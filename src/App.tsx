@@ -1,22 +1,23 @@
 import * as React from 'react';
-import './App.css';
+import { StyleSheet, Text, View } from 'react-native';
 
-const logo = require('./logo.svg');
-
-class App extends React.Component {
+export default class App extends React.Component<{}> {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
+      <View style={styles.container}>
+        <Text>Open up App.ts to start working on your app!</Text>
+        <Text>Changes you make will automatically reload.</Text>
+        <Text>Shake your phone to open the developer menu.</Text>
+      </View>
     );
   }
 }
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
