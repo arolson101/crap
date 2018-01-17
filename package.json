@@ -20,7 +20,7 @@
     "serve": "cross-env BROWSER=none react-scripts-ts start",
     "electron": "electron .",
     "build-web": "react-scripts-ts build",
-    "test-web": "react-scripts-ts test --env=jsdom",
+    "test": "react-scripts-ts test --env=jsdom",
     "eject-web": "react-scripts-ts eject",
     "storybook-web": "start-storybook -p 6006 -c storybook-web",
     "build-storybook-web": "build-storybook -c storybook-web",
@@ -28,11 +28,9 @@
     "eject-native": "react-native-scripts-ts eject",
     "android": "react-native-scripts-ts android",
     "ios": "react-native-scripts-ts ios",
-    "test-native": "node node_modules/jest/bin/jest.js --watch",
     "storybook-native": "storybook start -p 7007 -c storybook-native",
     "start": "npm run serve",
-    "storybook": "npm run storybook-web",
-    "test": "npm run test-web"
+    "storybook": "npm run storybook-web"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.9",
