@@ -13,6 +13,7 @@
     "appId": "com.github.arolson101.crap",
     "files": [
       "build/**/*",
+      "!build/**/*.map",
       "node_modules/**/*"
     ],
     "directories": {
