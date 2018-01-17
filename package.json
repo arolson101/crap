@@ -29,7 +29,10 @@
     "android": "react-native-scripts-ts android",
     "ios": "react-native-scripts-ts ios",
     "test-native": "node node_modules/jest/bin/jest.js --watch",
-    "storybook-native": "storybook start -p 7007 -c storybook-native"
+    "storybook-native": "storybook start -p 7007 -c storybook-native",
+    "start": "npm run serve",
+    "storybook": "npm run storybook-web",
+    "test": "npm run test-web"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.9",
@@ -51,7 +54,6 @@
     "babel-core": "^6.26.0",
     "cross-env": "^5.1.3",
     "electron": "^1.7.10",
-    "jest": "^22.1.2",
     "jest-expo-ts": "^22.0.1",
     "prop-types": "^15.6.0",
     "react-native-scripts-ts": "^1.7.0",
