@@ -6,14 +6,7 @@
   "private": true,
   "dependencies": {
     "electron-debug": "^1.5.0",
-    "expo": "^24.0.2",
-    "raf": "^3.4.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-native": "^0.52.0",
-    "react-native-web": "^0.3.0",
-    "react-scripts-ts": "2.8.0",
-    "source-map-explorer": "^1.5.0"
+    "electron-is-dev": "^0.3.0"
   },
   "build": {
     "appId": "com.github.arolson101.crap",
@@ -21,11 +14,11 @@
       "build/**/*",
       "node_modules/**/*"
     ],
-    "directories":{
+    "directories": {
       "buildResources": "assets"
     }
   },
-  "homepage": "./",
+  "homepage": "http://github.com/arolson101/crap/",
   "main-react": "./node_modules/react-native-scripts-ts/build/bin/crna-entry.js",
   "main": "public/electron.js",
   "scripts": {
@@ -33,7 +26,7 @@
     "web": "react-scripts-ts start",
     "serve": "cross-env BROWSER=none react-scripts-ts start",
     "electron": "electron .",
-    "electron-pack": "build --em.main=build/electron.js",
+    "electron-pack": "build --em.main=build/electron.js --dir",
     "preelectron-pack": "npm run build-web",
     "build-web": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
@@ -71,12 +64,19 @@
     "devtron": "^1.4.0",
     "electron": "^1.7.10",
     "electron-builder": "^19.54.0",
-    "electron-is-dev": "^0.3.0",
     "electron-react-devtools": "^0.5.3",
+    "expo": "^24.0.2",
     "prop-types": "^15.6.0",
+    "raf": "^3.4.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-native": "^0.52.0",
     "react-native-scripts-ts": "^1.7.0",
     "react-native-typescript-transformer": "^1.2.1",
+    "react-native-web": "^0.3.1",
+    "react-scripts-ts": "^2.12.0",
     "react-test-renderer": "^16.2.0",
+    "source-map-explorer": "^1.5.0",
     "ts-jest": "^22.0.1",
     "ts-loader": "^3.2.0",
     "tslib": "^1.8.1",

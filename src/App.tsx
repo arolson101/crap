@@ -1,21 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.app}>
-        <View style={styles.appHeader}>
-          <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
-        </View>
-        <Text style={styles.appIntro}>
-          To get started, edit src/App.tsx and save to reload.
-        </Text>
-      </View>
-    );
-  }
-}
-
 const styles = StyleSheet.create({
   app: {
     flex: 1
@@ -37,3 +22,18 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <View style={styles.app}>
+        <View style={styles.appHeader}>
+          <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
+        </View>
+        <Text style={styles.appIntro}>
+          To get started, edit src/App.tsx and save to reload.
+        </Text>
+      </View>
+    );
+  }
+}

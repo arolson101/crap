@@ -23,7 +23,7 @@
       "args" : ["."]
     },
     {
-      "name": "Electron (Renderer Process)",
+      "name": "Electron",
       "type": "chrome",
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
