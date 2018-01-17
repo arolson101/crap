@@ -7,16 +7,35 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome",
+      "name": "Chrome",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
     },
     {
+      "name": "Electron (Main Process)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "args" : ["."]
+    },
+    {
+      "name": "Electron (Renderer Process)",
       "type": "chrome",
-      "request": "attach",
-      "name": "Attach to Chrome",
-      "port": 9222,
-      "webRoot": "${workspaceFolder}"
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "runtimeArgs": [
+        "${workspaceRoot}",
+        "--remote-debugging-port=9222",
+        "--debug-brk"
+      ],
+      "webRoot": "${workspaceRoot}"
     }
   ]
 }

@@ -9,7 +9,7 @@ export default class App extends React.Component {
           <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
         </View>
         <Text style={styles.appIntro}>
-          To get started, edit src/App.js and save to reload.
+          To get started, edit src/App.tsx and save to reload.
         </Text>
       </View>
     );
