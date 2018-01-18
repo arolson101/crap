@@ -16,8 +16,8 @@ export function configureStore() {
 }
 
 if (module.hot) {
-  module.hot.accept('./modules/index', () => {
-    const nextRootEpic = require('./modules/index').default;
+  module.hot.accept('./epics', () => {
+    const nextRootEpic = require('./epics').rootEpic;
     epicMiddleware.replaceEpic(nextRootEpic);
   });
 }
