@@ -24,6 +24,7 @@
   "main": "public/electron.js",
   "scripts": {
     "analyze-web": "source-map-explorer build/static/js/main.*",
+    "preanalyze-web": "npm run build-web",
     "web": "react-scripts-ts start",
     "serve": "cross-env BROWSER=none react-scripts-ts start",
     "electron": "electron .",
