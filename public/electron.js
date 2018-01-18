@@ -16,15 +16,17 @@ let mainWindow;
 function createWindow() {
 
   if (isDev) {
-    const devtools = require('electron-devtools-installer');
-    const installExtension = devtools.default;
+    // this breaks VS Code debugging
+    //
+    // const devtools = require('electron-devtools-installer');
+    // const installExtension = devtools.default;
 
-    Promise.all(
-      [devtools.REACT_PERF, devtools.REDUX_DEVTOOLS]
-      .map(installExtension)
-    )
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
+    // Promise.all(
+    //   [devtools.REACT_PERF, devtools.REDUX_DEVTOOLS]
+    //   .map(installExtension)
+    // )
+    // .then((name) => console.log(`Added Extension:  ${name}`))
+    // .catch((err) => console.log('An error occurred: ', err));
 
     const getPath = name => require(name).path;
     BrowserWindow.addDevToolsExtension(getPath('devtron'));
