@@ -20,13 +20,15 @@ function createWindow() {
     const installExtension = devtools.default;
 
     Promise.all(
-      [devtools.REACT_DEVELOPER_TOOLS, devtools.REACT_PERF, devtools.REDUX_DEVTOOLS]
+      [devtools.REACT_PERF, devtools.REDUX_DEVTOOLS]
       .map(installExtension)
     )
     .then((name) => console.log(`Added Extension:  ${name}`))
     .catch((err) => console.log('An error occurred: ', err));
 
-    require('devtron').install();
+    const getPath = name => require(name).path;
+    BrowserWindow.addDevToolsExtension(getPath('devtron'));
+    BrowserWindow.addDevToolsExtension(getPath('electron-react-devtools'));
   }
 
   // Load the previous state with fallback to defaults

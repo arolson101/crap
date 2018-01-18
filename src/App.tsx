@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Provider } from 'react-redux';
+import configureStore from './redux/configureStore';
+import { PingTest } from './components';
 
 const styles = StyleSheet.create({
   app: {
@@ -24,16 +27,21 @@ const styles = StyleSheet.create({
 });
 
 export default class App extends React.Component {
+  store = configureStore();
+
   render() {
     return (
-      <View style={styles.app}>
-        <View style={styles.appHeader}>
-          <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
+      <Provider store={this.store}>
+        <View style={styles.app}>
+          <View style={styles.appHeader}>
+            <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
+          </View>
+          <Text style={styles.appIntro}>
+            To get started, edit src/App.tsx and save to reload.<br/>
+            <PingTest/>
+          </Text>
         </View>
-        <Text style={styles.appIntro}>
-          To get started, edit src/App.tsx and save to reload.
-        </Text>
-      </View>
+      </Provider>
     );
   }
 }
