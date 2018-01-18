@@ -10,11 +10,11 @@ const defaultState: State = ({
 });
 
 export const actions = {
-  ping: createAction('PING'),
-  pong: createAction('PONG')
+  ping: createAction('ping/PING'),
+  pong: createAction('ping/PONG')
 };
 
-const reducer = (state: State = defaultState, action: RootAction) => {
+const reducer = (state: State = defaultState, action: RootAction): State => {
   switch (action.type) {
     case getType(actions.ping):
       return { isPinging: true };

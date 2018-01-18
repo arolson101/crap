@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
-import configureStore from './redux/configureStore';
+import { configureStore } from './redux';
 import { PingTest } from './components';
 
 const styles = StyleSheet.create({
