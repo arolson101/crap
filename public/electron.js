@@ -4,9 +4,6 @@ const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-// https://github.com/sindresorhus/electron-debug
-require('electron-debug')({ showDevTools: false });
-
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
@@ -17,6 +14,21 @@ const windowStateKeeper = require('electron-window-state');
 let mainWindow;
 
 function createWindow() {
+
+  if (isDev) {
+    const devtools = require('electron-devtools-installer');
+    const installExtension = devtools.default;
+
+    Promise.all(
+      [devtools.REACT_DEVELOPER_TOOLS, devtools.REACT_PERF, devtools.REDUX_DEVTOOLS]
+      .map(installExtension)
+    )
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log('An error occurred: ', err));
+
+    require('devtron').install();
+  }
+
   // Load the previous state with fallback to defaults
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1000,
