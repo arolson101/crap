@@ -5,7 +5,7 @@ import { actions, RootState } from '../state';
 
 interface Props {
   isPinging: boolean;
-  ping: () => any;
+  ping: typeof actions.ping;
 }
 
 const PingTestComponent: React.SFC<Props> = ({isPinging, ping}) => {
