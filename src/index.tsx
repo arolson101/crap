@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { configureStore } from './state';
+import './dexie';
 
 const store = configureStore();
 
