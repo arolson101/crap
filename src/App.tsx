@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Provider } from 'react-redux';
-import { configureStore } from './redux';
 import { PingTest } from './components';
 
 const styles = StyleSheet.create({
@@ -27,21 +25,17 @@ const styles = StyleSheet.create({
 });
 
 export default class App extends React.Component {
-  store = configureStore();
-
   render() {
     return (
-      <Provider store={this.store}>
-        <View style={styles.app}>
-          <View style={styles.appHeader}>
-            <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
-          </View>
-          <Text style={styles.appIntro}>
-            To get started, edit src/App.tsx and save to reload.<br/>
-            <PingTest/>
-          </Text>
+      <View style={styles.app}>
+        <View style={styles.appHeader}>
+          <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
         </View>
-      </Provider>
+        <Text style={styles.appIntro}>
+          To get started, edit src/App.tsx and save to reload.<br/>
+          <PingTest/>
+        </Text>
+      </View>
     );
   }
 }
