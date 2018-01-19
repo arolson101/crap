@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { Button } from 'react-native';
 import { connect } from 'react-redux';
-import { actions, RootState } from '../redux';
+import { actions, RootState } from '../state';
 
 interface Props {
   isPinging: boolean;
@@ -9,7 +10,7 @@ interface Props {
 
 const PingTestComponent: React.SFC<Props> = ({isPinging, ping}) => {
   return (
-    <button onClick={ping}>{isPinging ? 'pinging' : 'ping'}</button>
+    <Button onPress={ping} title={isPinging ? 'pinging' : 'ping'}/>
   );
 };
 

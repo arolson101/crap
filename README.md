@@ -1,7 +1,19 @@
 # crap
 
+## targets
+* react-native
+* react-native-web
+* electron
 
-## guides used:
+## technologies
+* react
+* redux
+* storybook
+* redux-observable/rxjs
+* typescript
+* jest
+
+## guides used
 * https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
 * https://medium.com/@yannickdot/write-once-run-anywhere-with-create-react-native-app-and-react-native-web-ad40db63eed0
 * http://www.rahulpnath.com/blog/electron-and-react/
@@ -9,3 +21,6 @@
 * http://code.matsu.io/1
 * https://electronjs.org/docs/tutorial/debugging-main-process-vscode
 * https://github.com/piotrwitek/react-redux-typescript-guide
+
+## todo
+* get storybook working on mobile

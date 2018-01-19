@@ -5,7 +5,7 @@ import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { configureStore } from './redux';
+import { configureStore } from './state';
 
 const store = configureStore();
 
@@ -30,7 +30,7 @@ if (module.hot) {
     runApp();
   });
 
-  module.hot.accept('./redux', () => {
+  module.hot.accept('./state', () => {
     // hopefully configureStore didn't change!
   });
 }
