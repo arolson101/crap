@@ -44,6 +44,7 @@
       "program": "${workspaceRoot}/node_modules/react-scripts-ts/scripts/test.js",
       "stopOnEntry": false,
       "args": [
+        "--runInBand",
         "--env=jsdom"
       ],
       "cwd": "${workspaceRoot}",
