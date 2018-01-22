@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
-import 'dexie-observable';
-import 'dexie-syncable';
+// import 'dexie-observable';
+// import 'dexie-syncable';
 
 interface Contact {
   id?: string;
@@ -20,12 +20,14 @@ class MyAppDatabase extends Dexie {
 }
 
 export const test = async () => {
-  const db = new MyAppDatabase('myDb');
-  const contact: Contact = {
-    first: 'first ',
-    last: 'last'
-  };
   try {
+    await Dexie.delete('myDb');
+    const db = new MyAppDatabase('myDb');
+    const contact: Contact = {
+      first: 'first',
+      last: 'last'
+    };
+    await db.open();
     await db.transaction('rw', db.contacts, async () => {
       contact.id = await db.contacts.put(contact);
     });

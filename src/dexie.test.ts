@@ -1,7 +1,7 @@
 import { test } from  './dexie';
 
 describe('dexie tests', () => {
-  xit('test dexie', async () => {
+  it('test dexie', async () => {
     return test();
   });
 
