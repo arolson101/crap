@@ -48,8 +48,6 @@
         "--env=jsdom"
       ],
       "cwd": "${workspaceRoot}",
-      "preLaunchTask": null,
-      "runtimeExecutable": null,
       "runtimeArgs": [
         "--nolazy"
       ],
@@ -57,7 +55,7 @@
           "NODE_ENV": "test",
           "CI": "true"
       },
-      "console": "internalConsole",
+      "console": "integratedTerminal",
       "sourceMaps": true
     }
   ]
