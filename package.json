@@ -24,6 +24,7 @@
   "main": "public/electron.js",
   "scripts": {
     "analyze-web": "source-map-explorer build/static/js/main.*",
+    "coverage": "npm test -- --coverage",
     "preanalyze-web": "npm run build-web",
     "web": "react-scripts-ts start",
     "serve": "cross-env BROWSER=none react-scripts-ts start",
@@ -32,6 +33,7 @@
     "preelectron-pack": "npm run build-web",
     "build-web": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
+    "jest": "jest",
     "eject-web": "react-scripts-ts eject",
     "storybook-web": "start-storybook -p 6006 -c .storybook/web",
     "build-storybook-web": "build-storybook -c .storybook/web",

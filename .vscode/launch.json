@@ -57,6 +57,27 @@
       },
       "console": "integratedTerminal",
       "sourceMaps": true
+    },
+    {
+      "name": "Jest",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/jest-cli/bin/jest.js",
+      "stopOnEntry": false,
+      "args": [
+        "--runInBand",
+        "--env=jsdom"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+          "NODE_ENV": "test",
+          "CI": "true"
+      },
+      "console": "integratedTerminal",
+      "sourceMaps": true
     }
   ]
 }
