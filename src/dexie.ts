@@ -1,6 +1,4 @@
 import Dexie from 'dexie';
-// import 'dexie-observable';
-// import 'dexie-syncable';
 
 interface Contact {
   id?: string;
@@ -31,8 +29,9 @@ export const test = async () => {
     await db.transaction('rw', db.contacts, async () => {
       contact.id = await db.contacts.put(contact);
     });
-    console.log(contact);
+    // console.log(contact);
   } catch (err) {
-    console.error(err);
+    // console.error(err);
+    throw err;
   }
 };

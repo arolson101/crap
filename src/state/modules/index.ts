@@ -2,9 +2,11 @@ import { combineReducers } from 'redux';
 import { getReturnOfExpression } from 'react-redux-typescript';
 
 import ping, { State as PingState, actions as pingActions } from './ping';
+import db, { State as DbState, actions as dbActions } from './db';
 
 export const actions = {
-  ...pingActions
+  ...pingActions,
+  ...dbActions,
 };
 
 const returnOfActions =
@@ -16,10 +18,12 @@ export type RootAction =
 
 export interface RootState {
   ping: PingState;
+  db: DbState;
 }
 
 export const rootReducer = combineReducers<RootState>({
   ping,
+  db,
 });
 
 export default rootReducer;
