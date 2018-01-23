@@ -69,7 +69,7 @@ export interface Bank extends Bank.Props, Node<Bank.Props> {}
 
 export namespace Bank {
   export interface Props {
-    name: string;
+    readonly name: string;
   }
   export type Q = Query<Props>;
   export const schema = { banks: '&id, name' };

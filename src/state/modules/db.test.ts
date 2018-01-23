@@ -14,6 +14,5 @@ describe('db', () => {
     // conflicting change
     const bank3 = updateNode(bank2, {t: 10, q: {name: {$set: '3rd bank'}}});
     expect(bank3).toHaveProperty('name', '2nd bank');
-    console.log(bank3);
   });
 });
