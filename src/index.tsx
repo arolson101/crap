@@ -8,7 +8,7 @@ import registerServiceWorker from './registerServiceWorker';
 import { configureStore } from './state';
 import { test } from './dexie';
 
-const store = configureStore();
+const store = configureStore({ getTime: () => Date.now() });
 
 const Root = () => (
   <AppContainer>

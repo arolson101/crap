@@ -1,4 +1,4 @@
-import { createNode, updateNode, Bank } from './db';
+import { createNode, updateNode, Bank } from './';
 
 describe('db', () => {
   test('updateNode', () => {
