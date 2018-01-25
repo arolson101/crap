@@ -8,7 +8,13 @@ import registerServiceWorker from './registerServiceWorker';
 import { configureStore } from './state';
 import { test } from './dexie';
 
-const store = configureStore({ getTime: () => Date.now() });
+import * as shortid from 'shortid';
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
+
+const store = configureStore({
+  getTime: () => Date.now(),
+  genId: shortid,
+});
 
 const Root = () => (
   <AppContainer>

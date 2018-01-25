@@ -1,10 +1,7 @@
 import { BSON } from 'bson';
 import * as update from 'immutability-helper';
 import * as R from 'ramda';
-import * as shortid from 'shortid';
 import * as zlib from 'zlib';
-
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 
 type CompressedJson<T> = '<compressed json>' & { _tag: T };
 
@@ -36,8 +33,8 @@ export interface Node<T> {
   readonly _history?: CompressedJson<{ a: Array<Update<T>> }>; // bson doesn't support top-level array
 }
 
-export const createNode = <N extends Node<T> & T, T>(props: T): N => {
-  const id = shortid();
+export const createNode = <N extends Node<T> & T, T>(genId: () => string, props: T): N => {
+  const id = genId();
   const _base = undefined;
   const _history = undefined;
   // (props as {}) can be removed when https://github.com/Microsoft/TypeScript/pull/13288 is in

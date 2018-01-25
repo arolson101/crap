@@ -3,8 +3,9 @@ import { combineReducers } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
 import ping, { PingState, pingActions, pingThunks } from './ping';
-import db, { DbState, dbActions, dbThunks, dbSelectors } from './db';
-import { Bank } from '../docs/Bank';
+import db, { DbState, dbActions, dbSelectors } from './db';
+import bankThunks from '../thunks/bankThunks';
+import dbThunks from '../thunks/dbThunks';
 
 const basicActions = {
   ...pingActions,
@@ -15,7 +16,7 @@ export const actions = {
   ...basicActions,
   ...pingThunks,
   ...dbThunks,
-  ...Bank.thunks,
+  ...bankThunks,
 };
 
 export const selectors = {
@@ -35,6 +36,7 @@ export interface RootState {
 
 export interface ThunkDependencies {
   getTime: () => number;
+  genId: () => string;
 }
 
 export interface RootThunk<T = any> extends ThunkAction<Promise<T>, RootState, ThunkDependencies> {}
