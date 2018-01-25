@@ -9,7 +9,7 @@
 * react
 * redux
 * storybook
-* redux-observable/rxjs
+* redux-thunk
 * typescript
 * jest
 

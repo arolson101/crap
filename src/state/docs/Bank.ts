@@ -1,6 +1,7 @@
 import * as update from 'immutability-helper';
-import { createAction } from 'typesafe-actions';
-import { Node } from './Node';
+import { actions } from '../../state';
+import { Node, RootThunk } from '../';
+import { createNode } from './Node';
 
 export interface Bank extends Bank.Props, Node<Bank.Props> {}
 
@@ -13,18 +14,22 @@ export namespace Bank {
   export const table = 'banks';
   export const schema = { [table]: '&id, name' };
 
-  export const actions = {
-    bankCreate: createAction('docs/Bank/create', (props: Props) => ({
-      type: 'docs/Bank/create', props
-    })),
-    bankUpdate: createAction('docs/Bank/update', (id: string, q: Query) => ({
-      type: 'docs/Bank/update', id, q
-    })),
-    bankDelete: createAction('docs/Bank/delete', (id: string) => ({
-      type: 'docs/Bank/delete', id
-    })),
-    transaction: createAction('docs/db/transaction', (changes: any[]) => ({
-      type: 'docs/db/transaction', changes
-    })),
+  export const thunks = {
+    bankCreate: (props: Props): RootThunk<Bank> => async (dispatch, getState, { getTime }) => {
+      const bank: Bank = createNode(props);
+      const change = { table, t: getTime(), adds: [bank] };
+      await dispatch(actions.dbChange([change]));
+      return bank;
+    },
+
+    bankUpdate: (id: string, q: Query): RootThunk => (dispatch, getState, { getTime }) => {
+      const change = { table, t: getTime(), updates: [{id, q}] };
+      return dispatch(actions.dbChange([change]));
+    },
+
+    bankDelete: (id: string, q: Query): RootThunk => (dispatch, getState, { getTime }) => {
+      const change = { table, t: getTime(), updates: [{id, q}] };
+      return dispatch(actions.dbChange([change]));
+    },
   };
 }

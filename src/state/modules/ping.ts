@@ -1,25 +1,33 @@
 import { createAction, getType } from 'typesafe-actions';
-import { RootAction } from './';
+import { RootAction, RootThunk } from './';
 
-export type State = {
+export type PingState = {
   readonly isPinging: boolean;
 };
 
-const defaultState: State = ({
+const defaultState: PingState = ({
   isPinging: false
 });
 
-export const actions = {
+export const pingActions = {
   ping: createAction('ping/PING'),
   pong: createAction('ping/PONG')
 };
 
-const reducer = (state: State = defaultState, action: RootAction): State => {
+export const pingThunks = {
+  pingPong: (): RootThunk => async (dispatch) => {
+    dispatch(pingActions.ping());
+    await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+    dispatch(pingActions.pong());
+  },
+};
+
+const reducer = (state: PingState = defaultState, action: RootAction): PingState => {
   switch (action.type) {
-    case getType(actions.ping):
+    case getType(pingActions.ping):
       return { isPinging: true };
 
-    case getType(actions.pong):
+    case getType(pingActions.pong):
       return { isPinging: false };
 
     default:

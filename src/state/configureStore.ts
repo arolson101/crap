@@ -1,23 +1,20 @@
 import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { createEpicMiddleware } from 'redux-observable';
-import { rootEpic, EpicDependencies } from './epics';
+import { ThunkDependencies } from './';
 import { rootReducer } from './modules';
 
-export function configureStore(dependencies: EpicDependencies) {
-  const epicMiddleware = createEpicMiddleware(rootEpic, { dependencies });
+export function configureStore(dependencies: ThunkDependencies) {
   const store = createStore(
     rootReducer,
-    composeWithDevTools(applyMiddleware(epicMiddleware))
+    composeWithDevTools(
+      applyMiddleware(
+        thunk.withExtraArgument(dependencies)
+      )
+    )
   );
 
   if (module.hot) {
-    module.hot.accept('./epics', () => {
-      const nextRootEpic = require('./epics').rootEpic;
-      epicMiddleware.replaceEpic(nextRootEpic);
-      // console.log('epics updated');
-    });
-
     module.hot.accept('./modules', () => {
       const nextRootReducer = require('./modules').rootReducer;
       store.replaceReducer(nextRootReducer);

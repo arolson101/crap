@@ -1,23 +1,28 @@
 import { getReturnOfExpression } from 'react-redux-typescript';
 import { combineReducers } from 'redux';
-import { Epic } from 'redux-observable';
+import { ThunkAction } from 'redux-thunk';
 
-import ping, { State as PingState, actions as pingActions } from './ping';
-import db, { State as DbState, actions as dbActions, selectors as dbSelectors } from './db';
-import { EpicDependencies } from '../epics';
+import ping, { PingState, pingActions, pingThunks } from './ping';
+import db, { DbState, dbActions, dbThunks, dbSelectors } from './db';
 import { Bank } from '../docs/Bank';
 
-export const actions = {
+const basicActions = {
   ...pingActions,
   ...dbActions,
-  ...Bank.actions
+};
+
+export const actions = {
+  ...basicActions,
+  ...pingThunks,
+  ...dbThunks,
+  ...Bank.thunks,
 };
 
 export const selectors = {
   getDb: (state: RootState) => dbSelectors.getDb(state.db),
 };
 
-const returnOfActions = Object.values(actions).map(getReturnOfExpression);
+const returnOfActions = Object.values(basicActions).map(getReturnOfExpression);
 type AppAction = typeof returnOfActions[number];
 
 export type RootAction =
@@ -28,7 +33,11 @@ export interface RootState {
   db: DbState;
 }
 
-export interface RootEpic extends Epic<RootAction, RootState, EpicDependencies> {}
+export interface ThunkDependencies {
+  getTime: () => number;
+}
+
+export interface RootThunk<T = any> extends ThunkAction<Promise<T>, RootState, ThunkDependencies> {}
 
 export const rootReducer = combineReducers<RootState>({
   ping,

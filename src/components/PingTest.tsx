@@ -5,16 +5,16 @@ import { actions, RootState } from '../state';
 
 interface Props {
   isPinging: boolean;
-  ping: typeof actions.ping;
+  pingPong: typeof actions.pingPong;
 }
 
-const PingTestComponent: React.SFC<Props> = ({isPinging, ping}) => {
+const PingTestComponent: React.SFC<Props> = ({isPinging, pingPong}) => {
   return (
-    <Button onPress={ping} title={isPinging ? 'pinging' : 'ping'}/>
+    <Button onPress={pingPong} title={isPinging ? 'pinging' : 'ping'}/>
   );
 };
 
 export const PingTest = connect(
   (state: RootState) => ({ isPinging: state.ping.isPinging }),
-  ({ ping: actions.ping })
+  ({ pingPong: actions.pingPong })
 )(PingTestComponent);
