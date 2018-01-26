@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
 import { Form } from 'react-form';
+import TextField from './fields/TextField';
 
 const styles = StyleSheet.create({
   button: {
@@ -32,20 +32,14 @@ const styles = StyleSheet.create({
 const FormTest: React.SFC = props => {
   return (
     <Form
+      defaultValues={{email: ''}}
       onSubmit={(values) => {
         console.log('submit', values);
       }}
     >
       {(formApi) =>
         <View style={styles.container}>
-          <View style={{flexDirection: 'row'}}>
-            <Text>Email:</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => formApi.setValue('email', text)}
-              value={formApi.values.email || ''}
-            />
-          </View>
+          <TextField field="email" label="Email:"/>
           <TouchableOpacity onPress={formApi.submitForm as any}>
             <Text style={styles.button}>Submit</Text>
           </TouchableOpacity>
