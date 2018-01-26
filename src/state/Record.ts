@@ -1,6 +1,6 @@
 import { BSON } from 'bson';
 import * as update from 'immutability-helper';
-import { pipe } from 'ramda';
+import flow from 'lodash-es/flow';
 import * as zlib from 'zlib';
 
 type CompressedJson<T> = '<compressed json>' & { _tag: T };
@@ -9,13 +9,13 @@ const bson = new BSON();
 const CJSONToBuffer = (str: CompressedJson<any>) => new Buffer(str, 'base64');
 const bufferToCJSON = (buffer: Buffer) => buffer.toString('base64') as CompressedJson<any>;
 
-const dehydrate: <T extends Object>(obj: T) => CompressedJson<T> = pipe(
+const dehydrate: <T extends Object>(obj: T) => CompressedJson<T> = flow(
   bson.serialize,
   zlib.deflateSync,
   bufferToCJSON
 );
 
-const hydrate: <T>(x: CompressedJson<T>) => T = pipe(
+const hydrate: <T>(x: CompressedJson<T>) => T = flow(
   CJSONToBuffer,
   zlib.inflateSync,
   bson.deserialize,
@@ -37,7 +37,7 @@ export namespace Record {
   export const genSchema = (extra: string) => ['&id, _deleted', extra].join(', ');
 }
 
-export const createRecord = <R extends Record<T> & T, T>(genId: () => string, props: T): R => {
+export const createRecord = <R extends T & Record<T> & T, T>(genId: () => string, props: T): R => {
   const id = genId();
   const _base = undefined;
   const _history = undefined;
@@ -51,7 +51,7 @@ const rebuildObject = <T>(props: T, _base: CompressedJson<T> | undefined, change
   return changes.reduce((current, change) => update(current, change.q), base);
 };
 
-export const updateRecord = <R extends Record<T>, T>(record: R, change: Update<T>): R => {
+export const updateRecord = <R extends T & Record<T>, T>(record: R, change: Update<T>): R => {
   const { id, _base, _deleted, _history, ...props } = record as Record<T>;
   const prevHistory = _history ? hydrate(_history).a : [];
   const changes = [ ...prevHistory, change ].sort((a, b) => a.t - b.t);

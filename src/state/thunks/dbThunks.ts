@@ -1,5 +1,5 @@
 import * as update from 'immutability-helper';
-import { uniq } from 'ramda';
+import uniq from 'lodash-es/uniq';
 import { actions, selectors, RootThunk, AppDatabase, Record, updateRecord, deleteRecord } from '../index';
 
 export interface DbChange {
