@@ -1,14 +1,13 @@
 require('react-hot-loader/patch');
 import * as React from 'react';
-import { AppRegistry } from 'react-native';
 import { AppContainer } from 'react-hot-loader';
+import { Platform, AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
-import App from './App';
+import * as shortid from 'shortid';
+import { App } from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import { configureStore } from './state';
-import { test } from './dexie';
 
-import * as shortid from 'shortid';
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 
 const store = configureStore({
@@ -19,28 +18,28 @@ const store = configureStore({
 const Root = () => (
   <AppContainer>
     <Provider store={store}>
-      <App/>
+      <App />
     </Provider>
   </AppContainer>
 );
 
 AppRegistry.registerComponent('App', () => Root);
 
-const runApp = () => {
-  AppRegistry.runApplication('App', { rootTag: document.getElementById('root') });
-};
+if (Platform.OS === 'web') {
+  const runApp = () => {
+    AppRegistry.runApplication('App', { rootTag: document.getElementById('root') });
+  };
 
-runApp();
+  runApp();
+  registerServiceWorker();
 
-if (module.hot) {
-  module.hot.accept('./App', () => {
-    runApp();
-  });
+  if (module.hot) {
+    module.hot.accept('./components/App', () => {
+      runApp();
+    });
 
-  module.hot.accept('./state', () => {
-    // hopefully configureStore didn't change!
-  });
+    module.hot.accept('./state', () => {
+      // hopefully configureStore didn't change!
+    });
+  }
 }
-
-registerServiceWorker();
-test();

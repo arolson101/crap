@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { PingTest } from './components';
+import { PingTest } from './PingTest';
 
 const styles = StyleSheet.create({
   app: {
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class App extends React.Component {
+export class App extends React.Component {
   render() {
     return (
       <View style={styles.app}>
@@ -32,7 +32,7 @@ export default class App extends React.Component {
           <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
         </View>
         <Text style={styles.appIntro}>
-          To get started, edit src/App.tsx and save to reload.<br/>
+          To get started, edit src/components/App.tsx and save to reload.<br/>
           <PingTest/>
         </Text>
       </View>
