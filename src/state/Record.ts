@@ -1,6 +1,6 @@
 import { BSON } from 'bson';
 import * as update from 'immutability-helper';
-import * as R from 'ramda';
+import { pipe } from 'ramda';
 import * as zlib from 'zlib';
 
 type CompressedJson<T> = '<compressed json>' & { _tag: T };
@@ -9,13 +9,13 @@ const bson = new BSON();
 const CJSONToBuffer = (str: CompressedJson<any>) => new Buffer(str, 'base64');
 const bufferToCJSON = (buffer: Buffer) => buffer.toString('base64') as CompressedJson<any>;
 
-const dehydrate: <T extends Object>(obj: T) => CompressedJson<T> = R.pipe(
+const dehydrate: <T extends Object>(obj: T) => CompressedJson<T> = pipe(
   bson.serialize,
   zlib.deflateSync,
   bufferToCJSON
 );
 
-const hydrate: <T>(x: CompressedJson<T>) => T = R.pipe(
+const hydrate: <T>(x: CompressedJson<T>) => T = pipe(
   CJSONToBuffer,
   zlib.inflateSync,
   bson.deserialize,
@@ -26,19 +26,24 @@ interface Update<T> {
   readonly q: update.Query<T>;
 }
 
-export interface Node<T> {
+export interface Record<T> {
   readonly id: string;
-  readonly _deleted?: boolean;
+  readonly _deleted: number;
   readonly _base?: CompressedJson<T>;
   readonly _history?: CompressedJson<{ a: Array<Update<T>> }>; // bson doesn't support top-level array
 }
 
-export const createNode = <N extends Node<T> & T, T>(genId: () => string, props: T): N => {
+export namespace Record {
+  export const genSchema = (extra: string) => ['&id, _deleted', extra].join(', ');
+}
+
+export const createRecord = <R extends Record<T> & T, T>(genId: () => string, props: T): R => {
   const id = genId();
   const _base = undefined;
   const _history = undefined;
+  const _deleted = 0;
   // (props as {}) can be removed when https://github.com/Microsoft/TypeScript/pull/13288 is in
-  return { ...(props as {}), id, _base, _history } as N;
+  return { ...(props as {}), id, _base, _history, _deleted } as R;
 };
 
 const rebuildObject = <T>(props: T, _base: CompressedJson<T> | undefined, changes: Update<T>[]): T => {
@@ -46,8 +51,8 @@ const rebuildObject = <T>(props: T, _base: CompressedJson<T> | undefined, change
   return changes.reduce((current, change) => update(current, change.q), base);
 };
 
-export const updateNode = <N extends Node<T>, T>(node: N, change: Update<T>): N => {
-  const { id, _base, _deleted, _history, ...props } = node as Node<T>;
+export const updateRecord = <R extends Record<T>, T>(record: R, change: Update<T>): R => {
+  const { id, _base, _deleted, _history, ...props } = record as Record<T>;
   const prevHistory = _history ? hydrate(_history).a : [];
   const changes = [ ...prevHistory, change ].sort((a, b) => a.t - b.t);
   const isLatest = changes[changes.length - 1] === change;
@@ -58,9 +63,9 @@ export const updateNode = <N extends Node<T>, T>(node: N, change: Update<T>): N 
     _deleted,
     _base: _base || dehydrate(props as T),
     _history: dehydrate({a: changes}),
-  } as N;
+  } as R;
 };
 
-export const deleteNode = <N extends Node<T>, T>(node: N, t: number): N => {
-  return { ...(node as {}), _deleted: true } as N;
+export const deleteRecord = <R extends Record<T>, T>(record: R, t: number): R => {
+  return { ...(record as {}), _deleted: t } as R;
 };

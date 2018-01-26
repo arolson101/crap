@@ -1,7 +1,7 @@
 import * as update from 'immutability-helper';
-import { Node } from './Node';
+import { Record } from '../Record';
 
-export interface Bank extends Bank.Props, Node<Bank.Props> {}
+export interface Bank extends Bank.Props, Record<Bank.Props> {}
 
 export namespace Bank {
   export interface Props {
@@ -10,5 +10,5 @@ export namespace Bank {
 
   export type Query = update.Query<Props>;
   export const table = 'banks';
-  export const schema = { [table]: '&id, name' };
+  export const schema = { [table]: Record.genSchema('name') };
 }
