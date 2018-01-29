@@ -44,7 +44,7 @@ describe('bankThunks', () => {
     expect(banks[0]).toHaveProperty('name', '1st bank (modified)');
     expect(banks[0]._base).toBeDefined();
     expect(banks[0]._history).toBeDefined();
-    expect(actionTypes(store.getActions())).toEqual([actions.viewsRecordsUpdated.getType!()]);
+    expect(actionTypes(store.getActions())).toEqual([actions.recordsUpdated.getType!()]);
     store.clearActions();
 
     const base = banks[0]._base;
@@ -58,7 +58,7 @@ describe('bankThunks', () => {
     expect(banks[0]).toHaveProperty('name', '1st bank (modified)');
     expect(banks[0]).toHaveProperty('_base', base);
     expect(banks[0]._history).not.toBe(history);
-    expect(actionTypes(store.getActions())).toEqual([actions.viewsRecordsUpdated.getType!()]);
+    expect(actionTypes(store.getActions())).toEqual([actions.recordsUpdated.getType!()]);
     store.clearActions();
 
     // delete
@@ -67,7 +67,7 @@ describe('bankThunks', () => {
     banks = await allBanks();
     expect(banks).toHaveLength(1);
     expect(banks[0]).toHaveProperty('name', '2nd bank');
-    expect(actionTypes(store.getActions())).toEqual([actions.viewsRecordsDeleted.getType!()]);
+    expect(actionTypes(store.getActions())).toEqual([actions.recordsDeleted.getType!()]);
     store.clearActions();
   });
 });

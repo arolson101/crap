@@ -79,11 +79,11 @@ export default {
       });
 
       edits.forEach((records, table) => {
-        dispatch(actions.viewsRecordsUpdated(table, records));
+        dispatch(actions.recordsUpdated(table, records));
       });
 
       deletes.forEach((keys, table) => {
-        dispatch(actions.viewsRecordsDeleted(table, keys));
+        dispatch(actions.recordsDeleted(table, keys));
       });
     },
 };

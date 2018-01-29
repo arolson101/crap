@@ -1,5 +1,6 @@
 import { createStore } from 'redux';
-import reducer, { viewsActions as actions, Bank, viewsSelectors as selectors } from './views';
+import { actions } from '../actions';
+import reducer, { Bank, viewsSelectors as selectors } from './views';
 
 describe('views', () => {
   test('recordsUpdated', () => {
@@ -8,7 +9,7 @@ describe('views', () => {
       {id: 'id1', _base: undefined, _history: undefined, _deleted: 0, name: '1st bank'},
       {id: 'id2', _base: undefined, _history: undefined, _deleted: 0, name: '2nd bank'},
     ];
-    store.dispatch(actions.viewsRecordsUpdated('banks', bankRecords));
+    store.dispatch(actions.recordsUpdated('banks', bankRecords));
     const views = store.getState();
     expect(views).toEqual({
       banks: {
@@ -29,7 +30,7 @@ describe('views', () => {
         [bankRecords[1].id]: bankRecords[1],
       }
     });
-    store.dispatch(actions.viewsRecordsDeleted('banks', [bankRecords[0].id]));
+    store.dispatch(actions.recordsDeleted('banks', [bankRecords[0].id]));
     const views = store.getState();
     expect(views).toEqual({
       banks: {

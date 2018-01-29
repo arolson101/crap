@@ -1,19 +1,6 @@
-import { createAction, getType } from 'typesafe-actions';
-import { RootAction, AppDatabase } from '../index';
-
-export const dbActions = {
-  dbSetAvailableDbs: createAction('db/SET_AVAILABLE_DBS', (dbs: string[]) => ({
-    type: 'db/SET_AVAILABLE_DBS', dbs
-  })),
-
-  dbOpenBegin: createAction('db/DB_OPEN_BEGIN'),
-  dbOpenSuccess: createAction('db/DB_OPEN_SUCCESS', (db: AppDatabase) => ({
-    type: 'db/DB_OPEN_SUCCESS', db
-  })),
-  dbOpenFailure: createAction('db/DB_OPEN_FAILURE', (err: Error) => ({
-    type: 'db/DB_OPEN_FAILURE', err
-  })),
-};
+import { getType } from 'typesafe-actions';
+import { actions, RootAction } from '../actions';
+import { AppDatabase } from '../AppDatabase';
 
 export interface DbState {
   db?: AppDatabase;
@@ -40,16 +27,16 @@ const initialState: DbState = {
 
 const reducer = (state: DbState = initialState, action: RootAction): DbState => {
   switch (action.type) {
-    case getType(dbActions.dbSetAvailableDbs):
+    case getType(actions.dbSetAvailableDbs):
       return { ...state, dbs: action.dbs };
 
-    case getType(dbActions.dbOpenBegin):
+    case getType(actions.dbOpenBegin):
       return { ...state, db: undefined, openError: undefined };
 
-    case getType(dbActions.dbOpenSuccess):
+    case getType(actions.dbOpenSuccess):
       return { ...state, db: action.db };
 
-    case getType(dbActions.dbOpenFailure):
+    case getType(actions.dbOpenFailure):
       return { ...state, openError: action.err };
 
     default:
