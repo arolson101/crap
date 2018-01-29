@@ -4,12 +4,14 @@ import { ThunkAction } from 'redux-thunk';
 
 import ping, { PingState, pingActions, pingThunks } from './ping';
 import db, { DbState, dbActions, dbSelectors } from './db';
+import views, { ViewsState, viewsActions, viewsSelectors } from './views';
 import bankThunks from '../thunks/bankThunks';
 import dbThunks from '../thunks/dbThunks';
 
 const basicActions = {
   ...pingActions,
   ...dbActions,
+  ...viewsActions,
 };
 
 export const actions = {
@@ -21,6 +23,7 @@ export const actions = {
 
 export const selectors = {
   getDb: (state: RootState) => dbSelectors.getDb(state.db),
+  getBank: (state: RootState, id: string) => viewsSelectors.getBank(state.views, id),
 };
 
 const returnOfActions = Object.values(basicActions).map(getReturnOfExpression);
@@ -32,6 +35,7 @@ export type RootAction =
 export interface RootState {
   ping: PingState;
   db: DbState;
+  views: ViewsState;
 }
 
 export interface ThunkDependencies {
@@ -44,6 +48,7 @@ export interface RootThunk<T = any> extends ThunkAction<Promise<T>, RootState, T
 export const rootReducer = combineReducers<RootState>({
   ping,
   db,
+  views,
 });
 
 export default rootReducer;

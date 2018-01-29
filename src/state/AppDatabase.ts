@@ -1,6 +1,8 @@
 import Dexie from 'dexie';
 import { Bank } from './docs';
 
+export type TableName = typeof Bank.table;
+
 export interface Change {
   readonly seq?: number;
   readonly text: string;

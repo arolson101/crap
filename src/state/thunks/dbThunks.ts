@@ -1,9 +1,9 @@
 import * as update from 'immutability-helper';
 import uniq from 'lodash-es/uniq';
-import { actions, selectors, RootThunk, AppDatabase, Record, updateRecord, deleteRecord } from '../index';
+import { actions, selectors, RootThunk, AppDatabase, Record, updateRecord, deleteRecord, TableName } from '../index';
 
 export interface DbChange {
-  table: string;
+  table: TableName;
   t: number;
   adds?: Record<any>[];
   deletes?: string[];
@@ -14,7 +14,7 @@ export default {
   dbInit: (): RootThunk =>
     async function dbInit(dispatch) {
       const dbs = await AppDatabase.getDatabaseNames();
-      dispatch(actions.setDbs(dbs));
+      dispatch(actions.dbSetAvailableDbs(dbs));
     },
 
   dbOpen: (name: string): RootThunk =>
@@ -32,8 +32,8 @@ export default {
     async function dbChange(dispatch, getState) {
       const db = selectors.getDb(getState());
       const tables = uniq(changes.map(change => change.table)).map(db.table);
-      const edits = new Map<string, Record<any>[]>();
-      const deletes = new Map<string, string[]>();
+      const edits = new Map<TableName, Record<any>[]>();
+      const deletes = new Map<TableName, string[]>();
 
       await db.transaction('rw', [...tables, db._changes], async () => {
         for (let change of changes) {
@@ -79,11 +79,11 @@ export default {
       });
 
       edits.forEach((records, table) => {
-        dispatch(actions.recordsUpdated(table, records));
+        dispatch(actions.viewsRecordsUpdated(table, records));
       });
 
       deletes.forEach((keys, table) => {
-        dispatch(actions.recordsDeleted(table, keys));
+        dispatch(actions.viewsRecordsDeleted(table, keys));
       });
     },
 };

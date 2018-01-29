@@ -24,7 +24,7 @@ describe('dbThunks', () => {
     const store = mockStore();
     await store.dispatch(actions.dbInit());
     const acts = store.getActions();
-    expect(acts).toEqual([actions.setDbs(mockDbs)]);
+    expect(acts).toEqual([actions.dbSetAvailableDbs(mockDbs)]);
   });
 
   test('dbOpen', async () => {

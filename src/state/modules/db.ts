@@ -2,8 +2,8 @@ import { createAction, getType } from 'typesafe-actions';
 import { RootAction, AppDatabase } from '../index';
 
 export const dbActions = {
-  setDbs: createAction('db/SET_DBS', (dbs: string[]) => ({
-    type: 'db/SET_DBS', dbs
+  dbSetAvailableDbs: createAction('db/SET_AVAILABLE_DBS', (dbs: string[]) => ({
+    type: 'db/SET_AVAILABLE_DBS', dbs
   })),
 
   dbOpenBegin: createAction('db/DB_OPEN_BEGIN'),
@@ -40,7 +40,7 @@ const initialState: DbState = {
 
 const reducer = (state: DbState = initialState, action: RootAction): DbState => {
   switch (action.type) {
-    case getType(dbActions.setDbs):
+    case getType(dbActions.dbSetAvailableDbs):
       return { ...state, dbs: action.dbs };
 
     case getType(dbActions.dbOpenBegin):
