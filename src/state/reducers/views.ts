@@ -2,9 +2,9 @@ import keyBy from 'lodash-es/keyBy';
 import merge from 'lodash-es/merge';
 import omit from 'lodash-es/omit';
 import { getType } from 'typesafe-actions';
-import { Record } from '../Record';
-import { Bank } from '../docs';
 import { actions, RootAction } from '../actions';
+import { Bank } from '../docs';
+import { Record } from '../Record';
 
 export { Bank };
 
@@ -30,6 +30,9 @@ const buildDictionary = <T extends Record<any>>(records: T[]): Dictionary<T> => 
 
 const reducer = (state: State = defaultState, action: RootAction): State => {
   switch (action.type) {
+    case getType(actions.dbOpenBegin):
+      return defaultState;
+
     case getType(actions.recordsUpdated):
       return { ...state, [action.table]: merge(state[action.table], buildDictionary(action.records)) };
 

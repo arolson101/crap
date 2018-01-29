@@ -26,7 +26,7 @@ interface Update<T> {
   readonly q: update.Query<T>;
 }
 
-export interface Record<T> {
+export interface Record<T = {}> {
   readonly id: string;
   readonly _deleted: number;
   readonly _base?: CompressedJson<T>;

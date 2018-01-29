@@ -1,4 +1,5 @@
 import * as update from 'immutability-helper';
+import Dexie from 'dexie';
 import uniq from 'lodash-es/uniq';
 import { actions, selectors, AppDatabase, Record, updateRecord, deleteRecord, TableName } from '../index';
 import { RootThunk } from './';
@@ -23,6 +24,11 @@ export default {
       try {
         const db = new AppDatabase(name);
         await db.open();
+        for (let tableName of AppDatabase.tables) {
+          const table: Dexie.Table<Record<any>, string> = db.table(tableName);
+          const records = await table.where({_deleted: 0}).toArray();
+          await dispatch(actions.recordsUpdated(tableName, records));
+        }
         return dispatch(actions.dbOpenSuccess(db));
       } catch (err) {
         return dispatch(actions.dbOpenFailure(err));
