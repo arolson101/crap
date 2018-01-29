@@ -1,3 +1,4 @@
+require('node-libs-react-native/globals');
 import Expo from 'expo';
 import { App } from './src/components/App';
 import React from 'react';

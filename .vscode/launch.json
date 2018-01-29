@@ -55,7 +55,7 @@
           "NODE_ENV": "test",
           "CI": "true"
       },
-      "console": "integratedTerminal",
+      "console": "internalConsole",
       "sourceMaps": true
     },
     {
@@ -76,7 +76,7 @@
           "NODE_ENV": "test",
           "CI": "true"
       },
-      "console": "integratedTerminal",
+      "console": "internalConsole",
       "sourceMaps": true
     }
   ]
