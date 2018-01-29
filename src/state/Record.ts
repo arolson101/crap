@@ -1,7 +1,7 @@
 import { BSON } from 'bson';
 import * as update from 'immutability-helper';
 import flow from 'lodash-es/flow';
-import * as zlib from 'zlib';
+import * as pako from 'pako';
 
 type CompressedJson<T> = '<compressed json>' & { _tag: T };
 
@@ -11,13 +11,13 @@ const bufferToCJSON = (buffer: Buffer) => buffer.toString('base64') as Compresse
 
 const dehydrate: <T extends Object>(obj: T) => CompressedJson<T> = flow(
   bson.serialize,
-  zlib.deflateSync,
+  pako.deflate,
   bufferToCJSON
 );
 
 const hydrate: <T>(x: CompressedJson<T>) => T = flow(
   CJSONToBuffer,
-  zlib.inflateSync,
+  pako.inflate,
   bson.deserialize,
 );
 
