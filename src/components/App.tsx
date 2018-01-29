@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { PingTest } from './PingTest';
-import FormTest from './Form';
+// import { PingTest } from './PingTest';
+// import FormTest from './Form';
 
 const styles = StyleSheet.create({
   app: {
@@ -33,9 +33,9 @@ export class App extends React.Component {
           <Text style={styles.appTitle}>Welcome to React ⚛️</Text>
         </View>
         <Text style={styles.appIntro}>
-          To get started, edit src/components/App.tsx and save to reload.<br/>
-          <PingTest/>
-          <FormTest/>
+          To get started, edit src/components/App.tsx and save to reload.
+          {/* <PingTest/>
+          <FormTest/> */}
         </Text>
       </View>
     );

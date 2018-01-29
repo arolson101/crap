@@ -1,8 +1,10 @@
 {
   "expo": {
-    "name": "crap",
-    "slug": "crap",
-    "displayName": "crap",
-    "sdkVersion": "24.0.2"
+    "sdkVersion": "25.0.0",
+    "entryPoint": "./expo.js",
+    "packagerOpts": {
+      "sourceExts": ["ts", "tsx"],
+      "transformer": "node_modules/react-native-typescript-transformer/index.js"
+    }
   }
 }
