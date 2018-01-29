@@ -1,5 +1,6 @@
-import { actions, RootThunk, createRecord, Bank } from '../';
+import { actions, createRecord, Bank } from '../';
 import { DbChange } from './dbThunks';
+import { RootThunk } from './';
 
 export default {
   bankCreate: (props: Bank.Props): RootThunk<Bank> =>

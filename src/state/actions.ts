@@ -2,9 +2,7 @@ import { getReturnOfExpression } from 'react-redux-typescript';
 import { createAction } from 'typesafe-actions';
 import { AppDatabase, TableName } from './AppDatabase';
 import { Record } from './Record';
-import bankThunks from './thunks/bankThunks';
-import dbThunks from './thunks/dbThunks';
-import pingThunks from './thunks/pingThunks';
+import { thunks } from './thunks';
 
 const actionCreators = {
   ping: createAction('ping/PING'),
@@ -28,12 +26,6 @@ const actionCreators = {
   recordsDeleted: createAction('views/RECORDS_DELETED', (table: TableName, ids: string[]) => ({
     type: 'views/RECORDS_DELETED', table, ids
   })),
-};
-
-const thunks = {
-  ...pingThunks,
-  ...dbThunks,
-  ...bankThunks,
 };
 
 export const actions = {

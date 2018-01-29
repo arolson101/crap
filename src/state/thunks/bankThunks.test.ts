@@ -1,6 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { actions, RootAction, ThunkDependencies, AppDatabase } from '../';
+import { actions, RootAction, AppDatabase } from '../';
+import { ThunkDependencies } from './';
 
 describe('bankThunks', () => {
   let time = 1;

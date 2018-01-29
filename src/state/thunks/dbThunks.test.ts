@@ -2,7 +2,8 @@ import Dexie from 'dexie';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { getType } from 'typesafe-actions';
-import { actions, ThunkDependencies } from '../';
+import { actions } from '../';
+import { ThunkDependencies } from './';
 
 describe('dbThunks', () => {
   let time = 1;
@@ -34,5 +35,4 @@ describe('dbThunks', () => {
     expect(acts).toHaveLength(1);
     expect(acts[0]).toHaveProperty('type', getType(actions.dbOpenSuccess));
   });
-
 });

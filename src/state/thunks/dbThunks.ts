@@ -1,6 +1,7 @@
 import * as update from 'immutability-helper';
 import uniq from 'lodash-es/uniq';
-import { actions, selectors, RootThunk, AppDatabase, Record, updateRecord, deleteRecord, TableName } from '../index';
+import { actions, selectors, AppDatabase, Record, updateRecord, deleteRecord, TableName } from '../index';
+import { RootThunk } from './';
 
 export interface DbChange {
   table: TableName;

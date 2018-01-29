@@ -1,5 +1,5 @@
 import { actions } from '../actions';
-import { RootThunk } from '../';
+import { RootThunk } from './';
 
 export default {
   pingPong: (): RootThunk => async function pingPongThunk(dispatch) {
