@@ -1,8 +1,8 @@
 require('node-libs-react-native/globals');
 import Expo from 'expo';
-import Root from './src';
 import React from 'react';
 import { View } from 'react-native';
+import Root from './src';
 
 // we don't want this to require transformation
 class AwakeInDevApp extends React.Component {
