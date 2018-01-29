@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { Bank } from './docs';
+import { Bank } from './records';
 
 export type TableName = typeof Bank.table;
 

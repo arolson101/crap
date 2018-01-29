@@ -3,7 +3,7 @@ import merge from 'lodash-es/merge';
 import omit from 'lodash-es/omit';
 import { getType } from 'typesafe-actions';
 import { actions, RootAction } from '../actions';
-import { Bank } from '../docs';
+import { Bank } from '../records';
 import { Record } from '../Record';
 
 export { Bank };
