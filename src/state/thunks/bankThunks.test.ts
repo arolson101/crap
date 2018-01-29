@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { actions, ThunkDependencies, AppDatabase } from '../';
+import { actions, RootAction, ThunkDependencies, AppDatabase } from '../';
 
 describe('bankThunks', () => {
   let time = 1;
@@ -21,6 +21,7 @@ describe('bankThunks', () => {
     const store = mockStore({db: { db }});
 
     const allBanks = () => db.banks.where({_deleted: 0}).toArray();
+    const actionTypes = (acts: RootAction[]) => acts.map(a => a.type);
 
     let banks = await allBanks();
     expect(banks).toHaveLength(0);
@@ -33,6 +34,7 @@ describe('bankThunks', () => {
     expect(banks).toHaveLength(2);
     expect(banks[0]).toHaveProperty('name', '1st bank');
     expect(banks[1]).toHaveProperty('name', '2nd bank');
+    expect(actionTypes(store.getActions())).toEqual([]);
 
     // update
     time = 200;
@@ -42,6 +44,9 @@ describe('bankThunks', () => {
     expect(banks[0]).toHaveProperty('name', '1st bank (modified)');
     expect(banks[0]._base).toBeDefined();
     expect(banks[0]._history).toBeDefined();
+    expect(actionTypes(store.getActions())).toEqual([actions.recordsUpdated.getType!()]);
+    store.clearActions();
+
     const base = banks[0]._base;
     const history = banks[0]._history;
 
@@ -53,6 +58,8 @@ describe('bankThunks', () => {
     expect(banks[0]).toHaveProperty('name', '1st bank (modified)');
     expect(banks[0]).toHaveProperty('_base', base);
     expect(banks[0]._history).not.toBe(history);
+    expect(actionTypes(store.getActions())).toEqual([actions.recordsUpdated.getType!()]);
+    store.clearActions();
 
     // delete
     time = 300;
@@ -60,5 +67,7 @@ describe('bankThunks', () => {
     banks = await allBanks();
     expect(banks).toHaveLength(1);
     expect(banks[0]).toHaveProperty('name', '2nd bank');
+    expect(actionTypes(store.getActions())).toEqual([actions.recordsDeleted.getType!()]);
+    store.clearActions();
   });
 });

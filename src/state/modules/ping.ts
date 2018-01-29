@@ -15,7 +15,7 @@ export const pingActions = {
 };
 
 export const pingThunks = {
-  pingPong: (): RootThunk => async (dispatch) => {
+  pingPong: (): RootThunk => async function pingPongThunk(dispatch) {
     dispatch(pingActions.ping());
     await new Promise((resolve, reject) => setTimeout(resolve, 1000));
     dispatch(pingActions.pong());
