@@ -23,6 +23,8 @@ const Root = () => (
   </AppContainer>
 );
 
+export default Root;
+
 AppRegistry.registerComponent('App', () => Root);
 
 if (Platform.OS === 'web') {

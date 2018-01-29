@@ -1,6 +1,6 @@
 require('node-libs-react-native/globals');
 import Expo from 'expo';
-import { App } from './src/components/App';
+import Root from './src';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -14,7 +14,7 @@ class AwakeInDevApp extends React.Component {
           flex: 1,
         },
       },
-      React.createElement(App, this.props),
+      React.createElement(Root, this.props),
       React.createElement(process.env.NODE_ENV === 'development' ? Expo.KeepAwake : View)
     );
   }
