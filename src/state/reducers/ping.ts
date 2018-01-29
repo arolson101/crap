@@ -1,15 +1,15 @@
 import { getType } from 'typesafe-actions';
 import { actions, RootAction } from '../actions';
 
-export type PingState = {
+export type State = {
   readonly isPinging: boolean;
 };
 
-const defaultState: PingState = ({
+const defaultState: State = ({
   isPinging: false
 });
 
-const reducer = (state: PingState = defaultState, action: RootAction): PingState => {
+const reducer = (state: State = defaultState, action: RootAction): State => {
   switch (action.type) {
     case getType(actions.ping):
       return { isPinging: true };

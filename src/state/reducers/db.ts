@@ -2,7 +2,7 @@ import { getType } from 'typesafe-actions';
 import { actions, RootAction } from '../actions';
 import { AppDatabase } from '../AppDatabase';
 
-export interface DbState {
+export interface State {
   db?: AppDatabase;
   dbs: string[];
   isOpening: boolean;
@@ -10,7 +10,7 @@ export interface DbState {
 }
 
 export const dbSelectors = {
-  getDb: (state: DbState) => {
+  getDb: (state: State) => {
     if (!state.db) {
       throw new Error('db is not open');
     }
@@ -18,14 +18,14 @@ export const dbSelectors = {
   }
 };
 
-const initialState: DbState = {
+const initialState: State = {
   db: undefined,
   dbs: [],
   isOpening: false,
   openError: undefined,
 };
 
-const reducer = (state: DbState = initialState, action: RootAction): DbState => {
+const reducer = (state: State = initialState, action: RootAction): State => {
   switch (action.type) {
     case getType(actions.dbSetAvailableDbs):
       return { ...state, dbs: action.dbs };

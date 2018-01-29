@@ -12,23 +12,23 @@ export interface Dictionary<T> {
   [id: string]: T;
 }
 
-export type ViewsState = {
+export type State = {
   readonly banks: Dictionary<Bank>;
 };
 
-const defaultState: ViewsState = ({
+const defaultState: State = ({
   banks: {},
 });
 
 export const viewsSelectors = {
-  getBank: (state: ViewsState, id: string) => state.banks[id],
+  getBank: (state: State, id: string) => state.banks[id],
 };
 
 const buildDictionary = <T extends Record<any>>(records: T[]): Dictionary<T> => {
   return keyBy(records, record => record.id);
 };
 
-const reducer = (state: ViewsState = defaultState, action: RootAction): ViewsState => {
+const reducer = (state: State = defaultState, action: RootAction): State => {
   switch (action.type) {
     case getType(actions.recordsUpdated):
       return { ...state, [action.table]: merge(state[action.table], buildDictionary(action.records)) };
