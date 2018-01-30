@@ -5,7 +5,6 @@ import { Platform, AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
 import * as shortid from 'shortid';
 import { App } from './components/App';
-import registerServiceWorker from './registerServiceWorker';
 import { configureStore } from './state';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
@@ -33,6 +32,8 @@ if (Platform.OS === 'web') {
   };
 
   runApp();
+
+  const registerServiceWorker = require('./registerServiceWorker');
   registerServiceWorker();
 
   if (module.hot) {
