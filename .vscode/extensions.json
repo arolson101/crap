@@ -7,5 +7,7 @@
 		"Orta.vscode-jest",
 		"vsmobile.vscode-react-native",
 		"eg2.tslint",
+		"jpoissonnier.vscode-styled-components",
+		"shinnn.stylelint",
 	]
 }

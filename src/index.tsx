@@ -33,7 +33,7 @@ if (Platform.OS === 'web') {
 
   runApp();
 
-  const registerServiceWorker = require('./registerServiceWorker');
+  const registerServiceWorker = require('./registerServiceWorker').default;
   registerServiceWorker();
 
   if (module.hot) {
