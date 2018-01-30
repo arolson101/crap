@@ -1,39 +1,34 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native';
-import { FormField, FieldApi, FieldProps } from 'react-form';
+import { FormField, FieldProps, FormFieldProps } from 'react-form';
+import { TextInput, TouchableWithoutFeedback, } from 'react-native';
+import styled from 'styled-components/native';
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: 'blue',
-    color: 'white',
-    height: 30,
-    lineHeight: 30,
-    marginTop: 10,
-    textAlign: 'center',
-    width: 250
-  },
-  container: {
+const Container = styled.View`
+  flex-direction: row;
+  margin: 5px;
+  align-items: center;
+`;
 
-  },
-  input: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 37,
-    width: 250
-  }
-});
+const Label = styled.Text`
+  margin-left: 10px;
+  text-align: right;
+  color: gray;
+`;
+
+const Input = styled.TextInput`
+  flex: 5;
+  height: 35px;
+  margin-left: 10px;
+  border-color: lightgray;
+  border-width: 1px;
+  padding: 5px;
+`;
 
 interface Props extends FieldProps {
   label: string;
 }
 
-class TextFieldComponent extends React.Component<Props & {fieldApi: FieldApi}> {
+class TextFieldComponent extends React.Component<Props & FormFieldProps> {
   textInput: TextInput;
 
   focusTextInput = () => {
@@ -46,15 +41,14 @@ class TextFieldComponent extends React.Component<Props & {fieldApi: FieldApi}> {
     const { fieldApi, label } = this.props;
     return (
       <TouchableWithoutFeedback onPress={this.focusTextInput}>
-        <View style={{flexDirection: 'row'}}>
-          <Text>{label}</Text>
-          <TextInput
-            ref={(c) => this.textInput = c as any}
-            style={styles.input}
+        <Container>
+          <Label>{label}</Label>
+          <Input
+            innerRef={(c) => this.textInput = c}
             onChangeText={(text) => fieldApi.setValue(text)}
             value={fieldApi.getValue()}
           />
-        </View>
+        </Container>
       </TouchableWithoutFeedback>
     );
   }

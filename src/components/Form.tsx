@@ -1,33 +1,17 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
 import { Form } from 'react-form';
+import styled from 'styled-components/native';
 import TextField from './fields/TextField';
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: 'blue',
-    color: 'white',
-    height: 30,
-    lineHeight: 30,
-    marginTop: 10,
-    textAlign: 'center',
-    width: 250
-  },
-  container: {
+const Container = styled.View`
+  flex: 1;
+  flex-direction: column;
+`;
 
-  },
-  input: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 37,
-    width: 250
-  }
-});
+const SubmitButton = styled.Button`
+  flex: 1;
+  color: aliceblue;
+`;
 
 const FormTest: React.SFC = props => {
   return (
@@ -38,12 +22,11 @@ const FormTest: React.SFC = props => {
       }}
     >
       {(formApi) =>
-        <View style={styles.container}>
+        <Container>
           <TextField field="email" label="Email:"/>
-          <TouchableOpacity onPress={formApi.submitForm as any}>
-            <Text style={styles.button}>Submit</Text>
-          </TouchableOpacity>
-        </View>
+          <TextField field="email" label="Email:"/>
+          <SubmitButton onPress={formApi.submitForm as any} title="Submit"/>
+        </Container>
       }
     </Form>
   );
