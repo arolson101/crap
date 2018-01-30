@@ -15,6 +15,9 @@ export const dbSelectors = {
       throw new Error('db is not open');
     }
     return state.db;
+  },
+  getDbs: (state: State) => {
+    return state.dbs;
   }
 };
 
