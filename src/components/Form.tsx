@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Form } from 'react-form';
 import styled from 'styled-components/native';
-import TextField from './forms/fields/TextField';
+import { TextField } from './forms';
 
 const Container = styled.View`
   flex: 1;

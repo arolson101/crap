@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { configureStore, actions } from '../src/state';
-import { LoginForm } from '../src/components/forms/LoginForm';
+import { LoginForm } from '../src/forms/LoginForm';
 import { middlewares, dependencies } from './storeHelpers';
 
 const store = configureStore(dependencies, middlewares);

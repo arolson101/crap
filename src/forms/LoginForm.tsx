@@ -3,8 +3,8 @@ import { Form } from 'react-form';
 import { Picker } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components/native';
-import { RootState, selectors } from '../../state';
-import TextField from './fields/TextField';
+import { RootState, selectors } from '../state';
+import { TextField } from '../components';
 
 const Dropdown = styled.Picker`
   margin: 5px;

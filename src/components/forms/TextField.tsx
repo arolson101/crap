@@ -54,5 +54,4 @@ class TextFieldComponent extends React.Component<Props & FormFieldProps> {
   }
 }
 
-const TextField: React.ComponentType<Props> = FormField(TextFieldComponent);
-export default TextField;
+export const TextField: React.ComponentType<Props> = FormField(TextFieldComponent);
