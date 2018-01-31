@@ -20,28 +20,26 @@ module.exports = function override(config, env) {
 		// 'react/lib/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry'
   };
 
-  // config.module.rules[0] =
-  // // https://gist.github.com/micimize/bf64ecbb6a32c236534a3431e76b27bb
-  // {
-  //   test: /.jsx?$/,
-  //   // Add every directory that needs to be compiled by Babel during the build
-  //   include: [
-  //     nodeModule('react-native-drawer'),
-  //     nodeModule('react-native-easy-grid'),
-  //     nodeModule('react-native-keyboard-aware-scroll-view'),
-  //     nodeModule('native-base'),
-  //     nodeModule('native-base-shoutem-theme'),
-  //   ],
+  config.module.rules[0] =
+  // https://gist.github.com/micimize/bf64ecbb6a32c236534a3431e76b27bb
+  {
+    test: /.jsx?$/,
+    // Add every directory that needs to be compiled by Babel during the build
+    include: [
+      nodeModule('react-native-elements'),
+      nodeModule('react-native-easy-grid'),
+      nodeModule('react-native-keyboard-aware-scroll-view'),
+    ],
 
-  //   use: {
-  //     loader: 'babel-loader',
-  //     query: {
-  //       compact: false,
-  //       "presets": ["env", "flow", "react"],
-  //       "plugins": ["transform-class-properties"]
-  //     }
-  //   }
-  // }
+    use: {
+      loader: 'babel-loader',
+      query: {
+        compact: false,
+        "presets": ["env", "flow", "react"],
+        "plugins": ["transform-class-properties"]
+      }
+    }
+  }
 
   // config.resolve.extensions = [
   //   ...config.resolve.extensions,
