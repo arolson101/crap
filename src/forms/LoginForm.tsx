@@ -4,14 +4,9 @@ import { Picker } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components/native';
 import { RootState, selectors } from '../state';
-import { TextField } from '../components';
-
-const Dropdown = styled.Picker`
-  margin: 5px;
-`;
+import { TextField, SelectField } from '../components';
 
 const Container = styled.View`
-  background-color: papayawhip;
 `;
 
 const SubmitButton = styled.Button`
@@ -35,20 +30,21 @@ interface Props {
   onSubmit: (values: FormValues) => any;
 }
 
-export const LoginFormComponent = (props: Props) => {
+export const LoginFormComponent = ({onSubmit, dbs}: Props) => {
+  const items = [
+    ...dbs.map(db => ({value: db, label: db})),
+    {value: 'new', label: 'new database'},
+  ];
+
   return (
     <Form
       defaultValues={defaultValues}
-      onSubmit={(values: FormValues) => props.onSubmit(values)}
+      onSubmit={(values: FormValues) => onSubmit(values)}
     >
       {formApi =>
         <Container>
-          <Dropdown>
-            {props.dbs.map(db =>
-              <Picker.Item key={db} label={db} />
-            )}
-          </Dropdown>
-          <TextField field="password" label="password"/>
+          <SelectField field="dbName" label="database:" items={items}/>
+          <TextField field="password" label="password:"/>
           <SubmitButton onPress={formApi.submitForm as any} title="Submit"/>
         </Container>
       }

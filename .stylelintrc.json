@@ -6,7 +6,8 @@
   ],
   "rules": {
     "color-no-invalid-hex": true,
-    "unit-no-unknown": true
+    "unit-no-unknown": true,
+    "block-no-empty": null
   },
   "syntax": "scss"
 }
