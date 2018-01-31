@@ -19,18 +19,20 @@ module.exports = function (config, env) {
   });
 
   // config.module.rules.push({
-  //     test:/\.js$/,
-  //     loader: 'babel-loader',
-  //     exclude: /node_modules/,
-  //     include: [/stories/, /components/],
-  //     query: {
-  //         presets: ['react', 'es2015', "stage-0"]
-  //     }
+  //   test: /\.js$/,
+  //   loader: 'babel-loader',
+  //   query: {
+  //     compact: false,
+  //     "presets": ["env"]
+  //   }
   // })
 
   config.resolve.extensions.push('.tsx');
   config.resolve.extensions.push('.ts');
   config.resolve.extensions.push('.js');
+  config.resolve.extensions.push('.web.js');
+  config.resolve.extensions.push('.windows.js');
+  config.resolve.extensions.push('.android.js');
 
   config.resolve.modules = [
     path.resolve(__dirname, '..', 'src'),
@@ -38,7 +40,9 @@ module.exports = function (config, env) {
   ];
 
   config.resolve.alias = config.resolve.alias || {}
-  config.resolve.alias['react-native'] = 'react-native-web'
+  config.resolve.alias['react-native'] = 'react-native-web';
+  // config.resolve.alias['react/lib/ReactNativePropRegistry'] = 'react-native-web/dist/modules/ReactNativePropRegistry';
+  // config.resolve.alias['react-native/Libraries/Renderer/shims/ReactNativePropRegistry'] = 'react-native-web/dist/modules/ReactNativePropRegistry';
 
   config.plugins.push(
     // new webpack.DllReferencePlugin({
