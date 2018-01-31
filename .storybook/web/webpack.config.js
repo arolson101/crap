@@ -4,6 +4,10 @@ var genDefaultConfig = require('@storybook/react/dist/server/config/defaults/web
 const path = require('path');
 // const fs = require("fs");
 
+function nodeModule(mod) {
+  return path.resolve(__dirname, '../../node_modules/' + mod)
+}
+
 module.exports = function (config, env) {
   var config = genDefaultConfig(config, env);
 
@@ -18,21 +22,29 @@ module.exports = function (config, env) {
     ]
   });
 
-  // config.module.rules.push({
-  //   test: /\.js$/,
-  //   loader: 'babel-loader',
-  //   query: {
-  //     compact: false,
-  //     "presets": ["env"]
-  //   }
-  // })
+  config.module.rules.push({
+    test: /\.js$/,
+    loader: 'babel-loader',
+    // Add every directory that needs to be compiled by Babel during the build
+    include: [
+      nodeModule('react-native-elements'),
+      nodeModule('react-native-easy-grid'),
+      nodeModule('react-native-keyboard-aware-scroll-view'),
+      nodeModule('react-native-vector-icons'),
+    ],
+    query: {
+      compact: false,
+      "presets": ["env", "flow", "react"],
+      "plugins": ["transform-class-properties"]
+    }
+  })
 
   config.resolve.extensions.push('.tsx');
   config.resolve.extensions.push('.ts');
   config.resolve.extensions.push('.js');
   config.resolve.extensions.push('.web.js');
   config.resolve.extensions.push('.windows.js');
-  config.resolve.extensions.push('.android.js');
+  // config.resolve.extensions.push('.android.js');
 
   config.resolve.modules = [
     path.resolve(__dirname, '..', 'src'),
