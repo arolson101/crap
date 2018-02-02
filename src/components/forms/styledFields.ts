@@ -7,14 +7,13 @@ export const FieldWrapper = styled.View`
 `;
 
 export const FieldLabel = styled.Text`
-  flex: 2;
   margin-left: 10px;
-  text-align: right;
+  width: 80px;
   color: gray;
 `;
 
 const fieldControlStyle = css`
-  flex: 5;
+  flex: 1;
   height: 35px;
   margin-left: 10px;
   border-color: lightgray;

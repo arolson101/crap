@@ -11,4 +11,4 @@ store.dispatch(actions.dbSetAvailableDbs(['first', 'second', 'third']));
 
 storiesOf('Forms', module)
   .addDecorator(story => <Provider store={store}>{story()}</Provider>)
-  .add('Login', () => <LoginForm />);
+  .add('Login', () => <LoginForm onSubmit={action('submit')}/>);

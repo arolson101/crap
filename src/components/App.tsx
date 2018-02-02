@@ -35,7 +35,7 @@ export class App extends React.Component {
         </Header>
         <Intro>
           To get started, edit src/components/App.tsx and save to reload.
-          <LoginForm/>
+          <LoginForm onSubmit={() => null}/>
         </Intro>
       </AppView>
     );
