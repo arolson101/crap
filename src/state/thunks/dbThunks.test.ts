@@ -32,7 +32,7 @@ describe('dbThunks', () => {
 
   test('dbOpen', async () => {
     const store = mockStore();
-    await store.dispatch(actions.dbOpen('foo'));
+    await store.dispatch(actions.dbOpen('foo', 'password'));
     const acts = store.getActions();
     expect(acts).toHaveLength(2);
     let i = 0;

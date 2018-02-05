@@ -26,6 +26,10 @@ const actionCreators = {
   recordsDeleted: createAction('views/RECORDS_DELETED', (table: TableName, ids: string[]) => ({
     type: 'views/RECORDS_DELETED', table, ids
   })),
+
+  linkDbAdvanced: createAction('link/DB_ADVANCED', (dbName: string) => ({
+    type: 'link/DB_ADVANCED', dbName
+  })),
 };
 
 export const actions = {

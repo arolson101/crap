@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormField, FieldProps, FormFieldProps } from 'react-form';
-import { Picker, StyleSheet } from 'react-native';
+import { Picker } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { formStyles } from './formStyles';
 
@@ -18,6 +18,8 @@ interface Props extends FieldProps {
 
 const SelectFieldComponent: React.SFC<Props & FormFieldProps> = ({fieldApi, label, items}) => (
   <ListItem
+    wrapperStyle={formStyles.wrapperStyle}
+    title={label}
     label={
       <Picker
         style={formStyles.picker}
@@ -34,7 +36,6 @@ const SelectFieldComponent: React.SFC<Props & FormFieldProps> = ({fieldApi, labe
         )}
       </Picker>
     }
-    title={label}
     subtitle={fieldApi.getError()}
     subtitleStyle={formStyles.errorSubtitle}
     hideChevron

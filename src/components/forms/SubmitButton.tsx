@@ -1,7 +1,7 @@
 import * as React from 'react';
-import styled from 'styled-components/native';
+import { Button, ButtonProps } from 'react-native-elements';
+import { formStyles } from './formStyles';
 
-export const SubmitButton = styled.Button`
-  flex: 1;
-  padding-top: 50px;
-`;
+export const SubmitButton: React.SFC<ButtonProps> = (props) => (
+  <Button {...props} style={[props.style, formStyles.button]} {...{primary1: true}} />
+);
