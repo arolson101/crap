@@ -90,6 +90,7 @@
     "electron-devtools-installer": "^2.2.3",
     "electron-react-devtools": "^0.5.3",
     "expo": "^25.0.0",
+    "exponent": "^14.0.0",
     "fake-indexeddb": "^2.0.3",
     "immutability-helper": "^2.6.4",
     "lodash-es": "^4.17.4",
