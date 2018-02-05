@@ -19,7 +19,7 @@ export default {
       dispatch(actions.dbSetAvailableDbs(dbs));
     },
 
-  dbOpen: (name: string): RootThunk =>
+  dbOpen: (name: string, password: string): RootThunk =>
     async function dbOpen(dispatch) {
       try {
         const db = new AppDatabase(name);

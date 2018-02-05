@@ -1,119 +1,71 @@
 import * as React from 'react';
-import { Form } from 'react-form';
-import { Picker, View, StyleSheet, Text } from 'react-native';
+import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import styled from 'styled-components/native';
-import { RootState, selectors } from '../state';
-import { TextField, SelectField } from '../components';
-import { TextControl } from '../components/forms/styledFields';
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
-
-const Container = styled.View`
-`;
-
-const SubmitButton = styled.Button`
-  flex: 1;
-`;
-
-interface FormValues {
-  dbName: string;
-  password: string;
-  passwordConfirm: string;
-}
-
-const defaultValues: FormValues = {
-  dbName: '',
-  password: '',
-  passwordConfirm: '',
-};
+import { RootState, actions, selectors } from '../state';
+import { ButtonGroup } from 'react-native-elements';
+import { IconHeader } from '../components/icons';
+import { LoginFormCreate } from './LoginForm.Create';
+import { LoginFormOpen } from './LoginForm.Open';
+import messages from './LoginForm.messages';
 
 interface Props {
   dbs: string[];
-  onSubmit: (values: FormValues) => any;
+  dbOpen: (dbName: string, password: string) => any;
+  linkDbAdvanced: (dbName: string) => any;
 }
 
-import { List, ListItem } from 'react-native-elements';
-import { IconHeader } from '../components/icons';
+const enum Mode {
+  OpenExisting,
+  CreateNew,
+}
 
-const styles = StyleSheet.create({
-  subtitleView: {
-    flexDirection: 'row',
-    paddingLeft: 10,
-    paddingTop: 5
-  },
-  ratingImage: {
-    height: 19.21,
-    width: 100
-  },
-  ratingText: {
-    paddingLeft: 10,
-    color: 'grey'
+interface State {
+  mode: Mode;
+}
+
+const buttons = [
+  { element: () => <FormattedMessage {...messages.open} /> },
+  { element: () => <FormattedMessage {...messages.create} /> },
+];
+
+export class LoginFormComponent extends React.Component<Props, State> {
+  state: State = {
+    mode: Mode.OpenExisting
+  };
+
+  modePressed = (selectedIndex: number) => {
+    this.setState({ mode: selectedIndex });
   }
-});
 
-export const LoginFormComponent = ({onSubmit, dbs}: Props) => {
-  const items = [
-    ...dbs.map(db => ({value: db, label: db})),
-    {value: 'new', label: 'new database'},
-  ];
+  render() {
+    const { dbOpen, dbs, linkDbAdvanced } = this.props;
+    const mode = dbs.length ? this.state.mode : Mode.CreateNew;
 
-  return (
-    <>
-      <IconHeader/>
-      <Form
-        defaultValues={defaultValues}
-        onSubmit={(values: FormValues) => onSubmit(values)}
-      >
-        {formApi =>
-          <Container>
-            <SelectField field="dbName" label="database:" items={items}/>
-            <TextField field="password" label="password:"/>
-            <SubmitButton onPress={formApi.submitForm as any} title="Submit"/>
+    return (
+      <>
+        <IconHeader />
+        <ButtonGroup
+          onPress={this.modePressed}
+          buttons={buttons}
+          selectedIndex={mode}
+          disableSelected
+        />
 
-            <List>
-              <ListItem
-                titleNumberOfLines={2}
-                title="database name"
-                textInput
-                textInputPlaceholder="savings"
-                subtitle="error text error text error text error text"
-                hideChevron
-              />
-              <ListItem
-                title="password"
-                textInput
-                textInputPlaceholder="password"
-                subtitle="please enter a password"
-                hideChevron
-              />
-            </List>
-            <List>
-              <ListItem
-                titleNumberOfLines={2}
-                title="database name"
-                textInput
-                textInputPlaceholder="My Crap"
-                subtitle="error text error text error text error text"
-                subtitleStyle={{color: 'red'}}
-                rightIcon={{name: 'error', style: {color: 'red'} as any}}
-              />
-              <ListItem
-                title="password"
-                textInput
-                textInputPlaceholder="password"
-                subtitle="please enter a password"
-                hideChevron
-              />
-            </List>
-          </Container>
+        {mode === Mode.CreateNew
+          ? <LoginFormCreate dbs={dbs} dbOpen={dbOpen}/>
+          : <LoginFormOpen dbs={dbs} dbOpen={dbOpen} linkDbAdvanced={linkDbAdvanced}/>
         }
-      </Form>
-    </>
-  );
-};
+      </>
+    );
+  }
+}
 
 export const LoginForm = connect(
   (state: RootState) => ({
     dbs: selectors.getDbs(state),
-  })
+  }),
+  {
+    linkDbAdvanced: actions.linkDbAdvanced,
+    dbOpen: actions.dbOpen,
+  }
 )(LoginFormComponent);
