@@ -1,36 +1,25 @@
 import * as React from 'react';
 import { FormField, FieldProps, FormFieldProps } from 'react-form';
 import { TextInput, TouchableWithoutFeedback, } from 'react-native';
-import { FieldWrapper, FieldLabel, TextControl } from './styledFields';
+import { ListItem } from 'react-native-elements';
+import { formStyles } from './formStyles';
 
 interface Props extends FieldProps {
   label: string;
+  placeholder: string;
+  secure?: boolean;
 }
 
-class TextFieldComponent extends React.Component<Props & FormFieldProps> {
-  textInput: TextInput;
-
-  focusTextInput = () => {
-    if (this.textInput) {
-      this.textInput.focus();
-    }
-  }
-
-  render() {
-    const { fieldApi, label } = this.props;
-    return (
-      <FieldWrapper>
-        <TouchableWithoutFeedback onPress={this.focusTextInput}>
-          <FieldLabel>{label}</FieldLabel>
-        </TouchableWithoutFeedback>
-        <TextControl
-          innerRef={(c) => this.textInput = c}
-          onChangeText={fieldApi.setValue}
-          value={fieldApi.getValue()}
-        />
-      </FieldWrapper>
-    );
-  }
-}
+const TextFieldComponent: React.SFC<Props & FormFieldProps> = ({ fieldApi, label, placeholder, secure }) => (
+  <ListItem
+    title={label}
+    textInput
+    textInputPlaceholder={placeholder}
+    subtitle={fieldApi.getError()}
+    subtitleStyle={formStyles.errorSubtitle}
+    hideChevron
+    textInputSecure={secure}
+  />
+);
 
 export const TextField: React.ComponentType<Props> = FormField(TextFieldComponent);
