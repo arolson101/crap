@@ -24,8 +24,6 @@ const Intro = styled.Text`
   text-align: center;
 `;
 
-import { LoginForm } from '../forms/LoginForm';
-
 export class App extends React.Component {
   render() {
     return (
@@ -35,7 +33,6 @@ export class App extends React.Component {
         </Header>
         <Intro>
           To get started, edit src/components/App.tsx and save to reload.
-          <LoginForm/>
         </Intro>
       </AppView>
     );
