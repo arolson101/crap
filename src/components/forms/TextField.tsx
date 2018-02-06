@@ -1,22 +1,24 @@
 import * as React from 'react';
 import { FormField, FieldProps, FormFieldProps } from 'react-form';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
-import { ListItem } from 'react-native-elements';
+import { ListItem, IconObject } from 'react-native-elements';
 import { formStyles } from './formStyles';
 
 interface Props extends FieldProps {
   label: FormattedMessage.MessageDescriptor;
   placeholder: FormattedMessage.MessageDescriptor;
   secure?: boolean;
+  leftIcon?: IconObject;
 }
 
 export const TextField: React.ComponentType<Props> = FormField(injectIntl(
-  ({ fieldApi, label, placeholder, secure, intl: { formatMessage } }: Props & FormFieldProps & InjectedIntlProps) => (
+  ({ fieldApi, leftIcon, label, placeholder, secure, intl }: Props & FormFieldProps & InjectedIntlProps) => (
     <ListItem
-      title={formatMessage(label)}
       wrapperStyle={formStyles.wrapperStyle}
+      leftIcon={leftIcon}
+      title={intl.formatMessage(label)}
       textInput
-      textInputPlaceholder={formatMessage(placeholder)}
+      textInputPlaceholder={intl.formatMessage(placeholder)}
       textInputValue={fieldApi.getValue()}
       textInputOnChangeText={fieldApi.setValue}
       subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
