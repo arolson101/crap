@@ -1,7 +1,20 @@
 import * as React from 'react';
-import { Button, ButtonProps } from 'react-native-elements';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { Button } from 'react-native-elements';
 import { formStyles } from './formStyles';
 
-export const SubmitButton: React.SFC<ButtonProps> = (props) => (
-  <Button {...props} style={[props.style, formStyles.button]} {...{primary1: true}} />
+interface Props {
+  title: FormattedMessage.MessageDescriptor;
+  onPress: Function;
+}
+
+export const SubmitButton: React.ComponentType<Props> = injectIntl(
+  ({ title, onPress, intl: { formatMessage } }: Props & InjectedIntlProps) => (
+    <Button
+      title={formatMessage(title)}
+      onPress={() => onPress()}
+      style={formStyles.button}
+      {...{ primary1: true }}
+    />
+  )
 );
