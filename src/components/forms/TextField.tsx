@@ -15,8 +15,9 @@ const TextFieldComponent: React.SFC<Props & FormFieldProps> = ({ fieldApi, label
     wrapperStyle={formStyles.wrapperStyle}
     textInput
     textInputPlaceholder={placeholder}
+    textInputValue={fieldApi.getValue()}
     textInputOnChangeText={fieldApi.setValue}
-    subtitle={fieldApi.getError()}
+    subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
     subtitleStyle={formStyles.errorSubtitle}
     hideChevron
     textInputSecure={secure}

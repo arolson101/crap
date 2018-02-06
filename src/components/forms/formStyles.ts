@@ -11,10 +11,14 @@ export const formStyles = StyleSheet.create({
   errorSubtitle: {
     color: 'red',
   },
+  errorDisplay: {
+    color: 'red',
+    margin: 20,
+  },
   wrapperStyle: {
     height: 42
   },
   button: {
-    paddingTop: 40,
+    marginTop: 40,
   },
 });

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
-import { RootState, actions, selectors } from '../state';
 import { ButtonGroup } from 'react-native-elements';
+import { connect } from 'react-redux';
 import { IconHeader } from '../components/icons';
+import { RootState, actions, selectors } from '../state';
 import { LoginFormCreate } from './LoginForm.Create';
 import { LoginFormOpen } from './LoginForm.Open';
 import messages from './LoginForm.messages';
@@ -12,6 +12,8 @@ interface Props {
   dbs: string[];
   dbOpen: (dbName: string, password: string) => any;
   linkDbAdvanced: (dbName: string) => any;
+  initialValuesCreate?: Partial<LoginFormCreate.Values>;
+  initialValuesOpen?: Partial<LoginFormOpen.Values>;
 }
 
 const enum Mode {
@@ -38,7 +40,7 @@ export class LoginFormComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { dbOpen, dbs, linkDbAdvanced } = this.props;
+    const { dbOpen, dbs, linkDbAdvanced, initialValuesCreate, initialValuesOpen } = this.props;
     const mode = dbs.length ? this.state.mode : Mode.CreateNew;
 
     return (
@@ -52,8 +54,8 @@ export class LoginFormComponent extends React.Component<Props, State> {
         />
 
         {mode === Mode.CreateNew
-          ? <LoginFormCreate dbs={dbs} dbOpen={dbOpen}/>
-          : <LoginFormOpen dbs={dbs} dbOpen={dbOpen} linkDbAdvanced={linkDbAdvanced}/>
+          ? <LoginFormCreate dbs={dbs} dbOpen={dbOpen} initialValues={initialValuesCreate}/>
+          : <LoginFormOpen dbs={dbs} dbOpen={dbOpen} linkDbAdvanced={linkDbAdvanced} initialValues={initialValuesOpen}/>
         }
       </>
     );

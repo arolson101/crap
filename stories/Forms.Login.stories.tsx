@@ -1,33 +1,58 @@
 import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { IntlProvider } from 'react-intl';
-import { Text } from 'react-native';
-import { Provider } from 'react-redux';
-import { configureStore, actions } from '../src/state';
 import { LoginFormComponent } from '../src/forms/LoginForm';
-import { middlewares, dependencies } from './storeHelpers';
+
+const props = {
+  dbs: ['storied database'],
+  dbOpen: action('dbOpen'),
+  linkDbAdvanced: action('linkDbAdvanced'),
+};
+
+let errorCount = 0;
 
 storiesOf('Forms/Login', module)
   .add('Create', () => (
     <LoginFormComponent
+      {...props}
       dbs={[]}
-      dbOpen={action('dbOpen')}
-      linkDbAdvanced={action('link')}
     />
   ))
   .add('Open (single choice)', () => (
     <LoginFormComponent
-      dbs={['my database']}
-      dbOpen={action('dbOpen')}
-      linkDbAdvanced={action('link')}
+      {...props}
     />
   ))
   .add('Open (multiple choices)', () => (
     <LoginFormComponent
+      {...props}
       dbs={['first', 'second', 'third']}
-      dbOpen={action('dbOpen')}
-      linkDbAdvanced={action('link')}
+    />
+  ))
+  .add('Login fails', () => (
+    <LoginFormComponent
+      {...props}
+      initialValuesCreate={{
+        dbName: 'gonna fail',
+        password: 'password',
+        passwordConfirm: 'password',
+      }}
+      initialValuesOpen={{
+        password: 'password',
+      }}
+      dbOpen={() => {
+        throw new Error(`dbOpen failed (${errorCount++})!`);
+      }}
+    />
+  ))
+  .add('Initial Values', () => (
+    <LoginFormComponent
+      {...props}
+      initialValuesCreate={{
+        dbName: 'storied database',
+        password: 'asdf',
+        passwordConfirm: 'asdf',
+      }}
     />
   ))
   ;

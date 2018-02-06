@@ -36,7 +36,7 @@ const SelectFieldComponent: React.SFC<Props & FormFieldProps> = ({fieldApi, labe
         )}
       </Picker>
     }
-    subtitle={fieldApi.getError()}
+    subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
     subtitleStyle={formStyles.errorSubtitle}
     hideChevron
   />
