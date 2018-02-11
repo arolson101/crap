@@ -2,14 +2,13 @@ import * as React from 'react';
 import { Form } from 'react-form';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { List } from 'react-native-elements';
-import { TextField, SubmitButton, SubmitErrorDisplay } from '../components';
+import { TextField, SubmitButton, SubmitError } from '../components';
 import messages from './LoginForm.messages';
 
-interface FormValues {
+interface FormValues extends SubmitError.Values {
   dbName: string;
   password: string;
   passwordConfirm: string;
-  submitError?: string;
 }
 
 interface Props {
@@ -44,14 +43,10 @@ export const LoginFormCreate: React.ComponentType<Props> = injectIntl(
             : undefined,
         })}
         onSubmit={(values: FormValues, e, formApi) => {
-          formApi.setValue('submitError', undefined);
+          SubmitError.onSubmit(formApi);
           return dbOpen(values.dbName, values.password);
         }}
-        onSubmitFailure={(errors, formApi, error) => {
-          if (error) {
-            formApi.setValue('submitError', error.message);
-          }
-        }}
+        onSubmitFailure={SubmitError.onSubmitFailure}
       >
         {formApi =>
           <List>
@@ -72,7 +67,7 @@ export const LoginFormCreate: React.ComponentType<Props> = injectIntl(
               label={messages.passwordConfirmLabel}
               placeholder={messages.passwordConfirmPlaceholder}
             />
-            <SubmitErrorDisplay field="submitError" />
+            <SubmitError.Display />
             <SubmitButton
               onPress={formApi.submitForm}
               title={messages.create}
