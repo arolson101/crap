@@ -1,32 +1,32 @@
 import * as React from 'react';
 import { Form } from 'react-form';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { List } from 'react-native-elements';
-import { TextField, SubmitButton, SubmitError } from '../components';
+import { TextField, SelectField, SubmitButton, SubmitError, formStyles } from './fields';
+import { List, ListItem } from 'react-native-elements';
 import messages from './LoginForm.messages';
 
 interface FormValues extends SubmitError.Values {
   dbName: string;
   password: string;
-  passwordConfirm: string;
 }
 
 interface Props {
   dbs: string[];
   dbOpen: (dbName: string, password: string) => any;
+  navDbAdvanced: (dbName: string) => any;
   initialValues?: Partial<FormValues>;
 }
 
-export namespace LoginFormCreate {
+export namespace LoginFormOpen {
   export type Values = FormValues;
 }
 
-export const LoginFormCreate: React.ComponentType<Props> = injectIntl(
-  ({ dbs, dbOpen, initialValues, intl: { formatMessage } }: Props & InjectedIntlProps) => {
+export const LoginFormOpen: React.ComponentType<Props> = injectIntl(
+  ({ dbs, dbOpen, navDbAdvanced, initialValues, intl: { formatMessage } }: Props & InjectedIntlProps) => {
+    const items = dbs.map(db => ({ value: db, label: db }));
     const defaultValues: FormValues = {
-      dbName: '',
+      dbName: dbs[0],
       password: '',
-      passwordConfirm: '',
       ...initialValues,
     };
 
@@ -34,26 +34,22 @@ export const LoginFormCreate: React.ComponentType<Props> = injectIntl(
       <Form
         defaultValues={defaultValues}
         validateError={(values: FormValues) => ({
-          dbName: !values.dbName.trim() ? formatMessage(messages.valueEmpty)
-            : dbs.includes(values.dbName.trim()) ? formatMessage(messages.dbExists)
-              : undefined,
           password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-            : undefined,
-          passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
             : undefined,
         })}
         onSubmit={(values: FormValues, e, formApi) => {
           SubmitError.onSubmit(formApi);
+          formApi.setValue('submitError', undefined);
           return dbOpen(values.dbName, values.password);
         }}
         onSubmitFailure={SubmitError.onSubmitFailure}
       >
         {formApi =>
           <List>
-            <TextField
+            <SelectField
               field="dbName"
               label={messages.dbNameLabel}
-              placeholder={messages.dbNamePlaceholder}
+              items={items}
             />
             <TextField
               secure
@@ -61,19 +57,19 @@ export const LoginFormCreate: React.ComponentType<Props> = injectIntl(
               label={messages.passwordLabel}
               placeholder={messages.passwordPlaceholder}
             />
-            <TextField
-              secure
-              field="passwordConfirm"
-              label={messages.passwordConfirmLabel}
-              placeholder={messages.passwordConfirmPlaceholder}
+            <ListItem
+              wrapperStyle={formStyles.wrapperStyle}
+              title={formatMessage(messages.advanced)}
+              onPress={() => navDbAdvanced((formApi.values as FormValues).dbName)}
             />
             <SubmitError.Display />
             <SubmitButton
               onPress={formApi.submitForm}
-              title={messages.create}
+              title={messages.open}
             />
           </List>
         }
       </Form>
     );
-  });
+  }
+);

@@ -31,7 +31,7 @@ const actionCreators = {
 
 export const nav = {
   dbAdvanced: (dbName: string) => `/db/${dbName}/advanced`,
-  home: () => `/home`,
+  home: () => `/`,
   budgets: () => `/budgets`,
   accounts: () => `/accounts`,
   bank: (bankId: string) => `/bank/${bankId}`,

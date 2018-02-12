@@ -1,5 +1,6 @@
 import { addDecorator, configure } from '@storybook/react';
 import { setIntlConfig, withIntl } from 'storybook-addon-intl';
+import StoryRouter from 'storybook-router';
 
 // Load the locale data for all your defined locales
 import { addLocaleData } from 'react-intl';
@@ -23,6 +24,7 @@ setIntlConfig({
 
 // Register decorator
 addDecorator(withIntl);
+addDecorator(StoryRouter());
 
 // automatically import all files ending in *.stories.tsx
 const req = require.context('../../stories', true, /\.stories\.tsx?$/);

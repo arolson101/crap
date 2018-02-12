@@ -134,6 +134,7 @@
     "shortid": "^2.2.8",
     "source-map-explorer": "^1.5.0",
     "storybook-addon-intl": "^2.3.0",
+    "storybook-router": "^0.3.2",
     "styled-components": "^3.1.6",
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^18.0.0",
