@@ -1,4 +1,5 @@
 import { getReturnOfExpression } from 'react-redux-typescript';
+import { push } from 'react-router-redux';
 import { createAction } from 'typesafe-actions';
 import { AppDatabase, TableName } from './AppDatabase';
 import { Record } from './Record';
@@ -26,14 +27,27 @@ const actionCreators = {
   recordsDeleted: createAction('views/RECORDS_DELETED', (table: TableName, ids: string[]) => ({
     type: 'views/RECORDS_DELETED', table, ids
   })),
+};
 
-  linkDbAdvanced: createAction('link/DB_ADVANCED', (dbName: string) => ({
-    type: 'link/DB_ADVANCED', dbName
-  })),
+export const nav = {
+  dbAdvanced: (dbName: string) => `/db/${dbName}/advanced`,
+  home: () => `/home`,
+  budgets: () => `/budgets`,
+  accounts: () => `/accounts`,
+  bank: (bankId: string) => `/bank/${bankId}`,
+};
+
+export const navActions = {
+  navDbAdvanced: (dbName: string) => push(nav.dbAdvanced(dbName)),
+  navHome: () => push(nav.home()),
+  navBudgets: () => push(nav.budgets()),
+  navAccounts: () => push(nav.accounts()),
+  navBank: (bankId: string) => push(nav.bank(bankId)),
 };
 
 export const actions = {
   ...actionCreators,
+  ...navActions,
   ...thunks,
 };
 

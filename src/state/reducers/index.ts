@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 import db, { State as DbState, dbSelectors } from './db';
 import ping, { State as PingState } from './ping';
 import views, { State as ViewsState, viewsSelectors } from './views';
@@ -18,6 +19,7 @@ export interface RootState {
 export const rootReducer = combineReducers<RootState>({
   ping,
   db,
+  router: routerReducer,
   views,
 });
 

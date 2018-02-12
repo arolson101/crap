@@ -13,7 +13,7 @@ interface FormValues extends SubmitError.Values {
 interface Props {
   dbs: string[];
   dbOpen: (dbName: string, password: string) => any;
-  linkDbAdvanced: (dbName: string) => any;
+  navDbAdvanced: (dbName: string) => any;
   initialValues?: Partial<FormValues>;
 }
 
@@ -22,7 +22,7 @@ export namespace LoginFormOpen {
 }
 
 export const LoginFormOpen: React.ComponentType<Props> = injectIntl(
-  ({ dbs, dbOpen, linkDbAdvanced, initialValues, intl: { formatMessage } }: Props & InjectedIntlProps) => {
+  ({ dbs, dbOpen, navDbAdvanced, initialValues, intl: { formatMessage } }: Props & InjectedIntlProps) => {
     const items = dbs.map(db => ({ value: db, label: db }));
     const defaultValues: FormValues = {
       dbName: dbs[0],
@@ -60,7 +60,7 @@ export const LoginFormOpen: React.ComponentType<Props> = injectIntl(
             <ListItem
               wrapperStyle={formStyles.wrapperStyle}
               title={formatMessage(messages.advanced)}
-              onPress={() => linkDbAdvanced((formApi.values as FormValues).dbName)}
+              onPress={() => navDbAdvanced((formApi.values as FormValues).dbName)}
             />
             <SubmitError.Display />
             <SubmitButton

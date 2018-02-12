@@ -6,7 +6,7 @@ import { LoginFormComponent } from '../src/forms/LoginForm';
 const props = {
   dbs: ['storied database'],
   dbOpen: action('dbOpen'),
-  linkDbAdvanced: action('linkDbAdvanced'),
+  navDbAdvanced: action('navDbAdvanced'),
 };
 
 let errorCount = 0;

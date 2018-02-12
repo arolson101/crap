@@ -1,23 +1,32 @@
 require('react-hot-loader/patch');
+import createHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import { AppContainer } from 'react-hot-loader';
 import { Platform, AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
+import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import * as shortid from 'shortid';
 import { App } from './components/App';
 import { configureStore } from './state';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 
-const store = configureStore({
+const history = createHistory();
+const historyMiddleware = routerMiddleware(history);
+
+const dependencies = {
   getTime: () => Date.now(),
   genId: shortid,
-});
+};
+
+const store = configureStore(dependencies, [historyMiddleware]);
 
 const Root = () => (
   <AppContainer>
     <Provider store={store}>
-      <App />
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
     </Provider>
   </AppContainer>
 );
