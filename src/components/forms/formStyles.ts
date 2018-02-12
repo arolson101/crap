@@ -19,6 +19,10 @@ export const formStyles = StyleSheet.create({
     height: 42
   },
   button: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
     marginTop: 40,
   },
 });

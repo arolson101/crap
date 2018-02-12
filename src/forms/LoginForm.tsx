@@ -50,6 +50,7 @@ export class LoginFormComponent extends React.Component<Props, State> {
           onPress={this.modePressed}
           buttons={buttons}
           selectedIndex={mode}
+          selectedIndexes={[mode]}
           disableSelected
         />
 

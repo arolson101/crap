@@ -113,7 +113,7 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
-"@storybook/addon-actions@^3.3.13", "@storybook/addon-actions@^3.3.9":
+"@storybook/addon-actions@^3.3.13":
   version "3.3.13"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-3.3.13.tgz#6ba603e5254ab01d16f9ff97c1656f3746710059"
   dependencies:
@@ -124,7 +124,7 @@
     react-inspector "^2.2.2"
     uuid "^3.1.0"
 
-"@storybook/addon-links@^3.3.13", "@storybook/addon-links@^3.3.9":
+"@storybook/addon-links@^3.3.13":
   version "3.3.13"
   resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-3.3.13.tgz#ea27db37e609a9036e4e6164ed52edf768b99eef"
   dependencies:
@@ -132,7 +132,7 @@
     global "^4.3.2"
     prop-types "^15.5.10"
 
-"@storybook/addons@^3.3.13", "@storybook/addons@^3.3.9":
+"@storybook/addons@^3.3.13":
   version "3.3.13"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-3.3.13.tgz#b5c0395494b856cadc5bcb946cab7c206bc4f9af"
 
@@ -192,7 +192,7 @@
     lodash.pick "^4.4.0"
     shallowequal "^0.2.2"
 
-"@storybook/react-native@^3.3.9":
+"@storybook/react-native@^3.3.13":
   version "3.3.13"
   resolved "https://registry.yarnpkg.com/@storybook/react-native/-/react-native-3.3.13.tgz#a83241207426fb08816b7167f49c79ca88ed588a"
   dependencies:
@@ -258,7 +258,7 @@
   dependencies:
     babel-runtime "^6.5.0"
 
-"@storybook/react@^3.3.9":
+"@storybook/react@^3.3.13":
   version "3.3.13"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-3.3.13.tgz#5b610e09158582d24a7e748663e27372185c2a19"
   dependencies:
@@ -370,7 +370,7 @@
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
 
-"@types/jest@^22.0.1":
+"@types/jest@^22.1.2":
   version "22.1.2"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.1.2.tgz#813a79ec98221633845627636dbc606f31220dbc"
 
@@ -384,7 +384,7 @@
   version "4.14.102"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.102.tgz#586a3e22385fc79b07cef9c5a1c8a5387986fbc8"
 
-"@types/node@*", "@types/node@^9.3.0":
+"@types/node@*", "@types/node@^9.4.5":
   version "9.4.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.5.tgz#d2a90c634208173d1b1a0a6ba9f1df3de62edcf5"
 
@@ -436,13 +436,13 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native@*", "@types/react-native@^0.52.0":
+"@types/react-native@*", "@types/react-native@^0.52.8":
   version "0.52.8"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.8.tgz#dd5aa7c4eb944d7c0b2b249a2bb811aa119f49c6"
   dependencies:
     "@types/react" "*"
 
-"@types/react-navigation@^1.0.30":
+"@types/react-navigation@^1.0.31":
   version "1.0.31"
   resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.0.31.tgz#ae0d58e7cf6f54d82daea9602fe580d9f3597f7e"
   dependencies:
@@ -477,7 +477,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.0.34":
+"@types/react@*", "@types/react@^16.0.36":
   version "16.0.36"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.36.tgz#ceb5639013bdb92a94147883052e69bb2c22c69b"
 
@@ -595,7 +595,7 @@
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/storybook__addon-actions/-/storybook__addon-actions-3.0.1.tgz#e76b6cc3e6221d6578962a2ae59c3c33b6762453"
 
-"@types/storybook__addon-knobs@^3.2.1":
+"@types/storybook__addon-knobs@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@types/storybook__addon-knobs/-/storybook__addon-knobs-3.2.2.tgz#74713ca4b8dcf10418cdaa8cd44ec11542f1373b"
   dependencies:
@@ -4281,7 +4281,7 @@ electron-builder-lib@19.56.0:
     semver "^5.5.0"
     temp-file "^3.1.1"
 
-electron-builder@^19.54.0:
+electron-builder@^19.56.0:
   version "19.56.0"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.56.0.tgz#ad5a64c73ce50b561fc8e2bcf9309de0f6ad4e5e"
   dependencies:
@@ -4378,7 +4378,7 @@ electron-window-state@^4.1.1:
     jsonfile "^2.2.3"
     mkdirp "^0.5.1"
 
-electron@^1.7.10:
+electron@^1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/electron/-/electron-1.8.2.tgz#a817cd733c2972b3c7cc4f777caf6e424b88014d"
   dependencies:
@@ -7446,7 +7446,7 @@ lock@^0.1.2, lock@~0.1.2:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/lock/-/lock-0.1.4.tgz#fec7deaef17e7c3a0a55e1da042803e25d91745d"
 
-lodash-es@^4.17.4, lodash-es@^4.2.0, lodash-es@^4.2.1:
+lodash-es@^4.17.5, lodash-es@^4.2.0, lodash-es@^4.2.1:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.5.tgz#9fc6e737b1c4d151d8f9cae2247305d552ce748f"
 
@@ -7965,7 +7965,7 @@ methods@^1.1.1, methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
-metro-core@0.24.7, metro-core@^0.24.1:
+metro-core@0.24.7, metro-core@^0.24.3:
   version "0.24.7"
   resolved "https://registry.yarnpkg.com/metro-core/-/metro-core-0.24.7.tgz#89e4fbea5bad574eb971459ebfa74c028f52d278"
   dependencies:
@@ -7977,7 +7977,7 @@ metro-source-map@0.24.7:
   dependencies:
     source-map "^0.5.6"
 
-metro@^0.24.1:
+metro@^0.24.3:
   version "0.24.7"
   resolved "https://registry.yarnpkg.com/metro/-/metro-0.24.7.tgz#42cecdb236b702d16243812294f7d3b97c43378d"
   dependencies:
@@ -8332,7 +8332,7 @@ native-base-shoutem-theme@0.2.2:
     lodash "^4.10.1"
     prop-types "^15.5.10"
 
-native-base@^2.3.7:
+native-base@^2.3.8:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/native-base/-/native-base-2.3.8.tgz#8124a3e754da3842ff48dc854b912916aa30aefe"
   dependencies:
@@ -9950,7 +9950,7 @@ react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
 
-react-form@^2.16.1:
+react-form@2:
   version "2.16.2"
   resolved "https://registry.yarnpkg.com/react-form/-/react-form-2.16.2.tgz#0fe08e11cff392403885f73b5e4f57cd6f2fb668"
   dependencies:
@@ -10084,9 +10084,9 @@ react-native-easy-grid@0.1.17:
   dependencies:
     lodash "^4.11.1"
 
-react-native-elements@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-0.19.0.tgz#737c5198bf7487f9986e2023826cd0bd7a500366"
+react-native-elements@^1.0.0-beta2:
+  version "1.0.0-beta2"
+  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.0.0-beta2.tgz#39f1f98e9cb6e05facd71a955bcf8796705fe520"
   dependencies:
     lodash.isempty "^4.4.0"
     lodash.times "^4.3.2"
@@ -10116,9 +10116,9 @@ react-native-maps@0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.19.0.tgz#ce94fad1cf360e335cb4338a68c95f791e869074"
 
-"react-native-maps@git+https://github.com/exponent/react-native-maps.git#v0.12.2-exp.1":
+"react-native-maps@git+https://github.com/exponent/react-native-maps#v0.12.2-exp.1":
   version "0.12.2"
-  resolved "git+https://github.com/exponent/react-native-maps.git#268871ed909b02267671fb40576f50963f09bd7c"
+  resolved "git+https://github.com/exponent/react-native-maps#268871ed909b02267671fb40576f50963f09bd7c"
 
 react-native-randombytes@^2.2.0:
   version "2.3.0"
@@ -10139,7 +10139,7 @@ react-native-safe-module@^1.1.0:
   dependencies:
     dedent "^0.6.0"
 
-react-native-scripts-ts@^1.7.0:
+react-native-scripts-ts@^1.11.1:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/react-native-scripts-ts/-/react-native-scripts-ts-1.11.1.tgz#1609eb95c682db82123ec75408ef94b4749b8136"
   dependencies:
@@ -10159,9 +10159,9 @@ react-native-scripts-ts@^1.7.0:
     rimraf "^2.6.1"
     xdl "48.0.2"
 
-"react-native-svg@git+https://github.com/exponent/react-native-svg.git#4.4.1":
+"react-native-svg@git+https://github.com/exponent/react-native-svg#4.4.1":
   version "4.4.1"
-  resolved "git+https://github.com/exponent/react-native-svg.git#e26bec094b87ada3fa2f2557210226d06f1aec5e"
+  resolved "git+https://github.com/exponent/react-native-svg#e26bec094b87ada3fa2f2557210226d06f1aec5e"
   dependencies:
     color "^0.11.1"
     lodash "^4.0.0"
@@ -10204,7 +10204,7 @@ react-native-vector-icons@~4.4.2:
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native-web@^0.3.1, react-native-web@^0.3.2:
+react-native-web@^0.3.2:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.3.4.tgz#b73a483f3c37a37ed832903e02d9c3c96f3ea109"
   dependencies:
@@ -10220,9 +10220,25 @@ react-native-web@^0.3.1, react-native-web@^0.3.2:
     react-art "^16.2.0"
     react-timer-mixin "^0.13.3"
 
-react-native@^0.52.2:
-  version "0.52.2"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.52.2.tgz#1ae9a4c4441bd6e54a8ffc8aae4ac2b5c7cccd68"
+react-native-web@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.4.0.tgz#5c334fb6eba1623886e162d73174b3cc37826e63"
+  dependencies:
+    array-find-index "^1.0.2"
+    create-react-class "^15.6.2"
+    debounce "^1.1.0"
+    deep-assign "^2.0.0"
+    fbjs "^0.8.16"
+    hyphenate-style-name "^1.0.2"
+    inline-style-prefixer "^4.0.0"
+    normalize-css-color "^1.0.2"
+    prop-types "^15.6.0"
+    react-art "^16.2.0"
+    react-timer-mixin "^0.13.3"
+
+react-native@^0.53.0:
+  version "0.53.0"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.53.0.tgz#d57b49b1683f3bbfffd098fd07f7be0ff9e9df74"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -10251,8 +10267,8 @@ react-native@^0.52.2:
     graceful-fs "^4.1.3"
     inquirer "^3.0.6"
     lodash "^4.16.6"
-    metro "^0.24.1"
-    metro-core "^0.24.1"
+    metro "^0.24.3"
+    metro-core "^0.24.3"
     mime "^1.3.4"
     minimist "^1.2.0"
     mkdirp "^0.5.1"
@@ -10279,7 +10295,7 @@ react-native@^0.52.2:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation@^1.0.0-rc.1:
+react-navigation@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.0.3.tgz#1687ea67a72a382633b01e7afda88582ebc3b5f9"
   dependencies:
@@ -10362,7 +10378,7 @@ react-router@^4.2.0:
     prop-types "^15.5.4"
     warning "^3.0.0"
 
-react-scripts-ts@^2.12.0:
+react-scripts-ts@^2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/react-scripts-ts/-/react-scripts-ts-2.13.0.tgz#d5493035e6d521030f0d3e5e8e5b5872f7df1a28"
   dependencies:
@@ -10671,7 +10687,7 @@ redux-logger@^3.0.6:
   dependencies:
     deep-diff "^0.3.5"
 
-redux-mock-store@^1.4.0:
+redux-mock-store@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.5.1.tgz#fca4335392e66605420b5559fe02fc5b8bb6d63c"
   dependencies:
@@ -11916,7 +11932,7 @@ style-search@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/style-search/-/style-search-0.1.0.tgz#7958c793e47e32e07d2b5cafe5c0bf8e12e77902"
 
-styled-components@^3.1.4:
+styled-components@^3.1.6:
   version "3.1.6"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.1.6.tgz#9c443146fa82c6659a9f64dd493bf2202480342e"
   dependencies:
@@ -12443,7 +12459,7 @@ ts-jest@^20.0.7:
     source-map-support "^0.4.4"
     yargs "^8.0.1"
 
-ts-jest@^22.0.1:
+ts-jest@^22.0.4:
   version "22.0.4"
   resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-22.0.4.tgz#be5e8d7d2cf3f3ef97d877a6a0562508c3f64515"
   dependencies:
@@ -12467,7 +12483,7 @@ ts-loader@^2.3.7:
     loader-utils "^1.0.2"
     semver "^5.0.1"
 
-ts-loader@^3.2.0:
+ts-loader@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-3.5.0.tgz#151d004dcddb4cf8e381a3bf9d6b74c2d957a9c0"
   dependencies:
@@ -12579,7 +12595,7 @@ typescript-eslint-parser@^10.0.0:
     lodash.unescape "4.0.1"
     semver "5.4.1"
 
-typescript@^2.6.2:
+typescript@^2.7.1:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.1.tgz#bb3682c2c791ac90e7c6210b26478a8da085c359"
 
