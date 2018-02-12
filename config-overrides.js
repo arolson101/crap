@@ -9,11 +9,11 @@ module.exports = function override(config, env) {
   config.resolve.alias = {
     // ...config.resolve.alias,
 
-    'react-native$': 'react-native-web',
-    'react-router-native': 'react-router',
-    'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
-    'react-native-vector-icons/Fonts': nodeModule('react-native-vector-icons/Fonts'), // need to avoid aliasing Font dir
-    'react-native-vector-icons': 'react-native-vector-icons/dist',
+    'react-native': 'react-native-web',
+    // 'react-router-native': 'react-router',
+    // 'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
+    // 'react-native-vector-icons/Fonts': nodeModule('react-native-vector-icons/Fonts'), // need to avoid aliasing Font dir
+    // 'react-native-vector-icons': 'react-native-vector-icons/dist',
 
     // for native-base
     // 'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
@@ -26,9 +26,12 @@ module.exports = function override(config, env) {
     test: /.jsx?$/,
     // Add every directory that needs to be compiled by Babel during the build
     include: [
-      nodeModule('react-native-elements'),
       nodeModule('react-native-easy-grid'),
+      nodeModule('react-native-elements'),
       nodeModule('react-native-keyboard-aware-scroll-view'),
+      nodeModule('react-native-tab-view'),
+      nodeModule('react-native-vector-icons'),
+      nodeModule('react-navigation'),
     ],
 
     use: {
@@ -36,7 +39,15 @@ module.exports = function override(config, env) {
       query: {
         compact: false,
         "presets": ["env", "flow", "react"],
-        "plugins": ["transform-class-properties"]
+        "plugins": [
+          "transform-class-properties",
+          "dev-expression",
+          "transform-object-rest-spread",
+          ["transform-runtime", {
+            "polyfill": false,
+            "regenerator": true
+          }],
+        ]
       }
     }
   }
