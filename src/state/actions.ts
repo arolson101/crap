@@ -29,12 +29,22 @@ const actionCreators = {
   })),
 };
 
+export const paths = {
+  dbAdvanced: '/db/:dbName',
+  home: '/',
+  budgets: '/budgets',
+  accounts: '/accounts',
+  bank: '/bank/:bankId',
+  account: '/account/:accountId',
+};
+
 export const nav = {
-  dbAdvanced: (dbName: string) => `/db/${dbName}/advanced`,
-  home: () => `/`,
-  budgets: () => `/budgets`,
-  accounts: () => `/accounts`,
-  bank: (bankId: string) => `/bank/${bankId}`,
+  dbAdvanced: (dbName: string) => paths.dbAdvanced.replace(':dbName', dbName),
+  home: () => paths.home,
+  budgets: () => paths.budgets,
+  accounts: () => paths.accounts,
+  bank: (bankId: string) => paths.bank.replace(':bankId', bankId),
+  account: (accountId: string) => paths.account.replace(':accountId', accountId),
 };
 
 export const navActions = {
