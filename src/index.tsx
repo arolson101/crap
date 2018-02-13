@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import * as shortid from 'shortid';
 import { App } from './components/App';
+import { IconHeader } from './components/IconHeader';
 import { createHistory } from './createHistory';
 import { configureStore } from './state';
 
@@ -25,7 +26,10 @@ const Root = () => (
   <AppContainer>
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <App />
+        <>
+          <IconHeader/>
+          <App />
+        </>
       </ConnectedRouter>
     </Provider>
   </AppContainer>

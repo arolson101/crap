@@ -2,7 +2,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ButtonGroup } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { IconHeader } from '../icons';
 import { RootState, actions, selectors } from '../../state';
 import { LoginFormCreate } from './LoginForm.Create';
 import { LoginFormOpen } from './LoginForm.Open';
@@ -45,7 +44,6 @@ export class LoginFormComponent extends React.Component<Props, State> {
 
     return (
       <>
-        <IconHeader />
         <ButtonGroup
           onPress={this.modePressed}
           buttons={buttons}
