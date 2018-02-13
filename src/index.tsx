@@ -1,5 +1,4 @@
 require('react-hot-loader/patch');
-import createHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import { AppContainer } from 'react-hot-loader';
 import { Platform, AppRegistry } from 'react-native';
@@ -7,6 +6,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import * as shortid from 'shortid';
 import { App } from './components/App';
+import { createHistory } from './createHistory';
 import { configureStore } from './state';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');

@@ -33,6 +33,7 @@ module.exports = function (config, env) {
       nodeModule('react-native-tab-view'),
       nodeModule('react-native-vector-icons'),
       nodeModule('react-navigation'),
+      nodeModule('react-router-native'),
     ],
     query: {
       compact: false,

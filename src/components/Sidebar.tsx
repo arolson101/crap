@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-native';
 import { Bank, nav } from '../state';
 
 const banks: Bank[] = [
@@ -12,11 +12,11 @@ export const Sidebar: React.SFC = (props) => {
   return (
     <View>
       <Text>sidebar</Text>
-      <Text><Link to={nav.home()}>home</Link></Text>
-      <Text><Link to={nav.budgets()}>budgets</Link></Text>
-      <Text><Link to={nav.accounts()}>accounts</Link></Text>
+      <Link to={nav.home()}><Text>home</Text></Link>
+      <Link to={nav.budgets()}><Text>budgets</Text></Link>
+      <Link to={nav.accounts()}><Text>accounts</Text></Link>
       {banks.map(bank =>
-        <Text key={bank.id}><Link to={nav.bank(bank.id)}>{bank.name}</Link></Text>
+        <Link key={bank.id} to={nav.bank(bank.id)}><Text>{bank.name}</Text></Link>
       )}
     </View>
   );

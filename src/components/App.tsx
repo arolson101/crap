@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router';
 import { Sidebar } from './Sidebar';
 import * as Pages from './pages';
 import { paths } from '../state/actions';

@@ -464,6 +464,14 @@
     "@types/react" "*"
     "@types/react-router" "*"
 
+"@types/react-router-native@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@types/react-router-native/-/react-router-native-4.0.3.tgz#c741840063cb4d4842cf48355b967c7f7940e54e"
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
 "@types/react-router-redux@^5.0.12":
   version "5.0.12"
   resolved "https://registry.yarnpkg.com/@types/react-router-redux/-/react-router-redux-5.0.12.tgz#d676db022987c86ecf9359e134120ed90d84b15c"
@@ -10373,6 +10381,13 @@ react-router-dom@^4.2.2:
     prop-types "^15.5.4"
     react-router "^4.2.0"
     warning "^3.0.0"
+
+react-router-native@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-router-native/-/react-router-native-4.2.0.tgz#cb4ff08542ffe336b5f76167376cd788e1d4006a"
+  dependencies:
+    prop-types "^15.5.4"
+    react-router "^4.2.0"
 
 react-router-redux@^5.0.0-alpha.9:
   version "5.0.0-alpha.9"
