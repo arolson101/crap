@@ -9,7 +9,7 @@ module.exports = {
     "^.+\\.(t|j)sx?$": "ts-jest"
   },
   transformIgnorePatterns: [
-    "<rootDir>/node_modules/(?!lodash-es/.*)"
+    "<rootDir>/node_modules/(?!(lodash-es|redux-mock-store)/.*)"
   ],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   moduleFileExtensions: [
@@ -24,7 +24,8 @@ module.exports = {
     './src/setupTests.ts'
   ],
   moduleNameMapper: {
-    "react-native": "<rootDir>/node_modules/react-native-web"
+    "react-native": "<rootDir>/node_modules/react-native-web",
+    "redux-mock-store": "<rootDir>/node_modules/redux-mock-store/dist/index-es",
   },
   testEnvironment: "jsdom",
 }
