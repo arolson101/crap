@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { Form } from 'react-form';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { TextField, SelectField, SubmitButton, SubmitError, formStyles } from './fields';
 import { List, ListItem } from 'react-native-elements';
+import { TextField, SelectField, SubmitButton, formStyles, ErrorMessage } from './fields';
 import messages from './LoginForm.messages';
 
-interface FormValues extends SubmitError.Values {
+interface FormValues {
   dbName: string;
   password: string;
 }
 
 interface Props {
   dbs: string[];
+  openError: Error | undefined;
   dbOpen: (dbName: string, password: string) => any;
   navDbAdvanced: (dbName: string) => any;
   initialValues?: Partial<FormValues>;
@@ -22,7 +23,7 @@ export namespace LoginFormOpen {
 }
 
 export const LoginFormOpen: React.ComponentType<Props> = injectIntl(
-  ({ dbs, dbOpen, navDbAdvanced, initialValues, intl: { formatMessage } }: Props & InjectedIntlProps) => {
+  ({ dbs, dbOpen, openError, navDbAdvanced, initialValues, intl: { formatMessage } }: Props & InjectedIntlProps) => {
     const items = dbs.map(db => ({ value: db, label: db }));
     const defaultValues: FormValues = {
       dbName: dbs[0],
@@ -38,11 +39,8 @@ export const LoginFormOpen: React.ComponentType<Props> = injectIntl(
             : undefined,
         })}
         onSubmit={(values: FormValues, e, formApi) => {
-          SubmitError.onSubmit(formApi);
-          formApi.setValue('submitError', undefined);
           return dbOpen(values.dbName, values.password);
         }}
-        onSubmitFailure={SubmitError.onSubmitFailure}
       >
         {formApi =>
           <List>
@@ -62,7 +60,7 @@ export const LoginFormOpen: React.ComponentType<Props> = injectIntl(
               title={formatMessage(messages.advanced)}
               onPress={() => navDbAdvanced((formApi.values as FormValues).dbName)}
             />
-            <SubmitError.Display />
+            <ErrorMessage error={openError}/>
             <SubmitButton
               onPress={formApi.submitForm}
               title={messages.open}

@@ -10,7 +10,7 @@ export const dependencies: ThunkDependencies = {
 const logDispatch = action('dispatch');
 
 const dispatchActionLogger: Middleware = st => next => (act: any) => {
-  logDispatch(act);
+  logDispatch(JSON.stringify(act));
   return next(act);
 };
 

@@ -7,6 +7,7 @@ import views, { State as ViewsState, viewsSelectors } from './views';
 export const selectors = {
   getDb: (state: RootState) => dbSelectors.getDb(state.db),
   getDbs: (state: RootState) => dbSelectors.getDbs(state.db),
+  getDbOpenError: (state: RootState) => dbSelectors.getDbOpenError(state.db),
   getBank: (state: RootState, id: string) => viewsSelectors.getBank(state.views, id),
 };
 

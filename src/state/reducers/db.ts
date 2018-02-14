@@ -18,6 +18,9 @@ export const dbSelectors = {
   },
   getDbs: (state: State) => {
     return state.dbs;
+  },
+  getDbOpenError: (state: State) => {
+    return state.openError;
   }
 };
 

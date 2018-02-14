@@ -7,9 +7,8 @@ const props = {
   dbs: ['storied database'],
   dbOpen: action('dbOpen'),
   navDbAdvanced: action('navDbAdvanced'),
+  openError: undefined,
 };
-
-let errorCount = 0;
 
 storiesOf('Forms/Login', module)
   .add('Create', () => (
@@ -29,7 +28,7 @@ storiesOf('Forms/Login', module)
       dbs={['first', 'second', 'third']}
     />
   ))
-  .add('Login fails', () => (
+  .add('Login failed', () => (
     <LoginFormComponent
       {...props}
       initialValuesCreate={{
@@ -40,9 +39,7 @@ storiesOf('Forms/Login', module)
       initialValuesOpen={{
         password: 'password',
       }}
-      dbOpen={() => {
-        throw new Error(`dbOpen failed (${errorCount++})!`);
-      }}
+      openError={new Error(`dbOpen failed!`)}
     />
   ))
   .add('Initial Values', () => (

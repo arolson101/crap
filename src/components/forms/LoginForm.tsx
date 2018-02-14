@@ -9,6 +9,7 @@ import messages from './LoginForm.messages';
 
 interface Props {
   dbs: string[];
+  openError: Error | undefined;
   dbOpen: (dbName: string, password: string) => any;
   navDbAdvanced: (dbName: string) => any;
   initialValuesCreate?: Partial<LoginFormCreate.Values>;
@@ -39,7 +40,7 @@ export class LoginFormComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { dbOpen, dbs, navDbAdvanced, initialValuesCreate, initialValuesOpen } = this.props;
+    const { dbOpen, openError, dbs, navDbAdvanced, initialValuesCreate, initialValuesOpen } = this.props;
     const mode = dbs.length ? this.state.mode : Mode.CreateNew;
 
     return (
@@ -53,8 +54,19 @@ export class LoginFormComponent extends React.Component<Props, State> {
         />
 
         {mode === Mode.CreateNew
-          ? <LoginFormCreate dbs={dbs} dbOpen={dbOpen} initialValues={initialValuesCreate}/>
-          : <LoginFormOpen dbs={dbs} dbOpen={dbOpen} navDbAdvanced={navDbAdvanced} initialValues={initialValuesOpen}/>
+          ? <LoginFormCreate
+            dbs={dbs}
+            dbOpen={dbOpen}
+            openError={openError}
+            initialValues={initialValuesCreate}
+          />
+          : <LoginFormOpen
+            dbs={dbs}
+            dbOpen={dbOpen}
+            openError={openError}
+            navDbAdvanced={navDbAdvanced}
+            initialValues={initialValuesOpen}
+          />
         }
       </>
     );
@@ -64,9 +76,10 @@ export class LoginFormComponent extends React.Component<Props, State> {
 export const LoginForm = connect(
   (state: RootState) => ({
     dbs: selectors.getDbs(state),
+    openError: selectors.getDbOpenError(state),
   }),
   {
-    navDbAdvanced: actions.navDbAdvanced,
     dbOpen: actions.dbOpen,
+    navDbAdvanced: actions.navDbAdvanced,
   }
 )(LoginFormComponent);
