@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Platform } from 'react-native';
 import { Helmet } from 'react-helmet';
 
-export const IconHeader = () => (
+export const FontIcons: React.SFC = ({children}) => (
   <>
     {Platform.OS === 'web' &&
       <Helmet>
@@ -19,5 +19,6 @@ export const IconHeader = () => (
         </style>
       </Helmet>
     }
+    {children}
   </>
 );
