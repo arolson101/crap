@@ -11111,6 +11111,10 @@ rndm@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/rndm/-/rndm-1.2.0.tgz#f33fe9cfb52bbfd520aa18323bc65db110a1b76c"
 
+rrule@^2.2.9:
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.2.9.tgz#9485d91fdd6397d860ec7fc9ed3803f5f72c741a"
+
 run-async@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.3.0.tgz#0371ab4ae0bdd720d4166d7dfda64ff7a445a6c0"
