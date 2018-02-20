@@ -34,7 +34,7 @@ describe('dbThunks', () => {
     const store = mockStore();
     await store.dispatch(actions.dbOpen('foo', 'password'));
     const acts = store.getActions();
-    expect(acts).toHaveLength(2);
+    expect(acts).toHaveLength(AppDatabase.tables.length + 1);
     let i = 0;
     AppDatabase.tables.forEach(table => {
       expect(acts[i++]).toMatchObject({type: getType(actions.recordsUpdated), table});

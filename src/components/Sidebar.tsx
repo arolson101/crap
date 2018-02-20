@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { Bank, actions } from '../state';
 
 const banks: Bank[] = [
-  { name: '1st bank', id: '1', _deleted: 0 },
-  { name: '2nd bank', id: '2', _deleted: 0 },
+  { name: '1st bank', id: '1' as Bank.Id, _deleted: 0, accounts: [] },
+  { name: '2nd bank', id: '2' as Bank.Id, _deleted: 0, accounts: [] },
 ];
 
 interface Props {
