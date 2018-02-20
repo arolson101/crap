@@ -6,8 +6,8 @@ import { LoginFormComponent } from '../src/components/forms/LoginForm';
 const props = {
   dbs: ['storied database'],
   dbOpen: action('dbOpen'),
+  dbOpenError: undefined,
   navDbAdvanced: action('navDbAdvanced'),
-  openError: undefined,
 };
 
 storiesOf('Forms/Login', module)
@@ -31,21 +31,18 @@ storiesOf('Forms/Login', module)
   .add('Login failed', () => (
     <LoginFormComponent
       {...props}
-      initialValuesCreate={{
+      initialValues={{
         dbName: 'gonna fail',
         password: 'password',
         passwordConfirm: 'password',
       }}
-      initialValuesOpen={{
-        password: 'password',
-      }}
-      openError={new Error(`dbOpen failed!`)}
+      dbOpenError={new Error(`dbOpen failed!`)}
     />
   ))
   .add('Initial Values', () => (
     <LoginFormComponent
       {...props}
-      initialValuesCreate={{
+      initialValues={{
         dbName: 'storied database',
         password: 'asdf',
         passwordConfirm: 'asdf',
