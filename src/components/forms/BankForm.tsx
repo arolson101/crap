@@ -5,7 +5,7 @@ import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { RootState, actions, selectors, Bank } from '../../state';
-import { SelectField, TextField, SubmitButton } from './fields';
+import { SelectField, TextField, CheckboxField, CollapseField, SubmitButton } from './fields';
 
 interface Props {
   bankId?: Bank.Id;
@@ -176,12 +176,13 @@ export const BankFormComponent = enhance(props => {
             />
           </List>
           <List>
-            {/* <CheckboxField
-              field='online'
+            <CheckboxField
+              field="online"
               label={messages.online}
-              message={messages.online}
-            /> */}
-            {/* <CollapseField field='online'> */}
+            />
+          </List>
+          <CollapseField field="online">
+            <List>
               <TextField
                 field="username"
                 label={messages.username}
@@ -193,6 +194,8 @@ export const BankFormComponent = enhance(props => {
                 label={messages.password}
                 placeholder={messages.passwordPlaceholder}
               />
+            </List>
+            <List>
               <TextField
                 field="fid"
                 label={messages.fid}
@@ -208,12 +211,12 @@ export const BankFormComponent = enhance(props => {
                 label={messages.ofx}
                 placeholder={messages.ofxPlaceholder}
               />
-            {/* </CollapseField> */}
-            <SubmitButton
-              onPress={formApi.submitForm}
-              title={props.bankId ? messages.save : messages.create}
-            />
-          </List>
+            </List>
+          </CollapseField>
+          <SubmitButton
+            onPress={formApi.submitForm}
+            title={props.bankId ? messages.save : messages.create}
+          />
         </>
       }
     </Form>
