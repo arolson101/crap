@@ -1,10 +1,13 @@
 import * as update from 'immutability-helper';
 import { defineMessages } from 'react-intl';
 import { Record } from '../Record';
+import { Bank } from './Bank';
 
-export interface Account extends Account.Props, Record<Account.Props> {}
+export interface Account extends Account.Props, Record<Account.Id, Account.Props> {}
 
 export namespace Account {
+  export type Id = ':accountId';
+
   // see ofx4js.domain.data.banking.AccountType
   export type Type = 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD';
   export const Type = {
@@ -21,7 +24,7 @@ export namespace Account {
     readonly type: Account.Type;
     readonly number: string;
     readonly visible: boolean;
-    readonly bankid: string;
+    readonly bankid: Bank.Id;
     readonly key: string;
   }
 
@@ -50,5 +53,5 @@ export namespace Account {
 
   export type Query = update.Query<Props>;
   export const table = 'accounts';
-  export const schema = { [table]: Record.genSchema() };
+  export const schema = Record.genSchema();
 }

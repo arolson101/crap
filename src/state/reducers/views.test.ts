@@ -6,8 +6,8 @@ describe('views', () => {
   test('recordsUpdated', () => {
     const store = createStore(reducer);
     const bankRecords: Bank[] = [
-      {id: 'id1', _base: undefined, _history: undefined, _deleted: 0, name: '1st bank'},
-      {id: 'id2', _base: undefined, _history: undefined, _deleted: 0, name: '2nd bank'},
+      {id: 'id1' as Bank.Id, _base: undefined, _history: undefined, _deleted: 0, name: '1st bank', accounts: []},
+      {id: 'id2' as Bank.Id, _base: undefined, _history: undefined, _deleted: 0, name: '2nd bank', accounts: []},
     ];
     store.dispatch(actions.recordsUpdated('banks', bankRecords));
     const views = store.getState();
@@ -21,8 +21,8 @@ describe('views', () => {
 
   test('recordsDeleted', () => {
     const bankRecords: Bank[] = [
-      {id: 'id1', _base: undefined, _history: undefined, _deleted: 0, name: '1st bank'},
-      {id: 'id2', _base: undefined, _history: undefined, _deleted: 0, name: '2nd bank'},
+      {id: 'id1' as Bank.Id, _base: undefined, _history: undefined, _deleted: 0, name: '1st bank', accounts: []},
+      {id: 'id2' as Bank.Id, _base: undefined, _history: undefined, _deleted: 0, name: '2nd bank', accounts: []},
     ];
     const store = createStore(reducer, {
       banks: {
@@ -41,8 +41,8 @@ describe('views', () => {
 
   test('viewsSelectors', () => {
     const bankRecords: Bank[] = [
-      {id: 'id1', _base: undefined, _history: undefined, _deleted: 0, name: '1st bank'},
-      {id: 'id2', _base: undefined, _history: undefined, _deleted: 0, name: '2nd bank'},
+      {id: 'id1' as Bank.Id, _base: undefined, _history: undefined, _deleted: 0, name: '1st bank', accounts: []},
+      {id: 'id2' as Bank.Id, _base: undefined, _history: undefined, _deleted: 0, name: '2nd bank', accounts: []},
     ];
     const store = createStore(reducer, {
       banks: {

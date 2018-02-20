@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { actions, RootAction, AppDatabase } from '../';
+import { actions, RootAction, AppDatabase, Bank } from '../';
 import { ThunkDependencies } from './';
 
 describe('bankThunks', () => {
@@ -28,8 +28,8 @@ describe('bankThunks', () => {
     expect(banks).toHaveLength(0);
 
     // create
-    await store.dispatch(actions.bankCreate({name: '1st bank'}));
-    await store.dispatch(actions.bankCreate({name: '2nd bank'}));
+    await store.dispatch(actions.bankCreate({name: '1st bank' as Bank.Id, accounts: []}));
+    await store.dispatch(actions.bankCreate({name: '2nd bank' as Bank.Id, accounts: []}));
 
     banks = await allBanks();
     expect(banks).toHaveLength(2);
