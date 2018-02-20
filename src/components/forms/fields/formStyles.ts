@@ -16,7 +16,6 @@ export const formStyles = StyleSheet.create({
     margin: 20,
   },
   wrapperStyle: {
-    height: 42
   },
   button: {
     flex: 1,

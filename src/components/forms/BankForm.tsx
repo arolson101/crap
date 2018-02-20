@@ -5,7 +5,7 @@ import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { RootState, actions, selectors, Bank, FI } from '../../state';
-import { SelectField, TextField, CheckboxField, CollapseField, SubmitButton } from './fields';
+import { SelectField, TextField, MultilineTextField, CheckboxField, CollapseField, SubmitButton } from './fields';
 
 interface Props {
   bank?: Bank;
@@ -164,23 +164,21 @@ export const BankFormComponent = enhance(props => {
               label={messages.name}
               placeholder={messages.namePlaceholder}
             />
-            <TextField /*UrlField*/
-              field="web"
-              // favicoName='favicon'
-              label={messages.web}
-              placeholder={messages.webPlaceholder}
-            />
-            <TextField
+            <MultilineTextField
               field="address"
               rows={4}
-              label={messages.address}
-              placeholder={messages.addressPlaceholder}
+              placeholder={messages.address}
             />
-            <TextField
+            <MultilineTextField /*UrlField*/
+              field="web"
+              // favicoName='favicon'
+              placeholder={messages.web}
+              rows={1}
+            />
+            <MultilineTextField
               field="notes"
               rows={4}
-              label={messages.notes}
-              placeholder={messages.notesPlaceholder}
+              placeholder={messages.notes}
             />
           </List>
           <List>
@@ -324,29 +322,17 @@ const messages = defineMessages({
     id: 'BankForm.namePlaceholder',
     defaultMessage: 'Bank Name'
   },
-  web: {
-    id: 'BankForm.web',
-    defaultMessage: 'Website'
-  },
-  webPlaceholder: {
-    id: 'BankForm.webPlaceholder',
-    defaultMessage: 'www.mybank.com'
-  },
   address: {
     id: 'BankForm.address',
     defaultMessage: 'Address'
   },
-  addressPlaceholder: {
-    id: 'BankForm.addressPlaceholder',
-    defaultMessage: '123 Main St.'
+  web: {
+    id: 'BankForm.web',
+    defaultMessage: 'URL'
   },
   notes: {
     id: 'BankForm.notes',
     defaultMessage: 'Notes'
-  },
-  notesPlaceholder: {
-    id: 'BankForm.notesPlaceholder',
-    defaultMessage: 'Enter any notes'
   },
   online: {
     id: 'BankForm.online',
