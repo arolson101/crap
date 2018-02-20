@@ -4,6 +4,7 @@ import { createAction } from 'typesafe-actions';
 import { AppDatabase, TableName } from './AppDatabase';
 import { Record } from './Record';
 import { thunks } from './thunks';
+import { FI } from './reducers/fi';
 
 const actionCreators = {
   ping: createAction('ping/PING'),
@@ -27,6 +28,11 @@ const actionCreators = {
   recordsDeleted: createAction('views/RECORDS_DELETED', (table: TableName, ids: string[]) => ({
     type: 'views/RECORDS_DELETED', table, ids
   })),
+
+  setFi: createAction('fi/SET', (fi: FI[]) => ({
+    type: 'fi/SET', fi
+  })),
+
 };
 
 export const paths = {

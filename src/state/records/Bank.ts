@@ -8,8 +8,6 @@ export namespace Bank {
   export type Id = ':bankId';
 
   export interface Props {
-    readonly fi?: string;
-
     readonly name: string;
     readonly web?: string;
     readonly address?: string;

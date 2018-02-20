@@ -101,6 +101,7 @@
     "expo": "^25.0.0",
     "exponent": "^14.0.0",
     "fake-indexeddb": "^2.0.3",
+    "filist": "^1.0.3",
     "history": "^4.7.2",
     "immutability-helper": "^2.6.4",
     "lodash-es": "^4.17.5",

@@ -17,6 +17,7 @@ interface Props extends FieldProps {
   label: FormattedMessage.MessageDescriptor;
   items: SelectField.Item[];
   leftIcon?: IconObject;
+  onValueChange?: (value: string | number) => any;
 }
 
 type EnhancedProps = Props & FormFieldProps & InjectedIntlProps;
@@ -27,7 +28,7 @@ const enhance = compose<EnhancedProps, Props>(
 );
 
 export const SelectField = enhance(
-  ({ fieldApi, leftIcon, label, items, intl: { formatMessage } }) => (
+  ({ fieldApi, leftIcon, label, items, onValueChange, intl: { formatMessage } }) => (
     <ListItem
       wrapperStyle={formStyles.wrapperStyle}
       leftIcon={leftIcon}
@@ -36,7 +37,12 @@ export const SelectField = enhance(
         <Picker
           style={formStyles.picker}
           itemStyle={formStyles.pickerItem}
-          onValueChange={fieldApi.setValue}
+          onValueChange={(value) => {
+            fieldApi.setValue(value);
+            if (onValueChange) {
+              onValueChange(value);
+            }
+          }}
           selectedValue={fieldApi.getValue()}
         >
           {items.map(item =>

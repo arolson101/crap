@@ -4,19 +4,23 @@ import { FormattedMessage, defineMessages, injectIntl, InjectedIntlProps } from 
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { RootState, actions, selectors, Bank } from '../../state';
+import { RootState, actions, selectors, Bank, FI } from '../../state';
 import { SelectField, TextField, CheckboxField, CollapseField, SubmitButton } from './fields';
 
 interface Props {
-  bankId?: Bank.Id;
-  initialValues?: Partial<FormValues>;
+  bank?: Bank;
+}
+
+interface ComponentProps extends Props {
+  filist: FI[];
+  bank?: Bank;
   banks: Bank[];
   bankCreate: (props: Bank.Props) => any;
   bankUpdate: (bankId: Bank.Id, q: Bank.Query) => any;
 }
 
 interface FormValues {
-  fi: string;
+  fi: number;
 
   name: string;
   web: string;
@@ -34,20 +38,20 @@ interface FormValues {
   password: string;
 }
 
-type EnhancedProps = InjectedIntlProps & Props;
+type EnhancedProps = InjectedIntlProps & ComponentProps;
 
-const dummyFIs = ['bank 1', 'bank 2'];
-
-const enhance = compose<EnhancedProps, Props>(
+const enhance = compose<EnhancedProps, ComponentProps>(
   injectIntl,
 );
 
 export const BankFormComponent = enhance(props => {
   const { intl: { formatMessage } } = props;
+  const defaultFi = props.bank ? props.filist.findIndex(fi => fi.name === props.bank!.name) : 0;
+
   return (
     <Form
       defaultValues={{
-        fi: '',
+        fi: defaultFi,
 
         name: '',
         web: '',
@@ -63,11 +67,9 @@ export const BankFormComponent = enhance(props => {
         username: '',
         password: '',
 
-        ...props.initialValues,
+        ...props.bank,
       } as FormValues}
-      preValidate={({ fi, name, web, address, notes, fid, org, ofx, username, ...rest }: FormValues) => ({
-        fi: fi.trim(),
-
+      preValidate={({ name, web, address, notes, fid, org, ofx, username, ...rest }: FormValues) => ({
         name: name.trim(),
         web: web.trim(),
         address: address.trim(),
@@ -86,9 +88,9 @@ export const BankFormComponent = enhance(props => {
           : undefined,
       })}
       onSubmit={(values: FormValues) => {
-        if (props.bankId) {
+        if (props.bank) {
           const propIfChanged = (key: keyof FormValues) => {
-            if (props.initialValues && props.initialValues[key] !== values[key]) {
+            if (props.bank && props.bank[key] !== values[key]) {
               return { [key]: { $set: values[key] } };
             } else {
               return {};
@@ -96,8 +98,6 @@ export const BankFormComponent = enhance(props => {
           };
 
           const q: Bank.Query = {
-            ...propIfChanged('fi'),
-
             ...propIfChanged('name'),
             ...propIfChanged('web'),
             ...propIfChanged('address'),
@@ -113,11 +113,9 @@ export const BankFormComponent = enhance(props => {
             ...propIfChanged('password'),
           };
 
-          return props.bankUpdate(props.bankId, q);
+          return props.bankUpdate(props.bank.id, q);
         } else {
           const bank: Bank.Props = {
-            fi: values.fi,
-
             name: values.name,
             web: values.web,
             address: values.address,
@@ -145,10 +143,20 @@ export const BankFormComponent = enhance(props => {
           <List>
             <SelectField
               field="fi"
-              items={dummyFIs.map(fi => ({ label: fi, value: fi }))}
+              items={props.filist.map(fi => ({ label: fi.name, value: fi.id }))}
               label={messages.fi}
+              onValueChange={(value: number) => {
+                const fi = props.filist[value];
+                formApi.setValue('name', fi.name || '');
+                formApi.setValue('web', fi.profile.siteURL || '');
+                formApi.setValue('favicon', '');
+                formApi.setValue('address', formatAddress(fi) || '');
+                formApi.setValue('fid', fi.fid || '');
+                formApi.setValue('org', fi.org || '');
+                formApi.setValue('ofx', fi.ofx || '');
+              }}
             />
-            <FormattedMessage {...messages.fiHelp}/>
+            <FormattedMessage {...messages.fiHelp} />
           </List>
           <List>
             <TextField
@@ -215,7 +223,7 @@ export const BankFormComponent = enhance(props => {
           </CollapseField>
           <SubmitButton
             onPress={formApi.submitForm}
-            title={props.bankId ? messages.save : messages.create}
+            title={props.bank ? messages.save : messages.create}
           />
         </>
       }
@@ -225,6 +233,7 @@ export const BankFormComponent = enhance(props => {
 
 export const BankForm = connect(
   (state: RootState) => ({
+    filist: selectors.getFIs(state),
     banks: selectors.getBanks(state),
   }),
   {
@@ -232,6 +241,55 @@ export const BankForm = connect(
     bankUpdate: actions.bankUpdate,
   }
 )(BankFormComponent);
+
+const formatAddress = (fi: FI): string => {
+  let address = '';
+  if (fi && fi.profile) {
+    if (fi.profile.address1) {
+      address += fi.profile.address1;
+    }
+
+    if (fi.profile.address2) {
+      if (address) { address += '\n'; }
+      address += fi.profile.address2;
+    }
+
+    if (fi.profile.address3) {
+      if (address) { address += '\n'; }
+      address += fi.profile.address3;
+    }
+
+    if (fi.profile.city) {
+      if (address) { address += '\n'; }
+      address += fi.profile.city;
+    }
+
+    if (fi.profile.state) {
+      if (fi.profile.city) {
+        address += ', ';
+      } else {
+        address += '\n';
+      }
+      address += fi.profile.state;
+    }
+
+    if (fi.profile.zip) {
+      if (fi.profile.city || fi.profile.state) {
+        address += ' ';
+      } else {
+        address += '\n';
+      }
+      address += fi.profile.zip;
+    }
+
+    if (fi.profile.country) {
+      if (address) { address += '\n'; }
+      address += fi.profile.country;
+    }
+  }
+
+  return address;
+};
 
 const messages = defineMessages({
   save: {

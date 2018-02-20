@@ -1,13 +1,34 @@
+import { FinancialInstitution } from 'filist';
 import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BankFormComponent } from '../src/components/forms/BankForm';
 import { Bank } from '../src/state';
+import { finalizeFilist } from '../src/state/thunks/fiThunks';
+
+const filist = require<FinancialInstitution[]>('filist/filist.json');
 
 const props = {
+  filist: finalizeFilist(filist),
   banks: [] as Bank[],
   bankCreate: action('bankCreate'),
   bankUpdate: action('bankUpdate'),
+};
+
+const bank: Bank = {
+  id: '123' as Bank.Id,
+  _deleted: 0,
+  name: '1st Source Bank',
+  web: 'http://www.1stbank.com',
+  address: '123 Anywhere St\nAnytown, USA',
+  notes: 'member since 1999',
+  online: true,
+  fid: '54321',
+  org: '1ST',
+  ofx: 'https://ofx.1stbank.com',
+  username: 'anyone',
+  password: 'secret!',
+  accounts: [],
 };
 
 storiesOf('Forms/Bank', module)
@@ -16,11 +37,18 @@ storiesOf('Forms/Bank', module)
       {...props}
     />
   ))
-  // .add('Open (single choice)', () => (
-  //   <BankFormComponent
-  //     {...props}
-  //   />
-  // ))
+  .add('Edit (online)', () => (
+    <BankFormComponent
+      {...props}
+      bank={bank}
+    />
+  ))
+  .add('Edit (offline)', () => (
+    <BankFormComponent
+      {...props}
+      bank={{...bank, online: false}}
+    />
+  ))
   // .add('Open (multiple choices)', () => (
   //   <BankFormComponent
   //     {...props}
