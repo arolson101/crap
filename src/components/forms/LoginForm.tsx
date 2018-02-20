@@ -84,8 +84,8 @@ const FormCreate: React.SFC<EnhancedProps> = (props) => {
         password: '',
         passwordConfirm: '',
         ...props.initialValues,
-      }}
-      preValidate={({ dbName, ...rest }: FormValues) => ({
+      } as FormValues}
+      preValidate={({ dbName, ...rest }: FormValues): FormValues => ({
         dbName: dbName.trim(),
         ...rest,
       })}

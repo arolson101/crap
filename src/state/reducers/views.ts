@@ -22,6 +22,7 @@ const defaultState: State = ({
 
 export const viewsSelectors = {
   getBank: (state: State, id: string) => state.banks[id],
+  getBanks: (state: State) => Object.values(state.banks),
 };
 
 const buildDictionary = <T extends Record<any>>(records: T[]): Dictionary<T> => {

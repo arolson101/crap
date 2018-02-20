@@ -8,7 +8,7 @@ interface Params {
 
 interface Props extends RouteComponentProps<Params> {}
 
-export const Bank: React.SFC<Props> = (props) => {
+export const BankPage: React.SFC<Props> = (props) => {
   return (
     <View>
       <Text>bank id {props.match.params.bankId}</Text>

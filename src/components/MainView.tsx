@@ -8,11 +8,11 @@ export const MainView: React.SFC = (props) => {
   return (
     <View>
       <Switch>
-        <Route exact path={paths.home} component={Pages.Home}/>
-        <Route path={paths.budgets} component={Pages.Budgets}/>
-        <Route path={paths.accounts} component={Pages.Accounts}/>
-        <Route path={paths.bank} component={Pages.Bank}/>
-        <Route path={paths.account} component={Pages.Account}/>
+        <Route exact path={paths.home} component={Pages.HomePage}/>
+        <Route path={paths.budgets} component={Pages.BudgetsPage}/>
+        <Route path={paths.accounts} component={Pages.AccountsPage}/>
+        <Route path={paths.bank} component={Pages.BankPage}/>
+        <Route path={paths.account} component={Pages.AccountPage}/>
         <Redirect to="/"/>
       </Switch>
     </View>

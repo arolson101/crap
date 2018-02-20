@@ -9,6 +9,7 @@ export const selectors = {
   getDbs: (state: RootState) => dbSelectors.getDbs(state.db),
   getDbOpenError: (state: RootState) => dbSelectors.getDbOpenError(state.db),
   getBank: (state: RootState, id: string) => viewsSelectors.getBank(state.views, id),
+  getBanks: (state: RootState) => viewsSelectors.getBanks(state.views),
 };
 
 export interface RootState {

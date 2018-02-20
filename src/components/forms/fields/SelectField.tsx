@@ -3,6 +3,7 @@ import { FormField, FieldProps, FormFieldProps } from 'react-form';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { Picker } from 'react-native';
 import { ListItem, IconObject } from 'react-native-elements';
+import { compose } from 'recompose';
 import { formStyles } from './formStyles';
 
 export namespace SelectField {
@@ -18,8 +19,15 @@ interface Props extends FieldProps {
   leftIcon?: IconObject;
 }
 
-export const SelectField: React.ComponentType<Props> = FormField(injectIntl(
-  ({ fieldApi, leftIcon, label, items, intl: { formatMessage } }: Props & FormFieldProps & InjectedIntlProps) => (
+type EnhancedProps = Props & FormFieldProps & InjectedIntlProps;
+
+const enhance = compose<EnhancedProps, Props>(
+  FormField,
+  injectIntl,
+);
+
+export const SelectField = enhance(
+  ({ fieldApi, leftIcon, label, items, intl: { formatMessage } }) => (
     <ListItem
       wrapperStyle={formStyles.wrapperStyle}
       leftIcon={leftIcon}
@@ -45,4 +53,4 @@ export const SelectField: React.ComponentType<Props> = FormField(injectIntl(
       hideChevron
     />
   )
-));
+);

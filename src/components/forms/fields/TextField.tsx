@@ -9,15 +9,17 @@ interface Props extends FieldProps {
   placeholder: FormattedMessage.MessageDescriptor;
   secure?: boolean;
   leftIcon?: IconObject;
+  rows?: number;
 }
 
 export const TextField: React.ComponentType<Props> = FormField(injectIntl(
-  ({ fieldApi, leftIcon, label, placeholder, secure, intl }: Props & FormFieldProps & InjectedIntlProps) => (
+  ({ fieldApi, leftIcon, label, placeholder, secure, rows, intl }: Props & FormFieldProps & InjectedIntlProps) => (
     <ListItem
       wrapperStyle={formStyles.wrapperStyle}
       leftIcon={leftIcon}
       title={intl.formatMessage(label)}
       textInput
+      textInputMultiline={(rows ? rows > 0 : undefined)}
       textInputPlaceholder={intl.formatMessage(placeholder)}
       textInputValue={fieldApi.getValue()}
       textInputOnChangeText={fieldApi.setValue}

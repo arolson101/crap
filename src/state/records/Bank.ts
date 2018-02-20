@@ -22,10 +22,8 @@ export namespace Bank {
     readonly org?: string;
     readonly ofx?: string;
 
-    readonly login?: {
-      readonly username: string
-      readonly password: string
-    };
+    readonly username?: string;
+    readonly password?: string;
 
     readonly accounts: Account.Id[];
   }
