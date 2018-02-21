@@ -28,7 +28,8 @@ describe('views', () => {
       banks: {
         [bankRecords[0].id]: bankRecords[0],
         [bankRecords[1].id]: bankRecords[1],
-      }
+      },
+      accounts: {}
     });
     store.dispatch(actions.recordsDeleted('banks', [bankRecords[0].id]));
     const views = store.getState();
@@ -48,7 +49,8 @@ describe('views', () => {
       banks: {
         [bankRecords[0].id]: bankRecords[0],
         [bankRecords[1].id]: bankRecords[1],
-      }
+      },
+      accounts: {}
     });
     const bank = selectors.getBank(store.getState()!, bankRecords[1].id);
     expect(bank).toBe(bankRecords[1]);

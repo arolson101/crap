@@ -3,7 +3,7 @@ import merge from 'lodash-es/merge';
 import omit from 'lodash-es/omit';
 import { getType } from 'typesafe-actions';
 import { actions, RootAction } from '../actions';
-import { Bank } from '../records';
+import { Bank, Account } from '../records';
 import { Record } from '../Record';
 
 export { Bank };
@@ -14,15 +14,19 @@ export interface Dictionary<T> {
 
 export type State = {
   readonly banks: Dictionary<Bank>;
+  readonly accounts: Dictionary<Account>;
 };
 
 const defaultState: State = ({
   banks: {},
+  accounts: {},
 });
 
 export const viewsSelectors = {
-  getBank: (state: State, id: string) => state.banks[id],
+  getBank: (state: State, bankId: Bank.Id) => state.banks[bankId],
   getBanks: (state: State) => Object.values(state.banks),
+  getAccounts: (state: State, bankId: Bank.Id) =>
+    state.banks[bankId].accounts.map(accountId => state.accounts[accountId]),
 };
 
 const buildDictionary = <T extends Record<any>>(records: T[]): Dictionary<T> => {
