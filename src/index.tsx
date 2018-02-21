@@ -23,8 +23,7 @@ const dependencies = {
 const store = configureStore(dependencies, [historyMiddleware]);
 
 const Root = () => (
-  <>
-    <FontIcons/>
+  <FontIcons>
     <AppContainer>
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -32,7 +31,7 @@ const Root = () => (
         </ConnectedRouter>
       </Provider>
     </AppContainer>
-  </>
+  </FontIcons>
 );
 
 export default Root;
