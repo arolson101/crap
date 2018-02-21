@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import * as shortid from 'shortid';
 import { App } from './components/App';
-import { FontIcons } from './components/FontIcons';
+import { LoadFonts } from './components/LoadFonts';
 import { createHistory } from './createHistory';
 import { configureStore } from './state';
 
@@ -23,7 +23,7 @@ const dependencies = {
 const store = configureStore(dependencies, [historyMiddleware]);
 
 const Root = () => (
-  <FontIcons>
+  <LoadFonts>
     <AppContainer>
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -31,7 +31,7 @@ const Root = () => (
         </ConnectedRouter>
       </Provider>
     </AppContainer>
-  </FontIcons>
+  </LoadFonts>
 );
 
 export default Root;

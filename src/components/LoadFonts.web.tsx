@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Platform } from 'react-native';
 import { Helmet } from 'react-helmet';
 
-export const FontIcons: React.SFC = ({children}) => (
+export const LoadFonts: React.SFC = ({children}) => (
   <>
     {Platform.OS === 'web' &&
       <Helmet>

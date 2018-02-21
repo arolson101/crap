@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Font } from 'expo';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export class FontIcons extends React.Component {
+export class LoadFonts extends React.Component {
   state = {
     fontLoaded: false
   };
