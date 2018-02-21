@@ -5,7 +5,7 @@ import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { RootState, actions, selectors, Bank, Account } from '../../state';
-import { /*SelectField,*/ TextField, SubmitButton } from './fields';
+import { SelectField, TextField, SubmitButton } from './fields';
 
 interface Props {
   edit?: Account;
@@ -94,14 +94,14 @@ export const AccountFormComponent = enhance(props => {
               // addonBefore={<ColorAddon name='color'/>}
               // autoFocus
             />
-            {/* <SelectField
-              field='type'
-              options={typeOptions}
-              clearable={false}
-              optionRenderer={accountTypeRenderer}
-              valueRenderer={accountTypeRenderer}
+            <SelectField
+              field="type"
+              items={Object.keys(Account.Type).map((acct: Account.Type): SelectField.Item => ({
+                value: acct.toString(),
+                label: formatMessage(Account.messages[acct])
+              }))}
               label={messages.type}
-            /> */}
+            />
             <TextField
               field="number"
               label={messages.number}
