@@ -85,10 +85,6 @@ const FormCreate: React.SFC<EnhancedProps> = (props) => {
         passwordConfirm: '',
         ...props.initialValues,
       } as FormValues}
-      preValidate={({ dbName, ...rest }: FormValues): FormValues => ({
-        dbName: dbName.trim(),
-        ...rest,
-      })}
       validateError={(values: FormValues) => ({
         dbName: !values.dbName.trim() ? formatMessage(messages.valueEmpty)
           : props.dbs.includes(values.dbName.trim()) ? formatMessage(messages.dbExists)
@@ -142,10 +138,6 @@ const FormOpen: React.SFC<EnhancedProps> = (props) => {
         password: '',
         ...props.initialValues,
       }}
-      preValidate={({ dbName, ...rest }: FormValues) => ({
-        dbName: dbName.trim(),
-        ...rest,
-      })}
       validateError={(values: FormValues) => ({
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined,

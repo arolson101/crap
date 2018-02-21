@@ -1,4 +1,4 @@
-import * as update from 'immutability-helper';
+import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
 import { Category } from './Category';
 
@@ -13,7 +13,7 @@ export namespace Budget {
     readonly sortOrder: number;
   }
 
-  export type Query = update.Query<Props>;
+  export type Query = iupdate.Query<Props>;
   export const table = 'budgets';
   export const schema = Record.genSchema('*categories');
 }

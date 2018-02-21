@@ -64,7 +64,7 @@ describe('bankThunks', () => {
 
     // delete
     time = 300;
-    await store.dispatch(actions.bankDelete(banks[0].id));
+    await store.dispatch(actions.bankDelete(banks[0]));
     banks = await allBanks();
     expect(banks).toHaveLength(1);
     expect(banks[0]).toHaveProperty('name', '2nd bank');

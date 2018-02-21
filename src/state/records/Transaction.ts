@@ -1,4 +1,4 @@
-import * as update from 'immutability-helper';
+import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
 import { Account } from './Account';
 
@@ -22,7 +22,7 @@ export namespace Transaction {
     split: Split;
   }
 
-  export type Query = update.Query<Props>;
+  export type Query = iupdate.Query<Props>;
   export const table = 'transactions';
   export const schema = Record.genSchema('account', 'time');
 }

@@ -40,13 +40,13 @@ storiesOf('Forms/Bank', module)
   .add('Edit (online)', () => (
     <BankFormComponent
       {...props}
-      bank={bank}
+      edit={bank}
     />
   ))
   .add('Edit (offline)', () => (
     <BankFormComponent
       {...props}
-      bank={{...bank, online: false}}
+      edit={{...bank, online: false}}
     />
   ))
   // .add('Open (multiple choices)', () => (

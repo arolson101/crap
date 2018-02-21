@@ -1,8 +1,9 @@
-import * as update from 'immutability-helper';
+import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
 import { Account } from './Account';
+import { DbChange } from '../../state/thunks/dbThunks';
 
-export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> {}
+export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> { }
 
 export namespace Bank {
   export type Id = ':bankId';
@@ -26,7 +27,45 @@ export namespace Bank {
     readonly accounts: Account.Id[];
   }
 
-  export type Query = update.Query<Props>;
+  export type Query = iupdate.Query<Props>;
   export const table = 'banks';
   export const schema = Record.genSchema('*accounts');
+
+  export namespace change {
+    export const add = (t: number, bank: Bank): DbChange => ({
+      table,
+      t,
+      adds: [bank]
+    });
+
+    export const edit = (t: number, id: Bank.Id, q: Query): DbChange => ({
+      table,
+      t,
+      edits: [{ id, q }]
+    });
+
+    export const remove = (t: number, id: Bank.Id): DbChange => ({
+      table,
+      t,
+      deletes: [id]
+    });
+
+    export const addAccount = (t: number, id: Bank.Id, accountId: Account.Id): DbChange => ({
+      table,
+      t,
+      edits: [{
+        id,
+        q: { accounts: { $push: [accountId] } }
+      }]
+    });
+
+    export const removeAccount = (t: number, id: Bank.Id, accountId: Account.Id): DbChange => ({
+      table,
+      t,
+      edits: [{
+        id,
+        q: { accounts: { $exclude: [accountId] } }
+      }]
+    });
+  }
 }

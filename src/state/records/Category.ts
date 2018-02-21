@@ -1,4 +1,4 @@
-import * as update from 'immutability-helper';
+import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
 
 export interface Category extends Category.Props, Record<Category.Id, Category.Props> {}
@@ -11,7 +11,7 @@ export namespace Category {
     amount: number;
   }
 
-  export type Query = update.Query<Props>;
+  export type Query = iupdate.Query<Props>;
   export const table = 'categories';
   export const schema = Record.genSchema();
 }

@@ -1,4 +1,4 @@
-import * as update from 'immutability-helper';
+import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
 import { Account } from './Account';
 import { Category } from './Category';
@@ -21,7 +21,7 @@ export namespace Bill {
     readonly showAdvanced?: boolean;
   }
 
-  export type Query = update.Query<Props>;
+  export type Query = iupdate.Query<Props>;
   export const table = 'bills';
   export const schema = Record.genSchema('account', 'category');
 }

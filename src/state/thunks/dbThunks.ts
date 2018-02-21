@@ -1,16 +1,25 @@
-import * as update from 'immutability-helper';
 import Dexie from 'dexie';
 import uniq from 'lodash-es/uniq';
+import { iupdate } from '../../iupdate';
 import { actions, selectors, AppDatabase, Record, updateRecord, deleteRecord, TableName } from '../index';
 import { RootThunk } from './';
+
+export interface DbRecordEdit {
+  id: string;
+  q: iupdate.Query<{}>;
+}
 
 export interface DbChange {
   table: TableName;
   t: number;
   adds?: Record<any>[];
   deletes?: string[];
-  edits?: Array<{ id: string, q: update.Query<{}> }>;
+  edits?: Array<DbRecordEdit>;
 }
+
+// update.extend('$erase', function(tax, original) {
+//   return original + (tax * original);
+// });
 
 export default {
   dbInit: (): RootThunk =>

@@ -1,5 +1,6 @@
-import * as update from 'immutability-helper';
 import { defineMessages } from 'react-intl';
+import { iupdate } from '../../iupdate';
+import { DbChange } from '../../state/thunks/dbThunks';
 import { Record } from '../Record';
 import { Bank } from './Bank';
 
@@ -24,7 +25,7 @@ export namespace Account {
     readonly type: Account.Type;
     readonly number: string;
     readonly visible: boolean;
-    readonly bankid: Bank.Id;
+    readonly bankId: Bank.Id;
     readonly key: string;
   }
 
@@ -51,7 +52,27 @@ export namespace Account {
     }
   });
 
-  export type Query = update.Query<Props>;
+  export type Query = iupdate.Query<Props>;
   export const table = 'accounts';
   export const schema = Record.genSchema();
+
+  export namespace change {
+    export const add = (t: number, account: Account): DbChange => ({
+      table,
+      t,
+      adds: [account]
+    });
+
+    export const edit = (t: number, id: Account.Id, q: Query): DbChange => ({
+      table,
+      t,
+      edits: [{ id, q }]
+    });
+
+    export const remove = (t: number, id: Account.Id): DbChange => ({
+      table,
+      t,
+      deletes: [id]
+    });
+  }
 }

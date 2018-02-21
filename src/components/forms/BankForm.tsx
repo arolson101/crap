@@ -8,12 +8,8 @@ import { RootState, actions, selectors, Bank, FI } from '../../state';
 import { SelectField, TextField, MultilineTextField, CheckboxField, CollapseField, SubmitButton } from './fields';
 
 interface Props {
-  bank?: Bank;
-}
-
-interface ComponentProps extends Props {
   filist: FI[];
-  bank?: Bank;
+  edit?: Bank;
   banks: Bank[];
   bankCreate: (props: Bank.Props) => any;
   bankUpdate: (bankId: Bank.Id, q: Bank.Query) => any;
@@ -38,15 +34,15 @@ interface FormValues {
   password: string;
 }
 
-type EnhancedProps = InjectedIntlProps & ComponentProps;
+type EnhancedProps = InjectedIntlProps & Props;
 
-const enhance = compose<EnhancedProps, ComponentProps>(
+const enhance = compose<EnhancedProps, Props>(
   injectIntl,
 );
 
 export const BankFormComponent = enhance(props => {
   const { intl: { formatMessage } } = props;
-  const defaultFi = props.bank ? props.filist.findIndex(fi => fi.name === props.bank!.name) : 0;
+  const defaultFi = props.edit ? props.filist.findIndex(fi => fi.name === props.edit!.name) : 0;
 
   return (
     <Form
@@ -67,68 +63,55 @@ export const BankFormComponent = enhance(props => {
         username: '',
         password: '',
 
-        ...props.bank,
+        ...props.edit,
       } as FormValues}
-      preValidate={({ name, web, address, notes, fid, org, ofx, username, ...rest }: FormValues) => ({
-        name: name.trim(),
-        web: web.trim(),
-        address: address.trim(),
-        notes: notes.trim(),
-
-        fid: fid.trim(),
-        org: org.trim(),
-        ofx: ofx.trim(),
-
-        username: username.trim(),
-
-        ...rest,
-      })}
       validateError={(values: FormValues) => ({
         name: !values.name.trim() ? formatMessage(messages.valueEmpty)
           : undefined,
       })}
       onSubmit={(values: FormValues) => {
-        if (props.bank) {
-          const propIfChanged = (key: keyof FormValues) => {
-            if (props.bank && props.bank[key] !== values[key]) {
-              return { [key]: { $set: values[key] } };
+        if (props.edit) {
+          const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
+            const value = trim ? (values[key] as string).trim() : values[key];
+            if (props.edit && props.edit[key] !== value) {
+              return { [key]: { $set: value } };
             } else {
               return {};
             }
           };
 
           const q: Bank.Query = {
-            ...propIfChanged('name'),
-            ...propIfChanged('web'),
-            ...propIfChanged('address'),
-            ...propIfChanged('notes'),
+            ...propIfChanged('name', true),
+            ...propIfChanged('web', true),
+            ...propIfChanged('address', true),
+            ...propIfChanged('notes', true),
 
             ...propIfChanged('online'),
 
-            ...propIfChanged('fid'),
-            ...propIfChanged('org'),
-            ...propIfChanged('ofx'),
+            ...propIfChanged('fid', true),
+            ...propIfChanged('org', true),
+            ...propIfChanged('ofx', true),
 
-            ...propIfChanged('username'),
+            ...propIfChanged('username', true),
             ...propIfChanged('password'),
           };
 
-          return props.bankUpdate(props.bank.id, q);
+          return props.bankUpdate(props.edit.id, q);
         } else {
           const bank: Bank.Props = {
-            name: values.name,
-            web: values.web,
-            address: values.address,
-            notes: values.notes,
-            favicon: values.favicon,
+            name: values.name.trim(),
+            web: values.web.trim(),
+            address: values.address.trim(),
+            notes: values.notes.trim(),
+            favicon: values.favicon.trim(),
 
             online: values.online,
 
-            fid: values.fid,
-            org: values.org,
-            ofx: values.ofx,
+            fid: values.fid.trim(),
+            org: values.org.trim(),
+            ofx: values.ofx.trim(),
 
-            username: values.username,
+            username: values.username.trim(),
             password: values.password,
 
             accounts: [],
@@ -221,7 +204,7 @@ export const BankFormComponent = enhance(props => {
           </CollapseField>
           <SubmitButton
             onPress={formApi.submitForm}
-            title={props.bank ? messages.save : messages.create}
+            title={props.edit ? messages.save : messages.create}
           />
         </>
       }
@@ -240,53 +223,25 @@ export const BankForm = connect(
   }
 )(BankFormComponent);
 
+const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null);
+
 const formatAddress = (fi: FI): string => {
-  let address = '';
   if (fi && fi.profile) {
-    if (fi.profile.address1) {
-      address += fi.profile.address1;
-    }
+    return [
+      fi.profile.address1,
+      fi.profile.address2,
+      fi.profile.address3,
 
-    if (fi.profile.address2) {
-      if (address) { address += '\n'; }
-      address += fi.profile.address2;
-    }
+      [
+        [fi.profile.city, fi.profile.state].filter(defined).join(', '),
+        fi.profile.zip
+      ].filter(defined).join(' '),
 
-    if (fi.profile.address3) {
-      if (address) { address += '\n'; }
-      address += fi.profile.address3;
-    }
-
-    if (fi.profile.city) {
-      if (address) { address += '\n'; }
-      address += fi.profile.city;
-    }
-
-    if (fi.profile.state) {
-      if (fi.profile.city) {
-        address += ', ';
-      } else {
-        address += '\n';
-      }
-      address += fi.profile.state;
-    }
-
-    if (fi.profile.zip) {
-      if (fi.profile.city || fi.profile.state) {
-        address += ' ';
-      } else {
-        address += '\n';
-      }
-      address += fi.profile.zip;
-    }
-
-    if (fi.profile.country) {
-      if (address) { address += '\n'; }
-      address += fi.profile.country;
-    }
+      fi.profile.country
+    ].filter(defined).join('\n');
+  } else {
+    return '';
   }
-
-  return address;
 };
 
 const messages = defineMessages({
@@ -372,10 +327,10 @@ const messages = defineMessages({
   },
   password: {
     id: 'BankForm.password',
-    defaultMessage: 'Required'
+    defaultMessage: 'Password'
   },
   passwordPlaceholder: {
     id: 'BankForm.passwordPlaceholder',
-    defaultMessage: 'Password'
+    defaultMessage: 'Required'
   },
 });

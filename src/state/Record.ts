@@ -1,5 +1,5 @@
 import { BSON } from 'bson';
-import * as update from 'immutability-helper';
+import { iupdate } from '../iupdate';
 import flow from 'lodash-es/flow';
 import * as zlib from 'zlib';
 
@@ -23,7 +23,7 @@ export const hydrate: <T>(x: CompressedJson<T>) => T = flow(
 
 interface Update<T> {
   readonly t: number;
-  readonly q: update.Query<T>;
+  readonly q: iupdate.Query<T>;
 }
 
 export interface Record<ID, T = {}> {
@@ -48,7 +48,7 @@ export const createRecord = <ID extends string, R extends T & Record<ID, T> & T,
 
 const rebuildObject = <T>(props: T, _base: CompressedJson<T> | undefined, changes: Update<T>[]): T => {
   const base: T = _base ? hydrate(_base) : props;
-  return changes.reduce((current, change) => update(current, change.q), base);
+  return changes.reduce((current, change) => iupdate(current, change.q), base);
 };
 
 export const updateRecord = <ID, R extends T & Record<ID, T>, T>(record: R, change: Update<T>): R => {
@@ -56,7 +56,7 @@ export const updateRecord = <ID, R extends T & Record<ID, T>, T>(record: R, chan
   const prevHistory = _history ? hydrate(_history).a : [];
   const changes = [ ...prevHistory, change ].sort((a, b) => a.t - b.t);
   const isLatest = changes[changes.length - 1] === change;
-  const next = isLatest ? update(props, change.q) : rebuildObject(props, _base, changes);
+  const next = isLatest ? iupdate(props, change.q) : rebuildObject(props, _base, changes);
   return {
     ...next,
     id,

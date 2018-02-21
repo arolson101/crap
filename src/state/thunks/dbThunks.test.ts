@@ -2,6 +2,7 @@ import Dexie from 'dexie';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { getType } from 'typesafe-actions';
+import { iupdate } from '../../iupdate';
 import { actions, AppDatabase } from '../';
 import { ThunkDependencies } from './';
 
@@ -40,5 +41,13 @@ describe('dbThunks', () => {
       expect(acts[i++]).toMatchObject({type: getType(actions.recordsUpdated), table});
     });
     expect(acts[i++]).toHaveProperty('type', getType(actions.dbOpenSuccess));
+  });
+
+  test('$exclude works on arrays', () => {
+    const test = ['a', 'b', 'c', 'c'];
+    expect(iupdate(test, {$exclude: ['b']})).toEqual(['a', 'c', 'c']);
+    expect(iupdate(test, {$exclude: ['a']})).toEqual(['b', 'c', 'c']);
+    expect(iupdate(test, {$exclude: ['c']})).toEqual(['a', 'b']);
+    expect(iupdate(test, {$exclude: ['d']})).toEqual(test);
   });
 });
