@@ -1,3 +1,4 @@
+const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor');
 import { defineMessages } from 'react-intl';
 import { iupdate } from '../../iupdate';
 import { DbChange } from '../../state/thunks/dbThunks';
@@ -50,6 +51,24 @@ export namespace Account {
       defaultMessage: 'Credit Card'
     }
   });
+
+  export const generateColor = (type?: Type): string => {
+    switch (type) {
+      case Type.CHECKING:
+        return randomColor({ hue: 'red', luminosity: 'bright' })
+      case Type.SAVINGS:
+        return randomColor({ hue: 'green', luminosity: 'bright' })
+      case Type.MONEYMRKT:
+        return randomColor({ hue: 'purple', luminosity: 'bright' })
+      case Type.CREDITLINE:
+        return randomColor({ hue: 'blue', luminosity: 'bright' })
+      case Type.CREDITCARD:
+        return randomColor({ hue: 'orange', luminosity: 'bright' })
+
+      default:
+        return randomColor({ luminosity: 'bright' })
+    }
+  };
 
   export type Query = iupdate.Query<Props>;
   export const table = 'accounts';

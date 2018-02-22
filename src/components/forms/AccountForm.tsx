@@ -38,8 +38,8 @@ export const AccountFormComponent = enhance(props => {
     <Form
       defaultValues={{
         name: '',
-        color: '',
         type: Account.Type.CHECKING,
+        color: Account.generateColor(Account.Type.CHECKING),
         number: '',
         visible: true,
         key: '',
@@ -108,6 +108,15 @@ export const AccountFormComponent = enhance(props => {
                 label: formatMessage(Account.messages[acct])
               }))}
               label={messages.type}
+              onValueChange={(type: Account.Type) => {
+                formApi.setValue('color', Account.generateColor(type));
+              }}
+            />
+            <TextField
+              field="color"
+              label={messages.color}
+              placeholder={messages.colorPlaceholder}
+              textColor={(formApi.values as FormValues).color}
             />
             {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
               <TextField
@@ -192,6 +201,14 @@ const messages = defineMessages({
   uniqueNumber: {
     id: 'AccountDialog.uniqueNumber',
     defaultMessage: 'This account number is already used'
+  },
+  color: {
+    id: 'AccountDialog.color',
+    defaultMessage: 'Color'
+  },
+  colorPlaceholder: {
+    id: 'AccountDialog.colorPlaceholder',
+    defaultMessage: 'red'
   },
   bankid: {
     id: 'AccountDialog.bankid',
