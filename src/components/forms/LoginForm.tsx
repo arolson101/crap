@@ -3,15 +3,15 @@ import { Form } from 'react-form';
 import { FormattedMessage, defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { ButtonGroup, List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router';
 import { compose, withState } from 'recompose';
-import { RootState, actions, selectors } from '../../state';
+import { RootState, actions, nav, selectors } from '../../state';
 import { SelectField, TextField, SubmitButton, ErrorMessage, formStyles } from './fields';
 
 interface Props {
   dbs: string[];
   dbOpenError: Error | undefined;
   dbOpen: (dbName: string, password: string) => any;
-  navDbAdvanced: (dbName: string) => any;
   initialValues?: Partial<FormValues>;
 }
 
@@ -31,7 +31,7 @@ interface State {
   setMode: (mode: Mode) => void;
 }
 
-type EnhancedProps = InjectedIntlProps & Props & State;
+type EnhancedProps = RouteComponentProps<any> & InjectedIntlProps & Props & State;
 
 const buttons = [
   { element: () => <FormattedMessage {...messages.open} /> },
@@ -40,6 +40,7 @@ const buttons = [
 
 const enhance = compose<EnhancedProps, Props>(
   injectIntl,
+  withRouter,
   withState('mode', 'setMode', Mode.OpenExisting),
 );
 
@@ -70,7 +71,6 @@ export const LoginForm = connect(
   }),
   {
     dbOpen: actions.dbOpen,
-    navDbAdvanced: actions.navDbAdvanced,
   }
 )(LoginFormComponent);
 
@@ -129,7 +129,7 @@ const FormCreate: React.SFC<EnhancedProps> = (props) => {
 };
 
 const FormOpen: React.SFC<EnhancedProps> = (props) => {
-  const { intl: { formatMessage } } = props;
+  const { history: { push }, intl: { formatMessage } } = props;
 
   return (
     <Form
@@ -162,7 +162,7 @@ const FormOpen: React.SFC<EnhancedProps> = (props) => {
           <ListItem
             wrapperStyle={formStyles.wrapperStyle}
             title={formatMessage(messages.advanced)}
-            onPress={() => props.navDbAdvanced((formApi.values as FormValues).dbName)}
+            onPress={() => push(nav.dbAdvanced((formApi.values as FormValues).dbName))}
           />
           <ErrorMessage error={props.dbOpenError} />
           <SubmitButton

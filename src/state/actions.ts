@@ -1,5 +1,4 @@
 import { getReturnOfExpression } from 'react-redux-typescript';
-import { push } from 'react-router-redux';
 import { createAction } from 'typesafe-actions';
 import { AppDatabase, TableName } from './AppDatabase';
 import { Record } from './Record';
@@ -53,17 +52,8 @@ export const nav = {
   account: (accountId: string) => paths.account.replace(':accountId', accountId),
 };
 
-export const navActions = {
-  navDbAdvanced: (dbName: string) => push(nav.dbAdvanced(dbName)),
-  navHome: () => push(nav.home()),
-  navBudgets: () => push(nav.budgets()),
-  navAccounts: () => push(nav.accounts()),
-  navBank: (bankId: string) => push(nav.bank(bankId)),
-};
-
 export const actions = {
   ...actionCreators,
-  ...navActions,
   ...thunks,
 };
 
