@@ -2,7 +2,6 @@ import { defineMessages } from 'react-intl';
 import { iupdate } from '../../iupdate';
 import { DbChange } from '../../state/thunks/dbThunks';
 import { Record } from '../Record';
-import { Bank } from './Bank';
 
 export interface Account extends Account.Props, Record<Account.Id, Account.Props> {}
 
@@ -25,7 +24,7 @@ export namespace Account {
     readonly type: Account.Type;
     readonly number: string;
     readonly visible: boolean;
-    readonly bankId: Bank.Id;
+    readonly bankid: string;
     readonly key: string;
   }
 

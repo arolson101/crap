@@ -21,6 +21,7 @@ interface FormValues {
   type: Account.Type;
   number: string;
   visible: boolean;
+  bankid: string;
   key: string;
 }
 
@@ -64,6 +65,7 @@ export const AccountFormComponent = enhance(props => {
             ...propIfChanged('color', true),
             ...propIfChanged('type'),
             ...propIfChanged('number', true),
+            ...propIfChanged('bankid', true),
             ...propIfChanged('visible'),
             ...propIfChanged('key', true),
           };
@@ -76,7 +78,7 @@ export const AccountFormComponent = enhance(props => {
             type: values.type,
             number: values.number.trim(),
             visible: values.visible,
-            bankId: props.bank.id,
+            bankid: values.bankid.trim(),
             key: values.key.trim(),
           };
 
@@ -90,9 +92,14 @@ export const AccountFormComponent = enhance(props => {
             <TextField
               field="name"
               label={messages.name}
-              placeholder={messages.name}
+              placeholder={messages.namePlaceholder}
               // addonBefore={<ColorAddon name='color'/>}
               // autoFocus
+            />
+            <TextField
+              field="number"
+              label={messages.number}
+              placeholder={messages.numberPlaceholder}
             />
             <SelectField
               field="type"
@@ -102,23 +109,18 @@ export const AccountFormComponent = enhance(props => {
               }))}
               label={messages.type}
             />
-            <TextField
-              field="number"
-              label={messages.number}
-              placeholder={messages.number}
-            />
             {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
               <TextField
                 field="bankid"
                 label={messages.bankid}
-                placeholder={messages.bankid}
+                placeholder={messages.bankidPlaceholder}
               />
             }
             {(formApi.values.type === Account.Type.CREDITCARD) &&
               <TextField
                 field="key"
                 label={messages.key}
-                placeholder={messages.key}
+                placeholder={messages.keyPlaceholder}
               />
             }
             <SubmitButton
@@ -167,9 +169,17 @@ const messages = defineMessages({
     id: 'AccountDialog.name',
     defaultMessage: 'Name'
   },
+  namePlaceholder: {
+    id: 'AccountDialog.namePlaceholder',
+    defaultMessage: 'My Checking'
+  },
   number: {
     id: 'AccountDialog.number',
     defaultMessage: 'Number'
+  },
+  numberPlaceholder: {
+    id: 'AccountDialog.numberPlaceholder',
+    defaultMessage: '54321'
   },
   type: {
     id: 'AccountDialog.type',
@@ -200,8 +210,16 @@ const messages = defineMessages({
       NLD         Not used (field contents ignored)
       USA         Routing and transit number`
   },
+  bankidPlaceholder: {
+    id: 'AccountDialog.bankidPlaceholder',
+    defaultMessage: '0123456',
+  },
   key: {
     id: 'AccountDialog.key',
-    defaultMessage: 'Account Key (for international accounts)'
-  }
+    defaultMessage: 'Account Key'
+  },
+  keyPlaceholder: {
+    id: 'AccountDialog.keyPlaceholder',
+    defaultMessage: '(for international accounts)'
+  },
 });

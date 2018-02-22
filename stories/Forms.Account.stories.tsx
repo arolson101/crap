@@ -35,7 +35,7 @@ const account: Account = {
   type: Account.Type.CHECKING,
   number: '1234',
   visible: true,
-  bankId: bank.id,
+  bankid: 'asdf',
   key: '',
 };
 

@@ -23,12 +23,12 @@ export default {
       return dispatch(actions.dbChange(changes));
     },
 
-  accountDelete: (account: Account): RootThunk =>
+  accountDelete: (bankId: Bank.Id, accountId: Account.Id): RootThunk =>
     function accountDelete(dispatch, getState, { getTime }) {
       const t = getTime();
       const changes = [
-        Account.change.remove(t, account.id),
-        Bank.change.removeAccount(t, account.bankId, account.id)
+        Account.change.remove(t, accountId),
+        Bank.change.removeAccount(t, bankId, accountId)
       ];
       return dispatch(actions.dbChange(changes));
     },
