@@ -11,13 +11,15 @@ interface Props extends FieldProps {
   leftIcon?: IconObject;
   rows?: number;
   textColor?: string;
+  autoFocus?: boolean;
 }
 
 type EnhancedProps = Props & FormFieldProps & InjectedIntlProps;
 
 export const TextField: React.ComponentType<Props> = FormField(injectIntl(
-  ({ fieldApi, leftIcon, label, textColor, placeholder, secure, rows, intl }: EnhancedProps) => (
+  ({ fieldApi, leftIcon, autoFocus, label, textColor, placeholder, secure, rows, intl }: EnhancedProps) => (
     <ListItem
+      textInputAutoFocus={autoFocus}
       wrapperStyle={formStyles.wrapperStyle}
       leftIcon={leftIcon}
       title={intl.formatMessage(label)}

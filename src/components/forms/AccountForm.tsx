@@ -93,8 +93,7 @@ export const AccountFormComponent = enhance(props => {
               field="name"
               label={messages.name}
               placeholder={messages.namePlaceholder}
-              // addonBefore={<ColorAddon name='color'/>}
-              // autoFocus
+              autoFocus
             />
             <TextField
               field="number"

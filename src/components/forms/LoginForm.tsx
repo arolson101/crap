@@ -104,6 +104,7 @@ const FormCreate: React.SFC<EnhancedProps> = (props) => {
             field="dbName"
             label={messages.dbNameLabel}
             placeholder={messages.dbNamePlaceholder}
+            autoFocus
           />
           <TextField
             secure
@@ -155,6 +156,7 @@ const FormOpen: React.SFC<EnhancedProps> = (props) => {
           />
           <TextField
             secure
+            autoFocus
             field="password"
             label={messages.passwordLabel}
             placeholder={messages.passwordPlaceholder}

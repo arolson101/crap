@@ -16,6 +16,7 @@ export const formStyles = StyleSheet.create({
     margin: 20,
   },
   wrapperStyle: {
+    minHeight: 28,
   },
   button: {
     flex: 1,
