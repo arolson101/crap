@@ -12,6 +12,7 @@ describe('views', () => {
     store.dispatch(actions.recordsUpdated('banks', bankRecords));
     const views = store.getState();
     expect(views).toEqual({
+      accounts: {},
       banks: {
         [bankRecords[0].id]: bankRecords[0],
         [bankRecords[1].id]: bankRecords[1],
@@ -34,6 +35,7 @@ describe('views', () => {
     store.dispatch(actions.recordsDeleted('banks', [bankRecords[0].id]));
     const views = store.getState();
     expect(views).toEqual({
+      accounts: {},
       banks: {
         [bankRecords[1].id]: bankRecords[1],
       }
