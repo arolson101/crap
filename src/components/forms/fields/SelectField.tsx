@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { FormField, FieldProps, FormFieldProps } from 'react-form';
-import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Picker } from 'react-native';
 import { ListItem, IconObject } from 'react-native-elements';
-import { compose } from 'recompose';
+import { ctx } from '../../ctx';
 import { formStyles } from './formStyles';
 
 export namespace SelectField {
@@ -20,19 +20,12 @@ interface Props extends FieldProps {
   onValueChange?: (value: string | number) => any;
 }
 
-type EnhancedProps = Props & FormFieldProps & InjectedIntlProps;
-
-const enhance = compose<EnhancedProps, Props>(
-  FormField,
-  injectIntl,
-);
-
-export const SelectField = enhance(
-  ({ fieldApi, leftIcon, label, items, onValueChange, intl: { formatMessage } }) => (
+const SelectFieldComponent: React.SFC<Props & FormFieldProps> =
+  ({ fieldApi, leftIcon, label, items, onValueChange }, { intl }: ctx.Intl) => (
     <ListItem
       wrapperStyle={formStyles.wrapperStyle}
       leftIcon={leftIcon}
-      title={formatMessage(label)}
+      title={intl.formatMessage(label)}
       label={
         <Picker
           style={formStyles.picker}
@@ -58,5 +51,8 @@ export const SelectField = enhance(
       subtitleStyle={formStyles.errorSubtitle}
       hideChevron
     />
-  )
-);
+  );
+SelectFieldComponent.contextTypes = ctx.intl;
+
+export const SelectField: React.ComponentClass<Props> = FormField(SelectFieldComponent);
+SelectField.displayName = 'SelectField';

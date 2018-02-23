@@ -55,18 +55,18 @@ export namespace Account {
   export const generateColor = (type?: Type): string => {
     switch (type) {
       case Type.CHECKING:
-        return randomColor({ hue: 'red', luminosity: 'bright' })
+        return randomColor({ hue: 'red', luminosity: 'bright' });
       case Type.SAVINGS:
-        return randomColor({ hue: 'green', luminosity: 'bright' })
+        return randomColor({ hue: 'green', luminosity: 'bright' });
       case Type.MONEYMRKT:
-        return randomColor({ hue: 'purple', luminosity: 'bright' })
+        return randomColor({ hue: 'purple', luminosity: 'bright' });
       case Type.CREDITLINE:
-        return randomColor({ hue: 'blue', luminosity: 'bright' })
+        return randomColor({ hue: 'blue', luminosity: 'bright' });
       case Type.CREDITCARD:
-        return randomColor({ hue: 'orange', luminosity: 'bright' })
+        return randomColor({ hue: 'orange', luminosity: 'bright' });
 
       default:
-        return randomColor({ luminosity: 'bright' })
+        return randomColor({ luminosity: 'bright' });
     }
   };
 

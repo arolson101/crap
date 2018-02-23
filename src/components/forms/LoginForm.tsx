@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { Form } from 'react-form';
-import { FormattedMessage, defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { ButtonGroup, List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { compose, withState } from 'recompose';
 import { RootState, actions, nav, selectors } from '../../state';
+import { ctx } from '../ctx';
 import { SelectField, TextField, SubmitButton, ErrorMessage, formStyles } from './fields';
 
 interface Props {
@@ -28,41 +27,38 @@ const enum Mode {
 
 interface State {
   mode: Mode;
-  setMode: (mode: Mode) => void;
 }
-
-type EnhancedProps = RouteComponentProps<any> & InjectedIntlProps & Props & State;
 
 const buttons = [
   { element: () => <FormattedMessage {...messages.open} /> },
   { element: () => <FormattedMessage {...messages.create} /> },
 ];
 
-const enhance = compose<EnhancedProps, Props>(
-  injectIntl,
-  withRouter,
-  withState('mode', 'setMode', Mode.OpenExisting),
-);
+export class LoginFormComponent extends React.PureComponent<Props, State> {
+  state = {
+    mode: Mode.OpenExisting,
+  };
 
-export const LoginFormComponent = enhance(props => {
-  const mode = props.dbs.length ? props.mode : Mode.CreateNew;
-  return (
-    <>
-      <ButtonGroup
-        onPress={selectedIndex => props.setMode(selectedIndex)}
-        buttons={buttons}
-        selectedIndex={mode}
-        selectedIndexes={[mode]}
-        disableSelected
-      />
+  render() {
+    const mode = this.props.dbs.length ? this.state.mode : Mode.CreateNew;
+    return (
+      <>
+        <ButtonGroup
+          onPress={selectedIndex => this.setState({mode: selectedIndex})}
+          buttons={buttons}
+          selectedIndex={mode}
+          selectedIndexes={[mode]}
+          disableSelected
+        />
 
-      {mode === Mode.CreateNew
-        ? <FormCreate {...props} />
-        : <FormOpen {...props} />
-      }
-    </>
-  );
-});
+        {mode === Mode.CreateNew
+          ? <FormCreate {...this.props} />
+          : <FormOpen {...this.props} />
+        }
+      </>
+    );
+  }
+}
 
 export const LoginForm = connect(
   (state: RootState) => ({
@@ -73,9 +69,10 @@ export const LoginForm = connect(
     dbOpen: actions.dbOpen,
   }
 )(LoginFormComponent);
+LoginForm.displayName = 'LoginForm';
 
-const FormCreate: React.SFC<EnhancedProps> = (props) => {
-  const { intl: { formatMessage } } = props;
+const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
+  const { intl: { formatMessage } } = context;
 
   return (
     <Form
@@ -128,9 +125,11 @@ const FormCreate: React.SFC<EnhancedProps> = (props) => {
     </Form>
   );
 };
+FormCreate.contextTypes = ctx.intl;
 
-const FormOpen: React.SFC<EnhancedProps> = (props) => {
-  const { history: { push }, intl: { formatMessage } } = props;
+const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
+  const { intl: { formatMessage } } = context;
+  const { router: { history: { push } } } = context;
 
   return (
     <Form
@@ -176,6 +175,7 @@ const FormOpen: React.SFC<EnhancedProps> = (props) => {
     </Form>
   );
 };
+FormOpen.contextTypes = { ...ctx.intl, ...ctx.router };
 
 const messages = defineMessages({
   dbName: {

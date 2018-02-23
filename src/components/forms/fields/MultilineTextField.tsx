@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { FormField, FieldProps, FormFieldProps } from 'react-form';
-import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { TextInput } from 'react-native';
 import { ListItem, IconObject } from 'react-native-elements';
+import { ctx } from '../../ctx';
 import { formStyles } from './formStyles';
 
 interface Props extends FieldProps {
@@ -11,8 +12,8 @@ interface Props extends FieldProps {
   rows: number;
 }
 
-export const MultilineTextField: React.ComponentType<Props> = FormField(injectIntl(
-  ({ fieldApi, leftIcon, placeholder, rows, intl }: Props & FormFieldProps & InjectedIntlProps) => (
+const MultilineTextFieldComponent: React.SFC<Props & FormFieldProps> =
+  ({ fieldApi, leftIcon, placeholder, rows }, { intl }: ctx.Intl) => (
     <ListItem
       leftIcon={leftIcon}
       title={
@@ -28,5 +29,8 @@ export const MultilineTextField: React.ComponentType<Props> = FormField(injectIn
       subtitleStyle={formStyles.errorSubtitle}
       hideChevron
     />
-  )
-));
+  );
+MultilineTextFieldComponent.contextTypes = ctx.intl;
+
+export const MultilineTextField: React.ComponentClass<Props> = FormField(MultilineTextFieldComponent);
+MultilineTextField.displayName = 'MultilineTextField';

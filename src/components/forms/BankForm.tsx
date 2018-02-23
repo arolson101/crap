@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Form } from 'react-form';
-import { FormattedMessage, defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import { RootState, actions, selectors, Bank, FI } from '../../state';
+import { ctx } from '../ctx';
 import { SelectField, TextField, MultilineTextField, CheckboxField, CollapseField, SubmitButton } from './fields';
 
 interface Props {
@@ -34,14 +34,7 @@ interface FormValues {
   password: string;
 }
 
-type EnhancedProps = InjectedIntlProps & Props;
-
-const enhance = compose<EnhancedProps, Props>(
-  injectIntl,
-);
-
-export const BankFormComponent = enhance(props => {
-  const { intl: { formatMessage } } = props;
+export const BankFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) => {
   const defaultFi = props.edit ? props.filist.findIndex(fi => fi.name === props.edit!.name) : 0;
 
   return (
@@ -66,7 +59,7 @@ export const BankFormComponent = enhance(props => {
         ...props.edit,
       } as FormValues}
       validateError={(values: FormValues) => ({
-        name: !values.name.trim() ? formatMessage(messages.valueEmpty)
+        name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
       onSubmit={(values: FormValues) => {
@@ -210,7 +203,8 @@ export const BankFormComponent = enhance(props => {
       }
     </Form>
   );
-});
+};
+BankFormComponent.contextTypes = ctx.intl;
 
 export const BankForm = connect(
   (state: RootState) => ({

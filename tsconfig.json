@@ -18,6 +18,7 @@
     "strictNullChecks": true,
     "skipLibCheck": true,
     "suppressImplicitAnyIndexErrors": true,
+    "experimentalDecorators": true,
     "noUnusedLocals": true
   },
   "exclude": [

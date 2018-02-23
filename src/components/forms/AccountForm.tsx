@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Form } from 'react-form';
-import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import { RootState, actions, selectors, Bank, Account } from '../../state';
+import { ctx } from '../ctx';
 import { SelectField, TextField, SubmitButton } from './fields';
 
 interface Props {
@@ -25,15 +25,7 @@ interface FormValues {
   key: string;
 }
 
-type EnhancedProps = InjectedIntlProps & Props;
-
-const enhance = compose<EnhancedProps, Props>(
-  injectIntl,
-);
-
-export const AccountFormComponent = enhance(props => {
-  const { intl: { formatMessage } } = props;
-
+export const AccountFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) => {
   return (
     <Form
       defaultValues={{
@@ -46,7 +38,7 @@ export const AccountFormComponent = enhance(props => {
         ...props.edit,
       } as FormValues}
       validateError={(values: FormValues) => ({
-        name: !values.name.trim() ? formatMessage(messages.valueEmpty)
+        name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
       onSubmit={(values: FormValues) => {
@@ -104,7 +96,7 @@ export const AccountFormComponent = enhance(props => {
               field="type"
               items={Object.keys(Account.Type).map((acct: Account.Type): SelectField.Item => ({
                 value: acct.toString(),
-                label: formatMessage(Account.messages[acct])
+                label: intl.formatMessage(Account.messages[acct])
               }))}
               label={messages.type}
               onValueChange={(type: Account.Type) => {
@@ -140,7 +132,8 @@ export const AccountFormComponent = enhance(props => {
       }
     </Form>
   );
-});
+};
+AccountFormComponent.contextTypes = ctx.intl;
 
 export const AccountForm = connect(
   (state: RootState, props: Props) => ({

@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { TouchableHighlight, Platform } from 'react-native';
-import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { Button } from 'react-native-elements';
+import { ctx } from '../../ctx';
 import { formStyles } from './formStyles';
 
 interface Props {
@@ -11,14 +12,14 @@ interface Props {
 
 const TouchableComponent = Platform.OS === 'web' ? TouchableHighlight : undefined;
 
-export const SubmitButton: React.ComponentType<Props> = injectIntl(
-  ({ title, onPress, intl: { formatMessage } }: Props & InjectedIntlProps) => (
+export const SubmitButton: React.ComponentType<Props> =
+  ({ title, onPress }: Props, { intl }: ctx.Intl) => (
     <Button
       TouchableComponent={TouchableComponent}
-      text={formatMessage(title)}
+      text={intl.formatMessage(title)}
       onPress={() => onPress()}
       buttonStyle={formStyles.button}
       containerStyle={formStyles.buttonContainer}
     />
-  )
-);
+  );
+SubmitButton.contextTypes = ctx.intl;

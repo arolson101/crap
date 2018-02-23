@@ -21,6 +21,9 @@ export const dbSelectors = {
   },
   getDbOpenError: (state: State) => {
     return state.openError;
+  },
+  getDbIsOpen: (state: State): boolean => {
+    return !!state.db;
   }
 };
 

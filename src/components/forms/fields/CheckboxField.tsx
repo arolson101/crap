@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { FormField, FieldProps, FormFieldProps } from 'react-form';
-import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { ListItem, IconObject } from 'react-native-elements';
+import { ctx } from '../../ctx';
 import { formStyles } from './formStyles';
 
 interface Props extends FieldProps {
@@ -9,8 +10,8 @@ interface Props extends FieldProps {
   leftIcon?: IconObject;
 }
 
-export const CheckboxField: React.ComponentType<Props> = FormField(injectIntl(
-  ({ fieldApi, leftIcon, label, intl }: Props & FormFieldProps & InjectedIntlProps) => (
+const CheckboxFieldComponent: React.SFC<Props & FormFieldProps> =
+  ({ fieldApi, leftIcon, label }, { intl }: ctx.Intl) => (
     <ListItem
       wrapperStyle={formStyles.wrapperStyle}
       leftIcon={leftIcon}
@@ -22,5 +23,8 @@ export const CheckboxField: React.ComponentType<Props> = FormField(injectIntl(
       subtitleStyle={formStyles.errorSubtitle}
       hideChevron
     />
-  )
-));
+  );
+CheckboxFieldComponent.contextTypes = ctx.intl;
+
+export const CheckboxField: React.ComponentClass<Props> = FormField(CheckboxFieldComponent);
+CheckboxField.displayName = 'CheckboxField';

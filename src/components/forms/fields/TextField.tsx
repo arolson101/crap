@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { FormField, FieldProps, FormFieldProps } from 'react-form';
-import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { ListItem, IconObject } from 'react-native-elements';
+import { ctx } from '../../ctx';
 import { formStyles } from './formStyles';
 
 interface Props extends FieldProps {
@@ -14,10 +15,8 @@ interface Props extends FieldProps {
   autoFocus?: boolean;
 }
 
-type EnhancedProps = Props & FormFieldProps & InjectedIntlProps;
-
-export const TextField: React.ComponentType<Props> = FormField(injectIntl(
-  ({ fieldApi, leftIcon, autoFocus, label, textColor, placeholder, secure, rows, intl }: EnhancedProps) => (
+const TextFieldComponent: React.ComponentType<Props & FormFieldProps> =
+  ({ fieldApi, leftIcon, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => (
     <ListItem
       textInputAutoFocus={autoFocus}
       wrapperStyle={formStyles.wrapperStyle}
@@ -34,5 +33,8 @@ export const TextField: React.ComponentType<Props> = FormField(injectIntl(
       hideChevron
       textInputSecure={secure}
     />
-  )
-));
+  );
+TextFieldComponent.contextTypes = ctx.intl;
+
+export const TextField: React.ComponentClass<Props> = FormField(TextFieldComponent);
+TextField.displayName = 'TextField';

@@ -1,6 +1,7 @@
 require('react-hot-loader/patch');
 import * as React from 'react';
 import { AppContainer } from 'react-hot-loader';
+import { IntlProvider } from 'react-intl';
 import { Platform, AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
@@ -8,7 +9,7 @@ import * as shortid from 'shortid';
 import { App } from './components/App';
 import { LoadFonts } from './components/LoadFonts';
 import { createHistory } from './createHistory';
-import { configureStore } from './state';
+import { configureStore, actions } from './state';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 
@@ -21,15 +22,18 @@ const dependencies = {
 };
 
 const store = configureStore(dependencies, [historyMiddleware]);
+store.dispatch(actions.init());
 
 const Root = () => (
   <LoadFonts>
     <AppContainer>
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
-      </Provider>
+      <IntlProvider locale="en">
+        <Provider store={store}>
+          <ConnectedRouter history={history}>
+            <App />
+          </ConnectedRouter>
+        </Provider>
+      </IntlProvider>
     </AppContainer>
   </LoadFonts>
 );
