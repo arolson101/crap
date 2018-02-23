@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { Button, View, Text } from 'react-native';
-import { connect } from 'react-redux';
-import { RootState, Bank, Account, selectors, nav } from '../state';
+import { Bank, Account, nav } from '../state';
 import { ctx } from './ctx';
 
 interface Props {
-  bankId: Bank.Id;
-}
-
-interface ConnectedProps extends Props {
   bank: Bank;
   accounts: Account[];
 }
 
-export const BankDisplayComponent: React.SFC<ConnectedProps> = (props, { router }: ctx.Router) => {
+export const BankDisplay: React.SFC<Props> = (props, { router }: ctx.Router) => {
   return (
     <View>
       <Text>{props.bank.name}</Text>
@@ -29,14 +24,4 @@ export const BankDisplayComponent: React.SFC<ConnectedProps> = (props, { router 
     </View>
   );
 };
-BankDisplayComponent.contextTypes = ctx.router;
-
-export const BankDisplay = connect(
-  (state: RootState, props: Props) => {
-    return ({
-      bank: selectors.getBank(state, props.bankId),
-      accounts: selectors.getAccounts(state, props.bankId),
-    });
-  }
-)(BankDisplayComponent);
-BankDisplay.displayName = 'BankDisplay';
+BankDisplay.contextTypes = ctx.router;

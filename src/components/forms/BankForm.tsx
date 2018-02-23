@@ -11,7 +11,6 @@ import { SelectField, TextField, UrlField, MultilineTextField, CheckboxField,
 interface Props {
   filist: FI[];
   edit?: Bank;
-  banks: Bank[];
   bankCreate: (props: Bank.Props) => any;
   bankUpdate: (bankId: Bank.Id, q: Bank.Query) => any;
 }
@@ -210,7 +209,6 @@ BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 export const BankForm = connect(
   (state: RootState) => ({
     filist: selectors.getFIs(state),
-    banks: selectors.getBanks(state),
   }),
   {
     bankCreate: actions.bankCreate,

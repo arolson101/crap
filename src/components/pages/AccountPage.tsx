@@ -34,7 +34,7 @@ AccountCreatePage.displayName = 'AccountCreatePage';
 export const AccountDisplayPageComponent: React.SFC<Props> = (props) => {
   return (
     <View>
-      <Text>Account id {props.account.id}</Text>
+      <Text>Account: {props.account.name}</Text>
       <Text>bank: {props.bank.name}</Text>
       <Button title="edit" onPress={() => props.history.push(nav.accountUpdate(props.bank.id, props.account.id))}/>
     </View>

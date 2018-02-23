@@ -24,10 +24,13 @@ const defaultState: State = ({
 
 export const viewsSelectors = {
   getBank: (state: State, bankId: Bank.Id) => state.banks[bankId],
-  getBanks: (state: State) => Object.values(state.banks),
   getAccount: (state: State, accountId: Account.Id) => state.accounts[accountId],
   getAccounts: (state: State, bankId: Bank.Id) =>
     state.banks[bankId].accounts.map(accountId => state.accounts[accountId]),
+  getBanks: (state: State): Bank.View[] => Object.values(state.banks).map(bank => ({
+    bank,
+    accounts: viewsSelectors.getAccounts(state, bank.id),
+  })),
 };
 
 const buildDictionary = <T extends Record<any>>(records: T[]): Dictionary<T> => {

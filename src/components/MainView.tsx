@@ -12,7 +12,7 @@ export const MainView: React.SFC<Props> = (props) => {
   return (
     <View>
       <ConnectedSwitch>
-        <Route exact path={paths.home} component={Pages.HomePage} />
+        <Route path={paths.home} exact component={Pages.HomePage} />
         <Route path={paths.budgets} component={Pages.BudgetsPage} />
         <Route path={paths.accounts} exact component={Pages.AccountsPage} />
         <Route path={paths.bankCreate} component={Pages.BankCreatePage} />

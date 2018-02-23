@@ -6,15 +6,15 @@ import { ctx } from '../ctx';
 import { BankDisplay } from '../BankDisplay';
 
 interface Props {
-  banks: Bank[];
+  bankViews: Bank.View[];
 }
 
 export const AccountsPageComponent: React.SFC<Props> = (props, {router}: ctx.Router) => {
   return (
     <View>
       <Text>Accounts page</Text>
-      {props.banks.map(bank =>
-        <BankDisplay key={bank.id} bankId={bank.id}/>
+      {props.bankViews.map(bankView =>
+        <BankDisplay key={bankView.bank.id} bank={bankView.bank} accounts={bankView.accounts}/>
       )}
       <Button onPress={() => router.history.push(nav.bankCreate())} title="add bank"/>
     </View>
@@ -24,7 +24,7 @@ AccountsPageComponent.contextTypes = ctx.router;
 
 export const AccountsPage = connect(
   (state: RootState) => ({
-    banks: selectors.getBanks(state),
+    bankViews: selectors.getBanks(state),
   })
 )(AccountsPageComponent);
 AccountsPage.displayName = 'AccountsPage';

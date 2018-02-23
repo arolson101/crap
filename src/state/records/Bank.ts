@@ -31,6 +31,11 @@ export namespace Bank {
   export const table = 'banks';
   export const schema = Record.genSchema('*accounts');
 
+  export interface View {
+    bank: Bank;
+    accounts: Account[];
+  }
+
   export namespace change {
     export const add = (t: number, bank: Bank): DbChange => ({
       table,
