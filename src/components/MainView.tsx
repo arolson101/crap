@@ -16,7 +16,6 @@ export const MainView: React.SFC<Props> = (props) => {
         <Route path={paths.budgets} component={Pages.BudgetsPage} />
         <Route path={paths.accounts} exact component={Pages.AccountsPage} />
         <Route path={paths.bankCreate} component={Pages.BankCreatePage} />
-        <Route path={paths.bank} exact component={Pages.BankDisplayPage} />
         <Route path={paths.bankUpdate} component={Pages.BankUpdatePage} />
         <Route path={paths.accountCreate} component={Pages.AccountCreatePage} />
         <Route path={paths.account} exact component={Pages.AccountDisplayPage} />
