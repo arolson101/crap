@@ -18,3 +18,4 @@ export const PingTest = connect(
   (state: RootState) => ({ isPinging: state.ping.isPinging }),
   ({ pingPong: actions.pingPong })
 )(PingTestComponent);
+PingTest.displayName = 'PingTest';

@@ -35,6 +35,7 @@ export const App = connect(
   }),
   {}
 )(AppComponent);
+App.displayName = 'App';
 
 const styles = StyleSheet.create({
   container: {

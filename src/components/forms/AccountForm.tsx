@@ -144,6 +144,7 @@ export const AccountForm = connect(
     accountCreate: actions.accountCreate,
   }
 )(AccountFormComponent);
+AccountForm.displayName = 'AccountForm';
 
 const messages = defineMessages({
   save: {

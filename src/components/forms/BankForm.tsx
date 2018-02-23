@@ -216,6 +216,7 @@ export const BankForm = connect(
     bankUpdate: actions.bankUpdate,
   }
 )(BankFormComponent);
+BankForm.displayName = 'BankForm';
 
 const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null);
 
