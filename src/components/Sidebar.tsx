@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
 import { RootState, selectors, Bank, nav } from '../state';
+import { ctx } from './ctx';
 
-interface Props extends RouteComponentProps<any> {
+interface Props {
   banks: Bank[];
 }
 
-export const SidebarComponent = withRouter((props: Props) => {
-  const { history: { push } } = props;
+export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) => {
+  const { router: { history: { push } } } = context;
   return (
     <List>
       <ListItem onPress={() => push(nav.home())} title="home" leftIcon={{ name: 'home' }} hideChevron />
@@ -28,7 +28,8 @@ export const SidebarComponent = withRouter((props: Props) => {
       )}
     </List>
   );
-});
+};
+SidebarComponent.contextTypes = ctx.router;
 
 export const Sidebar = connect(
   (state: RootState) => ({
@@ -37,3 +38,4 @@ export const Sidebar = connect(
   {
   }
 )(SidebarComponent);
+Sidebar.displayName = 'Sidebar';
