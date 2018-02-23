@@ -4,7 +4,7 @@ import db, { State as DbState, dbSelectors } from './db';
 import fi, { State as FiState, fiSelectors } from './fi';
 import ping, { State as PingState } from './ping';
 import views, { State as ViewsState, viewsSelectors } from './views';
-import { Bank } from '../records';
+import { Bank, Account } from '../records';
 export { FI } from './fi';
 
 export const selectors = {
@@ -14,6 +14,7 @@ export const selectors = {
   getDbIsOpen: (state: RootState) => dbSelectors.getDbIsOpen(state.db),
   getBank: (state: RootState, bankId: Bank.Id) => viewsSelectors.getBank(state.views, bankId),
   getBanks: (state: RootState) => viewsSelectors.getBanks(state.views),
+  getAccount: (state: RootState, accountId: Account.Id) => viewsSelectors.getAccount(state.views, accountId),
   getAccounts: (state: RootState, bankId: Bank.Id) => viewsSelectors.getAccounts(state.views, bankId),
   getFIs: (state: RootState) => fiSelectors.getFIs(state.fi),
   getLocation: (state: RootState) => state.router.location,

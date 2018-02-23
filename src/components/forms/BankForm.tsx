@@ -3,9 +3,10 @@ import { Form } from 'react-form';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { RootState, actions, selectors, Bank, FI } from '../../state';
+import { RootState, actions, selectors, nav, Bank, FI } from '../../state';
 import { ctx } from '../ctx';
-import { SelectField, TextField, MultilineTextField, CheckboxField, CollapseField, SubmitButton } from './fields';
+import { SelectField, TextField, UrlField, MultilineTextField, CheckboxField,
+  CollapseField, SubmitButton } from './fields';
 
 interface Props {
   filist: FI[];
@@ -34,7 +35,7 @@ interface FormValues {
   password: string;
 }
 
-export const BankFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) => {
+export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   const defaultFi = props.edit ? props.filist.findIndex(fi => fi.name === props.edit!.name) : 0;
 
   return (
@@ -62,7 +63,7 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) =
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={(values: FormValues) => {
+      onSubmit={async (values: FormValues) => {
         if (props.edit) {
           const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
             const value = trim ? (values[key] as string).trim() : values[key];
@@ -89,9 +90,10 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) =
             ...propIfChanged('password'),
           };
 
-          return props.bankUpdate(props.edit.id, q);
+          await props.bankUpdate(props.edit.id, q);
+          router.history.goBack();
         } else {
-          const bank: Bank.Props = {
+          const bank = await props.bankCreate({
             name: values.name.trim(),
             web: values.web.trim(),
             address: values.address.trim(),
@@ -108,9 +110,9 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) =
             password: values.password,
 
             accounts: [],
-          };
+          });
 
-          return props.bankCreate(bank);
+          router.history.replace(nav.bank(bank.id));
         }
       }}
     >
@@ -145,11 +147,10 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) =
               rows={4}
               placeholder={messages.address}
             />
-            <MultilineTextField /*UrlField*/
+            <UrlField
               field="web"
               // favicoName='favicon'
               placeholder={messages.web}
-              rows={1}
             />
             <MultilineTextField
               field="notes"
@@ -204,7 +205,7 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) =
     </Form>
   );
 };
-BankFormComponent.contextTypes = ctx.intl;
+BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
 export const BankForm = connect(
   (state: RootState) => ({

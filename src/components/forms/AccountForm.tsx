@@ -3,13 +3,16 @@ import { Form } from 'react-form';
 import { defineMessages } from 'react-intl';
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { RootState, actions, selectors, Bank, Account } from '../../state';
+import { RootState, actions, selectors, Bank, Account, nav } from '../../state';
 import { ctx } from '../ctx';
 import { SelectField, TextField, SubmitButton } from './fields';
 
 interface Props {
   edit?: Account;
   bank: Bank;
+}
+
+interface ConnectedProps extends Props {
   accounts: Account[];
   accountUpdate: (id: Account.Id, q: Account.Query) => any;
   accountCreate: (bankId: Bank.Id, props: Account.Props) => any;
@@ -25,7 +28,7 @@ interface FormValues {
   key: string;
 }
 
-export const AccountFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl) => {
+export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   return (
     <Form
       defaultValues={{
@@ -34,6 +37,7 @@ export const AccountFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl
         color: Account.generateColor(Account.Type.CHECKING),
         number: '',
         visible: true,
+        bankid: '',
         key: '',
         ...props.edit,
       } as FormValues}
@@ -41,7 +45,7 @@ export const AccountFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={(values: FormValues) => {
+      onSubmit={async (values: FormValues) => {
         if (props.edit) {
           const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
             const value = trim ? (values[key] as string).trim() : values[key];
@@ -62,9 +66,10 @@ export const AccountFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl
             ...propIfChanged('key', true),
           };
 
-          return props.accountUpdate(props.edit.id, q);
+          await props.accountUpdate(props.edit.id, q);
+          router.history.goBack();
         } else {
-          const account: Account.Props = {
+          const account = await props.accountCreate(props.bank.id, {
             name: values.name.trim(),
             color: values.color.trim(),
             type: values.type,
@@ -72,9 +77,8 @@ export const AccountFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl
             visible: values.visible,
             bankid: values.bankid.trim(),
             key: values.key.trim(),
-          };
-
-          return props.accountCreate(props.bank.id, account);
+          });
+          router.history.replace(nav.account(props.bank.id, account.id));
         }
       }}
     >
@@ -133,9 +137,9 @@ export const AccountFormComponent: React.SFC<Props> = (props, { intl }: ctx.Intl
     </Form>
   );
 };
-AccountFormComponent.contextTypes = ctx.intl;
+AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
-export const AccountForm = connect(
+export const AccountForm: React.ComponentClass<Props> = connect(
   (state: RootState, props: Props) => ({
     accounts: selectors.getAccounts(state, props.bank.id),
   }),

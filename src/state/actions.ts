@@ -2,6 +2,7 @@ import { getReturnOfExpression } from 'react-redux-typescript';
 import { createAction } from 'typesafe-actions';
 import { AppDatabase, TableName } from './AppDatabase';
 import { Record } from './Record';
+import { Bank, Account } from './records';
 import { thunks } from './thunks';
 import { FI } from './reducers/fi';
 
@@ -39,8 +40,12 @@ export const paths = {
   home: '/',
   budgets: '/budgets',
   accounts: '/accounts',
-  bank: '/bank/:bankId',
-  account: '/account/:accountId',
+  bankCreate: '/accounts/create',
+  bank: '/accounts/:bankId',
+  bankUpdate: '/accounts/:bankId/update',
+  accountCreate: '/accounts/:bankId/create',
+  account: '/accounts/:bankId/:accountId',
+  accountUpdate: '/accounts/:bankId/:accountId/update',
 };
 
 export const nav = {
@@ -48,8 +53,14 @@ export const nav = {
   home: () => paths.home,
   budgets: () => paths.budgets,
   accounts: () => paths.accounts,
-  bank: (bankId: string) => paths.bank.replace(':bankId', bankId),
-  account: (accountId: string) => paths.account.replace(':accountId', accountId),
+  bankCreate: () => paths.bankCreate,
+  bank: (bankId: Bank.Id) => paths.bank.replace(':bankId', bankId),
+  bankUpdate: (bankId: Bank.Id) => paths.bankUpdate.replace(':bankId', bankId),
+  accountCreate: (bankId: Bank.Id) => paths.accountCreate.replace(':bankId', bankId),
+  account: (bankId: Bank.Id, accountId: Account.Id) =>
+    paths.account.replace(':bankId', bankId).replace(':accountId', accountId),
+  accountUpdate: (bankId: Bank.Id, accountId: Account.Id) =>
+    paths.accountUpdate.replace(':bankId', bankId).replace(':accountId', accountId),
 };
 
 export const actions = {
