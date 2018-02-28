@@ -36,10 +36,19 @@ const actionCreators = {
 };
 
 export const paths = {
+  root: {
+    home: '/',
+    accounts: '/accounts',
+    budgets: '/budgets',
+  },
+
+  accounts: {
+    create: '/accounts/create',
+    createAccount: '/accounts/create/account',
+  },
+
   dbAdvanced: '/db/:dbName',
-  home: '/',
-  budgets: '/budgets',
-  accounts: '/accounts',
+  accountsCreate: '/accounts/create',
   bankCreate: '/accounts/create',
   bank: '/accounts/:bankId',
   bankUpdate: '/accounts/:bankId/update',
@@ -50,9 +59,9 @@ export const paths = {
 
 export const nav = {
   dbAdvanced: (dbName: string) => paths.dbAdvanced.replace(':dbName', dbName),
-  home: () => paths.home,
-  budgets: () => paths.budgets,
-  accounts: () => paths.accounts,
+  home: () => paths.root.home,
+  budgets: () => paths.root.budgets,
+  accounts: () => paths.root.accounts,
   bankCreate: () => paths.bankCreate,
   bank: (bankId: Bank.Id) => paths.bank.replace(':bankId', bankId),
   bankUpdate: (bankId: Bank.Id) => paths.bankUpdate.replace(':bankId', bankId),
