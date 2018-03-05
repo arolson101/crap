@@ -43,7 +43,7 @@ export const paths = {
   bankCreate: '/accounts/create',
   bank: '/accounts/:bankId',
   bankUpdate: '/accounts/:bankId/update',
-  accountCreate: '/accounts/:bankId/create',
+  accountCreate: '/accounts/create/:bankId',
   account: '/accounts/:bankId/:accountId',
   accountUpdate: '/accounts/:bankId/:accountId/update',
 };

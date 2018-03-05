@@ -21,8 +21,8 @@ interface FormValues {
 }
 
 const enum Mode {
-  OpenExisting,
   CreateNew,
+  OpenExisting,
 }
 
 interface State {
@@ -30,8 +30,8 @@ interface State {
 }
 
 const buttons = [
-  { element: () => <FormattedMessage {...messages.open} /> },
   { element: () => <FormattedMessage {...messages.create} /> },
+  { element: () => <FormattedMessage {...messages.open} /> },
 ];
 
 export class LoginFormComponent extends React.PureComponent<Props, State> {

@@ -16,21 +16,6 @@ interface Props extends RouteComponentProps<Params> {
   account: Account;
 }
 
-export const AccountCreatePageComponent: React.SFC<Props> = ({bank, children}) => (
-  <AccountForm bank={bank}>
-    {children}
-  </AccountForm>
-);
-
-export const AccountCreatePage = connect(
-  (state: RootState, props: Props) => {
-    return ({
-      bank: selectors.getBank(state, props.match.params.bankId),
-    });
-  }
-)(AccountCreatePageComponent);
-AccountCreatePage.displayName = 'AccountCreatePage';
-
 export const AccountDisplayPageComponent: React.SFC<Props> = (props) => {
   return (
     <View>
