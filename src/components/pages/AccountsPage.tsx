@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { View, Text, Button } from 'react-native';
+import { Text, Button } from 'react-native';
 import { connect } from 'react-redux';
-import { nav, Bank, RootState, selectors } from '../../state';
+import { Switch, Route } from 'react-router';
+import { nav, Bank, RootState, selectors, paths } from '../../state';
 import { ctx } from '../ctx';
 import { BankDisplay } from '../BankDisplay';
+import { AccountsCreatePage } from './AccountsCreatePage';
 
 interface Props {
   bankViews: Bank.View[];
@@ -11,13 +13,18 @@ interface Props {
 
 export const AccountsPageComponent: React.SFC<Props> = (props, {router}: ctx.Router) => {
   return (
-    <View>
-      <Text>Accounts page</Text>
-      {props.bankViews.map(bankView =>
-        <BankDisplay key={bankView.bank.id} bank={bankView.bank} accounts={bankView.accounts}/>
-      )}
-      <Button onPress={() => router.history.push(nav.bankCreate())} title="add bank"/>
-    </View>
+    <Switch>
+      <Route path={paths.accounts.create} component={AccountsCreatePage}/>
+      <Route>
+        <>
+          <Text>Accounts page</Text>
+          {props.bankViews.map(bankView =>
+            <BankDisplay key={bankView.bank.id} bank={bankView.bank} accounts={bankView.accounts}/>
+          )}
+          <Button onPress={() => router.history.push(nav.bankCreate())} title="add bank"/>
+        </>
+      </Route>
+    </Switch>
   );
 };
 AccountsPageComponent.contextTypes = ctx.router;
