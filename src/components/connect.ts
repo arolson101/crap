@@ -1,3 +1,4 @@
+// https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951
 import { RootState } from '../state';
 
 import * as React from 'react';

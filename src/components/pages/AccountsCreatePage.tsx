@@ -7,7 +7,7 @@ import { BankForm } from '../forms/BankForm';
 import { AccountForm } from '../forms/AccountForm';
 import { ctx } from '../ctx';
 import { formStyles } from '../forms/fields/formStyles';
-import { connect } from '../myConnect';
+import { connect } from '../connect';
 
 interface Props {
   banks: Bank.View[];
