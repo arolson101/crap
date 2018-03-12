@@ -50,10 +50,12 @@ module.exports = function (config, env) {
     }
   })
 
+  config.resolve.extensions.push('.web.js');
+  config.resolve.extensions.push('.web.ts');
+  config.resolve.extensions.push('.web.tsx');
   config.resolve.extensions.push('.tsx');
   config.resolve.extensions.push('.ts');
   config.resolve.extensions.push('.js');
-  config.resolve.extensions.push('.web.js');
   config.resolve.extensions.push('.windows.js');
   // config.resolve.extensions.push('.android.js');
 

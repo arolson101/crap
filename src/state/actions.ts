@@ -44,7 +44,6 @@ export const paths = {
 
   accounts: {
     create: '/accounts/create',
-    createAccount: '/accounts/create/account',
   },
 
   dbAdvanced: '/db/:dbName',

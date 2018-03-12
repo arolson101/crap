@@ -19,7 +19,8 @@
     "skipLibCheck": true,
     "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
-    "noUnusedLocals": true
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": false
   },
   "exclude": [
     "node_modules",

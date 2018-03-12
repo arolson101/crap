@@ -9,7 +9,7 @@ import { SelectField, TextField, SubmitButton } from './fields';
 
 interface Props {
   edit?: Account;
-  bank: Bank;
+  bankId: Bank.Id;
 }
 
 interface ConnectedProps extends Props {
@@ -69,7 +69,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
           await props.accountUpdate(props.edit.id, q);
           router.history.goBack();
         } else {
-          const account = await props.accountCreate(props.bank.id, {
+          const account = await props.accountCreate(props.bankId, {
             name: values.name.trim(),
             color: values.color.trim(),
             type: values.type,
@@ -78,7 +78,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
             bankid: values.bankid.trim(),
             key: values.key.trim(),
           });
-          router.history.replace(nav.account(props.bank.id, account.id));
+          router.history.replace(nav.account(props.bankId, account.id));
         }
       }}
     >
@@ -141,7 +141,7 @@ AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
 export const AccountForm: React.ComponentClass<Props> = connect(
   (state: RootState, props: Props) => ({
-    accounts: selectors.getAccounts(state, props.bank.id),
+    accounts: selectors.getAccounts(state, props.bankId),
   }),
   {
     accountUpdate: actions.accountUpdate,

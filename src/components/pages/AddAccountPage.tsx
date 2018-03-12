@@ -32,7 +32,7 @@ const buttons = [
 export class AddAccountPageComponent extends React.PureComponent<Props, State> {
   static contextTypes = ctx.router;
 
-  state = {
+  state: State = {
     mode: Mode.Bank,
   };
 
@@ -53,7 +53,7 @@ export class AddAccountPageComponent extends React.PureComponent<Props, State> {
 
         {mode === Mode.Bank
           ? <BankForm />
-          : <AccountForm bank={bankView!.bank} {...this.props}/>
+          : <AccountForm bankId={bankView!.bank.id} {...this.props}/>
         }
       </>
     );

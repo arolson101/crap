@@ -37,7 +37,7 @@ export const AccountDisplayPage = connect(
 AccountDisplayPage.displayName = 'AccountDisplayPage';
 
 export const AccountUpdatePageComponent: React.SFC<Props> = ({bank, account, children}) => (
-  <AccountForm bank={bank} edit={account}>
+  <AccountForm bankId={bank.id} edit={account}>
     {children}
   </AccountForm>
 );
