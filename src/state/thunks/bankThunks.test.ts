@@ -9,6 +9,7 @@ describe('bankThunks', () => {
   const dependencies: ThunkDependencies = {
     getTime: () => time++,
     genId: () => `id${id++}`,
+    openDb: AppDatabase.open,
   };
   const mockStore = configureMockStore([thunk.withExtraArgument(dependencies)]);
 

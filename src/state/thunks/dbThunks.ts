@@ -29,10 +29,9 @@ export default {
     },
 
   dbOpen: (name: string, password: string): RootThunk =>
-    async function dbOpen(dispatch) {
+    async function dbOpen(dispatch, getState, { openDb }) {
       try {
-        const db = new AppDatabase(name);
-        await db.open();
+        const db = await openDb(name);
         for (let tableName of AppDatabase.tables) {
           const table: Dexie.Table<Record<any>, string> = db.table(tableName);
           const records = await table.where({_deleted: 0}).toArray();

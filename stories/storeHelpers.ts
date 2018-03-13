@@ -9,7 +9,8 @@ import { finalizeFilist } from '../src/state/thunks/fiThunks';
 
 export const dependencies: ThunkDependencies = {
   getTime: Date.now,
-  genId: () => Date.now().toString()
+  genId: () => Date.now().toString(),
+  openDb: async (name) => { throw new Error(`can't open databases in storybook`); },
 };
 
 const logDispatch = action('dispatch');
@@ -23,10 +24,11 @@ export const middlewares = [dispatchActionLogger];
 
 export const filist = finalizeFilist(require<FinancialInstitution[]>('filist/filist.json'));
 
-export const initDbs = (dbs: string[]) => ({
+export const initDbs = (dbs: string[], openError: Error | undefined = undefined) => ({
   db: {
     dbs,
     isOpening: false,
+    openError,
   }
 });
 

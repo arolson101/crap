@@ -12,8 +12,18 @@ storiesOf('Login', module)
       <App />
     </Provider>
   ))
+  .add('no dbs (failure)', () => (
+    <Provider store={preloadedStore(initDbs([], new Error('error opening db')))}>
+      <App />
+    </Provider>
+  ))
   .add('1 db', () => (
     <Provider store={preloadedStore(initDbs(['db1']))}>
+      <App />
+    </Provider>
+  ))
+  .add('1 db (failure)', () => (
+    <Provider store={preloadedStore(initDbs(['db1'], new Error('error opening db')))}>
       <App />
     </Provider>
   ))
