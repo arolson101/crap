@@ -17,7 +17,7 @@ export const BankDisplay: React.SFC<Props> = (props, { router }: ctx.Router) => 
         <Button
           key={account.id}
           title={account.name}
-          onPress={() => router.history.push(nav.account(props.bank.id, account.id))}
+          onPress={() => router.history.push(nav.accountView(props.bank.id, account.id))}
         />
       )}
       <Button title="add account" onPress={() => router.history.push(nav.accountCreate(props.bank.id))}/>

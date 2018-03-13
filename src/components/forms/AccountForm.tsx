@@ -78,7 +78,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
             bankid: values.bankid.trim(),
             key: values.key.trim(),
           });
-          router.history.replace(nav.account(props.bankId, account.id));
+          router.history.replace(nav.accountView(props.bankId, account.id));
         }
       }}
     >

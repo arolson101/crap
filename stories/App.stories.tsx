@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router';
-import { configureStore } from '../src/state';
+import { configureStore, Bank, nav } from '../src/state';
 import { App } from '../src/components';
 import { dependencies, middlewares, preloadedStore, initDbs, openedDb, withBank } from './storeHelpers';
 
@@ -24,40 +24,41 @@ storiesOf('Login', module)
   ))
   ;
 
+const Router: React.SFC<{pathname: string}> = ({pathname, children}) => (
+  <StaticRouter location={{ pathname }} context={{}}>
+    {children}
+  </StaticRouter>
+);
+
 storiesOf('App', module)
   .addDecorator(story => <Provider store={preloadedStore(openedDb())}>{story()}</Provider>)
   .add('/', () => (
-    <StaticRouter location={{ pathname: '/' }} context={{}}>
+    <Router pathname={nav.home()}>
       <App />
-    </StaticRouter>
+    </Router>
   ))
   .add('/budgets', () => (
-    <StaticRouter location={{ pathname: '/budgets' }} context={{}}>
+    <Router pathname={nav.budgets()}>
       <App />
-    </StaticRouter>
+    </Router>
   ))
   ;
 
 storiesOf('App/Accounts', module)
+  .addDecorator(story => <Provider store={preloadedStore(withBank('1st bank', '123', 1))}>{story()}</Provider>)
   .add('accounts', () => (
-    <Provider store={preloadedStore(openedDb())}>
-      <StaticRouter location={{ pathname: '/accounts' }} context={{}}>
-        <App />
-      </StaticRouter>
-    </Provider>
+    <Router pathname={nav.accounts()}>
+      <App />
+    </Router>
   ))
   .add('create bank', () => (
-    <Provider store={preloadedStore(openedDb())}>
-      <StaticRouter location={{ pathname: '/accounts/create' }} context={{}}>
-        <App />
-      </StaticRouter>
-    </Provider>
+    <Router pathname={nav.bankCreate()}>
+      <App />
+    </Router>
   ))
   .add('create account', () => (
-    <Provider store={preloadedStore(withBank('1st bank', '123', 1))}>
-      <StaticRouter location={{ pathname: '/accounts/create/123' }} context={{}}>
-        <App />
-      </StaticRouter>
-    </Provider>
+    <Router pathname={nav.accountCreate('123' as Bank.Id)}>
+      <App />
+    </Router>
   ))
   ;

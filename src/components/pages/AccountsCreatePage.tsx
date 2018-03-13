@@ -1,69 +1,60 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import { View, Text, Picker } from 'react-native';
-// import { connect } from 'react-redux';
-import { Bank, selectors } from '../../state';
+import { Bank, selectors, nav, paths } from '../../state';
 import { BankForm } from '../forms/BankForm';
 import { AccountForm } from '../forms/AccountForm';
+import { connect } from '../connect';
 import { ctx } from '../ctx';
 import { formStyles } from '../forms/fields/formStyles';
-import { connect } from '../connect';
+
+interface Params {
+  bankId: Bank.Id | typeof paths.accounts.newBankId;
+}
 
 interface Props {
   banks: Bank.View[];
 }
 
-interface State {
-  bankId: string | typeof newBank;
-}
+export const AccountsCreatePageComponent: React.SFC<Props> = (props, {intl, router}: ctx.Intl & ctx.Router<Params>) => {
+  const { history, route } = router;
+  return (
+    <View>
+      <Text>create account</Text>
 
-const newBank = 'new';
+      <Picker
+        style={formStyles.picker}
+        itemStyle={formStyles.pickerItem}
+        onValueChange={(bankId) => router.history.replace(nav.accountCreate(bankId))}
+        selectedValue={router.route.match.params.bankId}
+      >
+        <Picker.Item
+          label={intl.formatMessage(messages.new)}
+          value={paths.accounts.newBankId}
+        />
+        {props.banks.map(bankView =>
+          <Picker.Item
+            key={bankView.bank.id}
+            label={bankView.bank.name}
+            value={bankView.bank.id}
+          />
+        )}
+      </Picker>
 
-@connect(
+      {router.route.match.params.bankId === paths.accounts.newBankId
+        ? <BankForm/>
+        : <AccountForm bankId={router.route.match.params.bankId}/>
+      }
+    </View>
+  );
+};
+AccountsCreatePageComponent.contextTypes = {...ctx.intl, ...ctx.router};
+
+export const AccountsCreatePage = connect(
   state => ({
     banks: selectors.getBanks(state),
   })
-)
-export class AccountsCreatePage extends React.Component<Props, State> {
-  static contextTypes = ctx.intl;
-
-  state: State = {
-    bankId: newBank
-  };
-
-  render() {
-    const { intl: { formatMessage } } = this.context as ctx.Intl;
-    return (
-      <View>
-        <Text>create account</Text>
-
-        <Picker
-          style={formStyles.picker}
-          itemStyle={formStyles.pickerItem}
-          onValueChange={(bankId) => this.setState({bankId})}
-          selectedValue={this.state.bankId}
-        >
-          <Picker.Item
-            label={formatMessage(messages.new)}
-            value={newBank}
-          />
-          {this.props.banks.map(bankView =>
-            <Picker.Item
-              key={bankView.bank.id}
-              label={bankView.bank.name}
-              value={bankView.bank.id}
-            />
-          )}
-        </Picker>
-
-        {this.state.bankId === newBank
-          ? <BankForm/>
-          : <AccountForm bankId={this.state.bankId as Bank.Id}/>
-        }
-      </View>
-    );
-  }
-}
+)(AccountsCreatePageComponent);
 
 const messages = defineMessages({
   new: {

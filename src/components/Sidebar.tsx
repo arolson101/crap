@@ -21,7 +21,7 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
           {view.accounts.map(account =>
             <ListItem
               key={view.bank.id}
-              onPress={() => push(nav.account(view.bank.id, account.id))}
+              onPress={() => push(nav.accountView(view.bank.id, account.id))}
               title={account.name}
               subtitle={'$100.00'}
               subtitleNumberOfLines={3}
