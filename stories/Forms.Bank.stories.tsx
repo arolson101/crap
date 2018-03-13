@@ -1,15 +1,12 @@
-import { FinancialInstitution } from 'filist';
 import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BankFormComponent } from '../src/components/forms/BankForm';
 import { Bank } from '../src/state';
-import { finalizeFilist } from '../src/state/thunks/fiThunks';
-
-const filist = require<FinancialInstitution[]>('filist/filist.json');
+import { filist } from './storeHelpers';
 
 const props = {
-  filist: finalizeFilist(filist),
+  filist,
   banks: [] as Bank[],
   bankCreate: action('bankCreate'),
   bankUpdate: action('bankUpdate'),

@@ -33,7 +33,7 @@ export const viewsSelectors = {
   })),
 };
 
-const buildDictionary = <T extends Record<any>>(records: T[]): Dictionary<T> => {
+export const buildDictionary = <T extends Record<any>>(records: T[]): Dictionary<T> => {
   return keyBy(records, record => record.id);
 };
 
