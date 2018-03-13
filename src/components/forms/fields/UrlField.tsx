@@ -29,5 +29,5 @@ const UrlFieldComponent: React.SFC<Props & FormFieldProps> =
   );
 UrlFieldComponent.contextTypes = ctx.intl;
 
-export const UrlField: React.ComponentClass<Props> = FormField(UrlFieldComponent);
+export const UrlField = FormField(UrlFieldComponent) as React.ComponentClass<Props>;
 UrlField.displayName = 'UrlField';

@@ -32,5 +32,5 @@ const MultilineTextFieldComponent: React.SFC<Props & FormFieldProps> =
   );
 MultilineTextFieldComponent.contextTypes = ctx.intl;
 
-export const MultilineTextField: React.ComponentClass<Props> = FormField(MultilineTextFieldComponent);
+export const MultilineTextField = FormField(MultilineTextFieldComponent) as React.ComponentClass<Props>;
 MultilineTextField.displayName = 'MultilineTextField';

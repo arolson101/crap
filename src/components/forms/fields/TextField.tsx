@@ -36,5 +36,5 @@ const TextFieldComponent: React.ComponentType<Props & FormFieldProps> =
   );
 TextFieldComponent.contextTypes = ctx.intl;
 
-export const TextField: React.ComponentClass<Props> = FormField(TextFieldComponent);
+export const TextField = FormField(TextFieldComponent) as React.ComponentClass<Props>;
 TextField.displayName = 'TextField';

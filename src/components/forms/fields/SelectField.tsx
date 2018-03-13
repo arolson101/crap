@@ -54,5 +54,5 @@ const SelectFieldComponent: React.SFC<Props & FormFieldProps> =
   );
 SelectFieldComponent.contextTypes = ctx.intl;
 
-export const SelectField: React.ComponentClass<Props> = FormField(SelectFieldComponent);
+export const SelectField = FormField(SelectFieldComponent) as React.ComponentClass<Props>;
 SelectField.displayName = 'SelectField';

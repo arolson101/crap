@@ -26,5 +26,5 @@ const CheckboxFieldComponent: React.SFC<Props & FormFieldProps> =
   );
 CheckboxFieldComponent.contextTypes = ctx.intl;
 
-export const CheckboxField: React.ComponentClass<Props> = FormField(CheckboxFieldComponent);
+export const CheckboxField = FormField(CheckboxFieldComponent) as React.ComponentClass<Props>;
 CheckboxField.displayName = 'CheckboxField';
