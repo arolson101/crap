@@ -4,7 +4,8 @@ import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router';
 import { configureStore, Bank, nav } from '../src/state';
 import { App } from '../src/components';
-import { dependencies, middlewares, preloadedStore, initDbs, openedDb, withBank } from './storeHelpers';
+import { dependencies, middlewares, preloadedStore, initDbs,
+  openedDb, withDummyDataMin, withDummyDataMed, withDummyDataMax } from './storeHelpers';
 
 storiesOf('Login', module)
   .add('no dbs', () => (
@@ -54,21 +55,51 @@ storiesOf('App', module)
   ))
   ;
 
+const accountsMin = withDummyDataMin();
+const accountsMed = withDummyDataMed();
+const accountsMax = withDummyDataMax();
+
 storiesOf('App/Accounts', module)
-  .addDecorator(story => <Provider store={preloadedStore(withBank('1st bank', '123', 1))}>{story()}</Provider>)
-  .add('accounts', () => (
-    <Router pathname={nav.accounts()}>
-      <App />
-    </Router>
+  .add('accounts (none)', () => (
+    <Provider store={preloadedStore(openedDb())}>
+      <Router pathname={nav.accounts()}>
+        <App />
+      </Router>
+    </Provider>
+  ))
+  .add('accounts (min)', () => (
+    <Provider store={preloadedStore(accountsMin)}>
+      <Router pathname={nav.accounts()}>
+        <App />
+      </Router>
+    </Provider>
+  ))
+  .add('accounts (med)', () => (
+    <Provider store={preloadedStore(accountsMed)}>
+      <Router pathname={nav.accounts()}>
+        <App />
+      </Router>
+    </Provider>
+  ))
+  .add('accounts (max)', () => (
+    <Provider store={preloadedStore(accountsMax)}>
+      <Router pathname={nav.accounts()}>
+        <App />
+      </Router>
+    </Provider>
   ))
   .add('create bank', () => (
-    <Router pathname={nav.bankCreate()}>
-      <App />
-    </Router>
+    <Provider store={preloadedStore(accountsMed)}>
+      <Router pathname={nav.bankCreate()}>
+        <App />
+      </Router>
+    </Provider>
   ))
   .add('create account', () => (
-    <Router pathname={nav.accountCreate('123' as Bank.Id)}>
-      <App />
-    </Router>
+    <Provider store={preloadedStore(accountsMed)}>
+      <Router pathname={nav.accountCreate(Object.keys(accountsMed.views.banks)[0] as Bank.Id)}>
+        <App />
+      </Router>
+    </Provider>
   ))
   ;

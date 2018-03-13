@@ -40,29 +40,83 @@ export const openedDb = () => ({
   }
 });
 
-export const withBank = (name: string, id: string, numAccounts: number) => {
-  const accounts = Array.from(Array(numAccounts)).map((v, idx): Account => ({
-    id: `${id}${idx}` as Account.Id,
-    _deleted: 0,
-    name: `${name} account ${idx + 1}`,
-    color: '',
-    type: Account.Type.CHECKING,
-    number: `${id}${idx}`,
-    visible: true,
-    bankid: '',
-    key: '',
-  }));
+const dummyAccount = (id: string, name: string, type: Account.Type): Account => ({
+  id: id as Account.Id,
+  _deleted: 0,
+  name,
+  color: '',
+  type,
+  number: id,
+  visible: true,
+  bankid: '',
+  key: '',
+});
+
+const dummyBank = (id: string, name: string, accounts: Account[]): Bank => ({
+  id: id as Bank.Id,
+  _deleted: 0,
+  name,
+  accounts: accounts.map(acct => acct.id)
+});
+
+export const withDummyDataMin = () => {
+  const accounts = [
+    dummyAccount('a1001', 'Checking', Account.Type.CHECKING),
+  ];
+  const banks = [
+    dummyBank('b100', '1st Bank', accounts),
+  ];
   return {
     ...openedDb(),
     views: {
-      banks: {
-        [id]: {
-          id: id as Bank.Id,
-          _deleted: 0,
-          name,
-          accounts: accounts.map(acct => acct.id)
-        } as Bank,
-      },
+      banks: buildDictionary(banks),
+      accounts: buildDictionary(accounts)
+    }
+  };
+};
+
+export const withDummyDataMed = () => {
+  const accounts = [
+    dummyAccount('a1001', 'Checking', Account.Type.CHECKING),
+    dummyAccount('a1002', 'Savings', Account.Type.SAVINGS),
+    dummyAccount('a2003', 'Credit Card', Account.Type.CREDITCARD),
+  ];
+  const banks = [
+    dummyBank('b100', '1st Bank', accounts.slice(0, 1)),
+    dummyBank('b200', 'CC Company', accounts.slice(2, 3)),
+  ];
+  return {
+    ...openedDb(),
+    views: {
+      banks: buildDictionary(banks),
+      accounts: buildDictionary(accounts)
+    }
+  };
+};
+
+export const withDummyDataMax = () => {
+  const accounts = [
+    dummyAccount('a1001', 'Checking', Account.Type.CHECKING),
+    dummyAccount('a1002', 'Savings', Account.Type.SAVINGS),
+    dummyAccount('a1003', 'Credit Card', Account.Type.CREDITCARD),
+    dummyAccount('a2001', 'Credit Card', Account.Type.CREDITCARD),
+    dummyAccount('a3001', 'Credit Card', Account.Type.CREDITCARD),
+    dummyAccount('a4001', 'Credit Card', Account.Type.CREDITCARD),
+    dummyAccount('a5001', 'Checking', Account.Type.CHECKING),
+    dummyAccount('a5002', 'Savings', Account.Type.SAVINGS),
+    dummyAccount('a5003', 'Credit Card', Account.Type.CREDITCARD),
+  ];
+  const banks = [
+    dummyBank('b100', '1st Bank', accounts.slice(0, 2)),
+    dummyBank('b200', 'CC A', accounts.slice(3, 4)),
+    dummyBank('b300', 'CC B', accounts.slice(4, 5)),
+    dummyBank('b400', 'CC C', accounts.slice(5, 6)),
+    dummyBank('b500', '2nd Bank', accounts.slice(6, 9)),
+  ];
+  return {
+    ...openedDb(),
+    views: {
+      banks: buildDictionary(banks),
       accounts: buildDictionary(accounts)
     }
   };
