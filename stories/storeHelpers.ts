@@ -102,7 +102,7 @@ const dummyBankAndAccounts = (fi: FI, numAccounts: number, type?: Account.Type) 
   const accounts = Array.from(Array(numAccounts)).map(
     (x, idx) => dummyAccount(
       `00${fi.id}00${idx}`,
-      `${name} ${type ? type : types[idx % types.length]}`,
+      `${fi.name} ${type ? type : types[idx % types.length]}`,
       type ? type : types[idx % types.length]
     )
   );
