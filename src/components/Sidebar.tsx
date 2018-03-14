@@ -20,7 +20,7 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
           <Text>{view.bank.name}</Text>
           {view.accounts.map(account =>
             <ListItem
-              key={view.bank.id}
+              key={account.id}
               onPress={() => push(nav.accountView(view.bank.id, account.id))}
               title={account.name}
               subtitle={'$100.00'}

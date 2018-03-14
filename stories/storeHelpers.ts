@@ -59,13 +59,36 @@ const dummyBank = (id: string, name: string, accounts: Account[]): Bank => ({
   accounts: accounts.map(acct => acct.id)
 });
 
+const types: Account.Type[] = [
+  Account.Type.CHECKING,
+  Account.Type.SAVINGS,
+  Account.Type.CREDITCARD,
+];
+
+const dummyBankAndAccounts = (id: number, name: string, numAccounts: number, type?: Account.Type) => {
+  const accounts = Array.from(Array(numAccounts)).map(
+    (x, idx) => dummyAccount(
+      `acct${id}_${idx}`,
+      `${name} ${type ? type : types[idx % types.length]}`,
+      type ? type : types[idx % types.length]
+    )
+  );
+
+  const bank = dummyBank(`bnk${id}`, name, accounts);
+  return {bank, accounts};
+};
+
 export const withDummyDataMin = () => {
-  const accounts = [
-    dummyAccount('a1001', 'Checking', Account.Type.CHECKING),
-  ];
-  const banks = [
-    dummyBank('b100', '1st Bank', accounts),
-  ];
+  const accounts: Account[] = [];
+  const banks: Bank[] = [];
+  [
+    dummyBankAndAccounts(1, '1st Bank', 1),
+    dummyBankAndAccounts(2, 'CC Company', 1, Account.Type.CREDITCARD),
+  ].forEach(a => {
+    accounts.push(...a.accounts);
+    banks.push(a.bank);
+  });
+
   return {
     ...openedDb(),
     views: {
@@ -76,15 +99,17 @@ export const withDummyDataMin = () => {
 };
 
 export const withDummyDataMed = () => {
-  const accounts = [
-    dummyAccount('a1001', 'Checking', Account.Type.CHECKING),
-    dummyAccount('a1002', 'Savings', Account.Type.SAVINGS),
-    dummyAccount('a2003', 'Credit Card', Account.Type.CREDITCARD),
-  ];
-  const banks = [
-    dummyBank('b100', '1st Bank', accounts.slice(0, 1)),
-    dummyBank('b200', 'CC Company', accounts.slice(2, 3)),
-  ];
+  const accounts: Account[] = [];
+  const banks: Bank[] = [];
+  [
+    dummyBankAndAccounts(1, '1st Bank', 3),
+    dummyBankAndAccounts(2, 'CC Company', 1, Account.Type.CREDITCARD),
+    dummyBankAndAccounts(3, 'CC Other', 1, Account.Type.CREDITCARD),
+  ].forEach(a => {
+    accounts.push(...a.accounts);
+    banks.push(a.bank);
+  });
+
   return {
     ...openedDb(),
     views: {
@@ -95,24 +120,15 @@ export const withDummyDataMed = () => {
 };
 
 export const withDummyDataMax = () => {
-  const accounts = [
-    dummyAccount('a1001', 'Checking', Account.Type.CHECKING),
-    dummyAccount('a1002', 'Savings', Account.Type.SAVINGS),
-    dummyAccount('a1003', 'Credit Card', Account.Type.CREDITCARD),
-    dummyAccount('a2001', 'Credit Card', Account.Type.CREDITCARD),
-    dummyAccount('a3001', 'Credit Card', Account.Type.CREDITCARD),
-    dummyAccount('a4001', 'Credit Card', Account.Type.CREDITCARD),
-    dummyAccount('a5001', 'Checking', Account.Type.CHECKING),
-    dummyAccount('a5002', 'Savings', Account.Type.SAVINGS),
-    dummyAccount('a5003', 'Credit Card', Account.Type.CREDITCARD),
-  ];
-  const banks = [
-    dummyBank('b100', '1st Bank', accounts.slice(0, 2)),
-    dummyBank('b200', 'CC A', accounts.slice(3, 4)),
-    dummyBank('b300', 'CC B', accounts.slice(4, 5)),
-    dummyBank('b400', 'CC C', accounts.slice(5, 6)),
-    dummyBank('b500', '2nd Bank', accounts.slice(6, 9)),
-  ];
+  const accounts: Account[] = [];
+  const banks: Bank[] = [];
+  Array.from(Array(10))
+  .map((x, idx) => dummyBankAndAccounts(idx, `${idx + 1}st Bank`, 5))
+  .forEach(a => {
+    accounts.push(...a.accounts);
+    banks.push(a.bank);
+  });
+
   return {
     ...openedDb(),
     views: {
