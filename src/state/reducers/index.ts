@@ -5,7 +5,7 @@ import fi, { State as FiState, fiSelectors } from './fi';
 import ping, { State as PingState } from './ping';
 import views, { State as ViewsState, viewsSelectors } from './views';
 import { Bank, Account } from '../records';
-export { FI } from './fi';
+export { FI, formatAddress } from './fi';
 
 export const selectors = {
   getDb: (state: RootState) => dbSelectors.getDb(state.db),

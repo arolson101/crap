@@ -3,7 +3,7 @@ import { Form } from 'react-form';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { RootState, actions, selectors, nav, Bank, FI } from '../../state';
+import { RootState, actions, selectors, nav, Bank, FI, formatAddress } from '../../state';
 import { ctx } from '../ctx';
 import { SelectField, TextField, UrlField, MultilineTextField, CheckboxField,
   CollapseField, SubmitButton } from './fields';
@@ -216,27 +216,6 @@ export const BankForm = connect(
   }
 )(BankFormComponent);
 BankForm.displayName = 'BankForm';
-
-const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null);
-
-const formatAddress = (fi: FI): string => {
-  if (fi && fi.profile) {
-    return [
-      fi.profile.address1,
-      fi.profile.address2,
-      fi.profile.address3,
-
-      [
-        [fi.profile.city, fi.profile.state].filter(defined).join(', '),
-        fi.profile.zip
-      ].filter(defined).join(' '),
-
-      fi.profile.country
-    ].filter(defined).join('\n');
-  } else {
-    return '';
-  }
-};
 
 const messages = defineMessages({
   save: {

@@ -31,3 +31,24 @@ const reducer = (state: State = initialState, action: RootAction): State => {
 };
 
 export default reducer;
+
+const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null);
+
+export const formatAddress = (fi: FI): string => {
+  if (fi && fi.profile) {
+    return [
+      fi.profile.address1,
+      fi.profile.address2,
+      fi.profile.address3,
+
+      [
+        [fi.profile.city, fi.profile.state].filter(defined).join(', '),
+        fi.profile.zip
+      ].filter(defined).join(' '),
+
+      fi.profile.country
+    ].filter(defined).join('\n');
+  } else {
+    return '';
+  }
+};

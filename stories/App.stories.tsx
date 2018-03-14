@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router';
 import { configureStore, Bank, nav } from '../src/state';
 import { App } from '../src/components';
-import { dependencies, middlewares, preloadedStore, initDbs,
+import { dependencies, preloadedStore, initialDbs,
   openedDb, withDummyDataMin, withDummyDataMed, withDummyDataMax } from './storeHelpers';
 
 storiesOf('Login', module)
@@ -14,22 +14,22 @@ storiesOf('Login', module)
     </Provider>
   ))
   .add('no dbs (failure)', () => (
-    <Provider store={preloadedStore(initDbs([], new Error('error opening db')))}>
+    <Provider store={preloadedStore(initialDbs([], new Error('error opening db')))}>
       <App />
     </Provider>
   ))
   .add('1 db', () => (
-    <Provider store={preloadedStore(initDbs(['db1']))}>
+    <Provider store={preloadedStore(initialDbs(['db1']))}>
       <App />
     </Provider>
   ))
   .add('1 db (failure)', () => (
-    <Provider store={preloadedStore(initDbs(['db1'], new Error('error opening db')))}>
+    <Provider store={preloadedStore(initialDbs(['db1'], new Error('error opening db')))}>
       <App />
     </Provider>
   ))
   .add('multiple dbs', () => (
-    <Provider store={preloadedStore(initDbs(['db1', 'db2', 'db3']))}>
+    <Provider store={preloadedStore(initialDbs(['db1', 'db2', 'db3']))}>
       <App />
     </Provider>
   ))
