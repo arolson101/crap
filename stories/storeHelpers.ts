@@ -7,6 +7,26 @@ import { RootState, configureStore, ThunkDependencies, Bank, Account, FI, format
 import { buildDictionary } from '../src/state/reducers/views';
 import { finalizeFilist } from '../src/state/thunks/fiThunks';
 
+/**
+ * Warning from React Router, caused by react-hot-loader.
+ * The warning can be safely ignored, so filter it from the console.
+ * Otherwise you'll see it every time something changes.
+ * See https://github.com/gaearon/react-hot-loader/issues/298
+ */
+if (module.hot) {
+  const isString = (x: any) => typeof x === 'string';
+
+  const orgError = console.error; // eslint-disable-line no-console
+  console.error = (...args: any[]) => { // eslint-disable-line no-console
+    if (args && args.length === 1 && isString(args[0]) && args[0].indexOf('You cannot change <Router history>') > -1) {
+      // React route changed
+    } else {
+      // Log the error as normally
+      orgError.apply(console, args);
+    }
+  };
+}
+
 export const dependencies: ThunkDependencies = {
   getTime: Date.now,
   genId: () => Date.now().toString(),
@@ -42,7 +62,7 @@ const dummyAccount = (id: string, name: string, type: Account.Type): Account => 
   id: id as Account.Id,
   _deleted: 0,
   name,
-  color: '',
+  color: 'red',
   type,
   number: id,
   visible: true,
@@ -79,10 +99,9 @@ const types: Account.Type[] = [
 ];
 
 const dummyBankAndAccounts = (fi: FI, numAccounts: number, type?: Account.Type) => {
-  console.log(fi);
   const accounts = Array.from(Array(numAccounts)).map(
     (x, idx) => dummyAccount(
-      `acct${fi.id}_${idx}`,
+      `00${fi.id}00${idx}`,
       `${name} ${type ? type : types[idx % types.length]}`,
       type ? type : types[idx % types.length]
     )

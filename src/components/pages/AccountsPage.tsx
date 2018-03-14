@@ -6,6 +6,7 @@ import { nav, Bank, RootState, selectors, paths } from '../../state';
 import { ctx } from '../ctx';
 import { BankDisplay } from '../BankDisplay';
 import { AccountsCreatePage } from './AccountsCreatePage';
+import { AccountsUpdatePage } from './AccountsUpdatePage';
 
 interface Props {
   bankViews: Bank.View[];
@@ -14,7 +15,8 @@ interface Props {
 export const AccountsPageComponent: React.SFC<Props> = (props, {router}: ctx.Router) => {
   return (
     <Switch>
-      <Route path={paths.accounts.create} component={AccountsCreatePage}/>
+      <Route path={paths.account.create} component={AccountsCreatePage}/>
+      <Route path={paths.account.update} component={AccountsUpdatePage}/>
       <Route>
         <>
           <Text>Accounts page</Text>

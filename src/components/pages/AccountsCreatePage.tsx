@@ -9,7 +9,7 @@ import { ctx } from '../ctx';
 import { formStyles } from '../forms/fields/formStyles';
 
 interface Params {
-  bankId: Bank.Id | typeof paths.accounts.newBankId;
+  bankId?: Bank.Id;
 }
 
 interface Props {
@@ -25,12 +25,12 @@ export const AccountsCreatePageComponent: React.SFC<Props> = (props, {intl, rout
       <Picker
         style={formStyles.picker}
         itemStyle={formStyles.pickerItem}
-        onValueChange={(bankId) => router.history.replace(nav.accountCreate(bankId))}
+        onValueChange={(bankId) => router.history.replace(bankId ? nav.accountCreate(bankId) : nav.bankCreate())}
         selectedValue={router.route.match.params.bankId}
       >
         <Picker.Item
           label={intl.formatMessage(messages.new)}
-          value={paths.accounts.newBankId}
+          value={''}
         />
         {props.banks.map(bankView =>
           <Picker.Item
@@ -41,9 +41,9 @@ export const AccountsCreatePageComponent: React.SFC<Props> = (props, {intl, rout
         )}
       </Picker>
 
-      {router.route.match.params.bankId === paths.accounts.newBankId
-        ? <BankForm/>
-        : <AccountForm bankId={router.route.match.params.bankId}/>
+      {router.route.match.params.bankId
+        ? <AccountForm bankId={router.route.match.params.bankId}/>
+        : <BankForm/>
       }
     </View>
   );
@@ -58,7 +58,7 @@ export const AccountsCreatePage = connect(
 
 const messages = defineMessages({
   new: {
-    id: 'BankForm.new',
+    id: 'AccountsCreatePage.new',
     defaultMessage: 'New...'
   },
 });

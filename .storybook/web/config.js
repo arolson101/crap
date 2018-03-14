@@ -1,3 +1,4 @@
+import { withKnobs } from '@storybook/addon-knobs/react';
 import { addDecorator, configure } from '@storybook/react';
 import { setIntlConfig, withIntl } from 'storybook-addon-intl';
 import StoryRouter from 'storybook-router';
@@ -23,6 +24,7 @@ setIntlConfig({
 });
 
 // Register decorator
+addDecorator(withKnobs);
 addDecorator(withIntl);
 addDecorator(StoryRouter());
 

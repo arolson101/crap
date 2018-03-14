@@ -111,7 +111,7 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx
             accounts: [],
           });
 
-          router.history.replace(nav.bank(bank.id));
+          router.history.replace(nav.accounts());
         }
       }}
     >
