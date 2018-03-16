@@ -18,6 +18,7 @@ interface ConnectedProps extends Props {
   accountCreate: (bankId: Bank.Id, props: Account.Props) => any;
 }
 
+// typescript 2.8: Mutable<Account.Props>
 interface FormValues {
   name: string;
   color: string;
@@ -32,13 +33,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
   return (
     <Form
       defaultValues={{
-        name: '',
-        type: Account.Type.CHECKING,
-        color: Account.generateColor(Account.Type.CHECKING),
-        number: '',
-        visible: true,
-        bankid: '',
-        key: '',
+        ...Account.defaultValues,
         ...props.edit,
       } as FormValues}
       validateError={(values: FormValues) => ({
@@ -47,37 +42,11 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
       })}
       onSubmit={async (values: FormValues) => {
         if (props.edit) {
-          const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
-            const value = trim ? (values[key] as string).trim() : values[key];
-            if (props.edit && props.edit[key] !== value) {
-              return { [key]: { $set: value } };
-            } else {
-              return {};
-            }
-          };
-
-          const q: Account.Query = {
-            ...propIfChanged('name', true),
-            ...propIfChanged('color', true),
-            ...propIfChanged('type'),
-            ...propIfChanged('number', true),
-            ...propIfChanged('bankid', true),
-            ...propIfChanged('visible'),
-            ...propIfChanged('key', true),
-          };
-
+          const q = Account.diff(props.edit, values);
           await props.accountUpdate(props.edit.id, q);
           router.history.goBack();
         } else {
-          const account = await props.accountCreate(props.bankId, {
-            name: values.name.trim(),
-            color: values.color.trim(),
-            type: values.type,
-            number: values.number.trim(),
-            visible: values.visible,
-            bankid: values.bankid.trim(),
-            key: values.key.trim(),
-          });
+          const account = await props.accountCreate(props.bankId, values);
           router.history.replace(nav.accountView(props.bankId, account.id));
         }
       }}

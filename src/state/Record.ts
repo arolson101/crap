@@ -23,6 +23,7 @@ export const hydrate: <T>(x: CompressedJson<T>) => T = flow(
 
 interface Update<T> {
   readonly t: number;
+  // typescript 2.8: iupdate.Query<Mutable<T>>
   readonly q: iupdate.Query<T>;
 }
 
