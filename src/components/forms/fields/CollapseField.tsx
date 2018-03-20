@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { FormField, FieldProps, FormFieldProps } from 'react-form';
+import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 
-interface Props extends FieldProps, React.Props<{}> {
+export namespace CollapseField {
+  export interface Props<T = {}> extends FieldProps<T>, React.Props<{}> {
+  }
 }
 
-export const CollapseField: React.ComponentType<Props> = FormField(
-  ({ fieldApi, children }: Props & FormFieldProps) => {
+export const CollapseField: React.ComponentType<CollapseField.Props> = FormField(
+  ({ fieldApi, children }: CollapseField.Props & FormFieldProps) => {
     if (fieldApi.getValue()) {
       return <>{children}</>;
     } else {

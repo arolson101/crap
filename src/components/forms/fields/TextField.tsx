@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { FormField, FieldProps, FormFieldProps } from 'react-form';
 import { FormattedMessage } from 'react-intl';
 import { ListItem, IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
+import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
 
-interface Props extends FieldProps {
-  label: FormattedMessage.MessageDescriptor;
-  placeholder: FormattedMessage.MessageDescriptor;
-  secure?: boolean;
-  leftIcon?: IconObject;
-  rows?: number;
-  textColor?: string;
-  autoFocus?: boolean;
+export namespace TextField {
+  export interface Props<T = {}> extends FieldProps<T> {
+    label: FormattedMessage.MessageDescriptor;
+    placeholder: FormattedMessage.MessageDescriptor;
+    secure?: boolean;
+    leftIcon?: IconObject;
+    rows?: number;
+    textColor?: string;
+    autoFocus?: boolean;
+  }
 }
 
-const TextFieldComponent: React.ComponentType<Props & FormFieldProps> =
+const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => (
     <ListItem
       textInputAutoFocus={autoFocus}
@@ -36,5 +38,5 @@ const TextFieldComponent: React.ComponentType<Props & FormFieldProps> =
   );
 TextFieldComponent.contextTypes = ctx.intl;
 
-export const TextField = FormField(TextFieldComponent) as React.ComponentClass<Props>;
+export const TextField = FormField<TextField.Props>(TextFieldComponent);
 TextField.displayName = 'TextField';

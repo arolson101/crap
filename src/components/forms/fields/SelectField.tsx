@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { FormField, FieldProps, FormFieldProps } from 'react-form';
 import { FormattedMessage } from 'react-intl';
 import { Picker } from 'react-native';
 import { ListItem, IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
+import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
 
 export namespace SelectField {
@@ -11,16 +11,16 @@ export namespace SelectField {
     label: string;
     value: string | number;
   }
+
+  export interface Props<T = {}> extends FieldProps<T> {
+    label: FormattedMessage.MessageDescriptor;
+    items: SelectField.Item[];
+    leftIcon?: IconObject;
+    onValueChange?: (value: string | number) => any;
+  }
 }
 
-interface Props extends FieldProps {
-  label: FormattedMessage.MessageDescriptor;
-  items: SelectField.Item[];
-  leftIcon?: IconObject;
-  onValueChange?: (value: string | number) => any;
-}
-
-const SelectFieldComponent: React.SFC<Props & FormFieldProps> =
+const SelectFieldComponent: React.SFC<SelectField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, label, items, onValueChange }, { intl }: ctx.Intl) => (
     <ListItem
       wrapperStyle={formStyles.wrapperStyle}
@@ -54,5 +54,5 @@ const SelectFieldComponent: React.SFC<Props & FormFieldProps> =
   );
 SelectFieldComponent.contextTypes = ctx.intl;
 
-export const SelectField = FormField(SelectFieldComponent) as React.ComponentClass<Props>;
+export const SelectField = FormField<SelectField.Props>(SelectFieldComponent);
 SelectField.displayName = 'SelectField';

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Form } from 'react-form';
 import { defineMessages } from 'react-intl';
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, selectors, Bank, Account, nav } from '../../state';
 import { ctx } from '../ctx';
-import { SelectField, TextField, SubmitButton } from './fields';
+import { typedFields, SelectFieldItem } from './Forms';
 
 interface Props {
   edit?: Account;
@@ -29,18 +28,20 @@ interface FormValues {
   key: string;
 }
 
+const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>();
+
 export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   return (
     <Form
       defaultValues={{
         ...Account.defaultValues,
-        ...props.edit,
-      } as FormValues}
-      validateError={(values: FormValues) => ({
+        ...props.edit as any,
+      }}
+      validateError={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={async (values: FormValues) => {
+      onSubmit={async values => {
         if (props.edit) {
           const q = Account.diff(props.edit, values);
           await props.accountUpdate(props.edit.id, q);
@@ -67,7 +68,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
             />
             <SelectField
               field="type"
-              items={Object.keys(Account.Type).map((acct: Account.Type): SelectField.Item => ({
+              items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
                 value: acct.toString(),
                 label: intl.formatMessage(Account.messages[acct])
               }))}
@@ -80,7 +81,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
               field="color"
               label={messages.color}
               placeholder={messages.colorPlaceholder}
-              textColor={(formApi.values as FormValues).color}
+              textColor={formApi.values.color}
             />
             {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
               <TextField

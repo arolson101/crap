@@ -1,16 +1,18 @@
 import * as React from 'react';
-import { FormField, FieldProps, FormFieldProps } from 'react-form';
 import { FormattedMessage } from 'react-intl';
 import { ListItem, IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
+import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
 
-interface Props extends FieldProps {
-  label: FormattedMessage.MessageDescriptor;
-  leftIcon?: IconObject;
+export namespace CheckboxField {
+  export interface Props<T = {}> extends FieldProps<T> {
+    label: FormattedMessage.MessageDescriptor;
+    leftIcon?: IconObject;
+  }
 }
 
-const CheckboxFieldComponent: React.SFC<Props & FormFieldProps> =
+const CheckboxFieldComponent: React.SFC<CheckboxField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, label }, { intl }: ctx.Intl) => (
     <ListItem
       wrapperStyle={formStyles.wrapperStyle}
@@ -26,5 +28,5 @@ const CheckboxFieldComponent: React.SFC<Props & FormFieldProps> =
   );
 CheckboxFieldComponent.contextTypes = ctx.intl;
 
-export const CheckboxField = FormField(CheckboxFieldComponent) as React.ComponentClass<Props>;
+export const CheckboxField = FormField<CheckboxField.Props>(CheckboxFieldComponent);
 CheckboxField.displayName = 'CheckboxField';

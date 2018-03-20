@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { Form } from 'react-form';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, selectors, nav, Bank, FI, formatAddress } from '../../state';
 import { ctx } from '../ctx';
-import { SelectField, TextField, UrlField, MultilineTextField, CheckboxField,
-  CollapseField, SubmitButton } from './fields';
+import { typedFields, SelectFieldItem } from './Forms';
 
 interface Props {
   filist: FI[];
@@ -34,6 +32,17 @@ interface FormValues {
   password: string;
 }
 
+const {
+  Form,
+  CheckboxField,
+  CollapseField,
+  MultilineTextField,
+  SelectField,
+  SubmitButton,
+  TextField,
+  UrlField,
+} = typedFields<FormValues>();
+
 export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   const defaultFi = props.edit ? props.filist.findIndex(fi => fi.name === props.edit!.name) : 0;
 
@@ -56,13 +65,13 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx
         username: '',
         password: '',
 
-        ...props.edit,
-      } as FormValues}
-      validateError={(values: FormValues) => ({
+        ...props.edit as any,
+      }}
+      validateError={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={async (values: FormValues) => {
+      onSubmit={async values => {
         if (props.edit) {
           const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
             const value = trim ? (values[key] as string).trim() : values[key];

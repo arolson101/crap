@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Form } from 'react-form';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { ButtonGroup, List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, nav, selectors } from '../../state';
 import { ctx } from '../ctx';
-import { SelectField, TextField, SubmitButton, ErrorMessage, formStyles } from './fields';
+import { typedFields, SelectFieldItem } from './Forms';
+import { formStyles } from './fields';
 
 interface Props {
   dbs: string[];
@@ -33,6 +33,18 @@ const buttons = [
   { element: () => <FormattedMessage {...messages.create} /> },
   { element: () => <FormattedMessage {...messages.open} /> },
 ];
+
+const {
+  Form,
+  CheckboxField,
+  CollapseField,
+  ErrorMessage,
+  MultilineTextField,
+  SelectField,
+  SubmitButton,
+  TextField,
+  UrlField,
+} = typedFields<FormValues>();
 
 export class LoginFormComponent extends React.PureComponent<Props, State> {
   state = {
@@ -81,8 +93,8 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
         password: '',
         passwordConfirm: '',
         ...props.initialValues,
-      } as FormValues}
-      validateError={(values: FormValues) => ({
+      }}
+      validateError={values => ({
         dbName: !values.dbName.trim() ? formatMessage(messages.valueEmpty)
           : props.dbs.includes(values.dbName.trim()) ? formatMessage(messages.dbExists)
             : undefined,
@@ -91,7 +103,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
         passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
           : undefined,
       })}
-      onSubmit={(values: FormValues) => {
+      onSubmit={values => {
         return props.dbOpen(values.dbName, values.password);
       }}
     >
@@ -138,11 +150,11 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
         password: '',
         ...props.initialValues,
       }}
-      validateError={(values: FormValues) => ({
+      validateError={values => ({
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={(values: FormValues) => {
+      onSubmit={values => {
         return props.dbOpen(values.dbName, values.password);
       }}
     >
@@ -163,7 +175,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
           <ListItem
             wrapperStyle={formStyles.wrapperStyle}
             title={formatMessage(messages.advanced)}
-            onPress={() => push(nav.dbAdvanced((formApi.values as FormValues).dbName))}
+            onPress={() => push(nav.dbAdvanced(formApi.values.dbName))}
           />
           <ErrorMessage error={props.dbOpenError} />
           <SubmitButton
