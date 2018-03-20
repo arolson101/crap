@@ -73,4 +73,21 @@ export namespace Bank {
       }]
     });
   }
+
+  export const diff = (bank: Bank, values: Partial<Props>): Query => {
+    return Object.keys(values).reduce(
+      (q, prop): Query => {
+        const val = values[prop];
+        if (val !== bank[prop]) {
+          return ({
+            ...q,
+            [prop]: { $set: val }
+          });
+        } else {
+          return q;
+        }
+      },
+      {} as Query
+    );
+  };
 }

@@ -73,53 +73,15 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx
       })}
       onSubmit={async values => {
         if (props.edit) {
-          const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
-            const value = trim ? (values[key] as string).trim() : values[key];
-            if (props.edit && props.edit[key] !== value) {
-              return { [key]: { $set: value } };
-            } else {
-              return {};
-            }
-          };
-
-          const q: Bank.Query = {
-            ...propIfChanged('name', true),
-            ...propIfChanged('web', true),
-            ...propIfChanged('address', true),
-            ...propIfChanged('notes', true),
-
-            ...propIfChanged('online'),
-
-            ...propIfChanged('fid', true),
-            ...propIfChanged('org', true),
-            ...propIfChanged('ofx', true),
-
-            ...propIfChanged('username', true),
-            ...propIfChanged('password'),
-          };
-
+          const q = Bank.diff(props.edit, values);
           await props.bankUpdate(props.edit.id, q);
           router.history.goBack();
         } else {
+          const { fi, ...bankProps } = values;
           const bank = await props.bankCreate({
-            name: values.name.trim(),
-            web: values.web.trim(),
-            address: values.address.trim(),
-            notes: values.notes.trim(),
-            favicon: values.favicon.trim(),
-
-            online: values.online,
-
-            fid: values.fid.trim(),
-            org: values.org.trim(),
-            ofx: values.ofx.trim(),
-
-            username: values.username.trim(),
-            password: values.password,
-
+            ...bankProps,
             accounts: [],
           });
-
           router.history.replace(nav.accounts());
         }
       }}
