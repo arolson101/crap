@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text } from 'react-native-elements';
+import { Text } from 'react-native';
 import { formStyles } from './formStyles';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 export const ErrorMessage: React.SFC<Props> = ({ error }) => {
   if (error) {
-    return <Text h4 style={formStyles.errorDisplay}>{error.message} </Text>;
+    return <Text style={formStyles.errorDisplay}>{error.message} </Text>;
   } else {
     return null;
   }

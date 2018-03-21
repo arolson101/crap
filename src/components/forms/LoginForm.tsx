@@ -35,14 +35,10 @@ const buttons = [
 
 const {
   Form,
-  CheckboxField,
-  CollapseField,
   ErrorMessage,
-  MultilineTextField,
   SelectField,
   SubmitButton,
   TextField,
-  UrlField,
 } = typedFields<FormValues>();
 
 export class LoginFormComponent extends React.PureComponent<Props, State> {

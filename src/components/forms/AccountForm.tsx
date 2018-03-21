@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
-import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, selectors, Bank, Account, nav } from '../../state';
 import { ctx } from '../ctx';
+import { List } from '../list';
 import { typedFields, SelectFieldItem } from './fields';
 
 interface Props {
