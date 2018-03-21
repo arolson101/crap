@@ -4,8 +4,7 @@ import { ButtonGroup, List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, nav, selectors } from '../../state';
 import { ctx } from '../ctx';
-import { typedFields, SelectFieldItem } from './Forms';
-import { formStyles } from './fields';
+import { typedFields, SelectFieldItem, formStyles } from './fields';
 
 interface Props {
   dbs: string[];

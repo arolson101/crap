@@ -4,7 +4,7 @@ import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, selectors, Bank, Account, nav } from '../../state';
 import { ctx } from '../ctx';
-import { typedFields, SelectFieldItem } from './Forms';
+import { typedFields, SelectFieldItem } from './fields';
 
 interface Props {
   edit?: Account;

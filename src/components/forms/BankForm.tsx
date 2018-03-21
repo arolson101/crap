@@ -4,7 +4,7 @@ import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, selectors, nav, Bank, FI, formatAddress } from '../../state';
 import { ctx } from '../ctx';
-import { typedFields, SelectFieldItem } from './Forms';
+import { typedFields, SelectFieldItem } from './fields';
 
 interface Props {
   filist: FI[];
