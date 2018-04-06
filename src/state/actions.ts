@@ -1,4 +1,5 @@
 import { getReturnOfExpression } from 'react-redux-typescript';
+import * as RRR from 'react-router-redux';
 import { createAction } from 'typesafe-actions';
 import { AppDatabase, TableName } from './AppDatabase';
 import { Record } from './Record';
@@ -33,6 +34,25 @@ const actionCreators = {
     type: 'fi/SET', fi
   })),
 
+  bankCreating: createAction('bank/CREATING', (creating: boolean | Error) => ({
+    type: 'bank/CREATING', creating
+  })),
+  bankUpdating: createAction('bank/UPDATING', (updating: boolean | Error) => ({
+    type: 'bank/UPDATING', updating
+  })),
+  bankDeleting: createAction('bank/DELETING', (deleting: boolean | Error) => ({
+    type: 'bank/DELETING', deleting
+  })),
+
+  accountCreating: createAction('account/CREATING', (creating: boolean | Error) => ({
+    type: 'account/CREATING', creating
+  })),
+  accountUpdating: createAction('account/UPDATING', (updating: boolean | Error) => ({
+    type: 'account/UPDATING', updating
+  })),
+  accountDeleting: createAction('account/DELETING', (deleting: boolean | Error) => ({
+    type: 'account/DELETING', deleting
+  })),
 };
 
 export const paths = {
@@ -68,9 +88,18 @@ export const nav = {
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
 };
 
+const history = {
+  push: RRR.push,
+  replace: RRR.replace,
+  go: RRR.go,
+  goForward: RRR.goForward,
+  goBack: RRR.goBack,
+};
+
 export const actions = {
   ...actionCreators,
   ...thunks,
+  history,
 };
 
 const returnOfActions = Object.values(actionCreators).map(getReturnOfExpression);

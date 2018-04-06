@@ -22,6 +22,7 @@ const bank: Bank = {
 
 const props = {
   bankId: bank.id,
+  saving: false,
   accounts: [],
   accountUpdate: action('accountUpdate'),
   accountCreate: action('accountCreate'),
@@ -45,10 +46,23 @@ storiesOf('Forms/Account', module)
       {...props}
     />
   ))
+  .add('Create (saving)', () => (
+    <AccountFormComponent
+      {...props}
+      saving
+    />
+  ))
   .add('Edit', () => (
     <AccountFormComponent
       {...props}
       edit={account}
+    />
+  ))
+  .add('Edit (saving)', () => (
+    <AccountFormComponent
+      {...props}
+      edit={account}
+      saving
     />
   ))
   ;

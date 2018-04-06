@@ -13,6 +13,7 @@ interface Props {
 
 interface ConnectedProps extends Props {
   accounts: Account[];
+  saving: boolean;
   accountUpdate: (id: Account.Id, q: Account.Query) => any;
   accountCreate: (bankId: Bank.Id, props: Account.Props) => any;
 }
@@ -41,14 +42,12 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={async values => {
+      onSubmit={values => {
         if (props.edit) {
           const q = Account.diff(props.edit, values);
-          await props.accountUpdate(props.edit.id, q);
-          router.history.goBack();
+          return props.accountUpdate(props.edit.id, q);
         } else {
-          const account = await props.accountCreate(props.bankId, values);
-          router.history.replace(nav.accountView(props.bankId, account.id));
+          return props.accountCreate(props.bankId, values);
         }
       }}
     >
@@ -98,6 +97,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
               />
             }
             <SubmitButton
+              disabled={props.saving}
               onPress={formApi.submitForm}
               title={props.edit ? messages.save : messages.create}
             />
@@ -112,10 +112,11 @@ AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 export const AccountForm: React.ComponentClass<Props> = connect(
   (state: RootState, props: Props) => ({
     accounts: selectors.getAccounts(state, props.bankId),
+    saving: props.edit ? selectors.isAccountUpdating(state) : selectors.isAccountCreating(state),
   }),
   {
-    accountUpdate: actions.accountUpdate,
-    accountCreate: actions.accountCreate,
+    accountUpdate: actions.accountUpdateUI,
+    accountCreate: actions.accountCreateUI,
   }
 )(AccountFormComponent);
 AccountForm.displayName = 'AccountForm';

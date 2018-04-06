@@ -8,6 +8,7 @@ import { filist } from './storeHelpers';
 const props = {
   filist,
   banks: [] as Bank[],
+  saving: false,
   bankCreate: action('bankCreate'),
   bankUpdate: action('bankUpdate'),
 };
@@ -34,6 +35,12 @@ storiesOf('Forms/Bank', module)
       {...props}
     />
   ))
+  .add('Create (saving)', () => (
+    <BankFormComponent
+      {...props}
+      saving
+    />
+  ))
   .add('Edit (online)', () => (
     <BankFormComponent
       {...props}
@@ -46,31 +53,11 @@ storiesOf('Forms/Bank', module)
       edit={{...bank, online: false}}
     />
   ))
-  // .add('Open (multiple choices)', () => (
-  //   <BankFormComponent
-  //     {...props}
-  //     dbs={['first', 'second', 'third']}
-  //   />
-  // ))
-  // .add('Login failed', () => (
-  //   <BankFormComponent
-  //     {...props}
-  //     initialValues={{
-  //       dbName: 'gonna fail',
-  //       password: 'password',
-  //       passwordConfirm: 'password',
-  //     }}
-  //     dbOpenError={new Error(`dbOpen failed!`)}
-  //   />
-  // ))
-  // .add('Initial Values', () => (
-  //   <BankFormComponent
-  //     {...props}
-  //     initialValues={{
-  //       dbName: 'storied database',
-  //       password: 'asdf',
-  //       passwordConfirm: 'asdf',
-  //     }}
-  //   />
-  // ))
+  .add('Edit (saving)', () => (
+    <BankFormComponent
+      {...props}
+      edit={{...bank, online: false}}
+      saving
+    />
+  ))
   ;

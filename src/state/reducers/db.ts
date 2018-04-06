@@ -7,6 +7,13 @@ export interface State {
   dbs: string[];
   isOpening: boolean;
   openError?: Error;
+
+  bankCreating?: boolean | Error;
+  bankUpdating?: boolean | Error;
+  bankDeleting?: boolean | Error;
+  accountCreating?: boolean | Error;
+  accountUpdating?: boolean | Error;
+  accountDeleting?: boolean | Error;
 }
 
 export const dbSelectors = {
@@ -24,7 +31,14 @@ export const dbSelectors = {
   },
   getDbIsOpen: (state: State): boolean => {
     return !!state.db;
-  }
+  },
+
+  isBankCreating: (state: State) => !!state.bankCreating,
+  isBankUpdating: (state: State) => !!state.bankUpdating,
+  isBankDeleting: (state: State) => !!state.bankDeleting,
+  isAccountCreating: (state: State) => !!state.accountCreating,
+  isAccountUpdating: (state: State) => !!state.accountUpdating,
+  isAccountDeleting: (state: State) => !!state.accountDeleting,
 };
 
 const initialState: State = {
@@ -47,6 +61,24 @@ const reducer = (state: State = initialState, action: RootAction): State => {
 
     case getType(actions.dbOpenFailure):
       return { ...state, openError: action.err };
+
+    case getType(actions.bankCreating):
+      return { ...state, bankCreating: action.creating };
+
+    case getType(actions.bankUpdating):
+      return { ...state, bankUpdating: action.updating };
+
+    case getType(actions.bankDeleting):
+      return { ...state, bankDeleting: action.deleting };
+
+    case getType(actions.accountCreating):
+      return { ...state, accountCreating: action.creating };
+
+    case getType(actions.accountUpdating):
+      return { ...state, accountUpdating: action.updating };
+
+    case getType(actions.accountDeleting):
+      return { ...state, accountDeleting: action.deleting };
 
     default:
       return state;

@@ -18,6 +18,13 @@ export const selectors = {
   getAccounts: (state: RootState, bankId: Bank.Id) => viewsSelectors.getAccounts(state.views, bankId),
   getFIs: (state: RootState) => fiSelectors.getFIs(state.fi),
   getLocation: (state: RootState) => state.router.location,
+  getPathname: (state: RootState) => state.router.location && state.router.location.pathname,
+  isBankCreating: (state: RootState) => dbSelectors.isBankCreating(state.db),
+  isBankUpdating: (state: RootState) => dbSelectors.isBankUpdating(state.db),
+  isBankDeleting: (state: RootState) => dbSelectors.isBankDeleting(state.db),
+  isAccountCreating: (state: RootState) => dbSelectors.isAccountCreating(state.db),
+  isAccountUpdating: (state: RootState) => dbSelectors.isAccountUpdating(state.db),
+  isAccountDeleting: (state: RootState) => dbSelectors.isAccountDeleting(state.db),
 };
 
 export interface RootState {

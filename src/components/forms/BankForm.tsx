@@ -7,8 +7,12 @@ import { List } from '../list';
 import { typedFields, SelectFieldItem } from './fields';
 
 interface Props {
-  filist: FI[];
   edit?: Bank;
+}
+
+interface ConnectedProps extends Props {
+  filist: FI[];
+  saving: boolean;
   bankCreate: (props: Bank.Props) => any;
   bankUpdate: (bankId: Bank.Id, q: Bank.Query) => any;
 }
@@ -43,7 +47,7 @@ const {
   UrlField,
 } = typedFields<FormValues>();
 
-export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
+export const BankFormComponent: React.SFC<ConnectedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   const defaultFi = props.edit ? props.filist.findIndex(fi => fi.name === props.edit!.name) : 0;
 
   return (
@@ -71,18 +75,16 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={async values => {
+      onSubmit={values => {
         if (props.edit) {
           const q = Bank.diff(props.edit, values);
-          await props.bankUpdate(props.edit.id, q);
-          router.history.goBack();
+          props.bankUpdate(props.edit.id, q);
         } else {
           const { fi, ...bankProps } = values;
-          const bank = await props.bankCreate({
+          props.bankCreate({
             ...bankProps,
             accounts: [],
           });
-          router.history.replace(nav.accounts());
         }
       }}
     >
@@ -167,6 +169,7 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx
             </List>
           </CollapseField>
           <SubmitButton
+            disabled={props.saving}
             onPress={formApi.submitForm}
             title={props.edit ? messages.save : messages.create}
           />
@@ -178,12 +181,13 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx
 BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
 export const BankForm = connect(
-  (state: RootState) => ({
+  (state: RootState, props: Props) => ({
     filist: selectors.getFIs(state),
+    saving: props.edit ? selectors.isBankUpdating(state) : selectors.isBankCreating(state)
   }),
   {
-    bankCreate: actions.bankCreate,
-    bankUpdate: actions.bankUpdate,
+    bankCreate: actions.bankCreateUI,
+    bankUpdate: actions.bankUpdateUI,
   }
 )(BankFormComponent);
 BankForm.displayName = 'BankForm';

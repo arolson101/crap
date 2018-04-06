@@ -8,11 +8,13 @@ import { formStyles } from './formStyles';
 interface Props {
   title: FormattedMessage.MessageDescriptor;
   onPress: Function;
+  disabled?: boolean;
 }
 
 export const SubmitButton: React.ComponentType<Props> =
-  ({ title, onPress }: Props, { intl }: ctx.Intl) => (
+  ({ title, disabled, onPress }: Props, { intl }: ctx.Intl) => (
     <Button
+      disabled={disabled}
       title={intl.formatMessage(title)}
       onPress={() => onPress()}
     />
