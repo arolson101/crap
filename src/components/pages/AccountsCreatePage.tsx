@@ -1,82 +1,64 @@
 import * as React from 'react';
-import { View, Text, Button } from 'react-native';
-import { connect } from 'react-redux';
-import { Route } from 'react-router';
-import { Bank, selectors, paths, RootState } from '../../state';
+import { defineMessages } from 'react-intl';
+import { View, Text, Picker } from 'react-native';
+import { Bank, selectors, nav, paths } from '../../state';
 import { BankForm } from '../forms/BankForm';
+import { AccountForm } from '../forms/AccountForm';
+import { connect } from '../connect';
 import { ctx } from '../ctx';
+import { formStyles } from '../forms/fields/formStyles';
+
+interface Params {
+  bankId?: Bank.Id;
+}
 
 interface Props {
   banks: Bank.View[];
 }
 
-interface Tab {
-  path: string;
-  title: string;
-  exact?: boolean;
-  disabled?: boolean;
-}
-
-interface TabProps {
-  tabs: Tab[];
-}
-
-export const Tabs: React.SFC<TabProps> = ({ children, tabs }, { router }: ctx.Router) => {
+export const AccountsCreatePageComponent: React.SFC<Props> = (props, {intl, router}: ctx.Intl & ctx.Router<Params>) => {
+  const { history, route } = router;
   return (
-    <View style={{flexDirection: 'row'}}>
-      {tabs.map(tab =>
-        <Route
-          key={tab.path}
-          exact={tab.exact}
-          path={tab.path}
-          children={({ match }) => <Button
-            disabled={!!match || tab.disabled}
-            onPress={() => router.history.replace(tab.path)}
-            title={tab.title}
-          />}
+    <View>
+      <Text>create account</Text>
+
+      <Picker
+        style={formStyles.picker}
+        itemStyle={formStyles.pickerItem}
+        onValueChange={(bankId) => router.history.replace(bankId ? nav.accountCreate(bankId) : nav.bankCreate())}
+        selectedValue={router.route.match.params.bankId}
+      >
+        <Picker.Item
+          label={intl.formatMessage(messages.new)}
+          value={''}
         />
-      )}
+        {props.banks.map(bankView =>
+          <Picker.Item
+            key={bankView.bank.id}
+            label={bankView.bank.name}
+            value={bankView.bank.id}
+          />
+        )}
+      </Picker>
+
+      {router.route.match.params.bankId
+        ? <AccountForm bankId={router.route.match.params.bankId}/>
+        : <BankForm/>
+      }
     </View>
   );
 };
-Tabs.contextTypes = ctx.router;
-
-export const AccountsCreatePageComponent: React.SFC<Props> = (props) => (
-  <View>
-    <Tabs
-      tabs={[
-        {
-          exact: true,
-          path: paths.accounts.create,
-          title: 'bank',
-        },
-        {
-          exact: true,
-          path: paths.accounts.createAccount,
-          title: 'account',
-          disabled: (props.banks.length === 0),
-        },
-      ]}
-    />
-    <Route path={paths.accounts.create} exact component={CreateBankPage}/>
-    <Route path={paths.accounts.createAccount} exact children={() => <CreateAccountPage {...props}/>}/>
-  </View>
-);
+AccountsCreatePageComponent.contextTypes = {...ctx.intl, ...ctx.router};
 
 export const AccountsCreatePage = connect(
-  (state: RootState) => ({
+  state => ({
     banks: selectors.getBanks(state),
   })
 )(AccountsCreatePageComponent);
 
-const CreateBankPage: React.SFC = () => <BankForm/>;
-
-const CreateAccountPage: React.SFC<Props> = (props) => {
-  return (
-    <View>
-      {props.banks.map(bank =>
-        <Text key={bank.bank.id}>{bank.bank.name}</Text>
-      )}
-    </View>
-  );
-};
+const messages = defineMessages({
+  new: {
+    id: 'AccountsCreatePage.new',
+    defaultMessage: 'New...'
+  },
+});

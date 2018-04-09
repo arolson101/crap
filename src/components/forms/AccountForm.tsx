@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { Form } from 'react-form';
 import { defineMessages } from 'react-intl';
-import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, selectors, Bank, Account, nav } from '../../state';
 import { ctx } from '../ctx';
-import { SelectField, TextField, SubmitButton } from './fields';
+import { List } from '../list';
+import { typedFields, SelectFieldItem } from './fields';
 
 interface Props {
   edit?: Account;
-  bank: Bank;
+  bankId: Bank.Id;
 }
 
 interface ConnectedProps extends Props {
@@ -18,6 +17,7 @@ interface ConnectedProps extends Props {
   accountCreate: (bankId: Bank.Id, props: Account.Props) => any;
 }
 
+// typescript 2.8: Mutable<Account.Props>
 interface FormValues {
   name: string;
   color: string;
@@ -28,57 +28,27 @@ interface FormValues {
   key: string;
 }
 
+const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>();
+
 export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   return (
     <Form
       defaultValues={{
-        name: '',
-        type: Account.Type.CHECKING,
-        color: Account.generateColor(Account.Type.CHECKING),
-        number: '',
-        visible: true,
-        bankid: '',
-        key: '',
-        ...props.edit,
-      } as FormValues}
-      validateError={(values: FormValues) => ({
+        ...Account.defaultValues,
+        ...props.edit as any,
+      }}
+      validateError={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={async (values: FormValues) => {
+      onSubmit={async values => {
         if (props.edit) {
-          const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
-            const value = trim ? (values[key] as string).trim() : values[key];
-            if (props.edit && props.edit[key] !== value) {
-              return { [key]: { $set: value } };
-            } else {
-              return {};
-            }
-          };
-
-          const q: Account.Query = {
-            ...propIfChanged('name', true),
-            ...propIfChanged('color', true),
-            ...propIfChanged('type'),
-            ...propIfChanged('number', true),
-            ...propIfChanged('bankid', true),
-            ...propIfChanged('visible'),
-            ...propIfChanged('key', true),
-          };
-
+          const q = Account.diff(props.edit, values);
           await props.accountUpdate(props.edit.id, q);
           router.history.goBack();
         } else {
-          const account = await props.accountCreate(props.bank.id, {
-            name: values.name.trim(),
-            color: values.color.trim(),
-            type: values.type,
-            number: values.number.trim(),
-            visible: values.visible,
-            bankid: values.bankid.trim(),
-            key: values.key.trim(),
-          });
-          router.history.replace(nav.account(props.bank.id, account.id));
+          const account = await props.accountCreate(props.bankId, values);
+          router.history.replace(nav.accountView(props.bankId, account.id));
         }
       }}
     >
@@ -98,7 +68,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
             />
             <SelectField
               field="type"
-              items={Object.keys(Account.Type).map((acct: Account.Type): SelectField.Item => ({
+              items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
                 value: acct.toString(),
                 label: intl.formatMessage(Account.messages[acct])
               }))}
@@ -111,7 +81,7 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
               field="color"
               label={messages.color}
               placeholder={messages.colorPlaceholder}
-              textColor={(formApi.values as FormValues).color}
+              textColor={formApi.values.color}
             />
             {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
               <TextField
@@ -141,7 +111,7 @@ AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
 export const AccountForm: React.ComponentClass<Props> = connect(
   (state: RootState, props: Props) => ({
-    accounts: selectors.getAccounts(state, props.bank.id),
+    accounts: selectors.getAccounts(state, props.bankId),
   }),
   {
     accountUpdate: actions.accountUpdate,

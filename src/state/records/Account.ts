@@ -93,4 +93,31 @@ export namespace Account {
       deletes: [id]
     });
   }
+
+  export const defaultValues = {
+    name: '',
+    type: Type.CHECKING,
+    color: generateColor(Account.Type.CHECKING),
+    number: '',
+    visible: true,
+    bankid: '',
+    key: '',
+  };
+
+  export const diff = (account: Account, values: Props): Query => {
+    return Object.keys(values).reduce(
+      (q, prop): Query => {
+        const val = values[prop];
+        if (val !== account[prop]) {
+          return ({
+            ...q,
+            [prop]: { $set: val }
+          });
+        } else {
+          return q;
+        }
+      },
+      {} as Query
+    );
+  };
 }

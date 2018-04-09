@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { FormField, FieldProps, FormFieldProps } from 'react-form';
 import { FormattedMessage } from 'react-intl';
 import { TextInput } from 'react-native';
 import { ListItem, IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
+import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
 
-interface Props extends FieldProps {
-  placeholder: FormattedMessage.MessageDescriptor;
-  leftIcon?: IconObject;
-  rows: number;
+export namespace MultilineTextField {
+  export interface Props<T = {}> extends FieldProps<T> {
+    placeholder: FormattedMessage.MessageDescriptor;
+    leftIcon?: IconObject;
+    rows: number;
+  }
 }
 
-const MultilineTextFieldComponent: React.SFC<Props & FormFieldProps> =
+const MultilineTextFieldComponent: React.SFC<MultilineTextField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, placeholder, rows }, { intl }: ctx.Intl) => (
     <ListItem
       leftIcon={leftIcon}
@@ -32,5 +34,5 @@ const MultilineTextFieldComponent: React.SFC<Props & FormFieldProps> =
   );
 MultilineTextFieldComponent.contextTypes = ctx.intl;
 
-export const MultilineTextField: React.ComponentClass<Props> = FormField(MultilineTextFieldComponent);
+export const MultilineTextField = FormField<MultilineTextField.Props>(MultilineTextFieldComponent);
 MultilineTextField.displayName = 'MultilineTextField';

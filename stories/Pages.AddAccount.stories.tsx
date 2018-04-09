@@ -1,11 +1,10 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { AddAccountPageComponent } from '../src/components/pages/AddAccountPage';
-import { configureStore } from '../src/state';
-import { dependencies, middlewares } from './storeHelpers';
+import { AccountsCreatePage } from '../src/components/pages/AccountsCreatePage';
+import { preloadedStore } from './storeHelpers';
 
-const store = configureStore(dependencies, middlewares);
+const store = preloadedStore();
 
 const props = {
   banks: [],
@@ -14,12 +13,12 @@ const props = {
 storiesOf('Pages/AddAccount', module)
   .addDecorator(story => <Provider store={store}>{story()}</Provider>)
   .add('No banks', () => (
-    <AddAccountPageComponent
+    <AccountsCreatePage
       {...props}
     />
   ))
   .add('Banks', () => (
-    <AddAccountPageComponent
+    <AccountsCreatePage
       {...props}
     />
   ))

@@ -38,23 +38,17 @@ const actionCreators = {
 export const paths = {
   root: {
     home: '/',
-    accounts: '/accounts',
+    accounts: '/account',
     budgets: '/budgets',
   },
 
-  accounts: {
-    create: '/accounts/create',
-    createAccount: '/accounts/create/account',
+  account: {
+    create: '/account/create/:bankId?',
+    view: '/account/:accountId',
+    update: '/account/update/:bankId/:accountId?',
   },
 
   dbAdvanced: '/db/:dbName',
-  accountsCreate: '/accounts/create',
-  bankCreate: '/accounts/create',
-  bank: '/accounts/:bankId',
-  bankUpdate: '/accounts/:bankId/update',
-  accountCreate: '/accounts/create/:bankId',
-  account: '/accounts/:bankId/:accountId',
-  accountUpdate: '/accounts/:bankId/:accountId/update',
 };
 
 export const nav = {
@@ -62,14 +56,16 @@ export const nav = {
   home: () => paths.root.home,
   budgets: () => paths.root.budgets,
   accounts: () => paths.root.accounts,
-  bankCreate: () => paths.bankCreate,
-  bank: (bankId: Bank.Id) => paths.bank.replace(':bankId', bankId),
-  bankUpdate: (bankId: Bank.Id) => paths.bankUpdate.replace(':bankId', bankId),
-  accountCreate: (bankId: Bank.Id) => paths.accountCreate.replace(':bankId', bankId),
-  account: (bankId: Bank.Id, accountId: Account.Id) =>
-    paths.account.replace(':bankId', bankId).replace(':accountId', accountId),
+  bankCreate: () =>
+    paths.account.create.replace(':bankId?', ''),
+  bankUpdate: (bankId: Bank.Id) =>
+    paths.account.update.replace(':bankId', bankId).replace(':accountId?', ''),
+  accountCreate: (bankId: Bank.Id) =>
+    paths.account.create.replace(':bankId?', bankId),
+  accountView: (bankId: Bank.Id, accountId: Account.Id) =>
+    paths.account.view.replace(':accountId', accountId),
   accountUpdate: (bankId: Bank.Id, accountId: Account.Id) =>
-    paths.accountUpdate.replace(':bankId', bankId).replace(':accountId', accountId),
+    paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
 };
 
 export const actions = {

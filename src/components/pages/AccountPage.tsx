@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { RouteComponentProps } from 'react-router';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { Button } from 'react-native';
 import { RootState, Bank, Account, selectors, nav } from '../../state';
 import { AccountForm } from '../forms/AccountForm';
+import { connect } from '../connect';
 
 interface Params {
   bankId: Bank.Id;
@@ -37,7 +38,7 @@ export const AccountDisplayPage = connect(
 AccountDisplayPage.displayName = 'AccountDisplayPage';
 
 export const AccountUpdatePageComponent: React.SFC<Props> = ({bank, account, children}) => (
-  <AccountForm bank={bank} edit={account}>
+  <AccountForm bankId={bank.id} edit={account}>
     {children}
   </AccountForm>
 );

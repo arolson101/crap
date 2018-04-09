@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { Form } from 'react-form';
 import { FormattedMessage, defineMessages } from 'react-intl';
-import { List } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { RootState, actions, selectors, nav, Bank, FI } from '../../state';
+import { RootState, actions, selectors, nav, Bank, FI, formatAddress } from '../../state';
 import { ctx } from '../ctx';
-import { SelectField, TextField, UrlField, MultilineTextField, CheckboxField,
-  CollapseField, SubmitButton } from './fields';
+import { List } from '../list';
+import { typedFields, SelectFieldItem } from './fields';
 
 interface Props {
   filist: FI[];
@@ -34,6 +32,17 @@ interface FormValues {
   password: string;
 }
 
+const {
+  Form,
+  CheckboxField,
+  CollapseField,
+  MultilineTextField,
+  SelectField,
+  SubmitButton,
+  TextField,
+  UrlField,
+} = typedFields<FormValues>();
+
 export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   const defaultFi = props.edit ? props.filist.findIndex(fi => fi.name === props.edit!.name) : 0;
 
@@ -56,62 +65,24 @@ export const BankFormComponent: React.SFC<Props> = (props, { intl, router }: ctx
         username: '',
         password: '',
 
-        ...props.edit,
-      } as FormValues}
-      validateError={(values: FormValues) => ({
+        ...props.edit as any,
+      }}
+      validateError={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={async (values: FormValues) => {
+      onSubmit={async values => {
         if (props.edit) {
-          const propIfChanged = (key: keyof FormValues, trim: boolean = false) => {
-            const value = trim ? (values[key] as string).trim() : values[key];
-            if (props.edit && props.edit[key] !== value) {
-              return { [key]: { $set: value } };
-            } else {
-              return {};
-            }
-          };
-
-          const q: Bank.Query = {
-            ...propIfChanged('name', true),
-            ...propIfChanged('web', true),
-            ...propIfChanged('address', true),
-            ...propIfChanged('notes', true),
-
-            ...propIfChanged('online'),
-
-            ...propIfChanged('fid', true),
-            ...propIfChanged('org', true),
-            ...propIfChanged('ofx', true),
-
-            ...propIfChanged('username', true),
-            ...propIfChanged('password'),
-          };
-
+          const q = Bank.diff(props.edit, values);
           await props.bankUpdate(props.edit.id, q);
           router.history.goBack();
         } else {
+          const { fi, ...bankProps } = values;
           const bank = await props.bankCreate({
-            name: values.name.trim(),
-            web: values.web.trim(),
-            address: values.address.trim(),
-            notes: values.notes.trim(),
-            favicon: values.favicon.trim(),
-
-            online: values.online,
-
-            fid: values.fid.trim(),
-            org: values.org.trim(),
-            ofx: values.ofx.trim(),
-
-            username: values.username.trim(),
-            password: values.password,
-
+            ...bankProps,
             accounts: [],
           });
-
-          router.history.replace(nav.bank(bank.id));
+          router.history.replace(nav.accounts());
         }
       }}
     >
@@ -216,27 +187,6 @@ export const BankForm = connect(
   }
 )(BankFormComponent);
 BankForm.displayName = 'BankForm';
-
-const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null);
-
-const formatAddress = (fi: FI): string => {
-  if (fi && fi.profile) {
-    return [
-      fi.profile.address1,
-      fi.profile.address2,
-      fi.profile.address3,
-
-      [
-        [fi.profile.city, fi.profile.state].filter(defined).join(', '),
-        fi.profile.zip
-      ].filter(defined).join(' '),
-
-      fi.profile.country
-    ].filter(defined).join('\n');
-  } else {
-    return '';
-  }
-};
 
 const messages = defineMessages({
   save: {

@@ -21,7 +21,7 @@ const bank: Bank = {
 };
 
 const props = {
-  bank,
+  bankId: bank.id,
   accounts: [],
   accountUpdate: action('accountUpdate'),
   accountCreate: action('accountCreate'),

@@ -33,6 +33,12 @@ export class AppDatabase extends Dexie {
   [Category.table]: Dexie.Table<Category, Category.Id>;
   [Transaction.table]: Dexie.Table<Transaction, Transaction.Id>;
 
+  static async open(name: string) {
+    const db = new AppDatabase(name);
+    await db.open();
+    return db;
+  }
+
   constructor (name: string) {
     super(name);
     this.version(1).stores({
