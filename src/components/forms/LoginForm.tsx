@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
-import { ButtonGroup, List, ListItem } from 'react-native-elements';
+import { View } from 'react-native';
+import { ButtonGroup, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, actions, nav, selectors } from '../../state';
 import { ctx } from '../ctx';
@@ -103,7 +104,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
       }}
     >
       {formApi =>
-        <List>
+        <View>
           <TextField
             field="dbName"
             label={messages.dbNameLabel}
@@ -127,7 +128,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
             onPress={formApi.submitForm}
             title={messages.create}
           />
-        </List>
+        </View>
       }
     </Form>
   );
@@ -154,7 +155,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
       }}
     >
       {formApi =>
-        <List>
+        <View>
           <SelectField
             field="dbName"
             label={messages.dbNameLabel}
@@ -168,7 +169,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
             placeholder={messages.passwordPlaceholder}
           />
           <ListItem
-            wrapperStyle={formStyles.wrapperStyle}
+            // wrapperStyle={formStyles.wrapperStyle}
             title={formatMessage(messages.advanced)}
             onPress={() => push(nav.dbAdvanced(formApi.values.dbName))}
           />
@@ -177,7 +178,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
             onPress={formApi.submitForm}
             title={messages.open}
           />
-        </List>
+        </View>
       }
     </Form>
   );

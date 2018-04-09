@@ -7,7 +7,7 @@ function nodeModule(mod) {
 }
 
 module.exports = function override(config, env) {
-  // config = rewireGqlTag(config,env);
+  config = rewireGqlTag(config,env);
 
   //do stuff with the webpack config...
   config.resolve.alias = {
@@ -27,13 +27,14 @@ module.exports = function override(config, env) {
   config.module.rules[0] =
   // https://gist.github.com/micimize/bf64ecbb6a32c236534a3431e76b27bb
   {
-    test: /.(jsx?|mjs)$/,
+    test: /.jsx?$/,
     // Add every directory that needs to be compiled by Babel during the build
     include: [
       nodeModule('react-native-easy-grid'),
       nodeModule('react-native-elements'),
       nodeModule('react-native-keyboard-aware-scroll-view'),
       nodeModule('react-native-tab-view'),
+      nodeModule('react-native-touchable-scale'),
       nodeModule('react-native-vector-icons'),
       nodeModule('react-navigation'),
       nodeModule('react-router-native'),
@@ -61,6 +62,7 @@ module.exports = function override(config, env) {
   //   test: /\.graphqls?$/, loader: require('graphql-tag/loader'), exclude: '/node_modules/',
   // })
 
+  config.resolve.extensions = config.resolve.extensions.filter(ext => ext !== '.mjs');
   // config.resolve.extensions = [
   //   ...config.resolve.extensions,
   //   '.windows.js',

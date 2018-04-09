@@ -8,22 +8,23 @@ import { formStyles } from './formStyles';
 export namespace CheckboxField {
   export interface Props<T = {}> extends FieldProps<T> {
     label: FormattedMessage.MessageDescriptor;
-    leftIcon?: IconObject;
+    // leftIcon?: IconObject;
   }
 }
 
 const CheckboxFieldComponent: React.SFC<CheckboxField.Props & FormFieldProps> =
-  ({ fieldApi, leftIcon, label }, { intl }: ctx.Intl) => (
+  ({ fieldApi, /*leftIcon,*/ label }, { intl }: ctx.Intl) => (
     <ListItem
-      wrapperStyle={formStyles.wrapperStyle}
-      leftIcon={leftIcon}
+      // wrapperStyle={formStyles.wrapperStyle}
+      // leftIcon={leftIcon}
       title={intl.formatMessage(label)}
-      switchButton
-      switched={fieldApi.getValue()}
-      onSwitch={fieldApi.setValue}
+      switch={{
+        onValueChange: fieldApi.setValue,
+        value: fieldApi.getValue(),
+      }}
       subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
       subtitleStyle={formStyles.errorSubtitle}
-      hideChevron
+      chevron={false}
     />
   );
 CheckboxFieldComponent.contextTypes = ctx.intl;
