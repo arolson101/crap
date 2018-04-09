@@ -1,10 +1,14 @@
 var path = require("path");
 
+const rewireGqlTag = require('react-app-rewire-graphql-tag');
+
 function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
 }
 
 module.exports = function override(config, env) {
+  // config = rewireGqlTag(config,env);
+
   //do stuff with the webpack config...
   config.resolve.alias = {
     // ...config.resolve.alias,
@@ -23,7 +27,7 @@ module.exports = function override(config, env) {
   config.module.rules[0] =
   // https://gist.github.com/micimize/bf64ecbb6a32c236534a3431e76b27bb
   {
-    test: /.jsx?$/,
+    test: /.(jsx?|mjs)$/,
     // Add every directory that needs to be compiled by Babel during the build
     include: [
       nodeModule('react-native-easy-grid'),
@@ -52,6 +56,10 @@ module.exports = function override(config, env) {
       }
     }
   }
+
+  // config.module.rules.unshift({
+  //   test: /\.graphqls?$/, loader: require('graphql-tag/loader'), exclude: '/node_modules/',
+  // })
 
   // config.resolve.extensions = [
   //   ...config.resolve.extensions,
