@@ -1,0 +1,11 @@
+
+query Course($id: Int!) {
+  course(id: $id) {
+    id
+    title
+    author
+    description
+    topic
+    url
+  }
+}

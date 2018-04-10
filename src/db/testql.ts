@@ -1,29 +1,20 @@
-import { runQuery, QueryOptions } from 'apollo-server/dist/core/runQuery';
-import { makeExecutableSchema } from 'graphql-tools';
+import { execute } from 'graphql';
 import schema from './schema';
 import gql from 'graphql-tag';
+import { Course, CourseQuery } from './queries';
+
+const document = Course;
 
 async function test() {
-  const query = gql`
-  {
-    course(id: 1) {
-      id
-      title
-      author
-      description
-      topic
-      url
-    }
-  }
-  `;
-  const variables = {};
+  const variableValues = {id: 1};
 
-  const opts: QueryOptions = {
+  const opts = {
     schema,
-    query,
-    variables,
+    document,
+    variableValues,
   };
-  const res = await runQuery(opts);
+  const res = await execute(opts);
+  const data = res.data as CourseQuery;
   console.log(res);
 }
 

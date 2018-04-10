@@ -870,59 +870,13 @@
     react-split-pane "^0.1.77"
     react-treebeard "^2.1.0"
 
-"@types/accepts@*":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@types/accepts/-/accepts-1.3.5.tgz#c34bec115cfc746e04fe5a059df4ce7e7b391575"
-  dependencies:
-    "@types/node" "*"
-
-"@types/body-parser@*":
-  version "1.16.8"
-  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.16.8.tgz#687ec34140624a3bec2b1a8ea9268478ae8f3be3"
-  dependencies:
-    "@types/express" "*"
-    "@types/node" "*"
-
-"@types/body-parser@0.0.33":
-  version "0.0.33"
-  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-0.0.33.tgz#33ca1498fc37e51c5df0c81cae34569e7041e025"
-  dependencies:
-    "@types/express" "*"
-
-"@types/boom@0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/boom/-/boom-0.0.32.tgz#5dfd349b4e7ebe2c73ca8d39ab05687dd403f9a1"
-  dependencies:
-    "@types/node" "*"
+"@types/async@2.0.47":
+  version "2.0.47"
+  resolved "https://registry.yarnpkg.com/@types/async/-/async-2.0.47.tgz#f49ba1dd1f189486beb6e1d070a850f6ab4bd521"
 
 "@types/bson@^1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@types/bson/-/bson-1.0.7.tgz#c7dc60b561e8556ae9442e07ce4d01e34651d4d8"
-  dependencies:
-    "@types/node" "*"
-
-"@types/chai@^3.4.34":
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-3.5.2.tgz#c11cd2817d3a401b7ba0f5a420f35c56139b1c1e"
-
-"@types/connect@*", "@types/connect@^3.4.30":
-  version "3.4.31"
-  resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.31.tgz#1f92d6b117ecc05076c49ecd024f7976e528bad9"
-  dependencies:
-    "@types/node" "*"
-
-"@types/cookies@*":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@types/cookies/-/cookies-0.7.1.tgz#f9f204bd6767d389eea3b87609e30c090c77a540"
-  dependencies:
-    "@types/connect" "*"
-    "@types/express" "*"
-    "@types/keygrip" "*"
-    "@types/node" "*"
-
-"@types/cookies@^0.5.30":
-  version "0.5.30"
-  resolved "https://registry.yarnpkg.com/@types/cookies/-/cookies-0.5.30.tgz#de798b61d6c6da77d6559ab1db4c6f3c8b4935bd"
   dependencies:
     "@types/node" "*"
 
@@ -946,28 +900,9 @@
     "@types/react-native" "*"
     "@types/react-native-vector-icons" "*"
 
-"@types/express-serve-static-core@*", "@types/express-serve-static-core@^4.0.36":
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.11.1.tgz#f6f7212382d59b19d696677bcaa48a37280f5d45"
-  dependencies:
-    "@types/events" "*"
-    "@types/node" "*"
-
-"@types/express@*", "@types/express@^4.0.33":
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.11.1.tgz#f99663b3ab32d04cb11db612ef5dd7933f75465b"
-  dependencies:
-    "@types/body-parser" "*"
-    "@types/express-serve-static-core" "*"
-    "@types/serve-static" "*"
-
 "@types/fbemitter@*":
   version "2.0.32"
   resolved "https://registry.yarnpkg.com/@types/fbemitter/-/fbemitter-2.0.32.tgz#8ed204da0f54e9c8eaec31b1eec91e25132d082c"
-
-"@types/fibers@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@types/fibers/-/fibers-0.0.29.tgz#4c815209a717ede505c3040b4e3a31a7f5239d49"
 
 "@types/glob@*":
   version "5.0.35"
@@ -981,23 +916,13 @@
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.11.8.tgz#53ff3604e99db810dd43347f19fcd1c59725a7bb"
 
-"@types/hapi@^13.0.35":
-  version "13.0.38"
-  resolved "https://registry.yarnpkg.com/@types/hapi/-/hapi-13.0.38.tgz#3671ab29fd465d61e394718ce546b7d5ef21a331"
-  dependencies:
-    "@types/node" "*"
+"@types/graphql@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.0.tgz#78a33a7f429a06a64714817d9130d578e0f35ecb"
 
 "@types/history@*", "@types/history@^4.6.2":
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
-
-"@types/http-assert@*":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.2.2.tgz#17dfe5a82184a8898935d96fe2eaedd37d22d9a4"
-
-"@types/http-errors@^1.3.29":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@types/http-errors/-/http-errors-1.6.1.tgz#367744a6c04b833383f497f647cc3690b0cd4055"
 
 "@types/inline-style-prefixer@^3.0.1":
   version "3.0.1"
@@ -1006,38 +931,6 @@
 "@types/jest@^22.2.2":
   version "22.2.2"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.2.2.tgz#afe5dacbd00d65325f52da0ed3e76e259629ac9d"
-
-"@types/keygrip@*":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/keygrip/-/keygrip-1.0.1.tgz#ff540462d2fb4d0a88441ceaf27d287b01c3d878"
-
-"@types/koa-bodyparser@^3.0.19":
-  version "3.0.26"
-  resolved "https://registry.yarnpkg.com/@types/koa-bodyparser/-/koa-bodyparser-3.0.26.tgz#fe17932fe0dbf52369bcf94adea5def41bb6269c"
-  dependencies:
-    "@types/koa" "*"
-
-"@types/koa-compose@*":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@types/koa-compose/-/koa-compose-3.2.2.tgz#dc106e000bbf92a3ac900f756df47344887ee847"
-
-"@types/koa-router@^7.0.21":
-  version "7.0.27"
-  resolved "https://registry.yarnpkg.com/@types/koa-router/-/koa-router-7.0.27.tgz#4993d50cb9efdfcfb11f16c726a4b34f8fb3e0d4"
-  dependencies:
-    "@types/koa" "*"
-
-"@types/koa@*", "@types/koa@^2.0.33":
-  version "2.0.45"
-  resolved "https://registry.yarnpkg.com/@types/koa/-/koa-2.0.45.tgz#133cbda6cc8d12b73434b5d9663898c833f80aa2"
-  dependencies:
-    "@types/accepts" "*"
-    "@types/cookies" "*"
-    "@types/events" "*"
-    "@types/http-assert" "*"
-    "@types/keygrip" "*"
-    "@types/koa-compose" "*"
-    "@types/node" "*"
 
 "@types/lodash-es@^4.17.0":
   version "4.17.0"
@@ -1049,31 +942,13 @@
   version "4.14.106"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.106.tgz#6093e9a02aa567ddecfe9afadca89e53e5dce4dd"
 
-"@types/mime@*":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
-
-"@types/mime@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-0.0.29.tgz#fbcfd330573b912ef59eeee14602bface630754b"
-
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
 
-"@types/multer@0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/multer/-/multer-0.0.32.tgz#f89c751227dc20b7c933c309a3e7467c499fcdec"
-  dependencies:
-    "@types/express" "*"
-
 "@types/node@*", "@types/node@^9.4.6", "@types/node@^9.6.2":
   version "9.6.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.2.tgz#e49ac1adb458835e95ca6487bc20f916b37aff23"
-
-"@types/node@^6.0.41":
-  version "6.0.104"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.104.tgz#5a17c151c223041602f11a404db9a00e54250174"
 
 "@types/node@^8.0.24":
   version "8.10.4"
@@ -1287,13 +1162,6 @@
     "@types/rx-lite-time" "*"
     "@types/rx-lite-virtualtime" "*"
 
-"@types/serve-static@*", "@types/serve-static@^1.7.31":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.1.tgz#1d2801fa635d274cd97d4ec07e26b21b44127492"
-  dependencies:
-    "@types/express-serve-static-core" "*"
-    "@types/mime" "*"
-
 "@types/shortid@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/shortid/-/shortid-0.0.29.tgz#8093ee0416a6e2bf2aa6338109114b3fbffa0e9b"
@@ -1328,6 +1196,10 @@
 "@types/webpack-env@*":
   version "1.13.5"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.13.5.tgz#ca854e9fbdbcdf45d7376882875f28e2c60593f8"
+
+"@types/zen-observable@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.5.3.tgz#91b728599544efbb7386d8b6633693a3c2e7ade5"
 
 abab@^1.0.4:
   version "1.0.4"
@@ -1550,6 +1422,26 @@ apollo-cache-control@^0.1.0:
   dependencies:
     graphql-extensions "^0.0.x"
 
+apollo-cache@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.1.7.tgz#5817018a2fbfc05a21ba319bd17a3e7538110cc5"
+  dependencies:
+    apollo-utilities "^1.0.11"
+
+apollo-client@^2.2.8:
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.2.8.tgz#b604d31ab2d2dd00db3105d8793b93ee02ce567e"
+  dependencies:
+    "@types/zen-observable" "^0.5.3"
+    apollo-cache "^1.1.7"
+    apollo-link "^1.0.0"
+    apollo-link-dedup "^1.0.0"
+    apollo-utilities "^1.0.11"
+    symbol-observable "^1.0.2"
+    zen-observable "^0.7.0"
+  optionalDependencies:
+    "@types/async" "2.0.47"
+
 apollo-codegen@^0.19.1:
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/apollo-codegen/-/apollo-codegen-0.19.1.tgz#30444de019f453c0d6ec167072b8e11b52d7f92e"
@@ -1568,7 +1460,13 @@ apollo-codegen@^0.19.1:
     source-map-support "^0.5.0"
     yargs "^10.0.3"
 
-apollo-link@^1.2.1:
+apollo-link-dedup@^1.0.0:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/apollo-link-dedup/-/apollo-link-dedup-1.0.8.tgz#8c3028cf32557bd040ab6ba8856f38067bdacead"
+  dependencies:
+    apollo-link "^1.2.1"
+
+apollo-link@^1.0.0, apollo-link@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.1.tgz#c120b16059f9bd93401b9f72b94d2f80f3f305d2"
   dependencies:
@@ -1595,39 +1493,13 @@ apollo-server-module-graphiql@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/apollo-server-module-graphiql/-/apollo-server-module-graphiql-1.3.4.tgz#50399b7c51b7267d0c841529f5173e5fc7304de4"
 
-apollo-server@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/apollo-server/-/apollo-server-0.3.3.tgz#3b6876c1d8bf56f51736375fa48f60dccada75a8"
-  dependencies:
-    "@types/body-parser" "0.0.33"
-    "@types/boom" "0.0.32"
-    "@types/chai" "^3.4.34"
-    "@types/connect" "^3.4.30"
-    "@types/cookies" "^0.5.30"
-    "@types/express" "^4.0.33"
-    "@types/express-serve-static-core" "^4.0.36"
-    "@types/fibers" "0.0.29"
-    "@types/hapi" "^13.0.35"
-    "@types/http-errors" "^1.3.29"
-    "@types/koa" "^2.0.33"
-    "@types/koa-bodyparser" "^3.0.19"
-    "@types/koa-router" "^7.0.21"
-    "@types/mime" "0.0.29"
-    "@types/multer" "0.0.32"
-    "@types/node" "^6.0.41"
-    "@types/serve-static" "^1.7.31"
-    boom "^4.0.0"
-    http-errors "^1.5.0"
-    source-map-support "^0.4.2"
-    typed-graphql "^1.0.2"
-
 apollo-tracing@^0.1.0:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/apollo-tracing/-/apollo-tracing-0.1.4.tgz#5b8ae1b01526b160ee6e552a7f131923a9aedcc7"
   dependencies:
     graphql-extensions "~0.0.9"
 
-apollo-utilities@^1.0.0, apollo-utilities@^1.0.1:
+apollo-utilities@^1.0.0, apollo-utilities@^1.0.1, apollo-utilities@^1.0.11:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.11.tgz#cd36bfa6e5c04eea2caf0c204a0f38a0ad550802"
 
@@ -3371,7 +3243,7 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
-boom@4.x.x, boom@^4.0.0:
+boom@4.x.x:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/boom/-/boom-4.3.1.tgz#4f8a3005cb4a7e3889f749030fd25b96e01d2e31"
   dependencies:
@@ -6999,7 +6871,7 @@ http-errors@1.6.2:
     setprototypeof "1.0.3"
     statuses ">= 1.3.1 < 2"
 
-http-errors@^1.5.0, http-errors@~1.6.2:
+http-errors@~1.6.2:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.6.3.tgz#8b55680bb4be283a0b5bf4ea2e38580be1d9320d"
   dependencies:
@@ -8606,7 +8478,7 @@ lodash.zipobject@^4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/lodash.zipobject/-/lodash.zipobject-4.1.3.tgz#b399f5aba8ff62a746f6979bf20b214f964dbef8"
 
-"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.0.1, lodash@^4.10.1, lodash@^4.11.1, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.14.1, lodash@^4.16.6, lodash@^4.17.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
+lodash@4.17.5, "lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.0.1, lodash@^4.10.1, lodash@^4.11.1, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.14.1, lodash@^4.16.6, lodash@^4.17.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
@@ -10814,6 +10686,16 @@ rc@^1.0.1, rc@^1.1.2, rc@^1.1.6, rc@^1.1.7, rc@^1.2.1:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-apollo@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.1.3.tgz#5eb02cdf18cc4bdeb615bda94baedb50354e94e5"
+  dependencies:
+    fbjs "^0.8.16"
+    hoist-non-react-statics "^2.5.0"
+    invariant "^2.2.2"
+    lodash "4.17.5"
+    prop-types "^15.6.0"
 
 react-app-rewire-graphql-tag@^1.1.0:
   version "1.1.0"
@@ -13187,7 +13069,7 @@ symbol-observable@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.1.tgz#8340fc4702c3122df5d22288f88283f513d3fdd4"
 
-symbol-observable@^1.0.3, symbol-observable@^1.0.4:
+symbol-observable@^1.0.2, symbol-observable@^1.0.3, symbol-observable@^1.0.4:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
 
@@ -13587,10 +13469,6 @@ type-is@~1.6.15, type-is@~1.6.16:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.18"
-
-typed-graphql@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/typed-graphql/-/typed-graphql-1.0.2.tgz#4c0f788775d552df4d4ec3d73f25469252f40fb8"
 
 typedarray@^0.0.6:
   version "0.0.6"

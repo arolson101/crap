@@ -28,13 +28,25 @@ var coursesData = [
 
 const resolvers = {
   Query: {
-      allCourses: async () => {
+      allCourses: () => {
           return coursesData;
       },
-      course: async (root: any, {id}: any) => {
+      course: (root: any, {id}: any) => {
           return coursesData.filter(course => {
               return course.id === id;
           })[0];
+      },
+      account: () => {
+          return ({
+            id: 'ID!',
+            name: 'string',
+            color: 'string',
+            type: 1,
+            number: 'string',
+            visible: true,
+            bankid: 'string',
+            key: 'string',
+          });
       }
   }
 };

@@ -1,13 +1,178 @@
-type Course {
-    id: Int
-    title: String
-    author: String
-    description: String
-    topic: String
-    url: String
+
+schema {
+  query: Query
+  mutation: Mutation
 }
 
 type Query {
-    allCourses: [Course]
-    course(id: Int!): Course
+  allCourses: [Course]
+  course(id: Int!): Course
+}
+
+type Course {
+  id: Int!
+  title: String!
+  author: String!
+  description: String!
+  topic: String!
+  url: String!
+}
+
+###############################################################################
+
+input DbInput {
+  name: String!
+  password: String!
+}
+
+type Db {
+  id: ID!
+  name: String!
+}
+
+extend type Query {
+  dbs: [Db]
+}
+
+type Mutation {
+  openDb(id: ID!, password: String!): Db
+  closeDb(id: ID!): Boolean
+}
+
+###############################################################################
+
+input BankInput {
+  name: String!
+  web: String
+  address: String
+  notes: String
+  favicon: String
+
+  online: Boolean
+
+  fid: String
+  org: String
+  ofx: String
+
+  username: String
+  password: String
+}
+
+type Bank {
+  id: ID!
+
+  name: String!
+  web: String
+  address: String
+  notes: String
+  favicon: String
+
+  online: Boolean
+
+  fid: String
+  org: String
+  ofx: String
+
+  username: String
+  password: String
+
+  accounts: [Account]!
+}
+
+extend type Query {
+  bank(bankId: ID!): Bank
+  banks: [Bank]
+}
+
+extend type Mutation {
+  createBank(input: BankInput!): Bank
+  updateBank(bankId: ID!, input: BankInput!): Bank
+  deleteBank(bankId: ID!): Boolean
+}
+
+###############################################################################
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  MONEYMRKT
+  CREDITLINE
+  CREDITCARD
+}
+
+input AccountInput {
+  name: String
+  color: String
+  type: AccountType
+  number: String
+  visible: Boolean
+  bankid: String
+  key: String
+}
+
+type Account {
+  id: ID!
+  name: String
+  color: String
+  type: AccountType
+  number: String
+  visible: Boolean
+  bankid: String
+  key: String
+}
+
+extend type Query {
+  account(accountId: ID!): Account
+}
+
+extend type Mutation {
+  createAccountInBank(bankId: ID!, input: AccountInput): Account
+  updateAccount(accountId: ID!, input: AccountInput): Account
+  deleteAccount(accountId: ID!): Boolean
+}
+
+###############################################################################
+
+type Split {
+  category: Category
+  amount: Float
+}
+
+type Transaction {
+  id: ID!
+  account: Account!
+  serverid: String
+  time: Int
+  type: String
+  name: String
+  memo: String
+  amount: Float
+  split: [Split]!
+}
+
+type Bill {
+  id: ID!
+  name: String!
+  group: String
+  web: String
+  favicon: String
+  notes: String
+  amount: Float
+  account: Account
+  category: Category
+  rruleString: String
+  showAdvanced: Boolean
+}
+
+type Budget {
+  id: ID!
+  name: String
+  categories: [Category]!
+  sortOrder: Int
+}
+
+type Category {
+  id: ID!
+  name: String
+  amount: Float
 }

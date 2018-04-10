@@ -79,3 +79,5 @@ yarn-error.log*
 
 # expo
 .expo
+
+temp/
