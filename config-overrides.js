@@ -1,10 +1,14 @@
 var path = require("path");
 
+const rewireGqlTag = require('react-app-rewire-graphql-tag');
+
 function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
 }
 
 module.exports = function override(config, env) {
+  config = rewireGqlTag(config,env);
+
   //do stuff with the webpack config...
   config.resolve.alias = {
     // ...config.resolve.alias,
@@ -30,6 +34,7 @@ module.exports = function override(config, env) {
       nodeModule('react-native-elements'),
       nodeModule('react-native-keyboard-aware-scroll-view'),
       nodeModule('react-native-tab-view'),
+      nodeModule('react-native-touchable-scale'),
       nodeModule('react-native-vector-icons'),
       nodeModule('react-navigation'),
       nodeModule('react-router-native'),
@@ -53,6 +58,11 @@ module.exports = function override(config, env) {
     }
   }
 
+  // config.module.rules.unshift({
+  //   test: /\.graphqls?$/, loader: require('graphql-tag/loader'), exclude: '/node_modules/',
+  // })
+
+  config.resolve.extensions = config.resolve.extensions.filter(ext => ext !== '.mjs');
   // config.resolve.extensions = [
   //   ...config.resolve.extensions,
   //   '.windows.js',

@@ -10,6 +10,7 @@ import { App } from './components/App';
 import { LoadFonts } from './components/LoadFonts';
 import { createHistory } from './createHistory';
 import { configureStore, actions, ThunkDependencies, AppDatabase } from './state';
+import './db';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 

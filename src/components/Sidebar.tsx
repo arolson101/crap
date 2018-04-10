@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { View, ScrollView } from 'react-native';
-import { List, ListItem, Text } from 'react-native-elements';
+import { ListItem, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { RootState, selectors, Bank, nav } from '../state';
 import { ctx } from './ctx';
+
+const List = View;
 
 interface Props {
   banks: Bank.View[];
@@ -15,9 +17,9 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
     <View style={{flex: 1, display: 'flex'}}>
       <ScrollView>
         <List>
-          <ListItem onPress={() => push(nav.home())} title="home" leftIcon={{ name: 'home' }} hideChevron />
-          <ListItem onPress={() => push(nav.budgets())} title="budgets" leftIcon={{ name: 'home' }} hideChevron />
-          <ListItem onPress={() => push(nav.accounts())} title="accounts" leftIcon={{ name: 'home' }} hideChevron />
+          <ListItem onPress={() => push(nav.home())} title="home" leftIcon={{ name: 'home' }}  />
+          <ListItem onPress={() => push(nav.budgets())} title="budgets" leftIcon={{ name: 'home' }}  />
+          <ListItem onPress={() => push(nav.accounts())} title="accounts" leftIcon={{ name: 'home' }}  />
           {props.banks.map(view =>
             <React.Fragment key={view.bank.id}>
               <Text>{view.bank.name}</Text>
@@ -27,9 +29,9 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
                   onPress={() => push(nav.accountView(view.bank.id, account.id))}
                   title={account.name}
                   subtitle={'$100.00'}
-                  subtitleNumberOfLines={3}
+                  // subtitleNumberOfLines={3}
                   leftIcon={{ name: 'home' }}
-                  hideChevron
+                  // hideChevron
                 />
               )}
             </React.Fragment>

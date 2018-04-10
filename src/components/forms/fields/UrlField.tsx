@@ -16,7 +16,7 @@ export namespace UrlField {
 const UrlFieldComponent: React.SFC<UrlField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, placeholder }, { intl }: ctx.Intl) => (
     <ListItem
-      leftIcon={leftIcon}
+      // leftIcon={leftIcon}
       title={
         <TextInput
           onChangeText={fieldApi.setValue}
@@ -26,7 +26,7 @@ const UrlFieldComponent: React.SFC<UrlField.Props & FormFieldProps> =
       }
       subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
       subtitleStyle={formStyles.errorSubtitle}
-      hideChevron
+      // hideChevron
     />
   );
 UrlFieldComponent.contextTypes = ctx.intl;

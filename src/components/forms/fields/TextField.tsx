@@ -20,20 +20,21 @@ export namespace TextField {
 const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => (
     <ListItem
-      textInputAutoFocus={autoFocus}
-      wrapperStyle={formStyles.wrapperStyle}
-      leftIcon={leftIcon}
+      // textInputAutoFocus={autoFocus}
+      // wrapperStyle={formStyles.wrapperStyle}
+      // leftIcon={leftIcon}
       title={intl.formatMessage(label)}
-      textInput
-      textInputStyle={{color: textColor}}
-      textInputMultiline={(rows ? rows > 0 : undefined)}
-      textInputPlaceholder={intl.formatMessage(placeholder)}
-      textInputValue={fieldApi.getValue()}
-      textInputOnChangeText={fieldApi.setValue}
-      subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
-      subtitleStyle={formStyles.errorSubtitle}
-      hideChevron
-      textInputSecure={secure}
+      input={{
+        inputStyle: {color: textColor},
+      }}
+      // textInputMultiline={(rows ? rows > 0 : undefined)}
+      // textInputPlaceholder={intl.formatMessage(placeholder)}
+      // textInputValue={fieldApi.getValue()}
+      // textInputOnChangeText={fieldApi.setValue}
+      // subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
+      // subtitleStyle={formStyles.errorSubtitle}
+      // hideChevron
+      // textInputSecure={secure}
     />
   );
 TextFieldComponent.contextTypes = ctx.intl;

@@ -17,7 +17,7 @@ export namespace MultilineTextField {
 const MultilineTextFieldComponent: React.SFC<MultilineTextField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, placeholder, rows }, { intl }: ctx.Intl) => (
     <ListItem
-      leftIcon={leftIcon}
+      // leftIcon={leftIcon}
       title={
         <TextInput
           multiline
@@ -29,7 +29,7 @@ const MultilineTextFieldComponent: React.SFC<MultilineTextField.Props & FormFiel
       }
       subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
       subtitleStyle={formStyles.errorSubtitle}
-      hideChevron
+      chevron={false}
     />
   );
 MultilineTextFieldComponent.contextTypes = ctx.intl;
