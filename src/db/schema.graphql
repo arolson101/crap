@@ -1,9 +1,13 @@
-type Query {
-  books: [Book]
-  book(title: String): Book
+type Course {
+    id: Int
+    title: String
+    author: String
+    description: String
+    topic: String
+    url: String
 }
 
-type Book {
-  title: String
-  author: String
+type Query {
+    allCourses: [Course]
+    course(id: Int!): Course
 }

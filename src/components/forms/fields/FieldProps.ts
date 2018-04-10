@@ -1,5 +1,4 @@
-import { FormFieldProps, FieldProps as RFFieldProps } from 'react-form';
-const RFFormField = require('react-form').withFormApi;
+import { FormField as RFFormField, FormFieldProps, FieldProps as RFFieldProps } from 'react-form';
 
 export { FormFieldProps };
 
