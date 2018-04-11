@@ -1,4 +1,4 @@
-import Course from './accounts.graphql';
+import Course from './Course.graphql';
 export { Course };
 export * from './query-types';
 
