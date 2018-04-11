@@ -5,9 +5,25 @@ schema {
 }
 
 type Query {
+  dbs: [Db]
   allCourses: [Course]
   course(id: Int!): Course
+
+  bank(bankId: ID!): Bank
+  banks: [Bank]
+  account(accountId: ID!): Account
 }
+
+type Mutation {
+  openDb(id: ID!, password: String!): Db
+  closeDb(id: ID!): Boolean
+
+  createAccountInBank(bankId: ID!, input: AccountInput): Account
+  updateAccount(accountId: ID!, input: AccountInput): Account
+  deleteAccount(accountId: ID!): Boolean
+}
+
+###############################################################################
 
 type Course {
   id: Int!
@@ -28,15 +44,6 @@ input DbInput {
 type Db {
   id: ID!
   name: String!
-}
-
-extend type Query {
-  dbs: [Db]
-}
-
-type Mutation {
-  openDb(id: ID!, password: String!): Db
-  closeDb(id: ID!): Boolean
 }
 
 ###############################################################################
@@ -79,11 +86,6 @@ type Bank {
   accounts: [Account]!
 }
 
-extend type Query {
-  bank(bankId: ID!): Bank
-  banks: [Bank]
-}
-
 extend type Mutation {
   createBank(input: BankInput!): Bank
   updateBank(bankId: ID!, input: BankInput!): Bank
@@ -119,16 +121,6 @@ type Account {
   visible: Boolean
   bankid: String
   key: String
-}
-
-extend type Query {
-  account(accountId: ID!): Account
-}
-
-extend type Mutation {
-  createAccountInBank(bankId: ID!, input: AccountInput): Account
-  updateAccount(accountId: ID!, input: AccountInput): Account
-  deleteAccount(accountId: ID!): Boolean
 }
 
 ###############################################################################

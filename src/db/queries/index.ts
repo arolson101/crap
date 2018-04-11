@@ -1,6 +1,6 @@
 import Course from './accounts.graphql';
 export { Course };
-export * from './codegen';
+export * from './query-types';
 
 // import { Query } from 'react-apollo';
 // import {} from 'apollo-client';
