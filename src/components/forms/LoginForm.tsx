@@ -8,51 +8,69 @@ import { ctx } from '../ctx';
 import { typedFields, SelectFieldItem, formStyles } from './fields';
 import ApolloClient from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
+import { ApolloProvider } from 'react-apollo';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import schema from '../../db/schema';
 import { execute } from 'graphql';
 import Observable from 'zen-observable-ts';
 
-const consoleLink = new ApolloLink((operation, forward) => {
-  console.log(`starting request for ${operation.operationName}`);
-
-  return new Observable(observer => {
-    const opts = {
-      schema,
-      document: operation.query,
-      variableValues: operation.variables,
-    };
-    Promise.resolve(execute(opts)).then(res => {
-      observer.next(res);
-      observer.complete();
-    });
+class GraphQlProvider extends React.Component {
+  client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new ApolloLink((operation, forward) => {
+      return new Observable(observer => {
+        const contextValue = {};
+        const opts = {
+          schema,
+          document: operation.query,
+          variableValues: operation.variables,
+          contextValue,
+        };
+        const exe = execute(opts);
+        if ('then' in exe) {
+          exe.then(res => {
+            observer.next(res);
+            observer.complete();
+          }).catch(err => {
+            observer.error(err);
+            observer.complete();
+          });
+        } else {
+          observer.next(exe);
+          observer.complete();
+        }
+      });
+    }),
   });
-});
 
-const client = new ApolloClient({
-  link: consoleLink,
-  cache: new InMemoryCache()
-});
-
-async function test() {
-  const query = gql`
-    query Course($id: Int!) {
-      course(id: $id) {
-        id
-        title
-        author
-        description
-        topic
-        url
-      }
-    }
-  `;
-  const variables = {id: 1};
-  client.query({query, variables}).then(res => console.log(`query result`, res));
+  render() {
+    return (
+      <ApolloProvider client={this.client}>
+        {this.props.children}
+      </ApolloProvider>
+    );
+  }
 }
 
-test();
+// async function test() {
+//   const query = gql`
+//     query Course($id: Int!) {
+//       course(id: $id) {
+//         id
+//         title
+//         author
+//         description
+//         topic
+//         url
+//       }
+//     }
+//   `;
+//   const variables = {id: 1};
+//   // client.query({query, variables}).then(res => console.log(`query result`, res));
+// }
+
+// test();
 
 interface Props {
   dbs: string[];
