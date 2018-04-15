@@ -22,35 +22,35 @@ export namespace SelectField {
 
 const SelectFieldComponent: React.SFC<SelectField.Props & FormFieldProps> =
   ({ fieldApi, leftIcon, label, items, onValueChange }, { intl }: ctx.Intl) => (
-    <ListItem
-      // wrapperStyle={formStyles.wrapperStyle}
-      // leftIcon={leftIcon}
-      title={intl.formatMessage(label)}
-      // label={
-      //   <Picker
-      //     style={formStyles.picker}
-      //     itemStyle={formStyles.pickerItem}
-      //     onValueChange={(value) => {
-      //       fieldApi.setValue(value);
-      //       if (onValueChange) {
-      //         onValueChange(value);
-      //       }
-      //     }}
-      //     selectedValue={fieldApi.getValue()}
-      //   >
-      //     {items.map(item =>
-      //       <Picker.Item
-      //         key={item.value}
-      //         label={item.label}
-      //         value={item.value}
-      //       />
-      //     )}
-      //   </Picker>
-      // }
-      subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
-      subtitleStyle={formStyles.errorSubtitle}
-      // hideChevron
-    />
+    // <ListItem
+    //   // wrapperStyle={formStyles.wrapperStyle}
+    //   // leftIcon={leftIcon}
+    //   title={intl.formatMessage(label)}
+    //   // label={
+        <Picker
+          style={formStyles.picker}
+          itemStyle={formStyles.pickerItem}
+          onValueChange={(value) => {
+            fieldApi.setValue(value);
+            if (onValueChange) {
+              onValueChange(value);
+            }
+          }}
+          selectedValue={fieldApi.getValue()}
+        >
+          {items.map(item =>
+            <Picker.Item
+              key={item.value}
+              label={item.label}
+              value={item.value}
+            />
+          )}
+        </Picker>
+    //   // }
+    //   subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
+    //   subtitleStyle={formStyles.errorSubtitle}
+    //   // hideChevron
+    // />
   );
 SelectFieldComponent.contextTypes = ctx.intl;
 

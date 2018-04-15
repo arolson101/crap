@@ -2,9 +2,9 @@ import Course from './Course.graphql';
 export { Course };
 export * from './query-types';
 
-// import { Query } from 'react-apollo';
+import { Query } from 'react-apollo';
 // import {} from 'apollo-client';
 
-// import { CourseQuery, CourseQueryVariables } from './codegen';
+import { CourseQuery as CourseQueryData, CourseQueryVariables } from './query-types';
 
-// class CourseQuery1 extends Query<CourseQuery, CourseQueryVariables> {}
+export class CourseQuery extends Query<CourseQueryData, CourseQueryVariables> {}

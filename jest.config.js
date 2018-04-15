@@ -6,7 +6,8 @@ module.exports = {
     }
   },
   transform: {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+    "^.+\\.(t|j)sx?$": "ts-jest",
+    "\\.(gql|graphql)$": "jest-transform-graphql",
   },
   transformIgnorePatterns: [
     "<rootDir>/node_modules/(?!(lodash-es|redux-mock-store)/.*)"

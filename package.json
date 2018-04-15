@@ -125,6 +125,7 @@
     "graphql-tools": "^2.23.1",
     "history": "^4.7.2",
     "immutability-helper": "^2.6.6",
+    "jest-transform-graphql": "^2.1.0",
     "lodash-es": "^4.17.8",
     "mkdirp": "^0.5.1",
     "native-base": "^2.4.1",

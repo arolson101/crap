@@ -8,50 +8,12 @@ import { ctx } from '../ctx';
 import { typedFields, SelectFieldItem, formStyles } from './fields';
 import ApolloClient from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
-import { ApolloProvider } from 'react-apollo';
+import { Query } from 'react-apollo';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import schema from '../../db/schema';
 import { execute } from 'graphql';
 import Observable from 'zen-observable-ts';
-
-class GraphQlProvider extends React.Component {
-  client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: new ApolloLink((operation, forward) => {
-      return new Observable(observer => {
-        const contextValue = {};
-        const opts = {
-          schema,
-          document: operation.query,
-          variableValues: operation.variables,
-          contextValue,
-        };
-        const exe = execute(opts);
-        if ('then' in exe) {
-          exe.then(res => {
-            observer.next(res);
-            observer.complete();
-          }).catch(err => {
-            observer.error(err);
-            observer.complete();
-          });
-        } else {
-          observer.next(exe);
-          observer.complete();
-        }
-      });
-    }),
-  });
-
-  render() {
-    return (
-      <ApolloProvider client={this.client}>
-        {this.props.children}
-      </ApolloProvider>
-    );
-  }
-}
 
 // async function test() {
 //   const query = gql`
@@ -117,7 +79,7 @@ export class LoginFormComponent extends React.PureComponent<Props, State> {
     return (
       <>
         <ButtonGroup
-          onPress={selectedIndex => this.setState({mode: selectedIndex})}
+          onPress={selectedIndex => this.setState({ mode: selectedIndex })}
           buttons={buttons}
           selectedIndex={mode}
           selectedIndexes={[mode]}

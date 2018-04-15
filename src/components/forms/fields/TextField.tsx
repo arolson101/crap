@@ -26,11 +26,11 @@ const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> 
       title={intl.formatMessage(label)}
       input={{
         inputStyle: {color: textColor},
+        onChangeText: fieldApi.setValue,
+        multiline: (rows ? rows > 0 : undefined),
+        placeholder: intl.formatMessage(placeholder),
+        value: fieldApi.getValue(),
       }}
-      // textInputMultiline={(rows ? rows > 0 : undefined)}
-      // textInputPlaceholder={intl.formatMessage(placeholder)}
-      // textInputValue={fieldApi.getValue()}
-      // textInputOnChangeText={fieldApi.setValue}
       // subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
       // subtitleStyle={formStyles.errorSubtitle}
       // hideChevron

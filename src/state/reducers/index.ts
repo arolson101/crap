@@ -12,6 +12,7 @@ export const selectors = {
   getDbs: (state: RootState) => dbSelectors.getDbs(state.db),
   getDbOpenError: (state: RootState) => dbSelectors.getDbOpenError(state.db),
   getDbIsOpen: (state: RootState) => dbSelectors.getDbIsOpen(state.db),
+  getGraphQLClient: (state: RootState) => dbSelectors.getGraphQLClient(state.db),
   getBank: (state: RootState, bankId: Bank.Id) => viewsSelectors.getBank(state.views, bankId),
   getBanks: (state: RootState) => viewsSelectors.getBanks(state.views),
   getAccount: (state: RootState, accountId: Account.Id) => viewsSelectors.getAccount(state.views, accountId),

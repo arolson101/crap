@@ -1,9 +1,11 @@
 import { getType } from 'typesafe-actions';
 import { actions, RootAction } from '../actions';
 import { AppDatabase } from '../AppDatabase';
+import { GraphQLClient, makeClient } from '../GraphQLClient';
 
 export interface State {
   db?: AppDatabase;
+  client?: GraphQLClient<any>;
   dbs: string[];
   isOpening: boolean;
   openError?: Error;
@@ -32,6 +34,9 @@ export const dbSelectors = {
   getDbIsOpen: (state: State): boolean => {
     return !!state.db;
   },
+  getGraphQLClient: (state: State) => {
+    return state.client;
+  },
 
   isBankCreating: (state: State) => !!state.bankCreating,
   isBankUpdating: (state: State) => !!state.bankUpdating,
@@ -57,7 +62,7 @@ const reducer = (state: State = initialState, action: RootAction): State => {
       return { ...state, db: undefined, openError: undefined };
 
     case getType(actions.dbOpenSuccess):
-      return { ...state, db: action.db };
+      return { ...state, db: action.db, client: makeClient(action.db) };
 
     case getType(actions.dbOpenFailure):
       return { ...state, openError: action.err };
