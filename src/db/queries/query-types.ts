@@ -7,7 +7,13 @@ export interface AccountsQuery {
       id: string,
       name: string | null,
     } | null >,
-  } | null > | null,
+  } | null >,
+};
+
+export interface AllCoursesQuery {
+  allCourses:  Array< {
+    title: string,
+  } | null >,
 };
 
 export interface CourseQueryVariables {
@@ -23,4 +29,17 @@ export interface CourseQuery {
     topic: string,
     url: string,
   } | null,
+};
+
+export interface DbsQuery {
+  dbs: Array< string >,
+};
+
+export interface OpenDbMutationVariables {
+  name: string,
+  password: string,
+};
+
+export interface OpenDbMutation {
+  openDb: boolean | null,
 };

@@ -1,29 +1,30 @@
-import * as React from 'react';
 import GraphQLClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
 import { execute } from 'graphql';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { connect } from 'react-redux';
 import Observable from 'zen-observable-ts';
 import schema, { ResolverContext } from '../db/schema';
-import { selectors, RootState } from '../state';
+import { selectors, RootState, RootStore } from '../state';
 import { AppDatabase } from './AppDatabase';
+import { runQuery } from 'apollo-server-core';
 
 export { GraphQLClient };
 
-export const makeClient = (db: AppDatabase) => new GraphQLClient({
+export const makeClient = (contextValue: ResolverContext) => new GraphQLClient({
   cache: new InMemoryCache(),
   link: new ApolloLink((operation, forward) => {
     return new Observable(observer => {
-      const contextValue: ResolverContext = { db };
       const opts = {
         schema,
-        document: operation.query,
-        variableValues: operation.variables,
-        contextValue,
+        query: operation.query,
+        variables: operation.variables,
+        context: contextValue,
       };
-      const exe = execute(opts);
+      const exe = runQuery(opts);
       if ('then' in exe) {
         exe.then(res => {
           observer.next(res);
@@ -40,19 +41,13 @@ export const makeClient = (db: AppDatabase) => new GraphQLClient({
   }),
 });
 
-const GraphQLProviderComponent: React.SFC<{client: any}> = ({client, children}) => {
-  if (!client) {
-    return <>{children}</>;
-  }
+export const GraphQLProvider: React.SFC = ({children}, context) => {
+  const contextValue: ResolverContext = {};
+  const client = makeClient(contextValue);
   return (
     <ApolloProvider client={client}>
       {children}
     </ApolloProvider>
   );
 };
-
-export const GraphQLProvider = connect(
-  (state: RootState) => ({
-    client: selectors.getGraphQLClient(state),
-  })
-)(GraphQLProviderComponent);
+GraphQLProvider.contextTypes = { store: PropTypes.object };

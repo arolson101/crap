@@ -1,7 +1,8 @@
 import { makeExecutableSchema } from 'graphql-tools';
 import resolvers from './resolvers';
 import typeDefs from './schema.graphql';
-import { AppDatabase } from '../../state/index';
+import { RootStore } from '../../state';
+import { AppDatabase } from './AppDatabase';
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -11,5 +12,5 @@ const schema = makeExecutableSchema({
 export default schema;
 
 export interface ResolverContext {
-  db: AppDatabase;
+  db?: AppDatabase;
 }

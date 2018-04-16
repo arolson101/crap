@@ -13,36 +13,15 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import schema from '../../db/schema';
 import { execute } from 'graphql';
-import Observable from 'zen-observable-ts';
+import { withDbsQuery, withOpenDbMutation } from '../../db/queries';
+import { compose } from 'recompose';
 
-// async function test() {
-//   const query = gql`
-//     query Course($id: Int!) {
-//       course(id: $id) {
-//         id
-//         title
-//         author
-//         description
-//         topic
-//         url
-//       }
-//     }
-//   `;
-//   const variables = {id: 1};
-//   // client.query({query, variables}).then(res => console.log(`query result`, res));
-// }
-
-// test();
-
-interface Props {
-  dbs: string[];
-  dbOpenError: Error | undefined;
-  dbOpen: (dbName: string, password: string) => any;
+interface Props extends withDbsQuery.Props, withOpenDbMutation.Props {
   initialValues?: Partial<FormValues>;
 }
 
 interface FormValues {
-  dbName: string;
+  name: string;
   password: string;
   passwordConfirm: string;
 }
@@ -75,7 +54,15 @@ export class LoginFormComponent extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const mode = this.props.dbs.length ? this.state.mode : Mode.CreateNew;
+    if (this.props.dbs.loading) {
+      return null;
+    }
+
+    if (this.props.dbs.error) {
+      return `Error: ${this.props.dbs.error.message}`;
+    }
+
+    const mode = this.props.dbs.data.length ? this.state.mode : Mode.CreateNew;
     return (
       <>
         <ButtonGroup
@@ -87,24 +74,30 @@ export class LoginFormComponent extends React.PureComponent<Props, State> {
         />
 
         {mode === Mode.CreateNew
-          ? <FormCreate {...this.props} />
-          : <FormOpen {...this.props} />
+          ? <FormCreate {...this.props}/>
+          : <FormOpen {...this.props}/>
         }
       </>
     );
   }
 }
 
-export const LoginForm = connect(
-  (state: RootState) => ({
-    dbs: selectors.getDbs(state),
-    dbOpenError: selectors.getDbOpenError(state),
-  }),
-  {
-    dbOpen: actions.dbOpen,
-  }
+export const LoginForm = compose(
+  withDbsQuery,
+  withOpenDbMutation,
 )(LoginFormComponent);
 LoginForm.displayName = 'LoginForm';
+
+// export const LoginForm = connect(
+//   (state: RootState) => ({
+//     dbs: selectors.getDbs(state),
+//     dbOpenError: selectors.getDbOpenError(state),
+//   }),
+//   {
+//     dbOpen: actions.dbOpen,
+//   }
+// )(LoginFormComponent);
+// LoginForm.displayName = 'LoginForm';
 
 const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
   const { intl: { formatMessage } } = context;
@@ -112,30 +105,30 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
   return (
     <Form
       defaultValues={{
-        dbName: '',
+        name: '',
         password: '',
         passwordConfirm: '',
         ...props.initialValues,
       }}
       validateError={values => ({
-        dbName: !values.dbName.trim() ? formatMessage(messages.valueEmpty)
-          : props.dbs.includes(values.dbName.trim()) ? formatMessage(messages.dbExists)
+        name: !values.name.trim() ? formatMessage(messages.valueEmpty)
+          : props.dbs.data.includes(values.name.trim()) ? formatMessage(messages.dbExists)
             : undefined,
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined,
         passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
           : undefined,
       })}
-      onSubmit={values => {
-        return props.dbOpen(values.dbName, values.password);
+      onSubmit={variables => {
+        return props.openDb.execute({ variables });
       }}
     >
       {formApi =>
         <View>
           <TextField
-            field="dbName"
-            label={messages.dbNameLabel}
-            placeholder={messages.dbNamePlaceholder}
+            field="name"
+            label={messages.nameLabel}
+            placeholder={messages.namePlaceholder}
             autoFocus
           />
           <TextField
@@ -150,8 +143,9 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
             label={messages.passwordConfirmLabel}
             placeholder={messages.passwordConfirmPlaceholder}
           />
-          <ErrorMessage error={props.dbOpenError} />
+          <ErrorMessage error={props.openDb.error} />
           <SubmitButton
+            disabled={props.openDb.loading}
             onPress={formApi.submitForm}
             title={messages.create}
           />
@@ -169,24 +163,24 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
   return (
     <Form
       defaultValues={{
-        dbName: props.dbs[0],
+        name: props.dbs.data[0],
         password: '',
         ...props.initialValues,
       }}
-      validateError={values => ({
-        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined,
-      })}
-      onSubmit={values => {
-        return props.dbOpen(values.dbName, values.password);
+      // validateError={values => ({
+      //   password: !values.password.trim() ? formatMessage(messages.valueEmpty)
+      //     : undefined,
+      // })}
+      onSubmit={variables => {
+        return props.openDb.execute({ variables });
       }}
     >
       {formApi =>
         <View>
           <SelectField
-            field="dbName"
-            label={messages.dbNameLabel}
-            items={props.dbs.map(db => ({ value: db, label: db }))}
+            field="name"
+            label={messages.nameLabel}
+            items={props.dbs.data.map(db => ({ value: db, label: db }))}
           />
           <TextField
             secure
@@ -198,10 +192,11 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
           <ListItem
             // wrapperStyle={formStyles.wrapperStyle}
             title={formatMessage(messages.advanced)}
-            onPress={() => push(nav.dbAdvanced(formApi.values.dbName))}
+            onPress={() => push(nav.dbAdvanced(formApi.values.name))}
           />
-          <ErrorMessage error={props.dbOpenError} />
+          <ErrorMessage error={props.openDb.error} />
           <SubmitButton
+            disabled={props.openDb.loading}
             onPress={formApi.submitForm}
             title={messages.open}
           />
@@ -213,10 +208,6 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
 FormOpen.contextTypes = { ...ctx.intl, ...ctx.router };
 
 const messages = defineMessages({
-  dbName: {
-    id: 'LoginForm.dbName',
-    defaultMessage: 'DB Name'
-  },
   create: {
     id: 'LoginForm.create',
     defaultMessage: 'Create',
@@ -237,12 +228,12 @@ const messages = defineMessages({
     id: 'LoginForm.passwordsMatch',
     defaultMessage: 'Passwords must match'
   },
-  dbNameLabel: {
-    id: 'LoginForm.dbNameLabel',
+  nameLabel: {
+    id: 'LoginForm.nameLabel',
     defaultMessage: 'Database Name'
   },
-  dbNamePlaceholder: {
-    id: 'LoginForm.dbNamePlaceholder',
+  namePlaceholder: {
+    id: 'LoginForm.namePlaceholder',
     defaultMessage: 'My Database'
   },
   passwordLabel: {

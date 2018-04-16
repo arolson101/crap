@@ -48,7 +48,7 @@
     "generate": "yarn run generate:queries && yarn run generate:schema",
     "generate:queries": "apollo-codegen generate \"src/db/queries/*.graphql\" --schema temp/schema.json --target typescript --output src/db/queries/query-types.ts",
     "generate:schema": "gql-gen --template typescript --file ./temp/schema.json --out ./src/db/schema/schema-types.ts ./src/db/schema/schema.graphql",
-    "postinstall": "rimraf node_modules/graphql/*.mjs"
+    "postinstall": "rimraf \"node_modules/graphql/**/*.mjs\""
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.3.1",

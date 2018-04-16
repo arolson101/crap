@@ -1,0 +1,3 @@
+mutation OpenDb($name: String!, $password: String!) {
+  openDb(name: $name, password: $password)
+}

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers, Store } from 'redux';
 import { routerReducer, RouterState } from 'react-router-redux';
 import db, { State as DbState, dbSelectors } from './db';
 import fi, { State as FiState, fiSelectors } from './fi';
@@ -12,7 +12,6 @@ export const selectors = {
   getDbs: (state: RootState) => dbSelectors.getDbs(state.db),
   getDbOpenError: (state: RootState) => dbSelectors.getDbOpenError(state.db),
   getDbIsOpen: (state: RootState) => dbSelectors.getDbIsOpen(state.db),
-  getGraphQLClient: (state: RootState) => dbSelectors.getGraphQLClient(state.db),
   getBank: (state: RootState, bankId: Bank.Id) => viewsSelectors.getBank(state.views, bankId),
   getBanks: (state: RootState) => viewsSelectors.getBanks(state.views),
   getAccount: (state: RootState, accountId: Account.Id) => viewsSelectors.getAccount(state.views, accountId),
@@ -35,6 +34,8 @@ export interface RootState {
   router: RouterState;
   views: ViewsState;
 }
+
+export type RootStore = Store<RootState>;
 
 export const rootReducer = combineReducers<RootState>({
   ping,

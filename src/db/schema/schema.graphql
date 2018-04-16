@@ -5,18 +5,18 @@ schema {
 }
 
 type Query {
-  dbs: [Db]
-  allCourses: [Course]
+  dbs: [String!]!
+  allCourses: [Course]!
   course(id: Int!): Course
 
   bank(bankId: ID!): Bank
-  banks: [Bank]
-  account(accountId: ID!): Account
+  banks: [Bank]!
+  account(accountId: ID!): Account!
 }
 
 type Mutation {
-  openDb(id: ID!, password: String!): Db
-  closeDb(id: ID!): Boolean
+  openDb(name: String!, password: String!): Boolean
+  closeDb: Boolean
 
   createAccountInBank(bankId: ID!, input: AccountInput): Account
   updateAccount(accountId: ID!, input: AccountInput): Account
@@ -39,11 +39,6 @@ type Course {
 input DbInput {
   name: String!
   password: String!
-}
-
-type Db {
-  id: ID!
-  name: String!
 }
 
 ###############################################################################

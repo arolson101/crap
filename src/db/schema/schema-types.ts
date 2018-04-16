@@ -1,17 +1,12 @@
 /* tslint:disable */
 
 export interface Query {
-  dbs?: Db[] | null;
-  allCourses?: Course[] | null;
+  dbs: string[];
+  allCourses: Course[];
   course?: Course | null;
   bank?: Bank | null;
-  banks?: Bank[] | null;
-  account?: Account | null;
-}
-
-export interface Db {
-  id: string;
-  name: string;
+  banks: Bank[];
+  account: Account;
 }
 
 export interface Course {
@@ -51,7 +46,7 @@ export interface Account {
 }
 
 export interface Mutation {
-  openDb?: Db | null;
+  openDb?: boolean | null;
   closeDb?: boolean | null;
   createAccountInBank?: Account | null;
   updateAccount?: Account | null;
@@ -140,11 +135,8 @@ export interface AccountQueryArgs {
   accountId: string;
 }
 export interface OpenDbMutationArgs {
-  id: string;
+  name: string;
   password: string;
-}
-export interface CloseDbMutationArgs {
-  id: string;
 }
 export interface CreateAccountInBankMutationArgs {
   bankId: string;

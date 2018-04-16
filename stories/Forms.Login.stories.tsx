@@ -10,43 +10,43 @@ const props = {
   navDbAdvanced: action('navDbAdvanced'),
 };
 
-storiesOf('Forms/Login', module)
-  .add('Create', () => (
-    <LoginFormComponent
-      {...props}
-      dbs={[]}
-    />
-  ))
-  .add('Open (single choice)', () => (
-    <LoginFormComponent
-      {...props}
-    />
-  ))
-  .add('Open (multiple choices)', () => (
-    <LoginFormComponent
-      {...props}
-      dbs={['first', 'second', 'third']}
-    />
-  ))
-  .add('Login failed', () => (
-    <LoginFormComponent
-      {...props}
-      initialValues={{
-        dbName: 'gonna fail',
-        password: 'password',
-        passwordConfirm: 'password',
-      }}
-      dbOpenError={new Error(`dbOpen failed!`)}
-    />
-  ))
-  .add('Initial Values', () => (
-    <LoginFormComponent
-      {...props}
-      initialValues={{
-        dbName: 'storied database',
-        password: 'asdf',
-        passwordConfirm: 'asdf',
-      }}
-    />
-  ))
-  ;
+// storiesOf('Forms/Login', module)
+//   .add('Create', () => (
+//     <LoginFormComponent
+//       {...props}
+//       dbs={[]}
+//     />
+//   ))
+//   .add('Open (single choice)', () => (
+//     <LoginFormComponent
+//       {...props}
+//     />
+//   ))
+//   .add('Open (multiple choices)', () => (
+//     <LoginFormComponent
+//       {...props}
+//       dbs={['first', 'second', 'third']}
+//     />
+//   ))
+//   .add('Login failed', () => (
+//     <LoginFormComponent
+//       {...props}
+//       initialValues={{
+//         name: 'gonna fail',
+//         password: 'password',
+//         passwordConfirm: 'password',
+//       }}
+//       dbOpenError={new Error(`dbOpen failed!`)}
+//     />
+//   ))
+//   .add('Initial Values', () => (
+//     <LoginFormComponent
+//       {...props}
+//       initialValues={{
+//         name: 'storied database',
+//         password: 'asdf',
+//         passwordConfirm: 'asdf',
+//       }}
+//     />
+//   ))
+//   ;
