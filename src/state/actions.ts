@@ -67,7 +67,7 @@ export const paths = {
   account: {
     create: '/account/create/:bankId?',
     view: '/account/:accountId',
-    update: '/account/update/:bankId/:accountId?',
+    update: '/account/update/:accountId?',
   },
 
   dbAdvanced: '/db/:dbName',
@@ -86,8 +86,8 @@ export const nav = {
     paths.account.create.replace(':bankId?', bankId),
   accountView: (bankId: Bank.Id | string, accountId: Account.Id | string) =>
     paths.account.view.replace(':accountId', accountId),
-  accountUpdate: (bankId: Bank.Id, accountId: Account.Id) =>
-    paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
+  accountUpdate: (accountId: Account.Id | string) =>
+    paths.account.update.replace(':accountId?', accountId),
 };
 
 const history = {

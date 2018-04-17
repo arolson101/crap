@@ -24,11 +24,12 @@ interface QueryType<TData> {
 }
 
 const makeQuery = (QUERY: DocumentNode) =>
-  (name: string) =>
+  (name: string, variablesFcn?: (props: any) => Object) =>
     (Component: React.ComponentType<any>) =>
       (props: React.Props<{}>) => {
+        const variables = variablesFcn && variablesFcn(props);
         return (
-          <Query query={QUERY}>
+          <Query query={QUERY} variables={variables}>
             {({ data, ...rest }) => {
               const componentProps = { ...props, [name]: { data, ...rest } };
               return <Component {...componentProps} />;
@@ -37,10 +38,12 @@ const makeQuery = (QUERY: DocumentNode) =>
         );
       };
 
+import ACCOUNT_QUERY from './Account.graphql';
 import ACCOUNTS_QUERY from './Accounts.graphql';
 import DBS_QUERY from './Dbs.graphql';
 
 import {
+  AccountQuery,
   AccountsQuery,
   DbsQuery,
 } from './query-types';
@@ -48,6 +51,9 @@ import {
 export namespace Queries {
   export type Dbs = QueryType<DbsQuery>;
   export const withDbs = makeQuery(DBS_QUERY);
+
+  export type Account = QueryType<AccountQuery>;
+  export const withAccount = makeQuery(ACCOUNT_QUERY);
 
   export type Accounts = QueryType<AccountsQuery>;
   export const withAccounts = makeQuery(ACCOUNTS_QUERY);

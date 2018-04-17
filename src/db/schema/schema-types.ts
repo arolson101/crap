@@ -6,7 +6,7 @@ export interface Query {
   course?: Course | null;
   bank?: Bank | null;
   banks: Bank[];
-  account: Account;
+  account?: Account | null;
 }
 
 export interface Course {

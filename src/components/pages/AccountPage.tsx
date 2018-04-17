@@ -1,54 +1,45 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { RouteComponentProps } from 'react-router';
-// import { connect } from 'react-redux';
 import { Button } from 'react-native';
+import { compose } from 'recompose';
 import { RootState, Bank, Account, selectors, nav } from '../../state';
+import { Queries } from '../../db';
+import { ctx } from '../ctx';
 import { AccountForm } from '../forms/AccountForm';
-import { connect } from '../connect';
+import { ErrorMessage } from '../forms/fields/ErrorMessage';
 
 interface Params {
   bankId: Bank.Id;
   accountId: Account.Id;
 }
 
-interface Props extends RouteComponentProps<Params> {
-  bank: Bank;
-  account: Account;
+interface Props {
+  query: Queries.Account;
 }
 
-export const AccountDisplayPageComponent: React.SFC<Props> = (props) => {
+export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Router) => {
+  if (props.query.loading) {
+    return null;
+  }
+  const { router: { history } } = context;
+  const { account } = props.query.data;
+
+  if (!account) {
+    return <Text>unknown account</Text>;
+  }
+
   return (
     <View>
-      <Text>Account: {props.account.name}</Text>
-      <Text>bank: {props.bank.name}</Text>
-      <Button title="edit" onPress={() => props.history.push(nav.accountUpdate(props.bank.id, props.account.id))}/>
+      <Text>Account: {account.name}</Text>
+      <Text>bank: {account.name}</Text>
+      <Button title="edit" onPress={() => history.push(nav.accountUpdate(account.id))} />
     </View>
   );
 };
+AccountPageComponent.contextTypes = ctx.router;
 
-export const AccountDisplayPage = connect(
-  (state: RootState, props: Props) => {
-    return ({
-      bank: selectors.getBank(state, props.match.params.bankId),
-      account: selectors.getAccount(state, props.match.params.accountId),
-    });
-  }
-)(AccountDisplayPageComponent);
-AccountDisplayPage.displayName = 'AccountDisplayPage';
-
-export const AccountUpdatePageComponent: React.SFC<Props> = ({bank, account, children}) => (
-  <AccountForm bankId={bank.id} edit={account}>
-    {children}
-  </AccountForm>
-);
-
-export const AccountUpdatePage = connect(
-  (state: RootState, props: Props) => {
-    return ({
-      bank: selectors.getBank(state, props.match.params.bankId),
-      account: selectors.getAccount(state, props.match.params.accountId),
-    });
-  }
-)(AccountUpdatePageComponent);
-AccountUpdatePage.displayName = 'AccountUpdatePage';
+export const AccountPage = compose(
+  Queries.withAccount('query', (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId })),
+)(AccountPageComponent);
+AccountPage.displayName = 'AccountPage';

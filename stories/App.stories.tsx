@@ -111,16 +111,16 @@ storiesOf('App/Accounts', module)
       </Router>
     </Provider>
   ))
-  .add('edit account', () => (
-    <Provider store={preloadedStore(accountsMed)}>
-      <Router
-        pathname={nav.accountUpdate(
-          Object.values(accountsMed.views.banks)[0].id,
-          Object.values(accountsMed.views.banks)[0].accounts[0]
-        )}
-      >
-        <App />
-      </Router>
-    </Provider>
-  ))
+  // .add('edit account', () => (
+  //   <Provider store={preloadedStore(accountsMed)}>
+  //     <Router
+  //       pathname={nav.accountUpdate(
+  //         Object.values(accountsMed.views.banks)[0].id,
+  //         Object.values(accountsMed.views.banks)[0].accounts[0]
+  //       )}
+  //     >
+  //       <App />
+  //     </Router>
+  //   </Provider>
+  // ))
   ;

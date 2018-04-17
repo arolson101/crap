@@ -1,6 +1,18 @@
 /* tslint:disable */
 //  This file was automatically generated and should not be edited.
 
+export interface AccountQueryVariables {
+  accountId: string,
+};
+
+export interface AccountQuery {
+  account:  {
+    id: string,
+    name: string,
+    number: string,
+  } | null,
+};
+
 export interface AccountsQuery {
   banks:  Array< {
     id: string,

@@ -11,7 +11,7 @@ type Query {
 
   bank(bankId: ID!): Bank
   banks: [Bank!]!
-  account(accountId: ID!): Account!
+  account(accountId: ID!): Account
 }
 
 type Mutation {

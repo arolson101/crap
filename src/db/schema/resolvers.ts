@@ -54,19 +54,16 @@ interface Resolvers extends IResolvers<{}, ResolverContext> {
   };
 }
 
-const getBank = (db: AppDatabase, id: Bank.Id): Promise<Bank | undefined> => {
+const getDb = (context: ResolverContext) => {
+  const db = context.store.getState().db.db;
+  if (!db) {
+    throw new Error('db not open');
+  }
+  return db;
+};
+
+const getBank = (db: AppDatabase, id: Bank.Id | string): Promise<Bank | undefined> => {
   return db.banks.where({id, _deleted: 0}).first();
-};
-
-const toAccount = (account: Account): ST.Account => {
-  const { _deleted, _base, _history, type: stringType, ...rest } = account;
-  const type = ST.AccountType[stringType];
-  return { ...rest, type };
-};
-
-const getAccount = async (db: AppDatabase, id: Account.Id): Promise<ST.Account | undefined> => {
-  const account = await db.accounts.where({id, _deleted: 0}).first();
-  return account && toAccount(account);
 };
 
 const toBank = async (db: AppDatabase, dbBank: Bank): Promise<ST.Bank> => {
@@ -80,12 +77,15 @@ const toBank = async (db: AppDatabase, dbBank: Bank): Promise<ST.Bank> => {
   return { ...rest, accounts };
 };
 
-const getDb = (context: ResolverContext) => {
-  const db = context.store.getState().db.db;
-  if (!db) {
-    throw new Error('db not open');
-  }
-  return db;
+const getAccount = async (db: AppDatabase, id: Account.Id): Promise<ST.Account | undefined> => {
+  const account = await db.accounts.where({id, _deleted: 0}).first();
+  return account && toAccount(account);
+};
+
+const toAccount = (account: Account): ST.Account => {
+  const { _deleted, _base, _history, type: stringType, ...rest } = account;
+  const type = ST.AccountType[stringType];
+  return { ...rest, type };
 };
 
 const resolvers: Resolvers = {
@@ -96,7 +96,7 @@ const resolvers: Resolvers = {
     },
     bank: async (source, args, context): Promise<ST.Query['bank']> => {
       const db = getDb(context);
-      const res = await db.banks.where({id: args.bankId, _deleted: 0}).first();
+      const res = await getBank(db, args.bankId);
       return res && toBank(db, res);
     },
     banks: async (source, args, context): Promise<ST.Query['banks']> => {
@@ -114,17 +114,10 @@ const resolvers: Resolvers = {
         return course.id === id;
       })[0];
     },
-    account: (): ST.Query['account'] => {
-      return ({
-        id: 'ID!',
-        name: 'string',
-        color: 'string',
-        type: ST.AccountType.CHECKING,
-        number: 'string',
-        visible: true,
-        bankid: 'string',
-        key: 'string',
-      });
+    account: async (source, args, context): Promise<ST.Query['account']> => {
+      const db = getDb(context);
+      const res = await db.accounts.where({id: args.accountId, _deleted: 0}).first();
+      return res && toAccount(res);
     }
   },
 
