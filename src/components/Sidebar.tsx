@@ -2,17 +2,22 @@ import * as React from 'react';
 import { View, ScrollView } from 'react-native';
 import { ListItem, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import { RootState, selectors, Bank, nav } from '../state';
+import { Queries } from '../db';
 import { ctx } from './ctx';
 
 const List = View;
 
 interface Props {
-  banks: Bank.View[];
+  query: Queries.Accounts;
 }
 
 export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) => {
   const { router: { history: { push } } } = context;
+  if (props.query.loading) {
+    return null;
+  }
   return (
     <View style={{flex: 1, display: 'flex'}}>
       <ScrollView>
@@ -20,13 +25,13 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
           <ListItem onPress={() => push(nav.home())} title="home" leftIcon={{ name: 'home' }}  />
           <ListItem onPress={() => push(nav.budgets())} title="budgets" leftIcon={{ name: 'home' }}  />
           <ListItem onPress={() => push(nav.accounts())} title="accounts" leftIcon={{ name: 'home' }}  />
-          {props.banks.map(view =>
-            <React.Fragment key={view.bank.id}>
-              <Text>{view.bank.name}</Text>
-              {view.accounts.map(account =>
+          {props.query.data.banks.map(bank =>
+            <React.Fragment key={bank.id}>
+              <Text>{bank.name}</Text>
+              {bank.accounts.map(account =>
                 <ListItem
                   key={account.id}
-                  onPress={() => push(nav.accountView(view.bank.id, account.id))}
+                  onPress={() => push(nav.accountView(bank.id, account.id))}
                   title={account.name}
                   subtitle={'$100.00'}
                   // subtitleNumberOfLines={3}
@@ -43,11 +48,7 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
 };
 SidebarComponent.contextTypes = ctx.router;
 
-export const Sidebar = connect(
-  (state: RootState) => ({
-    banks: selectors.getBanks(state),
-  }),
-  {
-  }
+export const Sidebar = compose(
+  Queries.withAccounts('query'),
 )(SidebarComponent);
 Sidebar.displayName = 'Sidebar';

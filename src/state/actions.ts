@@ -84,7 +84,7 @@ export const nav = {
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', ''),
   accountCreate: (bankId: Bank.Id) =>
     paths.account.create.replace(':bankId?', bankId),
-  accountView: (bankId: Bank.Id, accountId: Account.Id) =>
+  accountView: (bankId: Bank.Id | string, accountId: Account.Id | string) =>
     paths.account.view.replace(':accountId', accountId),
   accountUpdate: (bankId: Bank.Id, accountId: Account.Id) =>
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
