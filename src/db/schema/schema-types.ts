@@ -21,36 +21,36 @@ export interface Course {
 export interface Bank {
   id: string;
   name: string;
-  web?: string | null;
-  address?: string | null;
-  notes?: string | null;
-  favicon?: string | null;
-  online?: boolean | null;
-  fid?: string | null;
-  org?: string | null;
-  ofx?: string | null;
-  username?: string | null;
-  password?: string | null;
+  web: string;
+  address: string;
+  notes: string;
+  favicon: string;
+  online: boolean;
+  fid: string;
+  org: string;
+  ofx: string;
+  username: string;
+  password: string;
   accounts: Account[];
 }
 
 export interface Account {
   id: string;
-  name?: string | null;
-  color?: string | null;
-  type?: AccountType | null;
-  number?: string | null;
-  visible?: boolean | null;
-  bankid?: string | null;
-  key?: string | null;
+  name: string;
+  color: string;
+  type: AccountType;
+  number: string;
+  visible: boolean;
+  bankid: string;
+  key: string;
 }
 
 export interface Mutation {
-  openDb?: boolean | null;
-  closeDb?: boolean | null;
+  openDb: boolean;
+  closeDb: boolean;
   createAccountInBank?: Account | null;
   updateAccount?: Account | null;
-  deleteAccount?: boolean | null;
+  deleteAccount: boolean;
 }
 
 export interface Split {
@@ -60,45 +60,45 @@ export interface Split {
 
 export interface Category {
   id: string;
-  name?: string | null;
-  amount?: number | null;
+  name: string;
+  amount: number;
 }
 
 export interface Transaction {
   id: string;
   account: Account;
-  serverid?: string | null;
-  time?: number | null;
-  type?: string | null;
-  name?: string | null;
-  memo?: string | null;
-  amount?: number | null;
+  serverid: string;
+  time: number;
+  type: string;
+  name: string;
+  memo: string;
+  amount: number;
   split: Split[];
 }
 
 export interface Bill {
   id: string;
   name: string;
-  group?: string | null;
-  web?: string | null;
-  favicon?: string | null;
-  notes?: string | null;
-  amount?: number | null;
-  account?: Account | null;
-  category?: Category | null;
-  rruleString?: string | null;
-  showAdvanced?: boolean | null;
+  group: string;
+  web: string;
+  favicon: string;
+  notes: string;
+  amount: number;
+  account: Account;
+  category: Category;
+  rruleString: string;
+  showAdvanced: boolean;
 }
 
 export interface Budget {
   id: string;
-  name?: string | null;
+  name: string;
   categories: Category[];
-  sortOrder?: number | null;
+  sortOrder: number;
 }
 
 export interface AccountInput {
-  name?: string | null;
+  name: string;
   color?: string | null;
   type?: AccountType | null;
   number?: string | null;

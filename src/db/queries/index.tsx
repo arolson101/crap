@@ -1,15 +1,12 @@
+import { DocumentNode } from 'graphql';
 import * as React from 'react';
+import { Query, Mutation, MutationFunc } from 'react-apollo';
+
 import Course from './Course.graphql';
 export { Course };
 
 import AllCourses from './AllCourses.graphql';
 export { AllCourses };
-
-export * from './query-types';
-
-import { DocumentNode } from 'graphql';
-import { graphql, Query, ChildDataProps, DataValue, Mutation, MutationFunc, MutationResult } from 'react-apollo';
-// import {} from 'apollo-client';
 
 import {
   AllCoursesQuery as AllCoursesQueryData,
@@ -20,50 +17,38 @@ import {
 export class CourseQuery extends Query<CourseQueryData, CourseQueryVariables> { }
 export class AllCoursesQuery extends Query<AllCoursesQueryData, {}> { }
 
-type ChildProps = ChildDataProps<{}, Response, CourseQueryVariables>;
-
-// const withCharacter = graphql<{}, Response, CourseQueryVariables, ChildProps>(Course, {
-//   options: (props) => ({
-//     variables: { episode }
-//   }),
-//   props: ({ data }) => ({ ...data })
-// });
-
-type QueryType<TData> = DataValue<{}> & { data: TData };
-const makeQuery = (QUERY: DocumentNode, name: string) => graphql(QUERY, {
-  name,
-  props: ({ [name]: props }: any) => {
-    const { [name]: data, ...rest } = props;
-    return ({ [name]: { data, ...rest } });
-  }
-});
-
-import { DbsQuery } from './query-types';
-import DBS_QUERY from './Dbs.graphql';
-export const withDbsQuery = makeQuery(DBS_QUERY, 'dbs');
-export namespace withDbsQuery {
-  export type Props = {
-    dbs: QueryType<DbsQuery['dbs']>;
-  };
+interface QueryType<TData> {
+  data: TData;
+  loading: boolean;
+  error?: Error;
 }
 
-type MutationType<TData, TVariables> = { execute: MutationFunc<TData, TVariables> } & MutationResult<{}>;
-const makeMutation = (QUERY: DocumentNode, name: string) =>
-  (Component: React.ComponentType<any>) =>
-    (props: React.Props<{}>) => {
-      return (
-        <Mutation mutation={OPENDB_QUERY}>
-          {(execute, result) => {
-            const componentProps = { ...props, [name]: { execute, ...result } };
-            return <Component {...componentProps} />;
-          }}
-        </Mutation>
-      );
-    };
+const makeQuery = (QUERY: DocumentNode) =>
+  (name: string) =>
+    (Component: React.ComponentType<any>) =>
+      (props: React.Props<{}>) => {
+        return (
+          <Query query={QUERY}>
+            {({ data, ...rest }) => {
+              const componentProps = { ...props, [name]: { data, ...rest } };
+              return <Component {...componentProps} />;
+            }}
+          </Query>
+        );
+      };
 
-import { OpenDbMutation, OpenDbMutationVariables } from './query-types';
-import OPENDB_QUERY from './OpenDb.graphql';
-export const withOpenDbMutation = makeMutation(OPENDB_QUERY, 'openDb');
-export namespace withOpenDbMutation {
-  export type Props = { openDb: MutationType<OpenDbMutation, OpenDbMutationVariables> };
+import ACCOUNTS_QUERY from './Accounts.graphql';
+import DBS_QUERY from './Dbs.graphql';
+
+import {
+  AccountsQuery,
+  DbsQuery,
+} from './query-types';
+
+export namespace Queries {
+  export type Dbs = QueryType<DbsQuery>;
+  export const withDbs = makeQuery(DBS_QUERY);
+
+  export type Accounts = QueryType<AccountsQuery>;
+  export const withAccounts = makeQuery(ACCOUNTS_QUERY);
 }

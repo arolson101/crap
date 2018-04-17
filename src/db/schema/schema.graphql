@@ -10,17 +10,17 @@ type Query {
   course(id: Int!): Course
 
   bank(bankId: ID!): Bank
-  banks: [Bank]!
+  banks: [Bank!]!
   account(accountId: ID!): Account!
 }
 
 type Mutation {
-  openDb(name: String!, password: String!): Boolean
-  closeDb: Boolean
+  openDb(name: String!, password: String!): Boolean!
+  closeDb: Boolean!
 
   createAccountInBank(bankId: ID!, input: AccountInput): Account
   updateAccount(accountId: ID!, input: AccountInput): Account
-  deleteAccount(accountId: ID!): Boolean
+  deleteAccount(accountId: ID!): Boolean!
 }
 
 ###############################################################################
@@ -64,27 +64,27 @@ type Bank {
   id: ID!
 
   name: String!
-  web: String
-  address: String
-  notes: String
-  favicon: String
+  web: String!
+  address: String!
+  notes: String!
+  favicon: String!
 
-  online: Boolean
+  online: Boolean!
 
-  fid: String
-  org: String
-  ofx: String
+  fid: String!
+  org: String!
+  ofx: String!
 
-  username: String
-  password: String
+  username: String!
+  password: String!
 
-  accounts: [Account]!
+  accounts: [Account!]!
 }
 
 extend type Mutation {
   createBank(input: BankInput!): Bank
   updateBank(bankId: ID!, input: BankInput!): Bank
-  deleteBank(bankId: ID!): Boolean
+  deleteBank(bankId: ID!): Boolean!
 }
 
 ###############################################################################
@@ -98,7 +98,7 @@ enum AccountType {
 }
 
 input AccountInput {
-  name: String
+  name: String!
   color: String
   type: AccountType
   number: String
@@ -109,13 +109,13 @@ input AccountInput {
 
 type Account {
   id: ID!
-  name: String
-  color: String
-  type: AccountType
-  number: String
-  visible: Boolean
-  bankid: String
-  key: String
+  name: String!
+  color: String!
+  type: AccountType!
+  number: String!
+  visible: Boolean!
+  bankid: String!
+  key: String!
 }
 
 ###############################################################################
@@ -128,38 +128,38 @@ type Split {
 type Transaction {
   id: ID!
   account: Account!
-  serverid: String
-  time: Int
-  type: String
-  name: String
-  memo: String
-  amount: Float
-  split: [Split]!
+  serverid: String!
+  time: Int!
+  type: String!
+  name: String!
+  memo: String!
+  amount: Float!
+  split: [Split!]!
 }
 
 type Bill {
   id: ID!
   name: String!
-  group: String
-  web: String
-  favicon: String
-  notes: String
-  amount: Float
-  account: Account
-  category: Category
-  rruleString: String
-  showAdvanced: Boolean
+  group: String!
+  web: String!
+  favicon: String!
+  notes: String!
+  amount: Float!
+  account: Account!
+  category: Category!
+  rruleString: String!
+  showAdvanced: Boolean!
 }
 
 type Budget {
   id: ID!
-  name: String
-  categories: [Category]!
-  sortOrder: Int
+  name: String!
+  categories: [Category!]!
+  sortOrder: Int!
 }
 
 type Category {
   id: ID!
-  name: String
-  amount: Float
+  name: String!
+  amount: Float!
 }

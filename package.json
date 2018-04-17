@@ -45,8 +45,9 @@
     "storybook": "npm run storybook-web",
     "stylelint": "stylelint \"src/**/*.tsx\"",
     "pregenerate": "mkdirp temp && apollo-codegen introspect-schema ./src/db/schema/schema.graphql --output temp/schema.json",
-    "generate": "yarn run generate:queries && yarn run generate:schema",
+    "generate": "npm run generate:queries && npm run generate:mutations && npm run generate:schema",
     "generate:queries": "apollo-codegen generate \"src/db/queries/*.graphql\" --schema temp/schema.json --target typescript --output src/db/queries/query-types.ts",
+    "generate:mutations": "apollo-codegen generate \"src/db/mutations/*.graphql\" --schema temp/schema.json --target typescript --output src/db/mutations/mutation-types.ts",
     "generate:schema": "gql-gen --template typescript --file ./temp/schema.json --out ./src/db/schema/schema-types.ts ./src/db/schema/schema.graphql",
     "postinstall": "rimraf \"node_modules/graphql/**/*.mjs\""
   },

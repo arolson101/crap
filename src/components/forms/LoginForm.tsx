@@ -3,6 +3,8 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 import { View } from 'react-native';
 import { ButtonGroup, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import { compose } from 'recompose';
 import { RootState, actions, nav, selectors } from '../../state';
 import { ctx } from '../ctx';
 import { typedFields, SelectFieldItem, formStyles } from './fields';
@@ -13,11 +15,12 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import schema from '../../db/schema';
 import { execute } from 'graphql';
-import { withDbsQuery, withOpenDbMutation } from '../../db/queries';
-import { compose } from 'recompose';
+import { Queries, Mutations } from '../../db';
 
-interface Props extends withDbsQuery.Props, withOpenDbMutation.Props {
+interface Props {
   initialValues?: Partial<FormValues>;
+  query: Queries.Dbs;
+  openDb: Mutations.OpenDb;
 }
 
 interface FormValues {
@@ -54,15 +57,19 @@ export class LoginFormComponent extends React.PureComponent<Props, State> {
   };
 
   render() {
-    if (this.props.dbs.loading) {
+    if (this.props.query.loading) {
       return null;
     }
 
-    if (this.props.dbs.error) {
-      return `Error: ${this.props.dbs.error.message}`;
+    if (this.props.query.error) {
+      return <ErrorMessage error={this.props.query.error} />;
     }
 
-    const mode = this.props.dbs.data.length ? this.state.mode : Mode.CreateNew;
+    if (this.props.openDb.data) {
+      return <Redirect push to={nav.home()}/>;
+    }
+
+    const mode = this.props.query.data.dbs.length ? this.state.mode : Mode.CreateNew;
     return (
       <>
         <ButtonGroup
@@ -83,21 +90,10 @@ export class LoginFormComponent extends React.PureComponent<Props, State> {
 }
 
 export const LoginForm = compose(
-  withDbsQuery,
-  withOpenDbMutation,
+  Queries.withDbs('query'),
+  Mutations.withOpenDb('openDb'),
 )(LoginFormComponent);
 LoginForm.displayName = 'LoginForm';
-
-// export const LoginForm = connect(
-//   (state: RootState) => ({
-//     dbs: selectors.getDbs(state),
-//     dbOpenError: selectors.getDbOpenError(state),
-//   }),
-//   {
-//     dbOpen: actions.dbOpen,
-//   }
-// )(LoginFormComponent);
-// LoginForm.displayName = 'LoginForm';
 
 const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
   const { intl: { formatMessage } } = context;
@@ -112,7 +108,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
       }}
       validateError={values => ({
         name: !values.name.trim() ? formatMessage(messages.valueEmpty)
-          : props.dbs.data.includes(values.name.trim()) ? formatMessage(messages.dbExists)
+          : props.query.data.dbs.includes(values.name.trim()) ? formatMessage(messages.dbExists)
             : undefined,
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined,
@@ -163,7 +159,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
   return (
     <Form
       defaultValues={{
-        name: props.dbs.data[0],
+        name: props.query.data.dbs[0],
         password: '',
         ...props.initialValues,
       }}
@@ -171,8 +167,12 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
       //   password: !values.password.trim() ? formatMessage(messages.valueEmpty)
       //     : undefined,
       // })}
-      onSubmit={variables => {
-        return props.openDb.execute({ variables });
+      onSubmit={async variables => {
+        try {
+          await props.openDb.execute({ variables });
+        } catch (err) {
+          console.warn(err);
+        }
       }}
     >
       {formApi =>
@@ -180,7 +180,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
           <SelectField
             field="name"
             label={messages.nameLabel}
-            items={props.dbs.data.map(db => ({ value: db, label: db }))}
+            items={props.query.data.dbs.map(db => ({ value: db, label: db }))}
           />
           <TextField
             secure

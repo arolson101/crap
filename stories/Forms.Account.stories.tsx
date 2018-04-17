@@ -9,6 +9,7 @@ const bank: Bank = {
   _deleted: 0,
   name: '1st Source Bank',
   web: 'http://www.1stbank.com',
+  favicon: '',
   address: '123 Anywhere St\nAnytown, USA',
   notes: 'member since 1999',
   online: true,

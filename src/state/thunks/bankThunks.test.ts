@@ -29,8 +29,8 @@ describe('bankThunks', () => {
     expect(banks).toHaveLength(0);
 
     // create
-    await store.dispatch(actions.bankCreate({name: '1st bank' as Bank.Id, accounts: []}));
-    await store.dispatch(actions.bankCreate({name: '2nd bank' as Bank.Id, accounts: []}));
+    await store.dispatch(actions.bankCreate({name: '1st bank' as Bank.Id, accounts: []} as any));
+    await store.dispatch(actions.bankCreate({name: '2nd bank' as Bank.Id, accounts: []} as any));
 
     banks = await allBanks();
     expect(banks).toHaveLength(2);

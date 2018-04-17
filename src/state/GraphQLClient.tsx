@@ -42,7 +42,8 @@ export const makeClient = (contextValue: ResolverContext) => new GraphQLClient({
 });
 
 export const GraphQLProvider: React.SFC = ({children}, context) => {
-  const contextValue: ResolverContext = {};
+  const { store } = context;
+  const contextValue: ResolverContext = { store };
   const client = makeClient(contextValue);
   return (
     <ApolloProvider client={client}>

@@ -78,7 +78,7 @@ const dummyBank = (fi: FI, accounts: Account[]): Bank => ({
   web: fi.profile.siteURL,
   address: formatAddress(fi),
   notes: `notes for bank ${fi.name}\nmore notes`,
-  favicon: undefined,
+  favicon: '',
 
   online: true,
 

@@ -3,11 +3,13 @@
 
 export interface AccountsQuery {
   banks:  Array< {
+    id: string,
+    name: string,
     accounts:  Array< {
       id: string,
-      name: string | null,
-    } | null >,
-  } | null >,
+      name: string,
+    } >,
+  } >,
 };
 
 export interface AllCoursesQuery {
@@ -33,13 +35,4 @@ export interface CourseQuery {
 
 export interface DbsQuery {
   dbs: Array< string >,
-};
-
-export interface OpenDbMutationVariables {
-  name: string,
-  password: string,
-};
-
-export interface OpenDbMutation {
-  openDb: boolean | null,
 };

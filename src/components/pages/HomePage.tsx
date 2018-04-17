@@ -1,19 +1,46 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { CourseQuery, Course } from '../../db/queries';
+import { compose } from 'recompose';
+import { Queries } from '../../db';
+import { ErrorMessage } from '../forms/fields/ErrorMessage';
 
-export const HomePage: React.SFC = (props) => {
+interface Props {
+  query: Queries.Accounts;
+}
+
+export const HomePageComponent: React.SFC<Props> = (props) => {
+  if (props.query.loading) {
+    return null;
+  }
+
+  if (props.query.error) {
+    return <ErrorMessage error={props.query.error} />;
+  }
+
   return (
     <View>
-      <CourseQuery query={Course} variables={{id: 2}} fetchPolicy={'network-only'}>
-        {({ loading, error, data }) => {
-          if (loading) { return <p>Loading...</p>; }
-          if (error || !data) { return <p>Error :( {error && error.message}</p>; }
-          return <p>{data.course ? data.course.title : 'no result'}</p>;
-        }}
-      </CourseQuery>
-
+      {!props.query.data.banks.length &&
+        <Text>No banks</Text>
+      }
+      {props.query.data.banks.map(bank =>
+        <View key={bank.id}>
+          <Text>{bank.name}</Text>
+          {!bank.accounts.length &&
+            <Text>No accounts</Text>
+          }
+          {bank.accounts.map(account =>
+            <View key={account.id}>
+              <Text>{account.name}</Text>
+            </View>
+          )}
+        </View>
+      )}
       <Text>home page</Text>
     </View>
   );
 };
+
+export const HomePage = compose(
+  Queries.withAccounts('query'),
+)(HomePageComponent);
+HomePage.displayName = 'HomePage';

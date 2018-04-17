@@ -10,19 +10,19 @@ export namespace Bank {
 
   export interface Props {
     readonly name: string;
-    readonly web?: string;
-    readonly address?: string;
-    readonly notes?: string;
-    readonly favicon?: string;
+    readonly web: string;
+    readonly address: string;
+    readonly notes: string;
+    readonly favicon: string;
 
-    readonly online?: boolean;
+    readonly online: boolean;
 
-    readonly fid?: string;
-    readonly org?: string;
-    readonly ofx?: string;
+    readonly fid: string;
+    readonly org: string;
+    readonly ofx: string;
 
-    readonly username?: string;
-    readonly password?: string;
+    readonly username: string;
+    readonly password: string;
 
     readonly accounts: Account.Id[];
   }
