@@ -4,9 +4,9 @@ export interface Query {
   dbs: string[];
   allCourses: Course[];
   course?: Course | null;
-  bank?: Bank | null;
+  bank: Bank;
   banks: Bank[];
-  account?: Account | null;
+  account: Account;
 }
 
 export interface Course {
@@ -48,8 +48,9 @@ export interface Account {
 export interface Mutation {
   openDb: boolean;
   closeDb: boolean;
-  createAccountInBank?: Account | null;
-  updateAccount?: Account | null;
+  saveBank?: Bank | null;
+  deleteBank: boolean;
+  saveAccount?: Account | null;
   deleteAccount: boolean;
 }
 
@@ -97,8 +98,22 @@ export interface Budget {
   sortOrder: number;
 }
 
+export interface BankInput {
+  name?: string | null;
+  web?: string | null;
+  address?: string | null;
+  notes?: string | null;
+  favicon?: string | null;
+  online?: boolean | null;
+  fid?: string | null;
+  org?: string | null;
+  ofx?: string | null;
+  username?: string | null;
+  password?: string | null;
+}
+
 export interface AccountInput {
-  name: string;
+  name?: string | null;
   color?: string | null;
   type?: AccountType | null;
   number?: string | null;
@@ -110,20 +125,6 @@ export interface AccountInput {
 export interface DbInput {
   name: string;
   password: string;
-}
-
-export interface BankInput {
-  name: string;
-  web?: string | null;
-  address?: string | null;
-  notes?: string | null;
-  favicon?: string | null;
-  online?: boolean | null;
-  fid?: string | null;
-  org?: string | null;
-  ofx?: string | null;
-  username?: string | null;
-  password?: string | null;
 }
 export interface CourseQueryArgs {
   id: number;
@@ -138,13 +139,17 @@ export interface OpenDbMutationArgs {
   name: string;
   password: string;
 }
-export interface CreateAccountInBankMutationArgs {
-  bankId: string;
-  input?: AccountInput | null;
+export interface SaveBankMutationArgs {
+  input: BankInput;
+  bankId?: string | null;
 }
-export interface UpdateAccountMutationArgs {
-  accountId: string;
-  input?: AccountInput | null;
+export interface DeleteBankMutationArgs {
+  bankId: string;
+}
+export interface SaveAccountMutationArgs {
+  input: AccountInput;
+  accountId?: string | null;
+  bankId?: string | null;
 }
 export interface DeleteAccountMutationArgs {
   accountId: string;

@@ -33,7 +33,7 @@ const Root = () => (
       <IntlProvider locale="en">
         <Provider store={store}>
           <ConnectedRouter history={history}>
-            <GraphQLProvider>
+            <GraphQLProvider {...dependencies}>
               <App />
             </GraphQLProvider>
           </ConnectedRouter>

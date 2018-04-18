@@ -4,8 +4,14 @@ import { Bank, Account, nav } from '../state';
 import { ctx } from './ctx';
 
 interface Props {
-  bank: Bank;
-  accounts: Account[];
+  bank: {
+    name: string;
+    id: string;
+    accounts: Array<{
+      name: string;
+      id: string;
+    }>;
+  };
 }
 
 export const BankDisplay: React.SFC<Props> = (props, { router }: ctx.Router) => {
@@ -13,7 +19,7 @@ export const BankDisplay: React.SFC<Props> = (props, { router }: ctx.Router) => 
     <View>
       <Text>{props.bank.name}</Text>
       <Button title="edit" onPress={() => router.history.push(nav.bankUpdate(props.bank.id))}/>
-      {props.accounts.map(account =>
+      {props.bank.accounts.map(account =>
         <Button
           key={account.id}
           title={account.name}

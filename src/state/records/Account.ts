@@ -7,7 +7,7 @@ import { Record } from '../Record';
 export interface Account extends Account.Props, Record<Account.Id, Account.Props> {}
 
 export namespace Account {
-  export type Id = ':accountId';
+  export type Id = string | ':accountId';
 
   // see ofx4js.domain.data.banking.AccountType
   export type Type = 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD';
@@ -104,7 +104,9 @@ export namespace Account {
     key: '',
   };
 
-  export const diff = (account: Account, values: Props): Query => {
+  type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null };
+
+  export const diff = (account: Account, values: Nullable<Props>): Query => {
     return Object.keys(values).reduce(
       (q, prop): Query => {
         const val = values[prop];

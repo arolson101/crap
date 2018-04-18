@@ -8,7 +8,7 @@ import { ApolloProvider } from 'react-apollo';
 import { connect } from 'react-redux';
 import Observable from 'zen-observable-ts';
 import schema, { ResolverContext } from '../db/schema';
-import { selectors, RootState, RootStore } from '../state';
+import { selectors, RootState, RootStore, ThunkDependencies } from '../state';
 import { AppDatabase } from './AppDatabase';
 import { runQuery } from 'apollo-server-core';
 
@@ -41,9 +41,9 @@ export const makeClient = (contextValue: ResolverContext) => new GraphQLClient({
   }),
 });
 
-export const GraphQLProvider: React.SFC = ({children}, context) => {
+export const GraphQLProvider: React.SFC<ThunkDependencies> = ({ children, ...deps }, context) => {
   const { store } = context;
-  const contextValue: ResolverContext = { store };
+  const contextValue: ResolverContext = { store, ...deps };
   const client = makeClient(contextValue);
   return (
     <ApolloProvider client={client}>

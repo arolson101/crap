@@ -41,29 +41,29 @@ const account: Account = {
   key: '',
 };
 
-storiesOf('Forms/Account', module)
-  .add('Create', () => (
-    <AccountFormComponent
-      {...props}
-    />
-  ))
-  .add('Create (saving)', () => (
-    <AccountFormComponent
-      {...props}
-      saving
-    />
-  ))
-  .add('Edit', () => (
-    <AccountFormComponent
-      {...props}
-      edit={account}
-    />
-  ))
-  .add('Edit (saving)', () => (
-    <AccountFormComponent
-      {...props}
-      edit={account}
-      saving
-    />
-  ))
-  ;
+// storiesOf('Forms/Account', module)
+//   .add('Create', () => (
+//     <AccountFormComponent
+//       {...props}
+//     />
+//   ))
+//   .add('Create (saving)', () => (
+//     <AccountFormComponent
+//       {...props}
+//       saving
+//     />
+//   ))
+//   .add('Edit', () => (
+//     <AccountFormComponent
+//       {...props}
+//       edit={account}
+//     />
+//   ))
+//   .add('Edit (saving)', () => (
+//     <AccountFormComponent
+//       {...props}
+//       edit={account}
+//       saving
+//     />
+//   ))
+//   ;

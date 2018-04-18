@@ -32,11 +32,6 @@ export default {
     async function dbOpen(dispatch, getState, { openDb }) {
       try {
         const db = await openDb(name);
-        for (let tableName of AppDatabase.tables) {
-          const table: Dexie.Table<Record<any>, string> = db.table(tableName);
-          const records = await table.where({_deleted: 0}).toArray();
-          await dispatch(actions.recordsUpdated(tableName, records));
-        }
         return dispatch(actions.dbOpenSuccess(db));
       } catch (err) {
         return dispatch(actions.dbOpenFailure(err));
@@ -92,14 +87,6 @@ export default {
 
           const text = JSON.stringify(changes);
           await db._changes.add({ text });
-        });
-
-        edits.forEach((records, table) => {
-          dispatch(actions.recordsUpdated(table, records));
-        });
-
-        deletes.forEach((keys, table) => {
-          dispatch(actions.recordsDeleted(table, keys));
         });
       } catch (err) {
         console.error(err);

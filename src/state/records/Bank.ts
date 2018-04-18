@@ -6,7 +6,7 @@ import { DbChange } from '../../state/thunks/dbThunks';
 export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> { }
 
 export namespace Bank {
-  export type Id = ':bankId';
+  export type Id = string | ':bankId';
 
   export interface Props {
     readonly name: string;
@@ -74,7 +74,9 @@ export namespace Bank {
     });
   }
 
-  export const diff = (bank: Bank, values: Partial<Props>): Query => {
+  type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null };
+
+  export const diff = (bank: Bank, values: Nullable<Props>): Query => {
     return Object.keys(values).reduce(
       (q, prop): Query => {
         const val = values[prop];

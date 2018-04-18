@@ -8,6 +8,7 @@ import { SubmitButton } from './SubmitButton';
 import { TextField } from './TextField';
 import { UrlField } from './UrlField';
 export * from './formStyles';
+export { ErrorMessage };
 
 export type SelectFieldItem = SelectField.Item;
 

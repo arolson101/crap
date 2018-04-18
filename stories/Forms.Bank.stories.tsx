@@ -30,35 +30,35 @@ const bank: Bank = {
   accounts: [],
 };
 
-storiesOf('Forms/Bank', module)
-  .add('Create', () => (
-    <BankFormComponent
-      {...props}
-    />
-  ))
-  .add('Create (saving)', () => (
-    <BankFormComponent
-      {...props}
-      saving
-    />
-  ))
-  .add('Edit (online)', () => (
-    <BankFormComponent
-      {...props}
-      edit={bank}
-    />
-  ))
-  .add('Edit (offline)', () => (
-    <BankFormComponent
-      {...props}
-      edit={{...bank, online: false}}
-    />
-  ))
-  .add('Edit (saving)', () => (
-    <BankFormComponent
-      {...props}
-      edit={{...bank, online: false}}
-      saving
-    />
-  ))
-  ;
+// storiesOf('Forms/Bank', module)
+//   .add('Create', () => (
+//     <BankFormComponent
+//       {...props}
+//     />
+//   ))
+//   .add('Create (saving)', () => (
+//     <BankFormComponent
+//       {...props}
+//       saving
+//     />
+//   ))
+//   .add('Edit (online)', () => (
+//     <BankFormComponent
+//       {...props}
+//       edit={bank}
+//     />
+//   ))
+//   .add('Edit (offline)', () => (
+//     <BankFormComponent
+//       {...props}
+//       edit={{...bank, online: false}}
+//     />
+//   ))
+//   .add('Edit (saving)', () => (
+//     <BankFormComponent
+//       {...props}
+//       edit={{...bank, online: false}}
+//       saving
+//     />
+//   ))
+//   ;

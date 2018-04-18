@@ -1,39 +1,30 @@
 import * as React from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import { compose } from 'recompose';
 import { RootState, actions, selectors, nav, Bank, FI, formatAddress } from '../../state';
+import { Mutations, Queries, Types } from '../../db';
 import { ctx } from '../ctx';
 import { List } from '../list';
-import { typedFields, SelectFieldItem } from './fields';
+import { ErrorMessage, typedFields, SelectFieldItem } from './fields';
 
 interface Props {
-  edit?: Bank;
+  bankId?: Bank.Id;
 }
 
-interface ConnectedProps extends Props {
+interface ComposedProps extends Props {
+  query: Queries.Bank;
+  saveBank: Mutations.SaveBank;
   filist: FI[];
-  saving: boolean;
-  bankCreate: (props: Bank.Props) => any;
-  bankUpdate: (bankId: Bank.Id, q: Bank.Query) => any;
 }
 
-interface FormValues {
+type BankInput = {
+  [P in keyof Types.BankInput]-?: Types.Bank[P]
+};
+
+interface FormValues extends BankInput {
   fi: number;
-
-  name: string;
-  web: string;
-  address: string;
-  notes: string;
-  favicon: string;
-
-  online: boolean;
-
-  fid: string;
-  org: string;
-  ofx: string;
-
-  username: string;
-  password: string;
 }
 
 const {
@@ -47,45 +38,68 @@ const {
   UrlField,
 } = typedFields<FormValues>();
 
-export const BankFormComponent: React.SFC<ConnectedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
-  const defaultFi = props.edit ? props.filist.findIndex(fi => fi.name === props.edit!.name) : 0;
+export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
+  if (props.query.loading) {
+    return null;
+  }
 
+  if (props.bankId && props.query.error) {
+    return <ErrorMessage error={props.query.error} />;
+  }
+
+  if (props.saveBank.error) {
+    return <ErrorMessage error={props.saveBank.error} />;
+  }
+
+  if (props.saveBank.called && props.saveBank.data) {
+    return <Redirect to={nav.accounts()} />;
+  }
+
+  const edit = props.bankId && props.query.data.bank;
+  const defaultFi = edit ? props.filist.findIndex(fi => fi.name === edit.name) : 0;
   return (
     <Form
       defaultValues={{
         fi: defaultFi,
 
-        name: '',
-        web: '',
-        address: '',
-        notes: '',
+        name: edit ? edit.name : '',
+        web: edit ? edit.web : '',
+        address: edit ? edit.address : '',
+        notes: edit ? edit.notes : '',
 
-        online: true,
+        online: edit ? edit.online : true,
 
-        fid: '',
-        org: '',
-        ofx: '',
+        fid: edit ? edit.fid : '',
+        org: edit ? edit.org : '',
+        ofx: edit ? edit.ofx : '',
 
-        username: '',
-        password: '',
-
-        ...props.edit as any,
+        username: edit ? edit.username : '',
+        password: edit ? edit.password : '',
       }}
       validateError={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={values => {
-        if (props.edit) {
-          const q = Bank.diff(props.edit, values);
-          props.bankUpdate(props.edit.id, q);
-        } else {
-          const { fi, ...bankProps } = values;
-          props.bankCreate({
-            ...bankProps,
-            accounts: [],
-          });
+      onSubmit={async ({fi, ...input}) => {
+        try {
+          const variables = {
+            bankId: props.bankId,
+            input,
+          };
+          await props.saveBank.execute({ variables });
+        } catch (err) {
+          console.warn(err);
         }
+        // if (props.edit) {
+        //   const q = Bank.diff(props.edit, values);
+        //   props.bankUpdate(props.edit.id, q);
+        // } else {
+        //   const { fi, ...bankProps } = values;
+        //   props.bankCreate({
+        //     ...bankProps,
+        //     accounts: [],
+        //   });
+        // }
       }}
     >
       {formApi =>
@@ -169,9 +183,9 @@ export const BankFormComponent: React.SFC<ConnectedProps> = (props, { intl, rout
             </List>
           </CollapseField>
           <SubmitButton
-            disabled={props.saving}
+            disabled={props.saveBank.loading}
             onPress={formApi.submitForm}
-            title={props.edit ? messages.save : messages.create}
+            title={edit ? messages.save : messages.create}
           />
         </>
       }
@@ -180,15 +194,14 @@ export const BankFormComponent: React.SFC<ConnectedProps> = (props, { intl, rout
 };
 BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
-export const BankForm = connect(
-  (state: RootState, props: Props) => ({
-    filist: selectors.getFIs(state),
-    saving: props.edit ? selectors.isBankUpdating(state) : selectors.isBankCreating(state)
-  }),
-  {
-    bankCreate: actions.bankCreateUI,
-    bankUpdate: actions.bankUpdateUI,
-  }
+export const BankForm = compose<ComposedProps, Props>(
+  connect(
+    (state: RootState, props: Props) => ({
+      filist: selectors.getFIs(state),
+    })
+  ),
+  Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
+  Mutations.withSaveBank('saveBank'),
 )(BankFormComponent);
 BankForm.displayName = 'BankForm';
 

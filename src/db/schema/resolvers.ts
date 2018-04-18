@@ -3,7 +3,8 @@ import { GraphQLFieldResolver } from 'graphql';
 import { IResolvers } from 'graphql-tools';
 import { ResolverContext } from './';
 import Dexie from 'dexie';
-import { actions, Account, Bank, AppDatabase } from '../../state';
+import { actions, Account, Bank, AppDatabase, createRecord } from '../../state';
+import { iupdate } from '../../iupdate';
 
 var coursesData = [
   {
@@ -48,9 +49,8 @@ interface Resolvers extends IResolvers<{}, ResolverContext> {
   Mutation: {
     openDb: Resolver<ST.Mutation['openDb'], ST.OpenDbMutationArgs>;
     closeDb: Resolver<ST.Mutation['closeDb']>;
-    createAccountInBank: Resolver<ST.Mutation['createAccountInBank'], ST.CreateAccountInBankMutationArgs>;
-    updateAccount: Resolver<ST.Mutation['updateAccount'], ST.UpdateAccountMutationArgs>;
-    deleteAccount: Resolver<ST.Mutation['deleteAccount'], ST.DeleteAccountMutationArgs>;
+    saveAccount: Resolver<ST.Mutation['saveAccount'], ST.SaveAccountMutationArgs>;
+    saveBank: Resolver<ST.Mutation['saveBank'], ST.SaveBankMutationArgs>;
   };
 }
 
@@ -62,24 +62,31 @@ const getDb = (context: ResolverContext) => {
   return db;
 };
 
-const getBank = (db: AppDatabase, id: Bank.Id | string): Promise<Bank | undefined> => {
-  return db.banks.where({id, _deleted: 0}).first();
+const getBank = async (db: AppDatabase, id: Bank.Id | string): Promise<Bank> => {
+  const bank = await db.banks.where({id, _deleted: 0}).first();
+  if (!bank) {
+    throw new Error(`bank ${id} not found`);
+  }
+  return bank;
 };
 
 const toBank = async (db: AppDatabase, dbBank: Bank): Promise<ST.Bank> => {
   const { accounts: accountIds, _deleted, _base, _history, ...rest } = dbBank;
   const accountsWithNulls = await db.transaction('r', db.accounts, () => {
-    return Promise.all(accountIds.map(accountId =>
-      getAccount(db, accountId)
+    return Promise.all(accountIds.map(async accountId =>
+      toAccount(await getAccount(db, accountId))
     ));
   });
   const accounts = accountsWithNulls.filter((account): account is ST.Account => !!account);
   return { ...rest, accounts };
 };
 
-const getAccount = async (db: AppDatabase, id: Account.Id): Promise<ST.Account | undefined> => {
+const getAccount = async (db: AppDatabase, id: Account.Id): Promise<Account> => {
   const account = await db.accounts.where({id, _deleted: 0}).first();
-  return account && toAccount(account);
+  if (!account) {
+    throw new Error(`account ${id} not found`);
+  }
+  return account;
 };
 
 const toAccount = (account: Account): ST.Account => {
@@ -97,7 +104,7 @@ const resolvers: Resolvers = {
     bank: async (source, args, context): Promise<ST.Query['bank']> => {
       const db = getDb(context);
       const res = await getBank(db, args.bankId);
-      return res && toBank(db, res);
+      return toBank(db, res);
     },
     banks: async (source, args, context): Promise<ST.Query['banks']> => {
       const db = getDb(context);
@@ -116,8 +123,8 @@ const resolvers: Resolvers = {
     },
     account: async (source, args, context): Promise<ST.Query['account']> => {
       const db = getDb(context);
-      const res = await db.accounts.where({id: args.accountId, _deleted: 0}).first();
-      return res && toAccount(res);
+      const res = await getAccount(db, args.accountId);
+      return toAccount(res);
     }
   },
 
@@ -133,9 +140,76 @@ const resolvers: Resolvers = {
     closeDb: async (source, args, context): Promise<ST.Mutation['closeDb']> => {
       return true;
     },
-    createAccountInBank: (): Promise<ST.Mutation['createAccountInBank']> | null => null,
-    updateAccount: (): Promise<ST.Mutation['updateAccount']> | null => null,
-    deleteAccount: (): Promise<ST.Mutation['deleteAccount']> | boolean => true,
+    saveAccount: async (source, args, context): Promise<ST.Mutation['saveAccount']> => {
+      const db = getDb(context);
+      const t = context.getTime();
+      let account: Account;
+      let changes: Array<any>;
+      if (args.accountId) {
+        const edit = await getAccount(db, args.accountId);
+        const q = Account.diff(edit, args.input);
+        changes = [
+          Account.change.edit(t, args.accountId, q),
+        ];
+        account = iupdate(edit, q);
+      } else {
+        if (!args.bankId) {
+          throw new Error('when creating an account, bankId must be specified');
+        }
+        const props: Account.Props = {
+          name: args.input.name || '',
+          color: args.input.color || '',
+          type: args.input.type || Account.Type.CHECKING,
+          number: args.input.number || '',
+          visible: args.input.visible || true,
+          bankid: args.input.bankid || '',
+          key: args.input.key || '',
+        };
+        account = createRecord(context.genId, props);
+        changes = [
+          Account.change.add(t, account),
+          Bank.change.addAccount(t, args.bankId, account.id),
+        ];
+      }
+      await context.store.dispatch(actions.dbChange(changes));
+      return toAccount(account);
+    },
+
+    saveBank: async (source, args, context): Promise<ST.Mutation['saveBank']> => {
+      const db = getDb(context);
+      const t = context.getTime();
+      let bank: Bank;
+      let changes: Array<any>;
+      if (args.bankId) {
+        const edit = await getBank(db, args.bankId);
+        const q = Bank.diff(edit, args.input);
+        changes = [
+          Bank.change.edit(t, args.bankId, q),
+        ];
+        bank = iupdate(edit, q);
+      } else {
+        const props: Bank.Props = {
+          name: args.input.name || '',
+          web: args.input.web || '',
+          address: args.input.address || '',
+          notes: args.input.notes || '',
+          favicon: args.input.favicon || '',
+          online: args.input.online || true,
+          fid: args.input.fid || '',
+          org: args.input.org || '',
+          ofx: args.input.ofx || '',
+          username: args.input.username || '',
+          password: args.input.password || '',
+          accounts: []
+        };
+        bank = createRecord(context.genId, props);
+        changes = [
+          Bank.change.add(t, bank),
+        ];
+      }
+      await context.store.dispatch(actions.dbChange(changes));
+      return toBank(db, bank);
+    },
   }
 };
 

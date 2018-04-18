@@ -23,35 +23,8 @@ const actionCreators = {
     type: 'db/DB_OPEN_FAILURE', err
   })),
 
-  recordsUpdated: createAction('views/RECORDS_UPDATED', (table: TableName, records: Record<any>[]) => ({
-    type: 'views/RECORDS_UPDATED', table, records
-  })),
-  recordsDeleted: createAction('views/RECORDS_DELETED', (table: TableName, ids: string[]) => ({
-    type: 'views/RECORDS_DELETED', table, ids
-  })),
-
   setFi: createAction('fi/SET', (fi: FI[]) => ({
     type: 'fi/SET', fi
-  })),
-
-  bankCreating: createAction('bank/CREATING', (creating: boolean | Error) => ({
-    type: 'bank/CREATING', creating
-  })),
-  bankUpdating: createAction('bank/UPDATING', (updating: boolean | Error) => ({
-    type: 'bank/UPDATING', updating
-  })),
-  bankDeleting: createAction('bank/DELETING', (deleting: boolean | Error) => ({
-    type: 'bank/DELETING', deleting
-  })),
-
-  accountCreating: createAction('account/CREATING', (creating: boolean | Error) => ({
-    type: 'account/CREATING', creating
-  })),
-  accountUpdating: createAction('account/UPDATING', (updating: boolean | Error) => ({
-    type: 'account/UPDATING', updating
-  })),
-  accountDeleting: createAction('account/DELETING', (deleting: boolean | Error) => ({
-    type: 'account/DELETING', deleting
   })),
 };
 
@@ -78,9 +51,9 @@ export const nav = {
   accounts: () => paths.root.accounts,
   bankCreate: () =>
     paths.account.create.replace(':bankId?', ''),
-  bankUpdate: (bankId: Bank.Id) =>
+  bankUpdate: (bankId: Bank.Id | string) =>
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', ''),
-  accountCreate: (bankId: Bank.Id) =>
+  accountCreate: (bankId: Bank.Id | string) =>
     paths.account.create.replace(':bankId?', bankId),
   accountView: (bankId: Bank.Id | string, accountId: Account.Id | string) =>
     paths.account.view.replace(':accountId', accountId),

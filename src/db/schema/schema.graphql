@@ -9,17 +9,19 @@ type Query {
   allCourses: [Course]!
   course(id: Int!): Course
 
-  bank(bankId: ID!): Bank
+  bank(bankId: ID!): Bank!
   banks: [Bank!]!
-  account(accountId: ID!): Account
+  account(accountId: ID!): Account!
 }
 
 type Mutation {
   openDb(name: String!, password: String!): Boolean!
   closeDb: Boolean!
 
-  createAccountInBank(bankId: ID!, input: AccountInput): Account
-  updateAccount(accountId: ID!, input: AccountInput): Account
+  saveBank(input: BankInput!, bankId: ID): Bank
+  deleteBank(bankId: ID!): Boolean!
+
+  saveAccount(input: AccountInput!, accountId: ID, bankId: ID): Account
   deleteAccount(accountId: ID!): Boolean!
 }
 
@@ -44,7 +46,7 @@ input DbInput {
 ###############################################################################
 
 input BankInput {
-  name: String!
+  name: String
   web: String
   address: String
   notes: String
@@ -81,12 +83,6 @@ type Bank {
   accounts: [Account!]!
 }
 
-extend type Mutation {
-  createBank(input: BankInput!): Bank
-  updateBank(bankId: ID!, input: BankInput!): Bank
-  deleteBank(bankId: ID!): Boolean!
-}
-
 ###############################################################################
 
 enum AccountType {
@@ -98,7 +94,7 @@ enum AccountType {
 }
 
 input AccountInput {
-  name: String!
+  name: String
   color: String
   type: AccountType
   number: String

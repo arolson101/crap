@@ -1,0 +1,22 @@
+
+query Bank($bankId: ID!) {
+  bank(bankId: $bankId) {
+    id
+    name
+    web
+    address
+    notes
+    favicon
+    online
+    fid
+    org
+    ofx
+    username
+    password
+
+    accounts {
+      id
+      name
+    }
+  }
+}

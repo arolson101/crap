@@ -38,9 +38,6 @@ describe('dbThunks', () => {
     const acts = store.getActions();
     expect(acts).toHaveLength(AppDatabase.tables.length + 1);
     let i = 0;
-    AppDatabase.tables.forEach(table => {
-      expect(acts[i++]).toMatchObject({type: getType(actions.recordsUpdated), table});
-    });
     expect(acts[i++]).toHaveProperty('type', getType(actions.dbOpenSuccess));
   });
 

@@ -1,0 +1,6 @@
+
+mutation SaveAccount($input: AccountInput!, $accountId: ID, $bankId: ID) {
+  saveAccount(input: $input, accountId: $accountId, bankId: $bankId) {
+    id
+  }
+}

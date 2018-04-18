@@ -14,32 +14,21 @@ interface Params {
   accountId?: Account.Id;
 }
 
-interface Props extends RouteComponentProps<Params> {
-  bank: Bank;
-  account?: Account;
-}
-
-export const AccountsUpdatePageComponent: React.SFC<Props> =
+export const AccountsUpdatePage: React.SFC =
   (props, { intl, router }: ctx.Intl & ctx.Router<Params>) => {
     const { history, route } = router;
+    const { bankId, accountId } = route.match.params;
     return (
       <View>
         <Text>update account</Text>
-        {props.account
-          ? <AccountForm bankId={props.bank.id} edit={props.account} />
-          : <BankForm edit={props.bank} />
+        {accountId
+          ? <AccountForm bankId={bankId} accountId={accountId} />
+          : <BankForm bankId={bankId} />
         }
       </View>
     );
   };
-AccountsUpdatePageComponent.contextTypes = { ...ctx.intl, ...ctx.router };
-
-export const AccountsUpdatePage = connect(
-  (state, { match: { params } }: Props) => ({
-    bank: selectors.getBank(state, params.bankId),
-    account: params.accountId && selectors.getAccount(state, params.accountId),
-  })
-)(AccountsUpdatePageComponent);
+AccountsUpdatePage.contextTypes = { ...ctx.intl, ...ctx.router };
 
 const messages = defineMessages({
   new: {

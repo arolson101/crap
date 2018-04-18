@@ -4,7 +4,6 @@ import { Middleware } from 'redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { RootState, configureStore, ThunkDependencies, Bank, Account, FI, formatAddress } from '../src/state';
-import { buildDictionary } from '../src/state/reducers/views';
 import { finalizeFilist } from '../src/state/thunks/fiThunks';
 
 /**
@@ -124,10 +123,6 @@ export const withDummyDataMin = () => {
 
   return {
     ...openedDb(),
-    views: {
-      banks: buildDictionary(banks),
-      accounts: buildDictionary(accounts)
-    }
   };
 };
 
@@ -145,10 +140,6 @@ export const withDummyDataMed = () => {
 
   return {
     ...openedDb(),
-    views: {
-      banks: buildDictionary(banks),
-      accounts: buildDictionary(accounts)
-    }
   };
 };
 
@@ -164,10 +155,6 @@ export const withDummyDataMax = () => {
 
   return {
     ...openedDb(),
-    views: {
-      banks: buildDictionary(banks),
-      accounts: buildDictionary(accounts)
-    }
   };
 };
 
@@ -177,10 +164,6 @@ export const preloadedStore = (state: Partial<RootState> = {}) => {
     ...initialDbs([]),
     fi: { list: filist },
     router: { location: null },
-    views: {
-      banks: {},
-      accounts: {},
-    },
     ...state
   };
 

@@ -1,54 +1,69 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import { compose } from 'recompose';
 import { RootState, actions, selectors, Bank, Account, nav } from '../../state';
+import { Mutations, Queries, Types } from '../../db';
 import { ctx } from '../ctx';
 import { List } from '../list';
-import { typedFields, SelectFieldItem } from './fields';
+import { ErrorMessage, typedFields, SelectFieldItem } from './fields';
 
 interface Props {
-  edit?: Account;
+  accountId?: Account.Id;
   bankId: Bank.Id;
 }
 
-interface ConnectedProps extends Props {
-  accounts: Account[];
-  saving: boolean;
-  accountUpdate: (id: Account.Id, q: Account.Query) => any;
-  accountCreate: (bankId: Bank.Id, props: Account.Props) => any;
+interface ComposedProps extends Props {
+  query: Queries.Account;
+  saveAccount: Mutations.SaveAccount;
 }
 
-// typescript 2.8: Mutable<Account.Props>
-interface FormValues {
-  name: string;
-  color: string;
-  type: Account.Type;
-  number: string;
-  visible: boolean;
-  bankid: string;
-  key: string;
-}
+type FormValues = {
+  [P in keyof Types.AccountInput]-?: Types.Account[P]
+};
 
 const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>();
 
-export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
+export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
+  if (props.saveAccount.called && props.saveAccount.data) {
+    return <Redirect to={nav.accountView(props.bankId, props.saveAccount.data.saveAccount!.id)} />;
+  }
+
+  if (props.accountId && props.query.error) {
+    return <ErrorMessage error={props.query.error} />;
+  }
+
+  const edit = props.accountId && props.query.data.account;
+
   return (
     <Form
       defaultValues={{
-        ...Account.defaultValues,
-        ...props.edit as any,
+        name: edit ? edit.name : Account.defaultValues.name,
+        type: edit ? edit.type as any : Account.defaultValues.type,
+        color: edit ? edit.color : Account.defaultValues.color,
+        number: edit ? edit.number : Account.defaultValues.number,
+        visible: edit ? edit.visible : Account.defaultValues.visible,
+        bankid: edit ? edit.bankid : Account.defaultValues.bankid,
+        key: edit ? edit.key : Account.defaultValues.key,
       }}
       validateError={values => ({
-        name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
+        name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={values => {
-        if (props.edit) {
-          const q = Account.diff(props.edit, values);
-          return props.accountUpdate(props.edit.id, q);
-        } else {
-          return props.accountCreate(props.bankId, values);
-        }
+      onSubmit={input => {
+        const variables = {
+          bankId: props.bankId,
+          accountId: edit ? edit.id : null,
+          input,
+        };
+        props.saveAccount.execute({ variables });
+        // if (edit) {
+        //   const q = Account.diff(edit, input);
+        //   return props.accountUpdate(edit.id, q);
+        // } else {
+        //   return props.accountCreate(props.bankId, input);
+        // }
       }}
     >
       {formApi =>
@@ -97,9 +112,9 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
               />
             }
             <SubmitButton
-              disabled={props.saving}
+              disabled={props.saveAccount.loading}
               onPress={formApi.submitForm}
-              title={props.edit ? messages.save : messages.create}
+              title={edit ? messages.save : messages.create}
             />
           </List>
         </>
@@ -109,15 +124,9 @@ export const AccountFormComponent: React.SFC<ConnectedProps> = (props, { intl, r
 };
 AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
-export const AccountForm: React.ComponentClass<Props> = connect(
-  (state: RootState, props: Props) => ({
-    accounts: selectors.getAccounts(state, props.bankId),
-    saving: props.edit ? selectors.isAccountUpdating(state) : selectors.isAccountCreating(state),
-  }),
-  {
-    accountUpdate: actions.accountUpdateUI,
-    accountCreate: actions.accountCreateUI,
-  }
+export const AccountForm = compose<ComposedProps, Props>(
+  Mutations.withSaveAccount('saveAccount'),
+  Queries.withAccount('query', ({ accountId }: Props) => accountId && ({ accountId })),
 )(AccountFormComponent);
 AccountForm.displayName = 'AccountForm';
 

@@ -3,6 +3,11 @@ query Account($accountId: ID!) {
   account(accountId: $accountId) {
     id
     name
+    type
+    color
     number
+    visible
+    bankid
+    key
   }
 }

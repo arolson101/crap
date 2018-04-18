@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from 'graphql-tools';
 import resolvers from './resolvers';
+import { RootStore, ThunkDependencies } from '../../state';
 import typeDefs from './schema.graphql';
-import { RootStore } from '../../state';
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -10,6 +10,6 @@ const schema = makeExecutableSchema({
 
 export default schema;
 
-export interface ResolverContext {
+export interface ResolverContext extends ThunkDependencies {
   store: RootStore;
 }

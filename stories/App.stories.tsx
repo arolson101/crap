@@ -97,20 +97,20 @@ storiesOf('App/Accounts', module)
       </Router>
     </Provider>
   ))
-  .add('edit bank', () => (
-    <Provider store={preloadedStore(accountsMed)}>
-      <Router pathname={nav.bankUpdate(Object.keys(accountsMed.views.banks)[0] as Bank.Id)}>
-        <App />
-      </Router>
-    </Provider>
-  ))
-  .add('create account', () => (
-    <Provider store={preloadedStore(accountsMed)}>
-      <Router pathname={nav.accountCreate(Object.keys(accountsMed.views.banks)[0] as Bank.Id)}>
-        <App />
-      </Router>
-    </Provider>
-  ))
+  // .add('edit bank', () => (
+  //   <Provider store={preloadedStore(accountsMed)}>
+  //     <Router pathname={nav.bankUpdate(Object.keys(accountsMed.views.banks)[0] as Bank.Id)}>
+  //       <App />
+  //     </Router>
+  //   </Provider>
+  // ))
+  // .add('create account', () => (
+  //   <Provider store={preloadedStore(accountsMed)}>
+  //     <Router pathname={nav.accountCreate(Object.keys(accountsMed.views.banks)[0] as Bank.Id)}>
+  //       <App />
+  //     </Router>
+  //   </Provider>
+  // ))
   // .add('edit account', () => (
   //   <Provider store={preloadedStore(accountsMed)}>
   //     <Router

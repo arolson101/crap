@@ -1,8 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from '../reducers';
 import { AppDatabase } from '../AppDatabase';
-import accountThunks from './accountThunks';
-import bankThunks from './bankThunks';
 import dbThunks from './dbThunks';
 import fiThunks from './fiThunks';
 import initThunks from './initThunks';
@@ -21,6 +19,4 @@ export const thunks = {
   ...dbThunks,
   ...fiThunks,
   ...initThunks,
-  ...accountThunks,
-  ...bankThunks,
 };
