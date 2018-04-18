@@ -56,10 +56,8 @@ const actionCreators = {
 };
 
 export const paths = {
-  login: '/',
-
   root: {
-    home: '/home',
+    home: '/',
     accounts: '/account',
     budgets: '/budgets',
   },

@@ -3,19 +3,11 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 import { View } from 'react-native';
 import { ButtonGroup, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
 import { compose } from 'recompose';
+import { Queries, Mutations } from '../../db';
 import { RootState, actions, nav, selectors } from '../../state';
 import { ctx } from '../ctx';
 import { typedFields, SelectFieldItem, formStyles } from './fields';
-import ApolloClient from 'apollo-client';
-import { ApolloLink } from 'apollo-link';
-import { Query } from 'react-apollo';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import gql from 'graphql-tag';
-import schema from '../../db/schema';
-import { execute } from 'graphql';
-import { Queries, Mutations } from '../../db';
 
 interface Props {
   initialValues?: Partial<FormValues>;
@@ -63,10 +55,6 @@ export class LoginFormComponent extends React.PureComponent<Props, State> {
 
     if (this.props.query.error) {
       return <ErrorMessage error={this.props.query.error} />;
-    }
-
-    if (this.props.openDb.data) {
-      return <Redirect push to={nav.home()}/>;
     }
 
     const mode = this.props.query.data.dbs.length ? this.state.mode : Mode.CreateNew;
