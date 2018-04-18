@@ -152,6 +152,7 @@ export interface SaveAccountMutationArgs {
   bankId?: string | null;
 }
 export interface DeleteAccountMutationArgs {
+  bankId: string;
   accountId: string;
 }
 

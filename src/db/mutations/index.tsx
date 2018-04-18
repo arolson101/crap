@@ -29,10 +29,12 @@ const makeMutation = (QUERY: DocumentNode, refetchQueries: DocumentNode[] = []) 
         );
       };
 
+import DELETEBANK_MUTATION from './DeleteBank.graphql';
 import OPENDB_MUTATION from './OpenDb.graphql';
 import SAVEACCOUNT_MUTATION from './SaveAccount.graphql';
 import SAVEBANK_MUTATION from './SaveBank.graphql';
 import {
+  DeleteBankMutation, DeleteBankMutationVariables,
   OpenDbMutation, OpenDbMutationVariables,
   SaveAccountMutation, SaveAccountMutationVariables,
   SaveBankMutation, SaveBankMutationVariables,
@@ -41,6 +43,9 @@ import {
 import BANKS_QUERY from '../queries/Banks.graphql';
 
 export namespace Mutations {
+  export const withDeleteBank = makeMutation(DELETEBANK_MUTATION);
+  export type DeleteBank = MutationType<DeleteBankMutation, DeleteBankMutationVariables>;
+
   export const withOpenDb = makeMutation(OPENDB_MUTATION);
   export type OpenDb = MutationType<OpenDbMutation, OpenDbMutationVariables>;
 

@@ -22,7 +22,7 @@ type Mutation {
   deleteBank(bankId: ID!): Boolean!
 
   saveAccount(input: AccountInput!, accountId: ID, bankId: ID): Account
-  deleteAccount(accountId: ID!): Boolean!
+  deleteAccount(bankId: ID!, accountId: ID!): Boolean!
 }
 
 ###############################################################################

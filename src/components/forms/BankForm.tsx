@@ -1,3 +1,4 @@
+import pick from 'lodash-es/pick';
 import * as React from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
@@ -61,45 +62,18 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
     <Form
       defaultValues={{
         fi: defaultFi,
-
-        name: edit ? edit.name : '',
-        web: edit ? edit.web : '',
-        address: edit ? edit.address : '',
-        notes: edit ? edit.notes : '',
-
-        online: edit ? edit.online : true,
-
-        fid: edit ? edit.fid : '',
-        org: edit ? edit.org : '',
-        ofx: edit ? edit.ofx : '',
-
-        username: edit ? edit.username : '',
-        password: edit ? edit.password : '',
+        ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) as any : Bank.defaultValues),
       }}
       validateError={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined,
       })}
-      onSubmit={async ({fi, ...input}) => {
-        try {
-          const variables = {
-            bankId: props.bankId,
-            input,
-          };
-          await props.saveBank.execute({ variables });
-        } catch (err) {
-          console.warn(err);
-        }
-        // if (props.edit) {
-        //   const q = Bank.diff(props.edit, values);
-        //   props.bankUpdate(props.edit.id, q);
-        // } else {
-        //   const { fi, ...bankProps } = values;
-        //   props.bankCreate({
-        //     ...bankProps,
-        //     accounts: [],
-        //   });
-        // }
+      onSubmit={({fi, ...input}) => {
+        const variables = {
+          bankId: props.bankId,
+          input,
+        };
+        props.saveBank.execute({ variables });
       }}
     >
       {formApi =>

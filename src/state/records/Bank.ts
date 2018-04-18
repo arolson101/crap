@@ -3,7 +3,9 @@ import { Record } from '../Record';
 import { Account } from './Account';
 import { DbChange } from '../../state/thunks/dbThunks';
 
-export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> { }
+export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> {
+  readonly accounts: Account.Id[];
+}
 
 export namespace Bank {
   export type Id = string | ':bankId';
@@ -23,8 +25,6 @@ export namespace Bank {
 
     readonly username: string;
     readonly password: string;
-
-    readonly accounts: Account.Id[];
   }
 
   export type Query = iupdate.Query<Props>;
@@ -73,6 +73,23 @@ export namespace Bank {
       }]
     });
   }
+
+  export const defaultValues: Props = {
+    name: '',
+    web: '',
+    address: '',
+    notes: '',
+    favicon: '',
+
+    online: true,
+
+    fid: '',
+    org: '',
+    ofx: '',
+
+    username: '',
+    password: '',
+  };
 
   type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null };
 

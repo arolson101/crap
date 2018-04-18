@@ -34,6 +34,14 @@ export interface BankInput {
   password?: string | null,
 };
 
+export interface DeleteBankMutationVariables {
+  bankId: string,
+};
+
+export interface DeleteBankMutation {
+  deleteBank: boolean,
+};
+
 export interface OpenDbMutationVariables {
   name: string,
   password: string,

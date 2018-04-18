@@ -58,12 +58,6 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
           input,
         };
         props.saveAccount.execute({ variables });
-        // if (edit) {
-        //   const q = Account.diff(edit, input);
-        //   return props.accountUpdate(edit.id, q);
-        // } else {
-        //   return props.accountCreate(props.bankId, input);
-        // }
       }}
     >
       {formApi =>

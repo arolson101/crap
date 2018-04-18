@@ -49,8 +49,10 @@ interface Resolvers extends IResolvers<{}, ResolverContext> {
   Mutation: {
     openDb: Resolver<ST.Mutation['openDb'], ST.OpenDbMutationArgs>;
     closeDb: Resolver<ST.Mutation['closeDb']>;
-    saveAccount: Resolver<ST.Mutation['saveAccount'], ST.SaveAccountMutationArgs>;
     saveBank: Resolver<ST.Mutation['saveBank'], ST.SaveBankMutationArgs>;
+    deleteBank: Resolver<ST.Mutation['deleteBank'], ST.DeleteBankMutationArgs>;
+    saveAccount: Resolver<ST.Mutation['saveAccount'], ST.SaveAccountMutationArgs>;
+    deleteAccount: Resolver<ST.Mutation['deleteAccount'], ST.DeleteAccountMutationArgs>;
   };
 }
 
@@ -137,9 +139,47 @@ const resolvers: Resolvers = {
       }
       return !!db.db;
     },
+
     closeDb: async (source, args, context): Promise<ST.Mutation['closeDb']> => {
       return true;
     },
+
+    saveBank: async (source, args, context): Promise<ST.Mutation['saveBank']> => {
+      const db = getDb(context);
+      const t = context.getTime();
+      let bank: Bank;
+      let changes: Array<any>;
+      if (args.bankId) {
+        const edit = await getBank(db, args.bankId);
+        const q = Bank.diff(edit, args.input);
+        changes = [
+          Bank.change.edit(t, args.bankId, q),
+        ];
+        bank = iupdate(edit, q);
+      } else {
+        const props: Bank.Props = {
+          ...Bank.defaultValues,
+          ...args.input as any,
+        };
+        bank = createRecord(context.genId, props);
+        changes = [
+          Bank.change.add(t, bank),
+        ];
+      }
+      await context.store.dispatch(actions.dbChange(changes));
+      return toBank(db, bank);
+    },
+
+    deleteBank: async (source, args, context): Promise<ST.Mutation['deleteBank']> => {
+      const db = getDb(context);
+      const t = context.getTime();
+      const changes = [
+        Bank.change.remove(t, args.bankId),
+      ];
+      await context.store.dispatch(actions.dbChange(changes));
+      return true;
+    },
+
     saveAccount: async (source, args, context): Promise<ST.Mutation['saveAccount']> => {
       const db = getDb(context);
       const t = context.getTime();
@@ -157,13 +197,8 @@ const resolvers: Resolvers = {
           throw new Error('when creating an account, bankId must be specified');
         }
         const props: Account.Props = {
-          name: args.input.name || '',
-          color: args.input.color || '',
-          type: args.input.type || Account.Type.CHECKING,
-          number: args.input.number || '',
-          visible: args.input.visible || true,
-          bankid: args.input.bankid || '',
-          key: args.input.key || '',
+          ...Account.defaultValues,
+          ...args.input as any,
         };
         account = createRecord(context.genId, props);
         changes = [
@@ -175,41 +210,17 @@ const resolvers: Resolvers = {
       return toAccount(account);
     },
 
-    saveBank: async (source, args, context): Promise<ST.Mutation['saveBank']> => {
+    deleteAccount: async (source, args, context): Promise<ST.Mutation['deleteAccount']> => {
       const db = getDb(context);
       const t = context.getTime();
-      let bank: Bank;
-      let changes: Array<any>;
-      if (args.bankId) {
-        const edit = await getBank(db, args.bankId);
-        const q = Bank.diff(edit, args.input);
-        changes = [
-          Bank.change.edit(t, args.bankId, q),
-        ];
-        bank = iupdate(edit, q);
-      } else {
-        const props: Bank.Props = {
-          name: args.input.name || '',
-          web: args.input.web || '',
-          address: args.input.address || '',
-          notes: args.input.notes || '',
-          favicon: args.input.favicon || '',
-          online: args.input.online || true,
-          fid: args.input.fid || '',
-          org: args.input.org || '',
-          ofx: args.input.ofx || '',
-          username: args.input.username || '',
-          password: args.input.password || '',
-          accounts: []
-        };
-        bank = createRecord(context.genId, props);
-        changes = [
-          Bank.change.add(t, bank),
-        ];
-      }
+      const changes = [
+        Account.change.remove(t, args.accountId),
+        Bank.change.removeAccount(t, args.bankId, args.accountId),
+      ];
       await context.store.dispatch(actions.dbChange(changes));
-      return toBank(db, bank);
+      return true;
     },
+
   }
 };
 
