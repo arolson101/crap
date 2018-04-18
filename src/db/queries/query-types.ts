@@ -27,17 +27,6 @@ export interface AccountQuery {
   },
 };
 
-export interface AccountsQuery {
-  banks:  Array< {
-    id: string,
-    name: string,
-    accounts:  Array< {
-      id: string,
-      name: string,
-    } >,
-  } >,
-};
-
 export interface AllCoursesQuery {
   allCourses:  Array< {
     title: string,
@@ -97,4 +86,15 @@ export interface CourseQuery {
 
 export interface DbsQuery {
   dbs: Array< string >,
+};
+
+export interface AccountsQuery {
+  banks:  Array< {
+    id: string,
+    name: string,
+    accounts:  Array< {
+      id: string,
+      name: string,
+    } >,
+  } >,
 };
