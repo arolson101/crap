@@ -36,7 +36,7 @@ describe('dbThunks', () => {
     const store = mockStore();
     await store.dispatch(actions.dbOpen('foo', 'password'));
     const acts = store.getActions();
-    expect(acts).toHaveLength(AppDatabase.tables.length + 1);
+    expect(acts).toHaveLength(1);
     let i = 0;
     expect(acts[i++]).toHaveProperty('type', getType(actions.dbOpenSuccess));
   });
