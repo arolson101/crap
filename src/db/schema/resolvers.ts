@@ -161,7 +161,10 @@ const resolvers: Resolvers = {
           ...Bank.defaultValues,
           ...args.input as any,
         };
-        bank = createRecord(context.genId, props);
+        bank = {
+          ...createRecord(context.genId, props),
+          accounts: []
+        };
         changes = [
           Bank.change.add(t, bank),
         ];
