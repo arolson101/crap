@@ -43,7 +43,7 @@ import {
 import BANKS_QUERY from '../queries/Banks.graphql';
 
 export namespace Mutations {
-  export const withDeleteBank = makeMutation(DELETEBANK_MUTATION);
+  export const withDeleteBank = makeMutation(DELETEBANK_MUTATION, [BANKS_QUERY]);
   export type DeleteBank = MutationType<DeleteBankMutation, DeleteBankMutationVariables>;
 
   export const withOpenDb = makeMutation(OPENDB_MUTATION);

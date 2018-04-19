@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router';
 import { compose } from 'recompose';
 import { nav, Bank, RootState, selectors, paths } from '../../state';
-import { Queries } from '../../db';
+import { Queries, Mutations } from '../../db';
 import { ctx } from '../ctx';
 import { BankDisplay } from '../BankDisplay';
 import { ErrorMessage } from '../forms/fields';
@@ -14,6 +14,7 @@ import { AccountPage } from './AccountPage';
 
 interface Props {
   query: Queries.Banks;
+  deleteBank: Mutations.DeleteBank;
 }
 
 export const AccountsPageComponent: React.SFC<Props> = (props, {router}: ctx.Router) => {
@@ -34,7 +35,7 @@ export const AccountsPageComponent: React.SFC<Props> = (props, {router}: ctx.Rou
         <>
           <Text>Accounts page</Text>
           {props.query.data.banks.map(bank =>
-            <BankDisplay key={bank.id} bank={bank}/>
+            <BankDisplay key={bank.id} bank={bank} deleteBank={props.deleteBank}/>
           )}
           <Button onPress={() => router.history.push(nav.bankCreate())} title="add bank"/>
         </>
@@ -46,5 +47,6 @@ AccountsPageComponent.contextTypes = ctx.router;
 
 export const AccountsPage = compose(
   Queries.withBanks('query'),
+  Mutations.withDeleteBank('deleteBank'),
 )(AccountsPageComponent);
 AccountsPage.displayName = 'AccountsPage';

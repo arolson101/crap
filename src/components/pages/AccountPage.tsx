@@ -22,7 +22,7 @@ export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Route
   if (props.query.loading) {
     return null;
   }
-  const { router: { history } } = context;
+  const { router: { history, route } } = context;
   const { account } = props.query.data;
 
   if (!account) {
@@ -33,7 +33,7 @@ export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Route
     <View>
       <Text>Account: {account.name}</Text>
       <Text>bank: {account.name}</Text>
-      <Button title="edit" onPress={() => history.push(nav.accountUpdate(account.id))} />
+      <Button title="edit" onPress={() => history.push(nav.accountUpdate(route.match.params.accountId, account.id))} />
     </View>
   );
 };

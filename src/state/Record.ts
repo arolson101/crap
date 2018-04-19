@@ -35,7 +35,7 @@ export interface Record<ID, T = {}> {
 }
 
 export namespace Record {
-  export const genSchema = (...extra: string[]) => ['&id, _deleted', ...extra].join(', ');
+  export const genSchema = (...extra: string[]) => ['&id, _deleted', '[id+_deleted]', ...extra].join(', ');
 }
 
 export const createRecord = <ID extends string, R extends T & Record<ID, T> & T, T>(genId: () => ID, props: T): R => {
