@@ -3,8 +3,11 @@ import { defineMessages } from 'react-intl';
 import { iupdate } from '../../iupdate';
 import { DbChange } from '../../state/thunks/dbThunks';
 import { Record } from '../Record';
+import { Bank } from './Bank';
 
-export interface Account extends Account.Props, Record<Account.Id, Account.Props> {}
+export interface Account extends Account.Props, Record<Account.Id, Account.Props> {
+  readonly bankId: Bank.Id;
+}
 
 export namespace Account {
   export type Id = string | ':accountId';
@@ -25,7 +28,7 @@ export namespace Account {
     readonly type: Account.Type;
     readonly number: string;
     readonly visible: boolean;
-    readonly bankid: string;
+    readonly routing: string;
     readonly key: string;
   }
 
@@ -72,7 +75,7 @@ export namespace Account {
 
   export type Query = iupdate.Query<Props>;
   export const table = 'accounts';
-  export const schema = Record.genSchema();
+  export const schema = Record.genSchema('bankId', '[bankId+_deleted]');
 
   export namespace change {
     export const add = (t: number, account: Account): DbChange => ({
@@ -94,13 +97,13 @@ export namespace Account {
     });
   }
 
-  export const defaultValues = {
+  export const defaultValues: Props = {
     name: '',
     type: Type.CHECKING,
     color: generateColor(Account.Type.CHECKING),
     number: '',
     visible: true,
-    bankid: '',
+    routing: '',
     key: '',
   };
 

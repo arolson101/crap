@@ -35,7 +35,8 @@ var coursesData = [
 ];
 
 // see GraphQLTypeResolver
-type Resolver<TRet, TArgs = {}> = (source: {}, args: TArgs, context: ResolverContext) => TRet | Promise<TRet>;
+type Resolver<TRet, TArgs = {}> =
+  (source: {}, args: TArgs, context: ResolverContext) => Partial<TRet> | Promise<Partial<TRet>>;
 
 interface Resolvers extends IResolvers<{}, ResolverContext> {
   Query: {
@@ -43,7 +44,7 @@ interface Resolvers extends IResolvers<{}, ResolverContext> {
     allCourses: Resolver<ST.Query['allCourses']>;
     course: Resolver<ST.Query['course'], ST.CourseQueryArgs>;
     bank: Resolver<ST.Query['bank'], ST.BankQueryArgs>;
-    banks: Resolver<ST.Query['banks']>;
+    banks: Resolver<Partial<ST.Bank>[]/*ST.Query['banks']*/>;
     account: Resolver<ST.Query['account'], ST.AccountQueryArgs>;
   };
   Mutation: {
@@ -72,15 +73,9 @@ const getBank = async (db: AppDatabase, id: Bank.Id | string): Promise<Bank> => 
   return bank;
 };
 
-const toBank = async (db: AppDatabase, dbBank: Bank): Promise<ST.Bank> => {
-  const { accounts: accountIds, _deleted, _base, _history, ...rest } = dbBank;
-  const accountsWithNulls = await db.transaction('r', db.accounts, () => {
-    return Promise.all(accountIds.map(async accountId =>
-      toAccount(await getAccount(db, accountId))
-    ));
-  });
-  const accounts = accountsWithNulls.filter((account): account is ST.Account => !!account);
-  return { ...rest, accounts };
+const toBank = (dbBank: Bank): Partial<ST.Bank> => {
+  const { _deleted, _base, _history, ...rest } = dbBank;
+  return { ...rest } as any;
 };
 
 const getAccount = async (db: AppDatabase, id: Account.Id): Promise<Account> => {
@@ -91,42 +86,48 @@ const getAccount = async (db: AppDatabase, id: Account.Id): Promise<Account> => 
   return account;
 };
 
-const toAccount = (account: Account): ST.Account => {
-  const { _deleted, _base, _history, type: stringType, ...rest } = account;
+const toAccount = (account: Account): Partial<ST.Account> => {
+  const { bankId, _deleted, _base, _history, type: stringType, ...rest } = account;
   const type = ST.AccountType[stringType];
   return { ...rest, type };
 };
 
 const resolvers: Resolvers = {
   Query: {
-    dbs: async (): Promise<ST.Query['dbs']> => {
+    dbs: async () => {
       const names = await Dexie.getDatabaseNames();
       return names;
     },
-    bank: async (source, args, context): Promise<ST.Query['bank']> => {
+    bank: async (source, args, context) => {
       const db = getDb(context);
       const res = await getBank(db, args.bankId);
-      return toBank(db, res);
+      return toBank(res);
     },
-    banks: async (source, args, context): Promise<ST.Query['banks']> => {
+    banks: async (source, args, context) => {
       const db = getDb(context);
-      return await db.transaction('r', db.banks, db.accounts, async (): Promise<ST.Query['banks']> => {
-        const res = await db.banks.where({_deleted: 0}).toArray();
-        return Promise.all(res.map(bank => toBank(db, bank)));
-      });
+      const res = await db.banks.where({_deleted: 0}).toArray();
+      return res.map(toBank);
     },
-    allCourses: (): ST.Query['allCourses'] => {
+    allCourses: () => {
       return coursesData;
     },
-    course: (root: any, { id }): ST.Query['course'] => {
+    course: (root: any, { id }) => {
       return coursesData.filter(course => {
         return course.id === id;
       })[0];
     },
-    account: async (source, args, context): Promise<ST.Query['account']> => {
+    account: async (source, args, context) => {
       const db = getDb(context);
       const res = await getAccount(db, args.accountId);
       return toAccount(res);
+    }
+  },
+
+  Bank: {
+    accounts: async (bank: ST.Bank, args, context) => {
+      const db = getDb(context);
+      const res = await db.accounts.where({_deleted: 0, bankId: bank.id}).toArray();
+      return res.map(toAccount);
     }
   },
 
@@ -140,11 +141,11 @@ const resolvers: Resolvers = {
       return !!db.db;
     },
 
-    closeDb: async (source, args, context): Promise<ST.Mutation['closeDb']> => {
+    closeDb: async (source, args, context) => {
       return true;
     },
 
-    saveBank: async (source, args, context): Promise<ST.Mutation['saveBank']> => {
+    saveBank: async (source, args, context) => {
       const db = getDb(context);
       const t = context.getTime();
       let bank: Bank;
@@ -161,16 +162,13 @@ const resolvers: Resolvers = {
           ...Bank.defaultValues,
           ...args.input as any,
         };
-        bank = {
-          ...createRecord(context.genId, props),
-          accounts: []
-        };
+        bank = createRecord(context.genId, props);
         changes = [
           Bank.change.add(t, bank),
         ];
       }
       await context.store.dispatch(actions.dbChange(changes));
-      return toBank(db, bank);
+      return toBank(bank);
     },
 
     deleteBank: async (source, args, context): Promise<ST.Mutation['deleteBank']> => {
@@ -183,7 +181,7 @@ const resolvers: Resolvers = {
       return true;
     },
 
-    saveAccount: async (source, args, context): Promise<ST.Mutation['saveAccount']> => {
+    saveAccount: async (source, args, context) => {
       const db = getDb(context);
       const t = context.getTime();
       let account: Account;
@@ -203,22 +201,23 @@ const resolvers: Resolvers = {
           ...Account.defaultValues,
           ...args.input as any,
         };
-        account = createRecord(context.genId, props);
+        account = {
+          bankId: args.bankId,
+          ...createRecord(context.genId, props)
+        };
         changes = [
-          Account.change.add(t, account),
-          Bank.change.addAccount(t, args.bankId, account.id),
+          Account.change.add(t, account)
         ];
       }
       await context.store.dispatch(actions.dbChange(changes));
       return toAccount(account);
     },
 
-    deleteAccount: async (source, args, context): Promise<ST.Mutation['deleteAccount']> => {
+    deleteAccount: async (source, args, context) => {
       const db = getDb(context);
       const t = context.getTime();
       const changes = [
-        Account.change.remove(t, args.accountId),
-        Bank.change.removeAccount(t, args.bankId, args.accountId),
+        Account.change.remove(t, args.accountId)
       ];
       await context.store.dispatch(actions.dbChange(changes));
       return true;

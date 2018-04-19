@@ -7,7 +7,7 @@ query Account($accountId: ID!) {
     color
     number
     visible
-    bankid
+    routing
     key
   }
 }

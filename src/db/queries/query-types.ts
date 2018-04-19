@@ -22,9 +22,20 @@ export interface AccountQuery {
     color: string,
     number: string,
     visible: boolean,
-    bankid: string,
+    routing: string,
     key: string,
   },
+};
+
+export interface AccountsQuery {
+  banks:  Array< {
+    id: string,
+    name: string,
+    accounts:  Array< {
+      id: string,
+      name: string,
+    } >,
+  } >,
 };
 
 export interface AllCoursesQuery {
@@ -86,15 +97,4 @@ export interface CourseQuery {
 
 export interface DbsQuery {
   dbs: Array< string >,
-};
-
-export interface AccountsQuery {
-  banks:  Array< {
-    id: string,
-    name: string,
-    accounts:  Array< {
-      id: string,
-      name: string,
-    } >,
-  } >,
 };

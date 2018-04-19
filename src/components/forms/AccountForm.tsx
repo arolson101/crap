@@ -44,7 +44,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
         color: edit ? edit.color : Account.defaultValues.color,
         number: edit ? edit.number : Account.defaultValues.number,
         visible: edit ? edit.visible : Account.defaultValues.visible,
-        bankid: edit ? edit.bankid : Account.defaultValues.bankid,
+        routing: edit ? edit.routing : Account.defaultValues.routing,
         key: edit ? edit.key : Account.defaultValues.key,
       }}
       validateError={values => ({
@@ -93,9 +93,9 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
             />
             {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
               <TextField
-                field="bankid"
-                label={messages.bankid}
-                placeholder={messages.bankidPlaceholder}
+                field="routing"
+                label={messages.routing}
+                placeholder={messages.routingPlaceholder}
               />
             }
             {(formApi.values.type === Account.Type.CREDITCARD) &&
@@ -181,8 +181,8 @@ const messages = defineMessages({
     id: 'AccountDialog.colorPlaceholder',
     defaultMessage: 'red'
   },
-  bankid: {
-    id: 'AccountDialog.bankid',
+  routing: {
+    id: 'AccountDialog.routing',
     defaultMessage: 'Routing Number',
     description: `Bank identifier, A-9
       Use of this field by country:
@@ -198,8 +198,8 @@ const messages = defineMessages({
       NLD         Not used (field contents ignored)
       USA         Routing and transit number`
   },
-  bankidPlaceholder: {
-    id: 'AccountDialog.bankidPlaceholder',
+  routingPlaceholder: {
+    id: 'AccountDialog.routingPlaceholder',
     defaultMessage: '0123456',
   },
   key: {

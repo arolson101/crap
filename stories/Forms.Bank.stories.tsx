@@ -26,8 +26,7 @@ const bank: Bank = {
   org: '1ST',
   ofx: 'https://ofx.1stbank.com',
   username: 'anyone',
-  password: 'secret!',
-  accounts: [],
+  password: 'secret!'
 };
 
 // storiesOf('Forms/Bank', module)

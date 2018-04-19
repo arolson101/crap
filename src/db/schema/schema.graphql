@@ -96,10 +96,10 @@ enum AccountType {
 input AccountInput {
   name: String
   color: String
+  routing: String
   type: AccountType
   number: String
   visible: Boolean
-  bankid: String
   key: String
 }
 
@@ -107,10 +107,10 @@ type Account {
   id: ID!
   name: String!
   color: String!
+  routing: String!
   type: AccountType!
   number: String!
   visible: Boolean!
-  bankid: String!
   key: String!
 }
 
@@ -123,7 +123,7 @@ type Split {
 
 type Transaction {
   id: ID!
-  account: Account!
+  accountId: ID!
   serverid: String!
   time: Int!
   type: String!
@@ -156,6 +156,7 @@ type Budget {
 
 type Category {
   id: ID!
+  budgetId: ID!
   name: String!
   amount: Float!
 }

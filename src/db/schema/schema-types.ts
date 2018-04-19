@@ -38,10 +38,10 @@ export interface Account {
   id: string;
   name: string;
   color: string;
+  routing: string;
   type: AccountType;
   number: string;
   visible: boolean;
-  bankid: string;
   key: string;
 }
 
@@ -61,13 +61,14 @@ export interface Split {
 
 export interface Category {
   id: string;
+  budgetId: string;
   name: string;
   amount: number;
 }
 
 export interface Transaction {
   id: string;
-  account: Account;
+  accountId: string;
   serverid: string;
   time: number;
   type: string;
@@ -115,10 +116,10 @@ export interface BankInput {
 export interface AccountInput {
   name?: string | null;
   color?: string | null;
+  routing?: string | null;
   type?: AccountType | null;
   number?: string | null;
   visible?: boolean | null;
-  bankid?: string | null;
   key?: string | null;
 }
 

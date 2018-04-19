@@ -65,7 +65,8 @@ const dummyAccount = (id: string, name: string, type: Account.Type): Account => 
   type,
   number: id,
   visible: true,
-  bankid: '',
+  bankId: '',
+  routing: '',
   key: '',
 });
 
@@ -87,8 +88,6 @@ const dummyBank = (fi: FI, accounts: Account[]): Bank => ({
 
   username: `user${fi.id}`,
   password: `pass${fi.id}`,
-
-  accounts: accounts.map(acct => acct.id)
 });
 
 const types: Account.Type[] = [

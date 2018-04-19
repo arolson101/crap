@@ -4,10 +4,10 @@
 export interface AccountInput {
   name?: string | null,
   color?: string | null,
+  routing?: string | null,
   type?: AccountType | null,
   number?: string | null,
   visible?: boolean | null,
-  bankid?: string | null,
   key?: string | null,
 };
 

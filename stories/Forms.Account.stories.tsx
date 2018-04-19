@@ -18,7 +18,6 @@ const bank: Bank = {
   ofx: 'https://ofx.1stbank.com',
   username: 'anyone',
   password: 'secret!',
-  accounts: [],
 };
 
 const props = {
@@ -31,13 +30,14 @@ const props = {
 
 const account: Account = {
   id: '123' as Account.Id,
+  bankId: 'asdf',
   _deleted: 0,
   name: '1st checking',
   color: 'red',
   type: Account.Type.CHECKING,
   number: '1234',
+  routing: 'asdf',
   visible: true,
-  bankid: 'asdf',
   key: '',
 };
 

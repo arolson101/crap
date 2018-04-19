@@ -1,10 +1,8 @@
 import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
-import { Account } from './Account';
 import { DbChange } from '../../state/thunks/dbThunks';
 
 export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> {
-  readonly accounts: Account.Id[];
 }
 
 export namespace Bank {
@@ -29,12 +27,7 @@ export namespace Bank {
 
   export type Query = iupdate.Query<Props>;
   export const table = 'banks';
-  export const schema = Record.genSchema('*accounts');
-
-  export interface View {
-    bank: Bank;
-    accounts: Account[];
-  }
+  export const schema = Record.genSchema();
 
   export namespace change {
     export const add = (t: number, bank: Bank): DbChange => ({
@@ -53,24 +46,6 @@ export namespace Bank {
       table,
       t,
       deletes: [id]
-    });
-
-    export const addAccount = (t: number, id: Bank.Id, accountId: Account.Id): DbChange => ({
-      table,
-      t,
-      edits: [{
-        id,
-        q: { accounts: { $push: [accountId] } }
-      }]
-    });
-
-    export const removeAccount = (t: number, id: Bank.Id, accountId: Account.Id): DbChange => ({
-      table,
-      t,
-      edits: [{
-        id,
-        q: { accounts: { $exclude: [accountId] } }
-      }]
     });
   }
 
