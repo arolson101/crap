@@ -9,7 +9,6 @@ import { ctx } from '../ctx';
 import { typedFields } from './fields';
 
 interface Props {
-  initialValues?: Partial<FormValues>;
   query: Queries.Dbs;
   openDb: Mutations.OpenDb;
 }
@@ -91,7 +90,6 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
         name: '',
         password: '',
         passwordConfirm: '',
-        ...props.initialValues,
       }}
       validateError={values => ({
         name: !values.name.trim() ? formatMessage(messages.valueEmpty)
@@ -148,7 +146,6 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
       defaultValues={{
         name: props.query.data.dbs[0],
         password: '',
-        ...props.initialValues,
       }}
       // validateError={values => ({
       //   password: !values.password.trim() ? formatMessage(messages.valueEmpty)

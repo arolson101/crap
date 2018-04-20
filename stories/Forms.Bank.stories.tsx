@@ -14,7 +14,7 @@
 // };
 
 // const bank: Bank = {
-//   id: '123' as Bank.Id,
+//   id: '123',
 //   _deleted: 0,
 //   name: '1st Source Bank',
 //   web: 'http://www.1stbank.com',

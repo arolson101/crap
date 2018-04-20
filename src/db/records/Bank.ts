@@ -2,12 +2,10 @@ import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
 import { DbChange } from '../AppDatabase';
 
-export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> {
+export interface Bank extends Bank.Props, Record<Bank.Props> {
 }
 
 export namespace Bank {
-  export type Id = string | ':bankId';
-
   export interface Props {
     readonly name: string;
     readonly web: string;
@@ -36,13 +34,13 @@ export namespace Bank {
       adds: [bank]
     });
 
-    export const edit = (t: number, id: Bank.Id, q: Query): DbChange => ({
+    export const edit = (t: number, id: string, q: Query): DbChange => ({
       table,
       t,
       edits: [{ id, q }]
     });
 
-    export const remove = (t: number, id: Bank.Id): DbChange => ({
+    export const remove = (t: number, id: string): DbChange => ({
       table,
       t,
       deletes: [id]

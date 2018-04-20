@@ -11,7 +11,7 @@ import { List } from '../list';
 import { ErrorMessage, typedFields } from './fields';
 
 interface Props {
-  bankId?: Bank.Id;
+  bankId?: string;
 }
 
 interface ComposedProps extends Props {

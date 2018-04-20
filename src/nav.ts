@@ -1,5 +1,3 @@
-import { Bank, Account } from './db';
-
 export const paths = {
   root: {
     home: '/',
@@ -23,12 +21,12 @@ export const nav = {
   accounts: () => paths.root.accounts,
   bankCreate: () =>
     paths.account.create.replace(':bankId?', ''),
-  bankUpdate: (bankId: Bank.Id) =>
+  bankUpdate: (bankId: string) =>
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', ''),
-  accountCreate: (bankId: Bank.Id) =>
+  accountCreate: (bankId: string) =>
     paths.account.create.replace(':bankId?', bankId),
-  accountView: (bankId: Bank.Id, accountId: Account.Id) =>
+  accountView: (bankId: string, accountId: string) =>
     paths.account.view.replace(':accountId', accountId),
-  accountUpdate: (bankId: Bank.Id, accountId: Account.Id) =>
+  accountUpdate: (bankId: string, accountId: string) =>
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
 };

@@ -27,8 +27,8 @@ interface Update<T> {
   readonly q: iupdate.Query<T>;
 }
 
-export interface Record<ID, T = {}> {
-  readonly id: ID;
+export interface Record<T = {}> {
+  readonly id: string;
   readonly _deleted: number;
   readonly _base?: CompressedJson<T>;
   readonly _history?: CompressedJson<{ a: Array<Update<T>> }>; // bson doesn't support top-level array
@@ -38,7 +38,7 @@ export namespace Record {
   export const genSchema = (...extra: string[]) => ['&id, _deleted', '[id+_deleted]', ...extra].join(', ');
 }
 
-export const createRecord = <ID extends string, R extends T & Record<ID, T> & T, T>(genId: () => ID, props: T): R => {
+export const createRecord = <R extends T & Record<T> & T, T>(genId: () => string, props: T): R => {
   const id = genId();
   const _base = undefined;
   const _history = undefined;
@@ -52,8 +52,8 @@ const rebuildObject = <T>(props: T, _base: CompressedJson<T> | undefined, change
   return changes.reduce((current, change) => iupdate(current, change.q), base);
 };
 
-export const updateRecord = <ID, R extends T & Record<ID, T>, T>(record: R, change: Update<T>): R => {
-  const { id, _base, _deleted, _history, ...props } = record as Record<ID, T>;
+export const updateRecord = <R extends T & Record<T>, T>(record: R, change: Update<T>): R => {
+  const { id, _base, _deleted, _history, ...props } = record as Record<T>;
   const prevHistory = _history ? hydrate(_history).a : [];
   const changes = [ ...prevHistory, change ].sort((a, b) => a.t - b.t);
   const isLatest = changes[changes.length - 1] === change;
@@ -67,6 +67,6 @@ export const updateRecord = <ID, R extends T & Record<ID, T>, T>(record: R, chan
   } as R;
 };
 
-export const deleteRecord = <ID, R extends Record<ID, T>, T>(record: R, t: number): R => {
+export const deleteRecord = <R extends Record<T>, T>(record: R, t: number): R => {
   return { ...(record as {}), _deleted: t } as R;
 };

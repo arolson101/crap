@@ -1,18 +1,15 @@
 import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
-import { Account } from './Account';
 
-export interface Transaction extends Transaction.Props, Record<Transaction.Id, Transaction.Props> {}
+export interface Transaction extends Transaction.Props, Record<Transaction.Props> {}
 
 export namespace Transaction {
-  export type Id = ':transactionId';
-
   export interface Split {
     [categoryId: string]: number;
   }
 
   export interface Props {
-    account: Account.Id;
+    account: string;
     serverid?: string;
     time: number;
     type: string;

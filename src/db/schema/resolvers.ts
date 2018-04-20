@@ -36,7 +36,7 @@ const getDb = (context: ResolverContext) => {
   return db;
 };
 
-const getBank = async (db: AppDatabase, id: Bank.Id | string): Promise<Bank> => {
+const getBank = async (db: AppDatabase, id: string): Promise<Bank> => {
   const bank = await db.banks.where({ id, _deleted: 0 }).first();
   if (!bank) {
     throw new Error(`bank ${id} not found`);
@@ -49,7 +49,7 @@ const toBank = (dbBank: Bank): Partial<ST.Bank> => {
   return { ...rest } as any;
 };
 
-const getAccount = async (db: AppDatabase, id: Account.Id): Promise<Account> => {
+const getAccount = async (db: AppDatabase, id: string): Promise<Account> => {
   const account = await db.accounts.where({ id, _deleted: 0 }).first();
   if (!account) {
     throw new Error(`account ${id} not found`);

@@ -3,15 +3,12 @@ import { defineMessages } from 'react-intl';
 import { iupdate } from '../../iupdate';
 import { DbChange } from '../AppDatabase';
 import { Record } from '../Record';
-import { Bank } from './Bank';
 
-export interface Account extends Account.Props, Record<Account.Id, Account.Props> {
-  readonly bankId: Bank.Id;
+export interface Account extends Account.Props, Record<Account.Props> {
+  readonly bankId: string;
 }
 
 export namespace Account {
-  export type Id = string | ':accountId';
-
   // see ofx4js.domain.data.banking.AccountType
   export type Type = 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD';
   export const Type = {
@@ -84,13 +81,13 @@ export namespace Account {
       adds: [account]
     });
 
-    export const edit = (t: number, id: Account.Id, q: Query): DbChange => ({
+    export const edit = (t: number, id: string, q: Query): DbChange => ({
       table,
       t,
       edits: [{ id, q }]
     });
 
-    export const remove = (t: number, id: Account.Id): DbChange => ({
+    export const remove = (t: number, id: string): DbChange => ({
       table,
       t,
       deletes: [id]

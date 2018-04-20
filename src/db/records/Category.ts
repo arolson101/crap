@@ -1,11 +1,9 @@
 import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
 
-export interface Category extends Category.Props, Record<Category.Id, Category.Props> {}
+export interface Category extends Category.Props, Record<Category.Props> {}
 
 export namespace Category {
-  export type Id = ':categoryId';
-
   export interface Props {
     name: string;
     amount: number;

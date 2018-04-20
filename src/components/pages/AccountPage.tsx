@@ -3,13 +3,13 @@ import { View, Text } from 'react-native';
 import { RouteComponentProps } from 'react-router';
 import { Button } from 'react-native';
 import { compose } from 'recompose';
-import { Queries, Bank, Account } from '../../db';
+import { Queries } from '../../db';
 import { nav } from '../../nav';
 import { ctx } from '../ctx';
 
 interface Params {
-  bankId: Bank.Id;
-  accountId: Account.Id;
+  bankId: string;
+  accountId: string;
 }
 
 interface Props {

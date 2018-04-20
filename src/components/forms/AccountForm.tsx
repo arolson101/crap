@@ -1,16 +1,17 @@
+import pick from 'lodash-es/pick';
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import { Redirect } from 'react-router';
 import { compose } from 'recompose';
 import { nav } from '../../nav';
-import { Mutations, Queries, Types, Bank, Account } from '../../db';
+import { Mutations, Queries, Types, Account } from '../../db';
 import { ctx } from '../ctx';
 import { List } from '../list';
 import { ErrorMessage, typedFields, SelectFieldItem } from './fields';
 
 interface Props {
-  accountId?: Account.Id;
-  bankId: Bank.Id;
+  accountId?: string;
+  bankId: string;
 }
 
 interface ComposedProps extends Props {
@@ -38,13 +39,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
   return (
     <Form
       defaultValues={{
-        name: edit ? edit.name : Account.defaultValues.name,
-        type: edit ? edit.type as any : Account.defaultValues.type,
-        color: edit ? edit.color : Account.defaultValues.color,
-        number: edit ? edit.number : Account.defaultValues.number,
-        visible: edit ? edit.visible : Account.defaultValues.visible,
-        routing: edit ? edit.routing : Account.defaultValues.routing,
-        key: edit ? edit.key : Account.defaultValues.key,
+        ...(edit ? pick(edit, Object.keys(Account.defaultValues)) as any : Account.defaultValues),
       }}
       validateError={values => ({
         name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)

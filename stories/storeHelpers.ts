@@ -44,7 +44,7 @@ export const openedDb = () => ({
 });
 
 const dummyAccount = (id: string, name: string, type: Account.Type): Account => ({
-  id: id as Account.Id,
+  id: id,
   _deleted: 0,
   name,
   color: 'red',
@@ -57,7 +57,7 @@ const dummyAccount = (id: string, name: string, type: Account.Type): Account => 
 });
 
 const dummyBank = (fi: FI, accounts: Account[]): Bank => ({
-  id: `bnk${fi.id}` as Bank.Id,
+  id: `bnk${fi.id}`,
   _deleted: 0,
 
   name: fi.name,

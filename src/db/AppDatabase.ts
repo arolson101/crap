@@ -43,12 +43,12 @@ export class AppDatabase extends Dexie {
   static readonly tables = Object.keys(AppDatabase.schemas) as TableName[];
 
   _changes: Dexie.Table<Change, string>;
-  [Account.table]: Dexie.Table<Account, Account.Id>;
-  [Bank.table]: Dexie.Table<Bank, Bank.Id>;
-  [Bill.table]: Dexie.Table<Bill, Bill.Id>;
-  [Budget.table]: Dexie.Table<Budget, Budget.Id>;
-  [Category.table]: Dexie.Table<Category, Category.Id>;
-  [Transaction.table]: Dexie.Table<Transaction, Transaction.Id>;
+  [Account.table]: Dexie.Table<Account, string>;
+  [Bank.table]: Dexie.Table<Bank, string>;
+  [Bill.table]: Dexie.Table<Bill, string>;
+  [Budget.table]: Dexie.Table<Budget, string>;
+  [Category.table]: Dexie.Table<Category, string>;
+  [Transaction.table]: Dexie.Table<Transaction, string>;
 
   static async open(name: string) {
     const db = new AppDatabase(name);
