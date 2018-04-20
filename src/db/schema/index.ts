@@ -10,8 +10,7 @@ const schema = makeExecutableSchema({
 
 export default schema;
 
-export interface ResolverContext {
+export interface ResolverContext extends ThunkDependencies {
   db: AppDatabase | undefined;
   setDb: (db: AppDatabase | undefined) => any;
-  deps: ThunkDependencies;
 }

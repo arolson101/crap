@@ -32,7 +32,7 @@ const Root = () => (
     <AppContainer>
       <IntlProvider locale="en">
         <Provider store={store}>
-          <GraphQLProvider {...dependencies}>
+          <GraphQLProvider dependencies={dependencies}>
             <ConnectedRouter history={history}>
               <App />
             </ConnectedRouter>

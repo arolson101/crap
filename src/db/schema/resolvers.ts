@@ -95,7 +95,7 @@ const resolvers: Resolvers = {
 
   Mutation: {
     openDb: async (source, args, context): Promise<ST.Mutation['openDb']> => {
-      const db = await context.deps.openDb(args.name);
+      const db = await context.openDb(args.name);
       context.setDb(db);
       return true;
     },
@@ -107,7 +107,7 @@ const resolvers: Resolvers = {
 
     saveBank: async (source, args, context) => {
       const db = getDb(context);
-      const t = context.deps.getTime();
+      const t = context.getTime();
       let bank: Bank;
       let changes: Array<any>;
       if (args.bankId) {
@@ -122,7 +122,7 @@ const resolvers: Resolvers = {
           ...Bank.defaultValues,
           ...args.input as any,
         };
-        bank = createRecord(context.deps.genId, props);
+        bank = createRecord(context.genId, props);
         changes = [
           Bank.change.add(t, bank),
         ];
@@ -133,7 +133,7 @@ const resolvers: Resolvers = {
 
     deleteBank: async (source, args, context): Promise<ST.Mutation['deleteBank']> => {
       const db = getDb(context);
-      const t = context.deps.getTime();
+      const t = context.getTime();
       const changes = [
         Bank.change.remove(t, args.bankId),
       ];
@@ -143,7 +143,7 @@ const resolvers: Resolvers = {
 
     saveAccount: async (source, args, context) => {
       const db = getDb(context);
-      const t = context.deps.getTime();
+      const t = context.getTime();
       let account: Account;
       let changes: Array<any>;
       if (args.accountId) {
@@ -163,7 +163,7 @@ const resolvers: Resolvers = {
         };
         account = {
           bankId: args.bankId,
-          ...createRecord(context.deps.genId, props)
+          ...createRecord(context.genId, props)
         };
         changes = [
           Account.change.add(t, account)
@@ -175,7 +175,7 @@ const resolvers: Resolvers = {
 
     deleteAccount: async (source, args, context) => {
       const db = getDb(context);
-      const t = context.deps.getTime();
+      const t = context.getTime();
       const changes = [
         Account.change.remove(t, args.accountId)
       ];
