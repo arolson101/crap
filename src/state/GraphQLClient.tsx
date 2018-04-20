@@ -8,13 +8,14 @@ import { ApolloProvider } from 'react-apollo';
 import { connect } from 'react-redux';
 import Observable from 'zen-observable-ts';
 import schema, { ResolverContext } from '../db/schema';
-import { selectors, RootState, RootStore, ThunkDependencies } from '../state';
+import { selectors, RootState, ThunkDependencies } from '../state';
 import { AppDatabase } from './AppDatabase';
 import { runQuery } from 'apollo-server-core';
+import { Db } from '../components/ctx';
 
 export { GraphQLClient };
 
-export const makeClient = (contextValue: ResolverContext) => new GraphQLClient({
+const makeClient = (context: ResolverContext) => new GraphQLClient({
   cache: new InMemoryCache(),
   link: new ApolloLink((operation, forward) => {
     return new Observable(observer => {
@@ -22,7 +23,7 @@ export const makeClient = (contextValue: ResolverContext) => new GraphQLClient({
         schema,
         query: operation.query,
         variables: operation.variables,
-        context: contextValue,
+        context,
       };
       const exe = runQuery(opts);
       if ('then' in exe) {
@@ -41,14 +42,29 @@ export const makeClient = (contextValue: ResolverContext) => new GraphQLClient({
   }),
 });
 
-export const GraphQLProvider: React.SFC<ThunkDependencies> = ({ children, ...deps }, context) => {
-  const { store } = context;
-  const contextValue: ResolverContext = { store, ...deps };
-  const client = makeClient(contextValue);
-  return (
-    <ApolloProvider client={client}>
-      {children}
-    </ApolloProvider>
-  );
-};
-GraphQLProvider.contextTypes = { store: PropTypes.object };
+interface State {
+  db: AppDatabase | undefined;
+}
+
+export class GraphQLProvider extends React.Component<ThunkDependencies> {
+  state = {
+    db: undefined
+  };
+
+  setDb = (db: AppDatabase | undefined) => {
+    this.setState({ db });
+  }
+
+  render() {
+    const { children, ...deps } = this.props;
+    const context = { db: this.state.db, setDb: this.setDb, deps };
+    const client = makeClient(context);
+    return (
+      <ApolloProvider client={client}>
+        <Db.Provider value={{ isOpen: !!this.state.db }}>
+          {this.props.children}
+        </Db.Provider>
+      </ApolloProvider>
+    );
+  }
+}

@@ -28,7 +28,7 @@ interface Resolvers extends IResolvers<{}, ResolverContext> {
 }
 
 const getDb = (context: ResolverContext) => {
-  const db = context.store.getState().db.db;
+  const db = context.db;
   if (!db) {
     throw new Error('db not open');
   }
@@ -36,7 +36,7 @@ const getDb = (context: ResolverContext) => {
 };
 
 const getBank = async (db: AppDatabase, id: Bank.Id | string): Promise<Bank> => {
-  const bank = await db.banks.where({id, _deleted: 0}).first();
+  const bank = await db.banks.where({ id, _deleted: 0 }).first();
   if (!bank) {
     throw new Error(`bank ${id} not found`);
   }
@@ -49,7 +49,7 @@ const toBank = (dbBank: Bank): Partial<ST.Bank> => {
 };
 
 const getAccount = async (db: AppDatabase, id: Account.Id): Promise<Account> => {
-  const account = await db.accounts.where({id, _deleted: 0}).first();
+  const account = await db.accounts.where({ id, _deleted: 0 }).first();
   if (!account) {
     throw new Error(`account ${id} not found`);
   }
@@ -75,7 +75,7 @@ const resolvers: Resolvers = {
     },
     banks: async (source, args, context) => {
       const db = getDb(context);
-      const res = await db.banks.where({_deleted: 0}).toArray();
+      const res = await db.banks.where({ _deleted: 0 }).toArray();
       return res.map(toBank);
     },
     account: async (source, args, context) => {
@@ -88,28 +88,26 @@ const resolvers: Resolvers = {
   Bank: {
     accounts: async (bank: ST.Bank, args, context) => {
       const db = getDb(context);
-      const res = await db.accounts.where({_deleted: 0, bankId: bank.id}).toArray();
+      const res = await db.accounts.where({ _deleted: 0, bankId: bank.id }).toArray();
       return res.map(toAccount);
     }
   },
 
   Mutation: {
-    openDb: async (source, args, {store}): Promise<ST.Mutation['openDb']> => {
-      await store.dispatch(actions.dbOpen(args.name, args.password));
-      const db = store.getState().db;
-      if (db.openError) {
-        throw db.openError;
-      }
-      return !!db.db;
+    openDb: async (source, args, context): Promise<ST.Mutation['openDb']> => {
+      const db = await context.deps.openDb(args.name);
+      context.setDb(db);
+      return true;
     },
 
     closeDb: async (source, args, context) => {
+      context.setDb(undefined);
       return true;
     },
 
     saveBank: async (source, args, context) => {
       const db = getDb(context);
-      const t = context.getTime();
+      const t = context.deps.getTime();
       let bank: Bank;
       let changes: Array<any>;
       if (args.bankId) {
@@ -124,28 +122,28 @@ const resolvers: Resolvers = {
           ...Bank.defaultValues,
           ...args.input as any,
         };
-        bank = createRecord(context.genId, props);
+        bank = createRecord(context.deps.genId, props);
         changes = [
           Bank.change.add(t, bank),
         ];
       }
-      await context.store.dispatch(actions.dbChange(changes));
+      await db.change(changes);
       return toBank(bank);
     },
 
     deleteBank: async (source, args, context): Promise<ST.Mutation['deleteBank']> => {
       const db = getDb(context);
-      const t = context.getTime();
+      const t = context.deps.getTime();
       const changes = [
         Bank.change.remove(t, args.bankId),
       ];
-      await context.store.dispatch(actions.dbChange(changes));
+      await db.change(changes);
       return true;
     },
 
     saveAccount: async (source, args, context) => {
       const db = getDb(context);
-      const t = context.getTime();
+      const t = context.deps.getTime();
       let account: Account;
       let changes: Array<any>;
       if (args.accountId) {
@@ -165,23 +163,23 @@ const resolvers: Resolvers = {
         };
         account = {
           bankId: args.bankId,
-          ...createRecord(context.genId, props)
+          ...createRecord(context.deps.genId, props)
         };
         changes = [
           Account.change.add(t, account)
         ];
       }
-      await context.store.dispatch(actions.dbChange(changes));
+      await db.change(changes);
       return toAccount(account);
     },
 
     deleteAccount: async (source, args, context) => {
       const db = getDb(context);
-      const t = context.getTime();
+      const t = context.deps.getTime();
       const changes = [
         Account.change.remove(t, args.accountId)
       ];
-      await context.store.dispatch(actions.dbChange(changes));
+      await db.change(changes);
       return true;
     },
 

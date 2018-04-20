@@ -1,7 +1,6 @@
 import { getType } from 'typesafe-actions';
 import { actions, RootAction } from '../actions';
 import { AppDatabase } from '../AppDatabase';
-import { GraphQLClient, makeClient } from '../GraphQLClient';
 
 export interface State {
   db?: AppDatabase;
@@ -22,9 +21,6 @@ export const dbSelectors = {
   },
   getDbOpenError: (state: State) => {
     return state.openError;
-  },
-  getDbIsOpen: (state: State): boolean => {
-    return !!state.db;
   },
 };
 

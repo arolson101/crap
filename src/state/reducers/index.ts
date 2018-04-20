@@ -10,7 +10,6 @@ export const selectors = {
   getDb: (state: RootState) => dbSelectors.getDb(state.db),
   getDbs: (state: RootState) => dbSelectors.getDbs(state.db),
   getDbOpenError: (state: RootState) => dbSelectors.getDbOpenError(state.db),
-  getDbIsOpen: (state: RootState) => dbSelectors.getDbIsOpen(state.db),
   getFIs: (state: RootState) => fiSelectors.getFIs(state.fi),
   getLocation: (state: RootState) => state.router.location,
   getPathname: (state: RootState) => state.router.location && state.router.location.pathname,
