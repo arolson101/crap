@@ -28,19 +28,26 @@ const makeQuery = (QUERY: DocumentNode) =>
     (Component: React.ComponentType<any>) =>
       (props: React.Props<{}>) => {
         const variables = variablesFcn && variablesFcn(props);
-        const skip = !variablesFcn || (variablesFcn && !variables);
-        return (
-          <Query
-            query={QUERY}
-            variables={variables}
+        const skip = variablesFcn && !variables;
+        if (skip) {
+          const componentProps = { ...props, [name]: { loading: false } };
+          return (
+            <Component {...componentProps} />
+          );
+        } else {
+          return (
+            <Query
+              query={QUERY}
+              variables={variables}
             // fetchPolicy="network-only"
-          >
-            {({ data, ...rest }) => {
-              const componentProps = { ...props, [name]: { data, ...rest } };
-              return <Component {...componentProps} />;
-            }}
-          </Query>
-        );
+            >
+              {({ data, ...rest }) => {
+                const componentProps = { ...props, [name]: { data, ...rest } };
+                return <Component {...componentProps} />;
+              }}
+            </Query>
+          );
+        }
       };
 
 import ACCOUNT_QUERY from './Account.graphql';
