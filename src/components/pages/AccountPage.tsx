@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 import { Queries } from '../../db';
 import { nav } from '../../nav';
 import { ctx } from '../ctx';
+import { ErrorMessage } from '../forms/fields/';
 
 interface Params {
   bankId: string;
@@ -20,14 +21,18 @@ export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Route
   if (props.query.loading) {
     return null;
   }
+  if (props.query.error) {
+    return <ErrorMessage error={props.query.error}/>;
+  }
   const { router: { history, route } } = context;
   const { account } = props.query.data;
+  const { bankId, accountId } = route.match.params;
 
   return (
     <View>
       <Text>Account: {account.name}</Text>
       <Text>bank: {account.name}</Text>
-      <Button title="edit" onPress={() => history.push(nav.accountUpdate(route.match.params.accountId, account.id))} />
+      <Button title="edit" onPress={() => history.push(nav.accountUpdate(bankId, accountId))} />
     </View>
   );
 };

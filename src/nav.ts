@@ -7,7 +7,7 @@ export const paths = {
 
   account: {
     create: '/accounts/create/:bankId?',
-    view: '/accounts/:accountId',
+    view: '/accounts/:bankId/:accountId',
     update: '/accounts/update/:bankId/:accountId?',
   },
 
@@ -26,7 +26,7 @@ export const nav = {
   accountCreate: (bankId: string) =>
     paths.account.create.replace(':bankId?', bankId),
   accountView: (bankId: string, accountId: string) =>
-    paths.account.view.replace(':accountId', accountId),
+    paths.account.view.replace(':bankId', bankId).replace(':accountId', accountId),
   accountUpdate: (bankId: string, accountId: string) =>
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
 };
