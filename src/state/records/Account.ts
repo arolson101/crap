@@ -1,7 +1,7 @@
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor');
 import { defineMessages } from 'react-intl';
 import { iupdate } from '../../iupdate';
-import { DbChange } from '../../state/thunks/dbThunks';
+import { DbChange } from '../../state';
 import { Record } from '../Record';
 import { Bank } from './Bank';
 

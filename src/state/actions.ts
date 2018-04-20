@@ -8,21 +8,6 @@ import { thunks } from './thunks';
 import { FI } from './reducers/fi';
 
 const actionCreators = {
-  ping: createAction('ping/PING'),
-  pong: createAction('ping/PONG'),
-
-  dbSetAvailableDbs: createAction('db/SET_AVAILABLE_DBS', (dbs: string[]) => ({
-    type: 'db/SET_AVAILABLE_DBS', dbs
-  })),
-
-  dbOpenBegin: createAction('db/DB_OPEN_BEGIN'),
-  dbOpenSuccess: createAction('db/DB_OPEN_SUCCESS', (db: AppDatabase) => ({
-    type: 'db/DB_OPEN_SUCCESS', db
-  })),
-  dbOpenFailure: createAction('db/DB_OPEN_FAILURE', (err: Error) => ({
-    type: 'db/DB_OPEN_FAILURE', err
-  })),
-
   setFi: createAction('fi/SET', (fi: FI[]) => ({
     type: 'fi/SET', fi
   })),
@@ -31,14 +16,14 @@ const actionCreators = {
 export const paths = {
   root: {
     home: '/',
-    accounts: '/account',
+    accounts: '/accounts',
     budgets: '/budgets',
   },
 
   account: {
-    create: '/account/create/:bankId?',
-    view: '/account/:accountId',
-    update: '/account/update/:bankId/:accountId?',
+    create: '/accounts/create/:bankId?',
+    view: '/accounts/:accountId',
+    update: '/accounts/update/:bankId/:accountId?',
   },
 
   dbAdvanced: '/db/:dbName',

@@ -9,7 +9,7 @@ import * as shortid from 'shortid';
 import { App } from './components/App';
 import { LoadFonts } from './components/LoadFonts';
 import { createHistory } from './createHistory';
-import { GraphQLProvider } from './state/GraphQLClient';
+import { AppDbProvider } from './state/AppDbProvider';
 import { configureStore, actions, ThunkDependencies, AppDatabase } from './state';
 import './db';
 
@@ -32,11 +32,11 @@ const Root = () => (
     <AppContainer>
       <IntlProvider locale="en">
         <Provider store={store}>
-          <GraphQLProvider dependencies={dependencies}>
+          <AppDbProvider dependencies={dependencies}>
             <ConnectedRouter history={history}>
               <App />
             </ConnectedRouter>
-          </GraphQLProvider>
+          </AppDbProvider>
         </Provider>
       </IntlProvider>
     </AppContainer>

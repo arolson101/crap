@@ -159,8 +159,6 @@ export const withDummyDataMax = () => {
 
 export const preloadedStore = (state: Partial<RootState> = {}) => {
   const preloadedState: RootState = {
-    ping: { isPinging: false },
-    ...initialDbs([]),
     fi: { list: filist },
     router: { location: null },
     ...state

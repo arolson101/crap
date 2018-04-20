@@ -23,7 +23,7 @@ interface State {
   db: AppDatabase | undefined;
 }
 
-export class GraphQLProvider extends React.Component<Props, State> {
+export class AppDbProvider extends React.Component<Props, State> {
   state = {
     db: undefined
   };
