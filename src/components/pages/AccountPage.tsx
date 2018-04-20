@@ -25,10 +25,6 @@ export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Route
   const { router: { history, route } } = context;
   const { account } = props.query.data;
 
-  if (!account) {
-    return <Text>unknown account</Text>;
-  }
-
   return (
     <View>
       <Text>Account: {account.name}</Text>
