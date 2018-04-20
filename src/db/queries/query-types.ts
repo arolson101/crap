@@ -38,12 +38,6 @@ export interface AccountsQuery {
   } >,
 };
 
-export interface AllCoursesQuery {
-  allCourses:  Array< {
-    title: string,
-  } | null >,
-};
-
 export interface BankQueryVariables {
   bankId: string,
 };
@@ -78,21 +72,6 @@ export interface BanksQuery {
       name: string,
     } >,
   } >,
-};
-
-export interface CourseQueryVariables {
-  id: number,
-};
-
-export interface CourseQuery {
-  course:  {
-    id: number,
-    title: string,
-    author: string,
-    description: string,
-    topic: string,
-    url: string,
-  } | null,
 };
 
 export interface DbsQuery {

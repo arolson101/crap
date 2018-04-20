@@ -6,34 +6,6 @@ import Dexie from 'dexie';
 import { actions, Account, Bank, AppDatabase, createRecord } from '../../state';
 import { iupdate } from '../../iupdate';
 
-var coursesData = [
-  {
-    id: 1,
-    title: 'The Complete Node.js Developer Course',
-    author: 'Andrew Mead, Rob Percival',
-    description: 'Learn Node.js by building real-world applications with Node, Express, MongoDB, Mocha, and more!',
-    topic: 'Node.js',
-    url: 'https://codingthesmartway.com/courses/nodejs/'
-  },
-  {
-    id: 2,
-    title: 'Node.js, Express & MongoDB Dev to Deployment',
-    author: 'Brad Traversy',
-    description: 'Learn by example building & deploying real-world Node.js applications from absolute scratch',
-    topic: 'Node.js',
-    url: 'https://codingthesmartway.com/courses/nodejs-express-mongodb/'
-  },
-  {
-    id: 3,
-    title: 'JavaScript: Understanding The Weird Parts',
-    author: 'Anthony Alicea',
-    // tslint:disable-next-line:max-line-length
-    description: 'An advanced JavaScript course for everyone! Scope, closures, prototypes, this, build your own framework, and more.',
-    topic: 'JavaScript',
-    url: 'https://codingthesmartway.com/courses/understand-javascript/'
-  }
-];
-
 // see GraphQLTypeResolver
 type Resolver<TRet, TArgs = {}> =
   (source: {}, args: TArgs, context: ResolverContext) => Partial<TRet> | Promise<Partial<TRet>>;
@@ -41,8 +13,6 @@ type Resolver<TRet, TArgs = {}> =
 interface Resolvers extends IResolvers<{}, ResolverContext> {
   Query: {
     dbs: Resolver<ST.Query['dbs']>;
-    allCourses: Resolver<ST.Query['allCourses']>;
-    course: Resolver<ST.Query['course'], ST.CourseQueryArgs>;
     bank: Resolver<ST.Query['bank'], ST.BankQueryArgs>;
     banks: Resolver<Partial<ST.Bank>[]/*ST.Query['banks']*/>;
     account: Resolver<ST.Query['account'], ST.AccountQueryArgs>;
@@ -107,14 +77,6 @@ const resolvers: Resolvers = {
       const db = getDb(context);
       const res = await db.banks.where({_deleted: 0}).toArray();
       return res.map(toBank);
-    },
-    allCourses: () => {
-      return coursesData;
-    },
-    course: (root: any, { id }) => {
-      return coursesData.filter(course => {
-        return course.id === id;
-      })[0];
     },
     account: async (source, args, context) => {
       const db = getDb(context);

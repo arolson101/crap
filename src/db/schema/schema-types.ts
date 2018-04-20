@@ -2,20 +2,9 @@
 
 export interface Query {
   dbs: string[];
-  allCourses: Course[];
-  course?: Course | null;
   bank: Bank;
   banks: Bank[];
   account: Account;
-}
-
-export interface Course {
-  id: number;
-  title: string;
-  author: string;
-  description: string;
-  topic: string;
-  url: string;
 }
 
 export interface Bank {
@@ -126,9 +115,6 @@ export interface AccountInput {
 export interface DbInput {
   name: string;
   password: string;
-}
-export interface CourseQueryArgs {
-  id: number;
 }
 export interface BankQueryArgs {
   bankId: string;

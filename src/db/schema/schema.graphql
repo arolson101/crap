@@ -6,9 +6,6 @@ schema {
 
 type Query {
   dbs: [String!]!
-  allCourses: [Course]!
-  course(id: Int!): Course
-
   bank(bankId: ID!): Bank!
   banks: [Bank!]!
   account(accountId: ID!): Account!
@@ -23,17 +20,6 @@ type Mutation {
 
   saveAccount(input: AccountInput!, accountId: ID, bankId: ID): Account
   deleteAccount(bankId: ID!, accountId: ID!): Boolean!
-}
-
-###############################################################################
-
-type Course {
-  id: Int!
-  title: String!
-  author: String!
-  description: String!
-  topic: String!
-  url: String!
 }
 
 ###############################################################################

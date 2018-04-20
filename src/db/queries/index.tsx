@@ -2,21 +2,6 @@ import { DocumentNode } from 'graphql';
 import * as React from 'react';
 import { Query, Mutation, MutationFunc } from 'react-apollo';
 
-import Course from './Course.graphql';
-export { Course };
-
-import AllCourses from './AllCourses.graphql';
-export { AllCourses };
-
-import {
-  AllCoursesQuery as AllCoursesQueryData,
-  CourseQuery as CourseQueryData,
-  CourseQueryVariables
-} from './query-types';
-
-export class CourseQuery extends Query<CourseQueryData, CourseQueryVariables> { }
-export class AllCoursesQuery extends Query<AllCoursesQueryData, {}> { }
-
 interface QueryType<TData> {
   data: TData;
   loading: boolean;
