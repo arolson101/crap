@@ -3,11 +3,9 @@ import { View, Text } from 'react-native';
 import { RouteComponentProps } from 'react-router';
 import { Button } from 'react-native';
 import { compose } from 'recompose';
-import { RootState, selectors, nav } from '../../state';
 import { Queries, Bank, Account } from '../../db';
+import { nav } from '../../nav';
 import { ctx } from '../ctx';
-import { AccountForm } from '../forms/AccountForm';
-import { ErrorMessage } from '../forms/fields/ErrorMessage';
 
 interface Params {
   bankId: Bank.Id;

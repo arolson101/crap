@@ -22,7 +22,7 @@ function createWindow() {
     // const installExtension = devtools.default;
 
     // Promise.all(
-    //   [devtools.REACT_PERF, devtools.REDUX_DEVTOOLS]
+    //   [devtools.REACT_PERF]
     //   .map(installExtension)
     // )
     // .then((name) => console.log(`Added Extension:  ${name}`))

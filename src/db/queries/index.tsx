@@ -1,6 +1,6 @@
 import { DocumentNode } from 'graphql';
 import * as React from 'react';
-import { Query, Mutation, MutationFunc } from 'react-apollo';
+import { Query } from 'react-apollo';
 
 interface QueryType<TData> {
   data: TData;

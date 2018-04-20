@@ -1,13 +1,8 @@
-import { storiesOf } from '@storybook/react';
-import * as React from 'react';
-import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router';
-import { configureStore, nav } from '../src/state';
-import { App } from '../src/components';
-import {
-  dependencies, preloadedStore, initialDbs,
-  openedDb, withDummyDataMin, withDummyDataMed, withDummyDataMax
-} from './storeHelpers';
+// import * as React from 'react';
+// import { StaticRouter } from 'react-router';
+// import {
+//   withDummyDataMin, withDummyDataMed, withDummyDataMax
+// } from './storeHelpers';
 
 // storiesOf('Login', module)
 //   .add('no dbs', () => (
@@ -37,11 +32,11 @@ import {
 //   ))
 //   ;
 
-const Router: React.SFC<{ pathname: string }> = ({ pathname, children }) => (
-  <StaticRouter location={{ pathname }} context={{}}>
-    {children}
-  </StaticRouter>
-);
+// const Router: React.SFC<{ pathname: string }> = ({ pathname, children }) => (
+//   <StaticRouter location={{ pathname }} context={{}}>
+//     {children}
+//   </StaticRouter>
+// );
 
 // storiesOf('App', module)
 //   .addDecorator(story => <Provider store={preloadedStore(openedDb())}>{story()}</Provider>)
@@ -57,9 +52,9 @@ const Router: React.SFC<{ pathname: string }> = ({ pathname, children }) => (
 //   ))
 //   ;
 
-const accountsMin = withDummyDataMin();
-const accountsMed = withDummyDataMed();
-const accountsMax = withDummyDataMax();
+// const accountsMin = withDummyDataMin();
+// const accountsMed = withDummyDataMed();
+// const accountsMax = withDummyDataMax();
 
 // storiesOf('App/Accounts', module)
 //   .add('accounts (none)', () => (

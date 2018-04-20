@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TouchableHighlight, Platform } from 'react-native';
 import { Button } from 'react-native';
 import { ctx } from '../../ctx';
-import { formStyles } from './formStyles';
 
 interface Props {
   title: FormattedMessage.MessageDescriptor;

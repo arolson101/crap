@@ -1,14 +1,10 @@
 import GraphQLClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
-import { execute } from 'graphql';
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { ApolloProvider } from 'react-apollo';
-import { connect } from 'react-redux';
 import Observable from 'zen-observable-ts';
 import schema, { ResolverContext, DbDependencies } from '../db/schema';
-import { selectors, RootState } from '../state';
 import { AppDatabase } from './AppDatabase';
 import { runQuery } from 'apollo-server-core';
 import { Db } from '../components/ctx';

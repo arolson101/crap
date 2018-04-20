@@ -2,12 +2,11 @@ import * as React from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { View } from 'react-native';
 import { ButtonGroup, ListItem } from 'react-native-elements';
-import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { Queries, Mutations } from '../../db';
-import { RootState, actions, nav, selectors } from '../../state';
+import { nav } from '../../nav';
 import { ctx } from '../ctx';
-import { typedFields, SelectFieldItem, formStyles } from './fields';
+import { typedFields } from './fields';
 
 interface Props {
   initialValues?: Partial<FormValues>;

@@ -1,6 +1,5 @@
 import { makeExecutableSchema } from 'graphql-tools';
 import resolvers from './resolvers';
-import { RootStore } from '../../state';
 import { AppDatabase } from '../AppDatabase';
 import typeDefs from './schema.graphql';
 

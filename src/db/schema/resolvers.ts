@@ -1,5 +1,4 @@
 import * as ST from './schema-types';
-import { GraphQLFieldResolver } from 'graphql';
 import { IResolvers } from 'graphql-tools';
 import Dexie from 'dexie';
 import { iupdate } from '../../iupdate';

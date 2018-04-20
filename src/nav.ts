@@ -1,15 +1,4 @@
-import { getReturnOfExpression } from 'react-redux-typescript';
-import * as RRR from 'react-router-redux';
-import { createAction } from 'typesafe-actions';
-import { Bank, Account } from '../db';
-import { thunks } from './thunks';
-import { FI } from './reducers/fi';
-
-const actionCreators = {
-  setFi: createAction('fi/SET', (fi: FI[]) => ({
-    type: 'fi/SET', fi
-  })),
-};
+import { Bank, Account } from './db';
 
 export const paths = {
   root: {
@@ -43,23 +32,3 @@ export const nav = {
   accountUpdate: (bankId: Bank.Id, accountId: Account.Id) =>
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
 };
-
-const history = {
-  push: RRR.push,
-  replace: RRR.replace,
-  go: RRR.go,
-  goForward: RRR.goForward,
-  goBack: RRR.goBack,
-};
-
-export const actions = {
-  ...actionCreators,
-  ...thunks,
-  history,
-};
-
-const returnOfActions = Object.values(actionCreators).map(getReturnOfExpression);
-type AppAction = typeof returnOfActions[number];
-
-export type RootAction =
-  | AppAction;

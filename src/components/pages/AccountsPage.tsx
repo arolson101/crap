@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Text, Button } from 'react-native';
-import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router';
 import { compose } from 'recompose';
-import { nav, RootState, selectors, paths } from '../../state';
+import { nav, paths } from '../../nav';
 import { Queries, Mutations } from '../../db';
 import { ctx } from '../ctx';
 import { BankDisplay } from '../BankDisplay';

@@ -3,19 +3,13 @@ import * as React from 'react';
 import { AppContainer } from 'react-hot-loader';
 import { IntlProvider } from 'react-intl';
 import { Platform, AppRegistry } from 'react-native';
-import { Provider } from 'react-redux';
-import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import * as shortid from 'shortid';
 import { App } from './components/App';
 import { LoadFonts } from './components/LoadFonts';
-import { createHistory } from './createHistory';
-import { configureStore, actions } from './state';
+import { Router } from './Router';
 import { AppDatabase, AppDbProvider, DbDependencies } from './db';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
-
-const history = createHistory();
-const historyMiddleware = routerMiddleware(history);
 
 const dependencies: DbDependencies = {
   getTime: () => Date.now(),
@@ -23,20 +17,15 @@ const dependencies: DbDependencies = {
   openDb: AppDatabase.open,
 };
 
-const store = configureStore([historyMiddleware]);
-store.dispatch(actions.init());
-
 const Root = () => (
   <LoadFonts>
     <AppContainer>
       <IntlProvider locale="en">
-        <Provider store={store}>
-          <AppDbProvider dependencies={dependencies}>
-            <ConnectedRouter history={history}>
-              <App />
-            </ConnectedRouter>
-          </AppDbProvider>
-        </Provider>
+        <AppDbProvider dependencies={dependencies}>
+          <Router>
+            <App />
+          </Router>
+        </AppDbProvider>
       </IntlProvider>
     </AppContainer>
   </LoadFonts>
@@ -59,10 +48,6 @@ if (Platform.OS === 'web') {
   if (module.hot) {
     module.hot.accept('./components/App', () => {
       runApp();
-    });
-
-    module.hot.accept('./state', () => {
-      // hopefully configureStore didn't change!
     });
   }
 }

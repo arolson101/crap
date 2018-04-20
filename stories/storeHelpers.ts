@@ -1,11 +1,5 @@
-import { action } from '@storybook/addon-actions';
-import { FinancialInstitution } from 'filist';
-import { Middleware } from 'redux';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { RootState, configureStore, FI, formatAddress } from '../src/state';
+import { FI, filist, formatAddress } from '../src/fi';
 import { DbDependencies, Bank, Account } from '../src/db';
-import { finalizeFilist } from '../src/state/thunks/fiThunks';
 
 /**
  * Warning from React Router, caused by react-hot-loader.
@@ -32,15 +26,6 @@ export const dependencies: DbDependencies = {
   genId: () => Date.now().toString(),
   openDb: async (name) => { throw new Error(`can't open databases in storybook`); },
 };
-
-const logDispatch = action('dispatch');
-
-const dispatchActionLogger: Middleware = st => next => (act: any) => {
-  logDispatch(JSON.stringify(act));
-  return next(act);
-};
-
-export const filist = finalizeFilist(require<FinancialInstitution[]>('filist/filist.json'));
 
 export const initialDbs = (dbs: string[], openError: Error | undefined = undefined) => ({
   db: {
@@ -156,15 +141,4 @@ export const withDummyDataMax = () => {
   return {
     ...openedDb(),
   };
-};
-
-export const preloadedStore = (state: Partial<RootState> = {}) => {
-  const preloadedState: RootState = {
-    fi: { list: filist },
-    router: { location: null },
-    ...state
-  };
-
-  const mockStore = configureMockStore([dispatchActionLogger, thunk.withExtraArgument(dependencies)]);
-  return mockStore(preloadedState);
 };

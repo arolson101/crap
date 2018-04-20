@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { ListItem, IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
-import { formStyles } from './formStyles';
+// import { formStyles } from './formStyles';
 
 export namespace TextField {
   export interface Props<T = {}> extends FieldProps<T> {

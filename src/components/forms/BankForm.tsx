@@ -1,14 +1,14 @@
 import pick from 'lodash-es/pick';
 import * as React from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { compose } from 'recompose';
-import { RootState, actions, selectors, nav, FI, formatAddress } from '../../state';
+import { nav } from '../../nav';
+import { filist, formatAddress } from '../../fi';
 import { Mutations, Queries, Types, Bank } from '../../db';
 import { ctx } from '../ctx';
 import { List } from '../list';
-import { ErrorMessage, typedFields, SelectFieldItem } from './fields';
+import { ErrorMessage, typedFields } from './fields';
 
 interface Props {
   bankId?: Bank.Id;
@@ -17,7 +17,6 @@ interface Props {
 interface ComposedProps extends Props {
   query: Queries.Bank;
   saveBank: Mutations.SaveBank;
-  filist: FI[];
 }
 
 type BankInput = {
@@ -57,7 +56,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
   }
 
   const edit = props.bankId && props.query.data.bank;
-  const defaultFi = edit ? props.filist.findIndex(fi => fi.name === edit.name) : 0;
+  const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0;
   return (
     <Form
       defaultValues={{
@@ -81,10 +80,10 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
           <List>
             <SelectField
               field="fi"
-              items={props.filist.map(fi => ({ label: fi.name, value: fi.id }))}
+              items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
               label={messages.fi}
               onValueChange={(value: number) => {
-                const fi = props.filist[value];
+                const fi = filist[value];
                 formApi.setValue('name', fi.name || '');
                 formApi.setValue('web', fi.profile.siteURL || '');
                 formApi.setValue('favicon', '');
@@ -169,11 +168,6 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
 BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
 
 export const BankForm = compose<ComposedProps, Props>(
-  connect(
-    (state: RootState, props: Props) => ({
-      filist: selectors.getFIs(state),
-    })
-  ),
   Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
   Mutations.withSaveBank('saveBank'),
 )(BankFormComponent);

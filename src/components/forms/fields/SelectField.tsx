@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Picker } from 'react-native';
-import { ListItem, IconObject } from 'react-native-elements';
+import { /*ListItem,*/ IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { compose } from 'recompose';
-import { RootState, actions, selectors, nav } from '../../state';
+import { nav } from '../../nav';
 import { Mutations, Queries, Types, Bank, Account } from '../../db';
 import { ctx } from '../ctx';
 import { List } from '../list';

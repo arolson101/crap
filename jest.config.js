@@ -10,7 +10,7 @@ module.exports = {
     "\\.(gql|graphql)$": "jest-transform-graphql",
   },
   transformIgnorePatterns: [
-    "<rootDir>/node_modules/(?!(lodash-es|redux-mock-store)/.*)"
+    "<rootDir>/node_modules/(?!(lodash-es)/.*)"
   ],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   moduleFileExtensions: [
@@ -26,7 +26,6 @@ module.exports = {
   ],
   moduleNameMapper: {
     "react-native": "<rootDir>/node_modules/react-native-web",
-    "redux-mock-store": "<rootDir>/node_modules/redux-mock-store/dist/index-es",
   },
   testEnvironment: "jsdom",
 }
