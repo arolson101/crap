@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { AccountFormComponent } from '../src/components/forms/AccountForm';
-import { Bank, Account } from '../src/state';
+import { Bank, Account } from '../src/db';
 
 const bank: Bank = {
   id: '123' as Bank.Id,

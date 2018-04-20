@@ -3,7 +3,7 @@ import { Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router';
 import { compose } from 'recompose';
-import { nav, Bank, RootState, selectors, paths } from '../../state';
+import { nav, RootState, selectors, paths } from '../../state';
 import { Queries, Mutations } from '../../db';
 import { ctx } from '../ctx';
 import { BankDisplay } from '../BankDisplay';

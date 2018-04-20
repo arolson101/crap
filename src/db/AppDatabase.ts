@@ -1,8 +1,7 @@
 import Dexie from 'dexie';
 import uniq from 'lodash-es/uniq';
 import { iupdate } from '../iupdate';
-import { actions, selectors, Record, updateRecord, deleteRecord, TableName } from './';
-import { RootThunk } from './';
+import { Record, updateRecord, deleteRecord } from './Record';
 
 import { Account, Bank, Bill, Budget, Category, Transaction } from './records';
 

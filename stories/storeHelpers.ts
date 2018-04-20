@@ -3,7 +3,8 @@ import { FinancialInstitution } from 'filist';
 import { Middleware } from 'redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { RootState, configureStore, ThunkDependencies, Bank, Account, FI, formatAddress } from '../src/state';
+import { RootState, configureStore, FI, formatAddress } from '../src/state';
+import { DbDependencies, Bank, Account } from '../src/db';
 import { finalizeFilist } from '../src/state/thunks/fiThunks';
 
 /**
@@ -26,7 +27,7 @@ if (module.hot) {
   };
 }
 
-export const dependencies: ThunkDependencies = {
+export const dependencies: DbDependencies = {
   getTime: Date.now,
   genId: () => Date.now().toString(),
   openDb: async (name) => { throw new Error(`can't open databases in storybook`); },

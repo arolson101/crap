@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router';
-import { configureStore, Bank, nav } from '../src/state';
+import { configureStore, nav } from '../src/state';
 import { App } from '../src/components';
 import {
   dependencies, preloadedStore, initialDbs,

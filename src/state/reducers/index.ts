@@ -1,7 +1,6 @@
 import { combineReducers, Store } from 'redux';
 import { routerReducer, RouterState } from 'react-router-redux';
 import fi, { State as FiState, fiSelectors } from './fi';
-import { Bank, Account } from '../records';
 export { FI, formatAddress } from './fi';
 
 export const selectors = {

@@ -7,8 +7,8 @@ import * as React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { connect } from 'react-redux';
 import Observable from 'zen-observable-ts';
-import schema, { ResolverContext } from '../db/schema';
-import { selectors, RootState, ThunkDependencies } from '../state';
+import schema, { ResolverContext, DbDependencies } from '../db/schema';
+import { selectors, RootState } from '../state';
 import { AppDatabase } from './AppDatabase';
 import { runQuery } from 'apollo-server-core';
 import { Db } from '../components/ctx';
@@ -16,7 +16,7 @@ import { Db } from '../components/ctx';
 export { GraphQLClient };
 
 interface Props {
-  dependencies: ThunkDependencies;
+  dependencies: DbDependencies;
 }
 
 interface State {

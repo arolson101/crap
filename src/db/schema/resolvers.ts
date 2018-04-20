@@ -1,10 +1,12 @@
 import * as ST from './schema-types';
 import { GraphQLFieldResolver } from 'graphql';
 import { IResolvers } from 'graphql-tools';
-import { ResolverContext } from './';
 import Dexie from 'dexie';
-import { actions, Account, Bank, AppDatabase, createRecord } from '../../state';
 import { iupdate } from '../../iupdate';
+import { AppDatabase } from '../AppDatabase';
+import { createRecord } from '../Record';
+import { Account, Bank } from '../records';
+import { ResolverContext } from './';
 
 // see GraphQLTypeResolver
 type Resolver<TRet, TArgs = {}> =

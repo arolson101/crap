@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { RootState, Bank, selectors } from '../../state';
+import { RootState, selectors } from '../../state';
+import { Bank } from '../../db';
 import { BankForm } from '../forms/BankForm';
 import { ctx } from '../ctx';
 

@@ -1,6 +1,6 @@
 import { iupdate } from '../../iupdate';
 import { Record } from '../Record';
-import { DbChange } from '../../state';
+import { DbChange } from '../AppDatabase';
 
 export interface Bank extends Bank.Props, Record<Bank.Id, Bank.Props> {
 }

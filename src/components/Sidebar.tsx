@@ -3,7 +3,7 @@ import { View, ScrollView } from 'react-native';
 import { ListItem, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { RootState, selectors, Bank, nav } from '../state';
+import { RootState, selectors, nav } from '../state';
 import { Queries } from '../db';
 import { ctx } from './ctx';
 

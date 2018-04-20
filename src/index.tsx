@@ -9,22 +9,21 @@ import * as shortid from 'shortid';
 import { App } from './components/App';
 import { LoadFonts } from './components/LoadFonts';
 import { createHistory } from './createHistory';
-import { AppDbProvider } from './state/AppDbProvider';
-import { configureStore, actions, ThunkDependencies, AppDatabase } from './state';
-import './db';
+import { configureStore, actions } from './state';
+import { AppDatabase, AppDbProvider, DbDependencies } from './db';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_');
 
 const history = createHistory();
 const historyMiddleware = routerMiddleware(history);
 
-const dependencies: ThunkDependencies = {
+const dependencies: DbDependencies = {
   getTime: () => Date.now(),
   genId: shortid,
   openDb: AppDatabase.open,
 };
 
-const store = configureStore(dependencies, [historyMiddleware]);
+const store = configureStore([historyMiddleware]);
 store.dispatch(actions.init());
 
 const Root = () => (

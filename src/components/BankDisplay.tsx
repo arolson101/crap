@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, View, Text } from 'react-native';
-import { Bank, Account, nav } from '../state';
+import { nav } from '../state';
 import { Mutations } from '../db';
 import { ctx } from './ctx';
 

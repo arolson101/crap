@@ -1,9 +1,7 @@
 import { getReturnOfExpression } from 'react-redux-typescript';
 import * as RRR from 'react-router-redux';
 import { createAction } from 'typesafe-actions';
-import { AppDatabase, TableName } from './AppDatabase';
-import { Record } from './Record';
-import { Bank, Account } from './records';
+import { Bank, Account } from '../db';
 import { thunks } from './thunks';
 import { FI } from './reducers/fi';
 
