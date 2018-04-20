@@ -1,36 +1,36 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { TextInput } from 'react-native';
-import { ListItem, IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
+import { WrappedField } from './WrappedField';
 
 export namespace MultilineTextField {
   export interface Props<T = {}> extends FieldProps<T> {
     placeholder: FormattedMessage.MessageDescriptor;
-    leftIcon?: IconObject;
     rows: number;
+    textColor?: string;
+    autoFocus?: boolean;
   }
 }
 
-const MultilineTextFieldComponent: React.SFC<MultilineTextField.Props & FormFieldProps> =
-  ({ fieldApi, leftIcon, placeholder, rows }, { intl }: ctx.Intl) => (
-    <ListItem
-      // leftIcon={leftIcon}
-      title={
-        <TextInput
-          multiline
-          numberOfLines={rows}
-          onChangeText={fieldApi.setValue}
-          value={fieldApi.getValue()}
-          placeholder={intl.formatMessage(placeholder)}
-        />
-      }
-      subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
-      subtitleStyle={formStyles.errorSubtitle}
-      chevron={false}
-    />
+const MultilineTextFieldComponent: React.ComponentType<MultilineTextField.Props & FormFieldProps> =
+  ({ fieldApi, autoFocus, textColor, placeholder, rows }, { intl }: ctx.Intl) => (
+    <WrappedField fieldApi={fieldApi}>
+      <TextInput
+        style={[
+          formStyles.control,
+          formStyles.textInput,
+          { color: textColor }
+        ]}
+        multiline={true}
+        numberOfLines={rows}
+        onChangeText={fieldApi.setValue}
+        value={fieldApi.getValue()}
+        placeholder={intl.formatMessage(placeholder)}
+      />
+    </WrappedField>
   );
 MultilineTextFieldComponent.contextTypes = ctx.intl;
 

@@ -147,10 +147,10 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
         name: props.query.data.dbs[0],
         password: '',
       }}
-      // validateError={values => ({
-      //   password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-      //     : undefined,
-      // })}
+      validateError={values => ({
+        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
+          : undefined,
+      })}
       onSubmit={async variables => {
         try {
           await props.openDb.execute({ variables });

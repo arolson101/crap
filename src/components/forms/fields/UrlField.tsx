@@ -1,33 +1,30 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { TextInput } from 'react-native';
-import { ListItem, IconObject } from 'react-native-elements';
 import { ctx } from '../../ctx';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
+import { WrappedField } from './WrappedField';
 
 export namespace UrlField {
   export interface Props<T = {}> extends FieldProps<T> {
     placeholder: FormattedMessage.MessageDescriptor;
-    leftIcon?: IconObject;
   }
 }
 
 const UrlFieldComponent: React.SFC<UrlField.Props & FormFieldProps> =
-  ({ fieldApi, leftIcon, placeholder }, { intl }: ctx.Intl) => (
-    <ListItem
-      // leftIcon={leftIcon}
-      title={
-        <TextInput
-          onChangeText={fieldApi.setValue}
-          value={fieldApi.getValue()}
-          placeholder={intl.formatMessage(placeholder)}
-        />
-      }
-      subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
-      subtitleStyle={formStyles.errorSubtitle}
-      // hideChevron
-    />
+  ({ fieldApi, placeholder }, { intl }: ctx.Intl) => (
+    <WrappedField fieldApi={fieldApi}>
+      <TextInput
+        style={[
+          formStyles.control,
+          {color: fieldApi.getValue()}
+        ]}
+        onChangeText={fieldApi.setValue}
+        value={fieldApi.getValue()}
+        placeholder={intl.formatMessage(placeholder)}
+      />
+    </WrappedField>
   );
 UrlFieldComponent.contextTypes = ctx.intl;
 

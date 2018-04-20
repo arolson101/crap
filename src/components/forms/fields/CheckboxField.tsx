@@ -1,31 +1,29 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ListItem /*, IconObject*/ } from 'react-native-elements';
+import { Switch } from 'react-native';
 import { ctx } from '../../ctx';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
+import { WrappedField } from './WrappedField';
 
 export namespace CheckboxField {
   export interface Props<T = {}> extends FieldProps<T> {
     label: FormattedMessage.MessageDescriptor;
-    // leftIcon?: IconObject;
   }
 }
 
 const CheckboxFieldComponent: React.SFC<CheckboxField.Props & FormFieldProps> =
-  ({ fieldApi, /*leftIcon,*/ label }, { intl }: ctx.Intl) => (
-    <ListItem
-      // wrapperStyle={formStyles.wrapperStyle}
-      // leftIcon={leftIcon}
-      title={intl.formatMessage(label)}
-      switch={{
-        onValueChange: fieldApi.setValue,
-        value: fieldApi.getValue(),
-      }}
-      subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
-      subtitleStyle={formStyles.errorSubtitle}
-      chevron={false}
-    />
+  ({ fieldApi, label }, { intl }: ctx.Intl) => (
+    <WrappedField label={label} fieldApi={fieldApi}>
+      <Switch
+        style={[
+          formStyles.control,
+          formStyles.switch,
+        ]}
+        onValueChange={(value: boolean) => fieldApi.setValue(value)}
+        value={fieldApi.getValue()}
+      />
+    </WrappedField>
   );
 CheckboxFieldComponent.contextTypes = ctx.intl;
 

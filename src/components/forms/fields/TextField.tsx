@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ListItem, IconObject } from 'react-native-elements';
+import { TextInput } from 'react-native';
 import { ctx } from '../../ctx';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
-// import { formStyles } from './formStyles';
+import { formStyles } from './formStyles';
+import { WrappedField } from './WrappedField';
 
 export namespace TextField {
   export interface Props<T = {}> extends FieldProps<T> {
     label: FormattedMessage.MessageDescriptor;
     placeholder: FormattedMessage.MessageDescriptor;
     secure?: boolean;
-    leftIcon?: IconObject;
     rows?: number;
     textColor?: string;
     autoFocus?: boolean;
@@ -18,24 +18,22 @@ export namespace TextField {
 }
 
 const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> =
-  ({ fieldApi, leftIcon, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => (
-    <ListItem
-      // textInputAutoFocus={autoFocus}
-      // wrapperStyle={formStyles.wrapperStyle}
-      // leftIcon={leftIcon}
-      title={intl.formatMessage(label)}
-      input={{
-        inputStyle: {color: textColor},
-        onChangeText: fieldApi.setValue,
-        multiline: (rows ? rows > 0 : undefined),
-        placeholder: intl.formatMessage(placeholder),
-        value: fieldApi.getValue(),
-      }}
-      // subtitle={fieldApi.getTouched() ? fieldApi.getError() : undefined}
-      // subtitleStyle={formStyles.errorSubtitle}
-      // hideChevron
-      // textInputSecure={secure}
-    />
+  ({ fieldApi, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => (
+    <WrappedField label={label} fieldApi={fieldApi}>
+      <TextInput
+        style={[
+          formStyles.control,
+          formStyles.textInput,
+          { color: textColor }
+        ]}
+        multiline={(rows ? rows > 0 : undefined)}
+        numberOfLines={rows}
+        onChangeText={fieldApi.setValue}
+        value={fieldApi.getValue()}
+        secureTextEntry={secure}
+        placeholder={intl.formatMessage(placeholder)}
+      />
+    </WrappedField>
   );
 TextFieldComponent.contextTypes = ctx.intl;
 
