@@ -13,9 +13,9 @@ module.exports = function override(config, env) {
   config.resolve.alias = {
     // ...config.resolve.alias,
 
+    'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
     'react-native': 'react-native-web',
     // 'react-router-native': 'react-router',
-    // 'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
     // 'react-native-vector-icons/Fonts': nodeModule('react-native-vector-icons/Fonts'), // need to avoid aliasing Font dir
     // 'react-native-vector-icons': 'react-native-vector-icons/dist',
 
@@ -38,6 +38,17 @@ module.exports = function override(config, env) {
       nodeModule('react-native-vector-icons'),
       nodeModule('react-navigation'),
       nodeModule('react-router-native'),
+
+      nodeModule('native-base-shoutem-theme'),
+      nodeModule('react-navigation'),
+      nodeModule('react-native-easy-grid'),
+      nodeModule('react-native-drawer'),
+      nodeModule('react-native-safe-area-view'),
+      nodeModule('react-native-vector-icons'),
+      nodeModule('react-native-keyboard-aware-scroll-view'),
+      // nodeModule('react-native-web'),
+      nodeModule('react-native-tab-view'),
+      nodeModule('static-container'),
     ],
 
     use: {
