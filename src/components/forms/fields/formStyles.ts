@@ -32,6 +32,9 @@ export const formStyles = StyleSheet.create({
     fontSize: 16,
     color: '#404040',
   },
+  errorLabel: {
+    color: 'red',
+  },
   control: {
     flex: 3
   },
@@ -42,6 +45,9 @@ export const formStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'Gainsboro',
     fontSize: 20,
+  },
+  errorTextInput: {
+    borderColor: 'red',
   },
   button: {
     flex: 1,

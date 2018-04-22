@@ -18,23 +18,27 @@ export namespace TextField {
 }
 
 const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> =
-  ({ fieldApi, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => (
-    <WrappedField label={label} fieldApi={fieldApi}>
-      <TextInput
-        style={[
-          formStyles.control,
-          formStyles.textInput,
-          { color: textColor }
-        ]}
-        multiline={(rows ? rows > 0 : undefined)}
-        numberOfLines={rows}
-        onChangeText={fieldApi.setValue}
-        value={fieldApi.getValue()}
-        secureTextEntry={secure}
-        placeholder={intl.formatMessage(placeholder)}
-      />
-    </WrappedField>
-  );
+  ({ fieldApi, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => {
+    const error = fieldApi.getTouched() && fieldApi.getError();
+    return (
+      <WrappedField label={label} fieldApi={fieldApi}>
+        <TextInput
+          style={[
+            formStyles.control,
+            formStyles.textInput,
+            { color: textColor },
+            error ? formStyles.errorTextInput : undefined,
+          ]}
+          multiline={(rows ? rows > 0 : undefined)}
+          numberOfLines={rows}
+          onChangeText={fieldApi.setValue}
+          value={fieldApi.getValue()}
+          secureTextEntry={secure}
+          placeholder={intl.formatMessage(placeholder)}
+        />
+      </WrappedField>
+    );
+  };
 TextFieldComponent.contextTypes = ctx.intl;
 
 export const TextField = FormField<TextField.Props>(TextFieldComponent);
