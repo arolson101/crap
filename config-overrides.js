@@ -2,6 +2,7 @@ var path = require("path");
 
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireGqlTag = require('react-app-rewire-graphql-tag');
+const rewireTypescript = require('react-app-rewire-typescript');
 
 function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
@@ -23,6 +24,7 @@ const babelModules = [
 ]
 
 module.exports = function override(config, env) {
+  config = rewireTypescript(config, env);
   config = rewireGqlTag(config, env);
   config = injectBabelPlugin("transform-class-properties", config)
   config = injectBabelPlugin("dev-expression", config)
@@ -54,6 +56,11 @@ module.exports = function override(config, env) {
   });
 
   config.resolve.extensions = config.resolve.extensions.filter(ext => ext !== '.mjs');
+  config.resolve.extensions = [
+    '.web.ts',
+    '.web.tsx',
+    ...config.resolve.extensions,
+  ]
 
   return config;
 }
