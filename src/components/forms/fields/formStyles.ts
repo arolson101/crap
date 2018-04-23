@@ -4,7 +4,7 @@ export const formStyles = StyleSheet.create({
   picker: {
     flex: 1,
     borderWidth: 1,
-    borderColor: 'Gainsboro',
+    borderColor: 'silver',
     fontSize: 20,
   },
   pickerItem: {
@@ -43,7 +43,7 @@ export const formStyles = StyleSheet.create({
   },
   textInput: {
     borderWidth: 1,
-    borderColor: 'Gainsboro',
+    borderColor: 'silver',
     fontSize: 20,
   },
   errorTextInput: {
