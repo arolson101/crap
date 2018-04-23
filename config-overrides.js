@@ -1,85 +1,59 @@
 var path = require("path");
 
+const { injectBabelPlugin } = require('react-app-rewired');
 const rewireGqlTag = require('react-app-rewire-graphql-tag');
 
 function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
 }
 
+const babelModules = [
+  'native-base-shoutem-theme',
+  'react-native-drawer',
+  'react-native-easy-grid',
+  'react-native-elements',
+  'react-native-keyboard-aware-scroll-view',
+  'react-native-safe-area-view',
+  'react-native-tab-view',
+  'react-native-touchable-scale',
+  'react-native-vector-icons',
+  'react-navigation',
+  'react-router-native',
+  'static-container',
+]
+
 module.exports = function override(config, env) {
-  config = rewireGqlTag(config,env);
+  config = rewireGqlTag(config, env);
+  config = injectBabelPlugin("transform-class-properties", config)
+  config = injectBabelPlugin("dev-expression", config)
+  config = injectBabelPlugin("transform-object-rest-spread", config)
+  config = injectBabelPlugin(["transform-runtime", { "polyfill": false, "regenerator": true }], config)
 
-  //do stuff with the webpack config...
   config.resolve.alias = {
-    // ...config.resolve.alias,
-
     'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
-    'react-native': 'react-native-web',
+    'react-native$': 'react-native-web',
+
     // 'react-router-native': 'react-router',
     // 'react-native-vector-icons/Fonts': nodeModule('react-native-vector-icons/Fonts'), // need to avoid aliasing Font dir
     // 'react-native-vector-icons': 'react-native-vector-icons/dist',
 
-    // for native-base
-    // 'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
-		// 'react/lib/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry'
+    ...config.resolve.alias,
   };
 
-  config.module.rules[0] =
-  // https://gist.github.com/micimize/bf64ecbb6a32c236534a3431e76b27bb
-  {
-    test: /.jsx?$/,
-    // Add every directory that needs to be compiled by Babel during the build
-    include: [
-      nodeModule('react-native-easy-grid'),
-      nodeModule('react-native-elements'),
-      nodeModule('react-native-keyboard-aware-scroll-view'),
-      nodeModule('react-native-tab-view'),
-      nodeModule('react-native-touchable-scale'),
-      nodeModule('react-native-vector-icons'),
-      nodeModule('react-navigation'),
-      nodeModule('react-router-native'),
-
-      nodeModule('native-base-shoutem-theme'),
-      nodeModule('react-navigation'),
-      nodeModule('react-native-easy-grid'),
-      nodeModule('react-native-drawer'),
-      nodeModule('react-native-safe-area-view'),
-      nodeModule('react-native-vector-icons'),
-      nodeModule('react-native-keyboard-aware-scroll-view'),
-      // nodeModule('react-native-web'),
-      nodeModule('react-native-tab-view'),
-      nodeModule('static-container'),
-    ],
-
-    use: {
-      loader: 'babel-loader',
-      query: {
-        compact: false,
-        "presets": ["env", "flow", "react"],
-        "plugins": [
-          "transform-class-properties",
-          "dev-expression",
-          "transform-object-rest-spread",
-          ["transform-runtime", {
-            "polyfill": false,
-            "regenerator": true
-          }],
-        ]
-      }
+  config.module.rules.forEach(rule => {
+    if (rule.oneOf) {
+      rule.oneOf.forEach(one => {
+        if (one.loader && one.loader.indexOf('babel-loader') !== -1) {
+          one.include = [
+            one.include,
+            ...babelModules.map(nodeModule)
+          ]
+        }
+      });
     }
-  }
-
-  // config.module.rules.unshift({
-  //   test: /\.graphqls?$/, loader: require('graphql-tag/loader'), exclude: '/node_modules/',
-  // })
+  });
 
   config.resolve.extensions = config.resolve.extensions.filter(ext => ext !== '.mjs');
-  // config.resolve.extensions = [
-  //   ...config.resolve.extensions,
-  //   '.windows.js',
-  //   '.ios.js',
-  // ];
 
-  // console.log(JSON.stringify(config, null, "  "));
   return config;
 }
