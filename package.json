@@ -28,7 +28,7 @@
     "web": "react-app-rewired start",
     "serve": "cross-env BROWSER=none react-app-rewired start",
     "electron": "electron .",
-    "electron-pack": "build --em.main=build/electron.js --dir",
+    "electron-pack": "build -c.extraMetadata.main=build/electron.js --dir",
     "preelectron-pack": "npm run build-web",
     "build-web": "react-app-rewired build",
     "test:cra": "react-app-rewired test --env=jsdom",
