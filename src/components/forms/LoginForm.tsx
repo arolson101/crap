@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
-import { View } from 'react-native';
-import { ButtonGroup, ListItem } from 'react-native-elements';
+import { defineMessages } from 'react-intl';
+import { Text, View } from 'react-native';
 import { compose } from 'recompose';
 import { Queries, Mutations } from '../../db';
-import { nav } from '../../nav';
 import { ctx } from '../ctx';
 import { typedFields } from './fields';
 
@@ -14,24 +12,9 @@ interface Props {
 }
 
 interface FormValues {
-  name: string;
   password: string;
   passwordConfirm: string;
 }
-
-const enum Mode {
-  CreateNew,
-  OpenExisting,
-}
-
-interface State {
-  mode: Mode;
-}
-
-const buttons = [
-  { element: () => <FormattedMessage {...messages.create} /> },
-  { element: () => <FormattedMessage {...messages.open} /> },
-];
 
 const {
   Form,
@@ -41,11 +24,7 @@ const {
   TextField,
 } = typedFields<FormValues>();
 
-export class LoginFormComponent extends React.PureComponent<Props, State> {
-  state = {
-    mode: Mode.OpenExisting,
-  };
-
+export class LoginFormComponent extends React.PureComponent<Props> {
   render() {
     if (this.props.query.loading) {
       return null;
@@ -55,22 +34,17 @@ export class LoginFormComponent extends React.PureComponent<Props, State> {
       return <ErrorMessage error={this.props.query.error} />;
     }
 
-    const mode = this.props.query.data.dbs.length ? this.state.mode : Mode.CreateNew;
+    const exists = this.props.query.data.dbs.length > 0;
     return (
-      <>
-        <ButtonGroup
-          onPress={selectedIndex => this.setState({ mode: selectedIndex })}
-          buttons={buttons}
-          selectedIndex={mode}
-          selectedIndexes={[mode]}
-          disableSelected
-        />
-
-        {mode === Mode.CreateNew
-          ? <FormCreate {...this.props}/>
-          : <FormOpen {...this.props}/>
-        }
-      </>
+      <View style={{flexDirection: 'column', alignItems: 'center', margin: 100}}>
+        <Text style={{fontSize: 80, margin: 20}}>App</Text>
+        <View style={{maxWidth: 400}}>
+          {exists
+            ? <FormOpen {...this.props}/>
+            : <FormCreate {...this.props}/>
+          }
+        </View>
+      </View>
     );
   }
 }
@@ -87,14 +61,10 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
   return (
     <Form
       defaultValues={{
-        name: '',
         password: '',
         passwordConfirm: '',
       }}
       validateError={values => ({
-        name: !values.name.trim() ? formatMessage(messages.valueEmpty)
-          : props.query.data.dbs.includes(values.name.trim()) ? formatMessage(messages.dbExists)
-            : undefined,
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined,
         passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
@@ -106,12 +76,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
     >
       {formApi =>
         <View>
-          <TextField
-            field="name"
-            label={messages.nameLabel}
-            placeholder={messages.namePlaceholder}
-            autoFocus
-          />
+          <Text style={{marginBottom: 20, textAlign: 'center'}}>Welcome!  Create a password to secure your data.</Text>
           <TextField
             secure
             field="password"
@@ -144,7 +109,6 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
   return (
     <Form
       defaultValues={{
-        name: props.query.data.dbs[0],
         password: '',
       }}
       validateError={values => ({
@@ -161,22 +125,13 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
     >
       {formApi =>
         <View>
-          <SelectField
-            field="name"
-            label={messages.nameLabel}
-            items={props.query.data.dbs.map(db => ({ value: db, label: db }))}
-          />
+          <Text style={{marginBottom: 20, textAlign: 'center'}}>Welcome!  Enter your password to access your data.</Text>
           <TextField
             secure
             autoFocus
             field="password"
             label={messages.passwordLabel}
             placeholder={messages.passwordPlaceholder}
-          />
-          <ListItem
-            // wrapperStyle={formStyles.wrapperStyle}
-            title={formatMessage(messages.advanced)}
-            onPress={() => push(nav.dbAdvanced(formApi.values.name))}
           />
           <ErrorMessage error={props.openDb.error} />
           <SubmitButton

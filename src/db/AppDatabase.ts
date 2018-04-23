@@ -50,14 +50,14 @@ export class AppDatabase extends Dexie {
   [Category.table]: Dexie.Table<Category, string>;
   [Transaction.table]: Dexie.Table<Transaction, string>;
 
-  static async open(name: string) {
-    const db = new AppDatabase(name);
+  static async open() {
+    const db = new AppDatabase();
     await db.open();
     return db;
   }
 
-  constructor(name: string) {
-    super(name);
+  constructor() {
+    super('appdb');
     this.version(1).stores({
       _changes: '++seq',
       ...AppDatabase.schemas,

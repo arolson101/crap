@@ -12,7 +12,6 @@ const babelModules = [
   'native-base-shoutem-theme',
   'react-native-drawer',
   'react-native-easy-grid',
-  'react-native-elements',
   'react-native-keyboard-aware-scroll-view',
   'react-native-safe-area-view',
   'react-native-tab-view',

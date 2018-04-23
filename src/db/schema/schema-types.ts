@@ -123,7 +123,6 @@ export interface AccountQueryArgs {
   accountId: string;
 }
 export interface OpenDbMutationArgs {
-  name: string;
   password: string;
 }
 export interface SaveBankMutationArgs {

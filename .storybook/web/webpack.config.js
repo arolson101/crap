@@ -28,7 +28,6 @@ module.exports = function (config, env) {
     // Add every directory that needs to be compiled by Babel during the build
     include: [
       nodeModule('react-native-easy-grid'),
-      nodeModule('react-native-elements'),
       nodeModule('react-native-keyboard-aware-scroll-view'),
       nodeModule('react-native-tab-view'),
       nodeModule('react-native-vector-icons'),

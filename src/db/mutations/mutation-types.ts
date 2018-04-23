@@ -43,7 +43,6 @@ export interface DeleteBankMutation {
 };
 
 export interface OpenDbMutationVariables {
-  name: string,
   password: string,
 };
 

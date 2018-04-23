@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { View, ScrollView } from 'react-native';
-import { ListItem, Text } from 'react-native-elements';
+import { View, Text, Button, ScrollView } from 'react-native';
 import { compose } from 'recompose';
 import { nav } from '../nav';
 import { Queries } from '../db';
@@ -21,20 +20,19 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
     <View style={{flex: 1, display: 'flex'}}>
       <ScrollView>
         <List>
-          <ListItem onPress={() => push(nav.home())} title="home" leftIcon={{ name: 'home' }}  />
-          <ListItem onPress={() => push(nav.budgets())} title="budgets" leftIcon={{ name: 'home' }}  />
-          <ListItem onPress={() => push(nav.accounts())} title="accounts" leftIcon={{ name: 'home' }}  />
+          <Button onPress={() => push(nav.home())} title="home"/>
+          <Button onPress={() => push(nav.budgets())} title="budgets"/>
+          <Button onPress={() => push(nav.accounts())} title="accounts"/>
           {props.query.data.banks.map(bank =>
             <React.Fragment key={bank.id}>
               <Text>{bank.name}</Text>
               {bank.accounts.map(account =>
-                <ListItem
+                <Button
                   key={account.id}
                   onPress={() => push(nav.accountView(bank.id, account.id))}
                   title={account.name}
-                  subtitle={'$100.00'}
+                  // subtitle={'$100.00'}
                   // subtitleNumberOfLines={3}
-                  leftIcon={{ name: 'home' }}
                   // hideChevron
                 />
               )}

@@ -24,7 +24,7 @@ if (module.hot) {
 export const dependencies: DbDependencies = {
   getTime: Date.now,
   genId: () => Date.now().toString(),
-  openDb: async (name) => { throw new Error(`can't open databases in storybook`); },
+  openDb: async () => { throw new Error(`can't open databases in storybook`); },
 };
 
 export const initialDbs = (dbs: string[], openError: Error | undefined = undefined) => ({

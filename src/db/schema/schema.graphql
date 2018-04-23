@@ -12,7 +12,7 @@ type Query {
 }
 
 type Mutation {
-  openDb(name: String!, password: String!): Boolean!
+  openDb(password: String!): Boolean!
   closeDb: Boolean!
 
   saveBank(input: BankInput!, bankId: ID): Bank

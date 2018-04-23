@@ -96,7 +96,7 @@ const resolvers: Resolvers = {
 
   Mutation: {
     openDb: async (source, args, context): Promise<ST.Mutation['openDb']> => {
-      const db = await context.openDb(args.name);
+      const db = await context.openDb();
       context.setDb(db);
       return true;
     },

@@ -142,7 +142,6 @@
     "react-hot-loader": "^4.0.1",
     "react-intl": "^2.4.0",
     "react-native": "0.55",
-    "react-native-elements": "^1.0.0-beta2",
     "react-native-scripts-ts": "^1.13.0",
     "react-native-typescript-transformer": "^1.2.4",
     "react-native-web": "^0.6.0",

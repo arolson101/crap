@@ -15,7 +15,6 @@ export const paths = {
 };
 
 export const nav = {
-  dbAdvanced: (dbName: string) => paths.dbAdvanced.replace(':dbName', dbName),
   home: () => paths.root.home,
   budgets: () => paths.root.budgets,
   accounts: () => paths.root.accounts,
