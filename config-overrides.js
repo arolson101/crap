@@ -57,7 +57,6 @@ module.exports = function override(config, env) {
     }
   });
 
-  config.resolve.extensions = config.resolve.extensions.filter(ext => ext !== '.mjs');
   config.resolve.extensions = [
     '.web.ts',
     '.web.tsx',
