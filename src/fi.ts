@@ -4,7 +4,7 @@ export interface FI extends FinancialInstitution {
   id: number;
 }
 
-const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null);
+const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null && x !== '');
 
 export const formatAddress = (fi: FI): string => {
   if (fi && fi.profile) {

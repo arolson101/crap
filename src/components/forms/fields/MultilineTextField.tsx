@@ -1,37 +1,46 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TextInput } from 'react-native';
 import { ctx } from '../../ctx';
+import { glamorous, ThemeProp } from '../../Theme';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
 import { WrappedField } from './WrappedField';
 
+const TextInput = glamorous.textInput<ThemeProp & { error: boolean }>({},
+  ({ theme, error }) => ({
+    borderWidth: theme.boxBorderWidth,
+    borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
+    fontSize: theme.controlFontSize,
+    color: theme.controlFontColor,
+  })
+);
+
 export namespace MultilineTextField {
   export interface Props<T = {}> extends FieldProps<T> {
-    placeholder: FormattedMessage.MessageDescriptor;
+    label: FormattedMessage.MessageDescriptor;
+    placeholder?: FormattedMessage.MessageDescriptor;
     rows: number;
-    textColor?: string;
     autoFocus?: boolean;
   }
 }
 
 const MultilineTextFieldComponent: React.ComponentType<MultilineTextField.Props & FormFieldProps> =
-  ({ fieldApi, autoFocus, textColor, placeholder, rows }, { intl }: ctx.Intl) => (
-    <WrappedField fieldApi={fieldApi}>
-      <TextInput
-        style={[
-          formStyles.control,
-          formStyles.textInput,
-          { color: textColor }
-        ]}
-        multiline={true}
-        numberOfLines={rows}
-        onChangeText={fieldApi.setValue}
-        value={fieldApi.getValue()}
-        placeholder={intl.formatMessage(placeholder)}
-      />
-    </WrappedField>
-  );
+  ({ fieldApi, autoFocus, label, placeholder, rows }, { intl }: ctx.Intl) => {
+    const error = !!(fieldApi.getTouched() && fieldApi.getError());
+    return (
+      <WrappedField label={label} fieldApi={fieldApi}>
+        <TextInput
+          error={error}
+          autoFocus={autoFocus}
+          multiline={true}
+          numberOfLines={rows}
+          onChangeText={fieldApi.setValue}
+          value={fieldApi.getValue()}
+          placeholder={placeholder && intl.formatMessage(placeholder)}
+        />
+      </WrappedField>
+    )
+  };
 MultilineTextFieldComponent.contextTypes = ctx.intl;
 
 export const MultilineTextField = FormField<MultilineTextField.Props>(MultilineTextFieldComponent);

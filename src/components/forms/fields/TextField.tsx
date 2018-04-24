@@ -1,10 +1,19 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TextInput } from 'react-native';
 import { ctx } from '../../ctx';
+import { glamorous, ThemeProp } from '../../Theme';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
 import { WrappedField } from './WrappedField';
+
+const TextInput = glamorous.textInput<ThemeProp & { error: boolean, textColor?: string }>({},
+  ({ theme, error, textColor }) => ({
+    borderWidth: theme.boxBorderWidth,
+    borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
+    fontSize: theme.controlFontSize,
+    color: textColor ? textColor : theme.controlFontColor,
+  })
+);
 
 export namespace TextField {
   export interface Props<T = {}> extends FieldProps<T> {
@@ -19,16 +28,12 @@ export namespace TextField {
 
 const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> =
   ({ fieldApi, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => {
-    const error = fieldApi.getTouched() && fieldApi.getError();
+    const error = !!(fieldApi.getTouched() && fieldApi.getError());
     return (
       <WrappedField label={label} fieldApi={fieldApi}>
         <TextInput
-          style={[
-            formStyles.control,
-            formStyles.textInput,
-            { color: textColor },
-            error ? formStyles.errorTextInput : undefined,
-          ]}
+          error={error}
+          autoFocus={autoFocus}
           multiline={(rows ? rows > 0 : undefined)}
           numberOfLines={rows}
           onChangeText={fieldApi.setValue}

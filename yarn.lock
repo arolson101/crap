@@ -3401,6 +3401,10 @@ braces@^2.3.0, braces@^2.3.1:
     split-string "^3.0.2"
     to-regex "^3.0.1"
 
+brcast@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/brcast/-/brcast-2.0.2.tgz#2db16de44140e418dc37fab10beec0369e78dcef"
+
 brcast@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/brcast/-/brcast-3.0.1.tgz#6256a8349b20de9eed44257a9b24d71493cd48dd"
@@ -6565,6 +6569,12 @@ glamor@^2.20.40:
     object-assign "^4.1.1"
     prop-types "^15.5.10"
     through "^2.3.8"
+
+glamorous-native@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/glamorous-native/-/glamorous-native-1.4.0.tgz#22c331e354f1fda59d8e57b245f2b09dc2463b14"
+  dependencies:
+    brcast "^2.0.0"
 
 glamorous@^4.12.1:
   version "4.12.1"

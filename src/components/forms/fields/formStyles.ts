@@ -1,4 +1,20 @@
 import { StyleSheet } from 'react-native';
+import glamorous from 'glamorous-native';
+
+interface Props {
+  noPadding?: boolean,
+  theme: { color: string }
+}
+
+const MyStyledDiv = glamorous.view<Props>(
+  {
+    margin: 1,
+  },
+  ({noPadding, theme}) => ({
+    padding: noPadding ? 0 : 4,
+    color: theme.color,
+  })
+);
 
 export const formStyles = StyleSheet.create({
   picker: {
@@ -10,50 +26,8 @@ export const formStyles = StyleSheet.create({
   pickerItem: {
     justifyContent: 'flex-end',
   },
-  errorSubtitle: {
-    color: 'red',
-  },
   errorDisplay: {
     color: 'red',
     margin: 20,
-  },
-  wrapper: {
-    flexDirection: 'column',
-    minHeight: 28,
-    marginBottom: 10,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  label: {
-    width: 100,
-    fontSize: 16,
-    color: '#404040',
-  },
-  errorLabel: {
-    color: 'red',
-  },
-  control: {
-    flex: 3
-  },
-  switch: {
-    flex: 0,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: 'silver',
-    fontSize: 20,
-  },
-  errorTextInput: {
-    borderColor: 'red',
-  },
-  button: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    marginTop: 40,
   },
 });

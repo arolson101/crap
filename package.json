@@ -114,6 +114,7 @@
     "exponent": "^14.0.0",
     "fake-indexeddb": "^2.0.4",
     "filist": "^1.0.3",
+    "glamorous-native": "^1.4.0",
     "graphql": "^0.13.2",
     "graphql-cli": "^2.15.9",
     "graphql-code-generator": "^0.8.21",

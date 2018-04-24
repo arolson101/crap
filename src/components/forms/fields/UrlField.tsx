@@ -1,31 +1,41 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TextInput } from 'react-native';
 import { ctx } from '../../ctx';
+import { glamorous, ThemeProp } from '../../Theme';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
 import { WrappedField } from './WrappedField';
 
+const TextInput = glamorous.textInput<ThemeProp & { error: boolean }>({},
+  ({ theme, error }) => ({
+    borderWidth: theme.boxBorderWidth,
+    borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
+    fontSize: theme.controlFontSize,
+    color: theme.controlFontColor,
+  })
+);
+
 export namespace UrlField {
   export interface Props<T = {}> extends FieldProps<T> {
-    placeholder: FormattedMessage.MessageDescriptor;
+    label: FormattedMessage.MessageDescriptor;
+    placeholder?: FormattedMessage.MessageDescriptor;
   }
 }
 
 const UrlFieldComponent: React.SFC<UrlField.Props & FormFieldProps> =
-  ({ fieldApi, placeholder }, { intl }: ctx.Intl) => (
-    <WrappedField fieldApi={fieldApi}>
-      <TextInput
-        style={[
-          formStyles.control,
-          {color: fieldApi.getValue()}
-        ]}
-        onChangeText={fieldApi.setValue}
-        value={fieldApi.getValue()}
-        placeholder={intl.formatMessage(placeholder)}
-      />
-    </WrappedField>
-  );
+  ({ fieldApi, label, placeholder }, { intl }: ctx.Intl) => {
+    const error = !!(fieldApi.getTouched() && fieldApi.getError());
+    return (
+      <WrappedField label={label} fieldApi={fieldApi}>
+        <TextInput
+          error={error}
+          onChangeText={fieldApi.setValue}
+          value={fieldApi.getValue()}
+          placeholder={placeholder && intl.formatMessage(placeholder)}
+        />
+      </WrappedField>
+    )
+  };
 UrlFieldComponent.contextTypes = ctx.intl;
 
 export const UrlField = FormField<UrlField.Props>(UrlFieldComponent);

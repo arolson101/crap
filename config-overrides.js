@@ -9,6 +9,7 @@ function nodeModule(mod) {
 }
 
 const babelModules = [
+  'glamorous-native',
   'native-base-shoutem-theme',
   'react-native-drawer',
   'react-native-easy-grid',
@@ -31,6 +32,8 @@ module.exports = function override(config, env) {
   config = injectBabelPlugin(["transform-runtime", { "polyfill": false, "regenerator": true }], config)
 
   config.resolve.alias = {
+    'react-native/Libraries/Text/TextStylePropTypes': 'react-native-web/dist/exports/Text/TextStylePropTypes.js',
+    'react-native/Libraries/Components/View/ViewStylePropTypes': 'react-native-web/dist/exports/View/ViewStylePropTypes.js',
     'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
     'react-native$': 'react-native-web',
 
