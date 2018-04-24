@@ -25,7 +25,7 @@ const makeQuery = (QUERY: DocumentNode) =>
             <Query
               query={QUERY}
               variables={variables}
-            // fetchPolicy="network-only"
+              // fetchPolicy="network-only"
             >
               {({ data, ...rest }) => {
                 const componentProps = { ...props, [name]: { data, ...rest } };

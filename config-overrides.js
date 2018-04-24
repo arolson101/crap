@@ -3,6 +3,7 @@ var path = require("path");
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireGqlTag = require('react-app-rewire-graphql-tag');
 const rewireTypescript = require('react-app-rewire-typescript');
+var getTransformer = require('ts-transform-graphql-tag').getTransformer;
 
 function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
@@ -44,24 +45,40 @@ module.exports = function override(config, env) {
     ...config.resolve.alias,
   };
 
-  config.module.rules.forEach(rule => {
+  let foundBabel = false;
+  const ruleSearcher = (rule) => {
     if (rule.oneOf) {
-      rule.oneOf.forEach(one => {
-        if (one.loader && one.loader.indexOf('babel-loader') !== -1) {
-          one.include = [
-            one.include,
-            ...babelModules.map(nodeModule)
-          ]
-        }
-      });
+      rule.oneOf.forEach(ruleSearcher);
     }
-  });
+    if (rule.use) {
+      rule.use.forEach(ruleSearcher);
+    }
+
+    if (!foundBabel && rule.loader && rule.loader.indexOf('babel-loader') !== -1) {
+      foundBabel = true;
+      rule.include = [
+        ...(rule.include ? (Array.isArray(rule.include) ? rule.include : [rule.include]) : []),
+        ...babelModules.map(nodeModule)
+      ]
+    }
+
+    if (rule.loader && rule.loader.indexOf('ts-loader') !== -1) {
+      rule.options = {
+        ...(rule.options || {}),
+        getCustomTransformers: () => ({ before: [getTransformer()] })
+      }
+    }
+  }
+
+  config.module.rules.forEach(ruleSearcher);
 
   config.resolve.extensions = [
     '.web.ts',
     '.web.tsx',
     ...config.resolve.extensions,
   ]
+
+  // console.log(JSON.stringify(config, null, '  '));
 
   return config;
 }
