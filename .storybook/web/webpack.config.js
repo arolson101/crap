@@ -1,6 +1,5 @@
 // module.exports = require('react-scripts-ts/config/webpack.config.dev.js');
 var webpack = require("webpack");
-var genDefaultConfig = require('@storybook/react/dist/server/config/defaults/webpack.config.js');
 const path = require('path');
 // const fs = require("fs");
 
@@ -8,45 +7,77 @@ function nodeModule(mod) {
   return path.resolve(__dirname, '../../node_modules/' + mod)
 }
 
-module.exports = function (config, env) {
-  var config = genDefaultConfig(config, env);
+// var getTransformer = require('ts-transform-graphql-tag').getTransformer
+var FixDefaultImportPlugin = require('webpack-fix-default-import-plugin');
 
+
+const babelModules = [
+  'glamorous-native',
+  'native-base-shoutem-theme',
+  'react-native-drawer',
+  'react-native-easy-grid',
+  'react-native-keyboard-aware-scroll-view',
+  'react-native-safe-area-view',
+  'react-native-tab-view',
+  'react-native-touchable-scale',
+  'react-native-vector-icons',
+  'react-navigation',
+  'react-router-native',
+  'static-container',
+]
+
+const babelLoader = {
+  loader: 'babel-loader',
+  query: {
+    compact: false,
+    "presets": ["env", "flow", "react"],
+    "plugins": [
+      // "babel-plugin-inline-import-graphql-ast",
+      "transform-class-properties",
+      "dev-expression",
+      "transform-object-rest-spread",
+      ["transform-runtime", {
+        "polyfill": false,
+        "regenerator": true
+      }],
+    ]
+  }
+}
+
+module.exports = function (baseConfig, env, config) {
   config.target = 'web';
+
+  config.module.rules.push({
+    test: /\.(graphql|gql)$/,
+    exclude: /node_modules/,
+    loader: 'graphql-tag/loader'
+  });
 
   config.module.rules.push({
     test: /\.tsx?$/,
     exclude: /node_modules/,
     include: [/stories/, /src/],
-    loaders: [
-      'ts-loader?configFile=tsconfig.test.json'
+    use: [
+      babelLoader,
+      {
+        loader: 'ts-loader',
+        options: {
+          configFile: 'tsconfig.test.json',
+          // getCustomTransformers: () => ({ before: [getTransformer()] }),
+        }
+      }
     ]
   });
 
   config.module.rules.push({
     test: /\.js$/,
-    loader: 'babel-loader',
     // Add every directory that needs to be compiled by Babel during the build
     include: [
-      nodeModule('react-native-easy-grid'),
-      nodeModule('react-native-keyboard-aware-scroll-view'),
-      nodeModule('react-native-tab-view'),
-      nodeModule('react-native-vector-icons'),
-      nodeModule('react-navigation'),
-      nodeModule('react-router-native'),
+      ...babelModules.map(nodeModule)
     ],
-    query: {
-      compact: false,
-      "presets": ["env", "flow", "react"],
-      "plugins": [
-        "transform-class-properties",
-        "dev-expression",
-        "transform-object-rest-spread",
-        ["transform-runtime", {
-          "polyfill": false,
-          "regenerator": true
-        }],
-      ]
-    }
+    use: [
+      babelLoader
+    ]
   })
 
   config.resolve.extensions.push('.web.js');
@@ -63,12 +94,21 @@ module.exports = function (config, env) {
     'node_modules',
   ];
 
-  config.resolve.alias = config.resolve.alias || {}
-  config.resolve.alias['react-native'] = 'react-native-web';
-  // config.resolve.alias['react/lib/ReactNativePropRegistry'] = 'react-native-web/dist/modules/ReactNativePropRegistry';
-  // config.resolve.alias['react-native/Libraries/Renderer/shims/ReactNativePropRegistry'] = 'react-native-web/dist/modules/ReactNativePropRegistry';
+  config.resolve.alias = {
+    'react-native/Libraries/Text/TextStylePropTypes': 'react-native-web/dist/exports/Text/TextStylePropTypes.js',
+    'react-native/Libraries/Components/View/ViewStylePropTypes': 'react-native-web/dist/exports/View/ViewStylePropTypes.js',
+    'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
+    'react-native$': 'react-native-web',
+
+    // 'react-router-native': 'react-router',
+    // 'react-native-vector-icons/Fonts': nodeModule('react-native-vector-icons/Fonts'), // need to avoid aliasing Font dir
+    // 'react-native-vector-icons': 'react-native-vector-icons/dist',
+
+    ...config.resolve.alias,
+  };
 
   config.plugins.push(
+    new FixDefaultImportPlugin(),
     // new webpack.DllReferencePlugin({
     //     context: path.resolve(__dirname, ".."),
     //     name: 'electron_dll',
