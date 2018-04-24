@@ -7,8 +7,8 @@ import { nav } from '../../nav';
 import { BankForm } from '../forms/BankForm';
 import { AccountForm } from '../forms/AccountForm';
 import { ctx } from '../ctx';
+import { ErrorMessage } from '../ErrorMessage';
 import { glamorous, ThemeProp } from '../Theme';
-import { ErrorMessage, formStyles } from '../forms/fields';
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,
@@ -55,7 +55,6 @@ export const AccountsCreatePageComponent: React.SFC<Props> =
         </LabelColumn>
           <InputColumn>
             <Picker
-              itemStyle={formStyles.pickerItem}
               onValueChange={(nextBankId) => router.history.replace(nextBankId
                 ? nav.accountCreate(nextBankId)
                 : nav.bankCreate()

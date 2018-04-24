@@ -3,34 +3,27 @@ import { BoundFormAPI } from 'react-form';
 import { FormattedMessage } from 'react-intl';
 import { ctx } from '../../ctx';
 import { glamorous, ThemeProp } from '../../Theme';
-import { formStyles } from './formStyles';
 
-const Row = glamorous.view<ThemeProp>({},
-  ({ theme }) => ({
-    marginBottom: theme.rowMargin,
-    flexDirection: 'row',
-    alignItems: 'baseline',
-  })
-);
+const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
+  marginBottom: theme.rowMargin,
+  flexDirection: 'row',
+  alignItems: 'baseline',
+}));
 
-const LabelColumn = glamorous.text<ThemeProp>({},
-  ({ theme }) => ({
-    width: theme.labelWidth,
-    fontSize: theme.labelFontSize,
-    color: theme.labelColor,
-  })
-);
+const LabelColumn = glamorous.text<ThemeProp>({}, ({ theme }) => ({
+  width: theme.labelWidth,
+  fontSize: theme.labelFontSize,
+  color: theme.labelColor,
+}));
 
 const InputColumn = glamorous.view({
   flexDirection: 'column',
   flex: 1,
 });
 
-const ErrorMessage = glamorous.text<ThemeProp>({},
-  ({ theme }) => ({
-    color: theme.errorTextColor
-  })
-);
+const ErrorMessage = glamorous.text<ThemeProp>({}, ({ theme }) => ({
+  color: theme.errorTextColor
+}));
 
 export namespace WrappedField {
   export interface Props {

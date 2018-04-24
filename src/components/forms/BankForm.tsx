@@ -7,8 +7,9 @@ import { nav } from '../../nav';
 import { filist, formatAddress } from '../../fi';
 import { Mutations, Queries, Types, Bank } from '../../db';
 import { ctx } from '../ctx';
+import { ErrorMessage } from '../ErrorMessage';
 import { List } from '../list';
-import { ErrorMessage, typedFields } from './fields';
+import { typedFields } from './fields';
 
 interface Props {
   bankId?: string;

@@ -6,7 +6,7 @@ import { nav, paths } from '../../nav';
 import { Queries, Mutations } from '../../db';
 import { ctx } from '../ctx';
 import { BankDisplay } from '../BankDisplay';
-import { ErrorMessage } from '../forms/fields';
+import { ErrorMessage } from '../ErrorMessage';
 import { AccountsCreatePage } from './AccountsCreatePage';
 import { AccountsUpdatePage } from './AccountsUpdatePage';
 import { AccountPage } from './AccountPage';

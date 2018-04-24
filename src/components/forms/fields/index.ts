@@ -1,14 +1,12 @@
 import * as RF from 'react-form';
 import { CheckboxField } from './CheckboxField';
 import { CollapseField } from './CollapseField';
-import { ErrorMessage } from './ErrorMessage';
+import { ErrorMessage } from '../../ErrorMessage';
 import { MultilineTextField } from './MultilineTextField';
 import { SelectField } from './SelectField';
 import { SubmitButton } from './SubmitButton';
 import { TextField } from './TextField';
 import { UrlField } from './UrlField';
-export * from './formStyles';
-export { ErrorMessage };
 
 export type SelectFieldItem = SelectField.Item;
 

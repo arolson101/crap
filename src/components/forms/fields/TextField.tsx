@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 import { ctx } from '../../ctx';
 import { glamorous, ThemeProp } from '../../Theme';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
-import { formStyles } from './formStyles';
 import { WrappedField } from './WrappedField';
 
 const TextInput = glamorous.textInput<ThemeProp & { error: boolean, textColor?: string }>({},
