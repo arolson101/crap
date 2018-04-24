@@ -1,3 +1,0 @@
-mutation OpenDb($password: String!) {
-  openDb(password: $password)
-}

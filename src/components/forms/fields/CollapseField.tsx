@@ -9,7 +9,7 @@ export namespace CollapseField {
 export const CollapseField: React.ComponentType<CollapseField.Props> = FormField(
   ({ fieldApi, children }: CollapseField.Props & FormFieldProps) => {
     if (fieldApi.getValue()) {
-      return <>{children}</>;
+      return <React.Fragment>{children}</React.Fragment>;
     } else {
       return null;
     }

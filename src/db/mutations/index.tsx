@@ -1,6 +1,8 @@
 import { DocumentNode } from 'graphql';
+import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation, MutationFunc } from 'react-apollo';
+import { Queries } from '../queries';
 
 export * from './mutation-types';
 
@@ -19,7 +21,7 @@ const makeMutation = (QUERY: DocumentNode, refetchQueries: DocumentNode[] = []) 
         return (
           <Mutation
             mutation={QUERY}
-            refetchQueries={refetchQueries.map(query => ({query}))}
+            refetchQueries={refetchQueries.map(query => ({ query }))}
           >
             {(execute, result) => {
               const componentProps = { ...props, [name]: { execute, ...result } };
@@ -29,10 +31,6 @@ const makeMutation = (QUERY: DocumentNode, refetchQueries: DocumentNode[] = []) 
         );
       };
 
-import DELETEBANK_MUTATION from './DeleteBank.graphql';
-import OPENDB_MUTATION from './OpenDb.graphql';
-import SAVEACCOUNT_MUTATION from './SaveAccount.graphql';
-import SAVEBANK_MUTATION from './SaveBank.graphql';
 import {
   DeleteBankMutation, DeleteBankMutationVariables,
   OpenDbMutation, OpenDbMutationVariables,
@@ -40,18 +38,44 @@ import {
   SaveBankMutation, SaveBankMutationVariables,
 } from './mutation-types';
 
-import BANKS_QUERY from '../queries/Banks.graphql';
-
 export namespace Mutations {
-  export const withDeleteBank = makeMutation(DELETEBANK_MUTATION, [BANKS_QUERY]);
+  // DeleteBank
+  export const DELETEBANK = gql`
+    mutation DeleteBank($bankId: ID!) {
+      deleteBank(bankId: $bankId)
+    }
+  `;
+  export const withDeleteBank = makeMutation(DELETEBANK, [Queries.BANKS]);
   export type DeleteBank = MutationType<DeleteBankMutation, DeleteBankMutationVariables>;
 
-  export const withOpenDb = makeMutation(OPENDB_MUTATION);
+  // OpenDb
+  export const OPENDB = gql`
+    mutation OpenDb($password: String!) {
+      openDb(password: $password)
+    }
+  `;
+  export const withOpenDb = makeMutation(OPENDB);
   export type OpenDb = MutationType<OpenDbMutation, OpenDbMutationVariables>;
 
-  export const withSaveAccount = makeMutation(SAVEACCOUNT_MUTATION, [BANKS_QUERY]);
+  // SaveAccount
+  export const SAVEACCOUNT = gql`
+    mutation SaveAccount($input: AccountInput!, $accountId: ID, $bankId: ID) {
+      saveAccount(input: $input, accountId: $accountId, bankId: $bankId) {
+        id
+      }
+    }
+  `;
+  export const withSaveAccount = makeMutation(SAVEACCOUNT, [Queries.BANKS]);
   export type SaveAccount = MutationType<SaveAccountMutation, SaveAccountMutationVariables>;
 
-  export const withSaveBank = makeMutation(SAVEBANK_MUTATION, [BANKS_QUERY]);
+  // SaveBank
+  export const SAVEBANK = gql`
+    mutation SaveBank($input: BankInput!, $bankId: ID) {
+      saveBank(input: $input, bankId: $bankId) {
+        id
+      }
+    }
+  `;
+  export const withSaveBank = makeMutation(SAVEBANK, [Queries.BANKS]);
   export type SaveBank = MutationType<SaveBankMutation, SaveBankMutationVariables>;
 }

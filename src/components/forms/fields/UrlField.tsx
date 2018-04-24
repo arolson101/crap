@@ -5,7 +5,7 @@ import { glamorous, ThemeProp } from '../../Theme';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { WrappedField } from './WrappedField';
 
-const TextInput = glamorous.textInput<ThemeProp & { error: boolean }>({},
+const TextInput = glamorous.textInput<ThemeProp & { error: any }>({},
   ({ theme, error }) => ({
     borderWidth: theme.boxBorderWidth,
     borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
@@ -13,6 +13,7 @@ const TextInput = glamorous.textInput<ThemeProp & { error: boolean }>({},
     color: theme.controlFontColor,
   })
 );
+TextInput.displayName = 'TextInput';
 
 export namespace UrlField {
   export interface Props<T = {}> extends FieldProps<T> {
@@ -23,7 +24,7 @@ export namespace UrlField {
 
 const UrlFieldComponent: React.SFC<UrlField.Props & FormFieldProps> =
   ({ fieldApi, label, placeholder }, { intl }: ctx.Intl) => {
-    const error = !!(fieldApi.getTouched() && fieldApi.getError());
+    const error = fieldApi.getTouched() && fieldApi.getError();
     return (
       <WrappedField label={label} fieldApi={fieldApi}>
         <TextInput

@@ -1,6 +1,0 @@
-
-mutation SaveBank($input: BankInput!, $bankId: ID) {
-  saveBank(input: $input, bankId: $bankId) {
-    id
-  }
-}

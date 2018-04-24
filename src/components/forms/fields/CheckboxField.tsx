@@ -11,6 +11,7 @@ const StyledSwitch = glamorous(Switch)({},
     marginLeft: 'auto',
   })
 );
+StyledSwitch.displayName = 'StyledSwitch';
 
 export namespace CheckboxField {
   export interface Props<T = {}> extends FieldProps<T> {

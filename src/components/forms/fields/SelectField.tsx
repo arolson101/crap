@@ -7,11 +7,12 @@ import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { WrappedField } from './WrappedField';
 
 const StyledPicker = glamorous(Picker)({},
-  ({ error, theme }: ThemeProp & { error: boolean }) => ({
+  ({ error, theme }: ThemeProp & { error: any }) => ({
     borderWidth: theme.boxBorderWidth,
     borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
   })
 );
+StyledPicker.displayName = 'StyledPicker';
 
 export namespace SelectField {
   export interface Item {
@@ -28,7 +29,7 @@ export namespace SelectField {
 
 const SelectFieldComponent: React.SFC<SelectField.Props & FormFieldProps> =
   ({ fieldApi, label, items, onValueChange }, { intl }: ctx.Intl) => {
-    const error = !!(fieldApi.getTouched() && fieldApi.getError());
+    const error = fieldApi.getTouched() && fieldApi.getError();
     return (
       <WrappedField label={label} fieldApi={fieldApi}>
         <StyledPicker
