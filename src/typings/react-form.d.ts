@@ -87,8 +87,26 @@ declare module 'react-form' {
     onChange?: Function
   }
 
-  export interface FieldProps {
+  export interface FieldProps extends FormPropsBase<V> {
     field: string
+    children?: (fieldApi: FieldAPI<any>) => React.ReactNode
+  }
+
+  export class Field extends React.Component<FieldProps> {
+  }
+
+  export interface FieldAPI<T> {
+    value: T
+    error: string | undefined
+    warning: string | undefined
+    success: string | undefined
+    touched: boolean
+    fieldName: string
+    setValue: (value: T) => void
+    setError: (value: string) => void
+    setWarning: (value: string) => void
+    setSuccess: (value: string) => void
+    setTouched: (value?: boolean) => void
   }
 
   export interface FormFieldProps extends ComponentBaseProps {

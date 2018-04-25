@@ -1,9 +1,9 @@
 import * as React from 'react'
+import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { Picker } from 'react-native'
 import { ctx } from '../../ctx'
 import { glamorous, ThemeProp } from '../../Theme'
-import { FormField, FormFieldProps, FieldProps } from './FieldProps'
 import { WrappedField } from './WrappedField'
 
 const StyledPicker = glamorous(Picker)({},
@@ -20,40 +20,42 @@ export namespace SelectField {
     value: string | number
   }
 
-  export interface Props<T = {}> extends FieldProps<T> {
+  export interface Props<T = {}> {
+    field: string
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
   }
 }
 
-const SelectFieldComponent: React.SFC<SelectField.Props & FormFieldProps> =
-  ({ fieldApi, label, items, onValueChange }, { intl }: ctx.Intl) => {
-    const error = fieldApi.getTouched() && fieldApi.getError()
-    return (
-      <WrappedField label={label} fieldApi={fieldApi}>
-        <StyledPicker
-          error={error}
-          onValueChange={(value) => {
-            fieldApi.setValue(value)
-            if (onValueChange) {
-              onValueChange(value)
-            }
-          }}
-          selectedValue={fieldApi.getValue()}
-        >
-          {items.map(item =>
-            <Picker.Item
-              key={item.value}
-              label={item.label}
-              value={item.value}
-            />
-          )}
-        </StyledPicker>
-      </WrappedField>
-    )
-  }
-SelectFieldComponent.contextTypes = ctx.intl
-
-export const SelectField = FormField<SelectField.Props>(SelectFieldComponent)
-SelectField.displayName = 'SelectField'
+export const SelectField: React.SFC<SelectField.Props> =
+  ({ field, label, items, onValueChange }, { intl }: ctx.Intl) => (
+    <Field field={field}>
+      {fieldApi => {
+        const error = fieldApi.touched && fieldApi.error
+        return (
+          <WrappedField label={label} fieldApi={fieldApi}>
+            <StyledPicker
+              error={error}
+              onValueChange={(value) => {
+                fieldApi.setValue(value)
+                if (onValueChange) {
+                  onValueChange(value)
+                }
+              }}
+              selectedValue={fieldApi.value}
+            >
+              {items.map(item =>
+                <Picker.Item
+                  key={item.value}
+                  label={item.label}
+                  value={item.value}
+                />
+              )}
+            </StyledPicker>
+          </WrappedField>
+        )
+      }}
+    </Field>
+  )
+SelectField.contextTypes = ctx.intl

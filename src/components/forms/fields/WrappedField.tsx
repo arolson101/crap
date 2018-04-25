@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BoundFormAPI } from 'react-form'
+import { FieldAPI } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { ctx } from '../../ctx'
 import { glamorous, ThemeProp } from '../../Theme'
@@ -32,13 +32,13 @@ ErrorMessage.displayName = 'ErrorMessage'
 export namespace WrappedField {
   export interface Props {
     label?: FormattedMessage.MessageDescriptor
-    fieldApi: BoundFormAPI
+    fieldApi: FieldAPI<any>
   }
 }
 
 export const WrappedField: React.ComponentType<WrappedField.Props> =
   ({ fieldApi, label, children }, { intl }: ctx.Intl) => {
-    const error = fieldApi.getTouched() && fieldApi.getError()
+    const error = fieldApi.touched && fieldApi.error
     return (
       <Row>
         {label &&
@@ -50,7 +50,7 @@ export const WrappedField: React.ComponentType<WrappedField.Props> =
           {children}
           {error &&
             <ErrorMessage>
-              {fieldApi.getError()}
+              {fieldApi.error}
             </ErrorMessage>
           }
         </InputColumn>

@@ -1,9 +1,9 @@
 import * as React from 'react'
+import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { Switch } from 'react-native'
 import { ctx } from '../../ctx'
 import { glamorous, ThemeProp } from '../../Theme'
-import { FormField, FormFieldProps, FieldProps } from './FieldProps'
 import { WrappedField } from './WrappedField'
 
 const StyledSwitch = glamorous(Switch)({},
@@ -14,21 +14,23 @@ const StyledSwitch = glamorous(Switch)({},
 StyledSwitch.displayName = 'StyledSwitch'
 
 export namespace CheckboxField {
-  export interface Props<T = {}> extends FieldProps<T> {
+  export interface Props<T = {}> {
+    field: string
     label: FormattedMessage.MessageDescriptor
   }
 }
 
-const CheckboxFieldComponent: React.SFC<CheckboxField.Props & FormFieldProps> =
-  ({ fieldApi, label }, { intl }: ctx.Intl) => (
-    <WrappedField label={label} fieldApi={fieldApi}>
-      <StyledSwitch
-        onValueChange={(value: boolean) => fieldApi.setValue(value)}
-        value={fieldApi.getValue()}
-      />
-    </WrappedField>
+export const CheckboxField: React.SFC<CheckboxField.Props> =
+  ({ field, label }, { intl }: ctx.Intl) => (
+    <Field field={field}>
+      {fieldApi =>
+        <WrappedField label={label} fieldApi={fieldApi}>
+          <StyledSwitch
+            onValueChange={(value: boolean) => fieldApi.setValue(value)}
+            value={fieldApi.value}
+          />
+        </WrappedField>
+      }
+    </Field>
   )
-CheckboxFieldComponent.contextTypes = ctx.intl
-
-export const CheckboxField = FormField<CheckboxField.Props>(CheckboxFieldComponent)
-CheckboxField.displayName = 'CheckboxField'
+CheckboxField.contextTypes = ctx.intl
