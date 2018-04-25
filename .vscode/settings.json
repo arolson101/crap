@@ -1,4 +1,3 @@
 {
   // "jest.pathToJest": "npm run test --",
-  "stylelint.additionalDocumentSelectors": ["typescriptreact"],
 }
