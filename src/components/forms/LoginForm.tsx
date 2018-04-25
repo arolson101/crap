@@ -78,6 +78,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
         <View>
           <Text style={{marginBottom: 20, textAlign: 'center'}}>Welcome!  Create a password to secure your data.</Text>
           <TextField
+            autoFocus
             secure
             field="password"
             label={messages.passwordLabel}
@@ -132,6 +133,8 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
             field="password"
             label={messages.passwordLabel}
             placeholder={messages.passwordPlaceholder}
+            // returnKeyType="default"
+            onSubmitEditing={formApi.submitForm}
           />
           <ErrorMessage error={props.openDb.error} />
           <SubmitButton

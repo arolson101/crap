@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TextInput } from 'react-native';
+import { TextInput, ReturnKeyType } from 'react-native';
 import { ctx } from '../../ctx';
 import { FormField, FormFieldProps, FieldProps } from './FieldProps';
 import { formStyles } from './formStyles';
@@ -14,11 +14,13 @@ export namespace TextField {
     rows?: number;
     textColor?: string;
     autoFocus?: boolean;
+    onSubmitEditing?: () => any;
+    returnKeyType?: ReturnKeyType;
   }
 }
 
 const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> =
-  ({ fieldApi, autoFocus, label, textColor, placeholder, secure, rows }, { intl }: ctx.Intl) => {
+  ({ fieldApi, autoFocus, label, textColor, placeholder, secure, rows, onSubmitEditing, returnKeyType }, { intl }: ctx.Intl) => {
     const error = fieldApi.getTouched() && fieldApi.getError();
     return (
       <WrappedField label={label} fieldApi={fieldApi}>
@@ -29,12 +31,15 @@ const TextFieldComponent: React.ComponentType<TextField.Props & FormFieldProps> 
             { color: textColor },
             error ? formStyles.errorTextInput : undefined,
           ]}
+          autoFocus={autoFocus}
           multiline={(rows ? rows > 0 : undefined)}
           numberOfLines={rows}
           onChangeText={fieldApi.setValue}
           value={fieldApi.getValue()}
           secureTextEntry={secure}
           placeholder={intl.formatMessage(placeholder)}
+          onSubmitEditing={onSubmitEditing}
+          returnKeyType={returnKeyType}
         />
       </WrappedField>
     );
