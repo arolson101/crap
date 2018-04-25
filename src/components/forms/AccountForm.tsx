@@ -6,8 +6,9 @@ import { compose } from 'recompose';
 import { nav } from '../../nav';
 import { Mutations, Queries, Types, Account } from '../../db';
 import { ctx } from '../ctx';
+import { ErrorMessage } from '../ErrorMessage';
 import { List } from '../list';
-import { ErrorMessage, typedFields, SelectFieldItem } from './fields';
+import { typedFields, SelectFieldItem } from './fields';
 
 interface Props {
   accountId?: string;

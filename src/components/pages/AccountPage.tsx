@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { Queries } from '../../db';
 import { nav } from '../../nav';
 import { ctx } from '../ctx';
-import { ErrorMessage } from '../forms/fields/';
+import { ErrorMessage } from '../ErrorMessage';
 
 interface Params {
   bankId: string;

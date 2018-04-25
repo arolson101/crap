@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text } from 'react-native';
 import { compose } from 'recompose';
 import { Queries } from '../../db';
-import { ErrorMessage } from '../forms/fields/ErrorMessage';
+import { ErrorMessage } from '../ErrorMessage';
 
 interface Props {
   query: Queries.Accounts;

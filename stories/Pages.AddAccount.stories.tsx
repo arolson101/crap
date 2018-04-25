@@ -1,22 +1,62 @@
+import apolloStorybookDecorator from 'apollo-storybook-react';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { AccountsCreatePage } from '../src/components/pages/AccountsCreatePage';
+import { AccountsCreatePageComponent } from '../src/components/pages/AccountsCreatePage';
+import { Queries } from '../src/db';
+import typeDefs from '../src/db/schema/schema.graphql';
 
-// const store = preloadedStore();
+const mocks = {
+  Query: () => {
+    return {
+      banks: () => [
+        {
+          id: '123',
+          name: '1st bank',
+          accounts: [
+            { id: '123a', name: 'checking' },
+            { id: '123b', name: 'savings' },
+          ]
+        }
+      ],
+    };
+  },
+};
+
+const makeQuery = <T extends {}>(data: T) => ({
+  data,
+  loading: false,
+  error: undefined,
+});
 
 const props = {
-  banks: [],
+  query: makeQuery({
+    banks: [
+      {
+        id: '123',
+        name: '1st bank',
+        accounts: [
+          { id: '123a', name: 'checking' },
+          { id: '123b', name: 'savings' },
+        ]
+      }
+    ]
+  })
 };
 
 storiesOf('Pages/AddAccount', module)
-  // .addDecorator(story => <Provider store={store}>{story()}</Provider>)
+  .addDecorator(
+    apolloStorybookDecorator({
+      typeDefs,
+      mocks,
+    }),
+  )
   .add('No banks', () => (
-    <AccountsCreatePage
+    <AccountsCreatePageComponent
       {...props}
     />
   ))
   .add('Banks', () => (
-    <AccountsCreatePage
+    <AccountsCreatePageComponent
       {...props}
     />
   ))

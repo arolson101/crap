@@ -7,8 +7,9 @@ import { nav } from '../../nav';
 import { filist, formatAddress } from '../../fi';
 import { Mutations, Queries, Types, Bank } from '../../db';
 import { ctx } from '../ctx';
+import { ErrorMessage } from '../ErrorMessage';
 import { List } from '../list';
-import { ErrorMessage, typedFields } from './fields';
+import { typedFields } from './fields';
 
 interface Props {
   bankId?: string;
@@ -78,6 +79,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
       {formApi =>
         <>
           <List>
+            <FormattedMessage {...messages.fiHelp} />
             <SelectField
               field="fi"
               items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
@@ -93,7 +95,6 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
                 formApi.setValue('ofx', fi.ofx || '');
               }}
             />
-            <FormattedMessage {...messages.fiHelp} />
           </List>
           <List>
             <TextField
@@ -103,18 +104,18 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
             />
             <MultilineTextField
               field="address"
+              label={messages.address}
               rows={4}
-              placeholder={messages.address}
             />
             <UrlField
               field="web"
               // favicoName='favicon'
-              placeholder={messages.web}
+              label={messages.web}
             />
             <MultilineTextField
               field="notes"
+              label={messages.notes}
               rows={4}
-              placeholder={messages.notes}
             />
           </List>
           <List>

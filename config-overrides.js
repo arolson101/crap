@@ -3,12 +3,14 @@ var path = require("path");
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireGqlTag = require('react-app-rewire-graphql-tag');
 const rewireTypescript = require('react-app-rewire-typescript');
+var getTransformer = require('ts-transform-graphql-tag').getTransformer;
 
 function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
 }
 
 const babelModules = [
+  'glamorous-native',
   'native-base-shoutem-theme',
   'react-native-drawer',
   'react-native-easy-grid',
@@ -31,6 +33,8 @@ module.exports = function override(config, env) {
   config = injectBabelPlugin(["transform-runtime", { "polyfill": false, "regenerator": true }], config)
 
   config.resolve.alias = {
+    'react-native/Libraries/Text/TextStylePropTypes': 'react-native-web/dist/exports/Text/TextStylePropTypes.js',
+    'react-native/Libraries/Components/View/ViewStylePropTypes': 'react-native-web/dist/exports/View/ViewStylePropTypes.js',
     'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
     'react-native$': 'react-native-web',
 
@@ -41,25 +45,40 @@ module.exports = function override(config, env) {
     ...config.resolve.alias,
   };
 
-  config.module.rules.forEach(rule => {
+  let foundBabel = false;
+  const ruleSearcher = (rule) => {
     if (rule.oneOf) {
-      rule.oneOf.forEach(one => {
-        if (one.loader && one.loader.indexOf('babel-loader') !== -1) {
-          one.include = [
-            one.include,
-            ...babelModules.map(nodeModule)
-          ]
-        }
-      });
+      rule.oneOf.forEach(ruleSearcher);
     }
-  });
+    if (rule.use) {
+      rule.use.forEach(ruleSearcher);
+    }
 
-  config.resolve.extensions = config.resolve.extensions.filter(ext => ext !== '.mjs');
+    if (!foundBabel && rule.loader && rule.loader.indexOf('babel-loader') !== -1) {
+      foundBabel = true;
+      rule.include = [
+        ...(rule.include ? (Array.isArray(rule.include) ? rule.include : [rule.include]) : []),
+        ...babelModules.map(nodeModule)
+      ]
+    }
+
+    if (rule.loader && rule.loader.indexOf('ts-loader') !== -1) {
+      rule.options = {
+        ...(rule.options || {}),
+        getCustomTransformers: () => ({ before: [getTransformer()] })
+      }
+    }
+  }
+
+  config.module.rules.forEach(ruleSearcher);
+
   config.resolve.extensions = [
     '.web.ts',
     '.web.tsx',
     ...config.resolve.extensions,
   ]
+
+  // console.log(JSON.stringify(config, null, '  '));
 
   return config;
 }
