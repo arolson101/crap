@@ -1,10 +1,10 @@
-import { FinancialInstitution, FinancialInstitutionProfile } from 'filist';
+import { FinancialInstitution, FinancialInstitutionProfile } from 'filist'
 
 export interface FI extends FinancialInstitution {
-  id: number;
+  id: number
 }
 
-const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null && x !== '');
+const defined = (x: string | undefined | null): boolean => (x !== undefined && x !== null && x !== '')
 
 export const formatAddress = (fi: FI): string => {
   if (fi && fi.profile) {
@@ -19,11 +19,11 @@ export const formatAddress = (fi: FI): string => {
       ].filter(defined).join(' '),
 
       fi.profile.country
-    ].filter(defined).join('\n');
+    ].filter(defined).join('\n')
   } else {
-    return '';
+    return ''
   }
-};
+}
 
 const emptyprofile: FinancialInstitutionProfile = {
   address1: '',
@@ -39,7 +39,7 @@ const emptyprofile: FinancialInstitutionProfile = {
   fax: '',
   financialInstitutionName: '',
   siteURL: ''
-};
+}
 
 const emptyfi: FinancialInstitution = {
   name: '',
@@ -47,12 +47,12 @@ const emptyfi: FinancialInstitution = {
   org: '',
   ofx: '',
   profile: emptyprofile
-};
+}
 
 const finalizeFilist = (list: FinancialInstitution[]): FI[] => [
-  {...emptyfi, id: 0},
+  { ...emptyfi, id: 0 },
   ...list.map((fi, index) => ({ ...fi, id: index + 1 }))
-];
+]
 
-const rawfilist = require<FinancialInstitution[]>('filist/filist.json');
-export const filist = finalizeFilist(rawfilist);
+const rawfilist = require<FinancialInstitution[]>('filist/filist.json')
+export const filist = finalizeFilist(rawfilist)

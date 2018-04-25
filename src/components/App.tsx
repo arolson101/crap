@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { Sidebar } from './Sidebar';
-import { MainView } from './MainView';
-import { LoginForm } from './forms/LoginForm';
-import { AppContainer } from './layout/AppContainer';
-import { Db } from './ctx';
-import { AppThemeProvider } from './Theme';
+import * as React from 'react'
+import { Sidebar } from './Sidebar'
+import { MainView } from './MainView'
+import { LoginForm } from './forms/LoginForm'
+import { AppContainer } from './layout/AppContainer'
+import { Db } from './ctx'
+import { AppThemeProvider } from './Theme'
 
 interface Props {
-  isOpen?: boolean;
+  isOpen?: boolean
 }
 
 export const App: React.SFC<Props> = (props) => {
@@ -21,14 +21,14 @@ export const App: React.SFC<Props> = (props) => {
                 sidebar={<Sidebar />}
                 main={<MainView />}
               />
-            );
+            )
           } else {
             return (
               <LoginForm />
-            );
+            )
           }
         }}
       </Db.Consumer>
     </AppThemeProvider>
-  );
-};
+  )
+}

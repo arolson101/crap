@@ -2,17 +2,17 @@ export const paths = {
   root: {
     home: '/',
     accounts: '/accounts',
-    budgets: '/budgets',
+    budgets: '/budgets'
   },
 
   account: {
     create: '/accounts/create/:bankId?',
     view: '/accounts/:bankId/:accountId',
-    update: '/accounts/update/:bankId/:accountId?',
+    update: '/accounts/update/:bankId/:accountId?'
   },
 
-  dbAdvanced: '/db/:dbName',
-};
+  dbAdvanced: '/db/:dbName'
+}
 
 export const nav = {
   home: () => paths.root.home,
@@ -27,5 +27,5 @@ export const nav = {
   accountView: (bankId: string, accountId: string) =>
     paths.account.view.replace(':bankId', bankId).replace(':accountId', accountId),
   accountUpdate: (bankId: string, accountId: string) =>
-    paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId),
-};
+    paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId)
+}

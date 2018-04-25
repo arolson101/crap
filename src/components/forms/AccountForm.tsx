@@ -1,101 +1,102 @@
-import pick from 'lodash-es/pick';
-import * as React from 'react';
-import { defineMessages } from 'react-intl';
-import { Redirect } from 'react-router';
-import { compose } from 'recompose';
-import { nav } from '../../nav';
-import { Mutations, Queries, Types, Account } from '../../db';
-import { ctx } from '../ctx';
-import { ErrorMessage } from '../ErrorMessage';
-import { List } from '../list';
-import { typedFields, SelectFieldItem } from './fields';
+import pick from 'lodash-es/pick'
+import * as React from 'react'
+import { defineMessages } from 'react-intl'
+import { Redirect } from 'react-router'
+import { compose } from 'recompose'
+import { nav } from '../../nav'
+import { Mutations, Queries, Types, Account } from '../../db'
+import { ctx } from '../ctx'
+import { ErrorMessage } from '../ErrorMessage'
+import { List } from '../list'
+import { typedFields, SelectFieldItem } from './fields'
 
 interface Props {
-  accountId?: string;
-  bankId: string;
+  accountId?: string
+  bankId: string
 }
 
 interface ComposedProps extends Props {
-  query: Queries.Account;
-  saveAccount: Mutations.SaveAccount;
+  query: Queries.Account
+  saveAccount: Mutations.SaveAccount
 }
 
 type FormValues = {
+  // tslint:disable-next-line
   [P in keyof Types.AccountInput]-?: Types.Account[P]
-};
+}
 
-const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>();
+const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>()
 
 export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   if (props.saveAccount.called && props.saveAccount.data) {
-    return <Redirect to={nav.accountView(props.bankId, props.saveAccount.data.saveAccount!.id)} />;
+    return <Redirect to={nav.accountView(props.bankId, props.saveAccount.data.saveAccount!.id)} />
   }
 
   if (props.accountId && props.query.error) {
-    return <ErrorMessage error={props.query.error} />;
+    return <ErrorMessage error={props.query.error} />
   }
 
-  const edit = props.accountId && props.query.data.account;
+  const edit = props.accountId && props.query.data.account
 
   return (
     <Form
       defaultValues={{
-        ...(edit ? pick(edit, Object.keys(Account.defaultValues)) as any : Account.defaultValues),
+        ...(edit ? pick(edit, Object.keys(Account.defaultValues)) as any : Account.defaultValues)
       }}
       validateError={values => ({
         name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
-          : undefined,
+          : undefined
       })}
       onSubmit={input => {
         const variables = {
           bankId: props.bankId,
           accountId: edit ? edit.id : null,
-          input,
-        };
-        props.saveAccount.execute({ variables });
+          input
+        }
+        void props.saveAccount.execute({ variables })
       }}
     >
       {formApi =>
         <>
           <List>
             <TextField
-              field="name"
+              field='name'
               label={messages.name}
               placeholder={messages.namePlaceholder}
               autoFocus
             />
             <TextField
-              field="number"
+              field='number'
               label={messages.number}
               placeholder={messages.numberPlaceholder}
             />
             <SelectField
-              field="type"
+              field='type'
               items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
                 value: acct.toString(),
                 label: intl.formatMessage(Account.messages[acct])
               }))}
               label={messages.type}
               onValueChange={(type: Account.Type) => {
-                formApi.setValue('color', Account.generateColor(type));
+                formApi.setValue('color', Account.generateColor(type))
               }}
             />
             <TextField
-              field="color"
+              field='color'
               label={messages.color}
               placeholder={messages.colorPlaceholder}
               textColor={formApi.values.color}
             />
             {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
               <TextField
-                field="routing"
+                field='routing'
                 label={messages.routing}
                 placeholder={messages.routingPlaceholder}
               />
             }
             {(formApi.values.type === Account.Type.CREDITCARD) &&
               <TextField
-                field="key"
+                field='key'
                 label={messages.key}
                 placeholder={messages.keyPlaceholder}
               />
@@ -109,15 +110,15 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
         </>
       }
     </Form>
-  );
-};
-AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
+  )
+}
+AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router }
 
 export const AccountForm = compose<ComposedProps, Props>(
   Mutations.withSaveAccount('saveAccount'),
-  Queries.withAccount('query', ({ accountId }: Props) => accountId && ({ accountId })),
-)(AccountFormComponent);
-AccountForm.displayName = 'AccountForm';
+  Queries.withAccount('query', ({ accountId }: Props) => accountId && ({ accountId }))
+)(AccountFormComponent)
+AccountForm.displayName = 'AccountForm'
 
 const messages = defineMessages({
   save: {
@@ -195,7 +196,7 @@ const messages = defineMessages({
   },
   routingPlaceholder: {
     id: 'AccountDialog.routingPlaceholder',
-    defaultMessage: '0123456',
+    defaultMessage: '0123456'
   },
   key: {
     id: 'AccountDialog.key',
@@ -204,5 +205,5 @@ const messages = defineMessages({
   keyPlaceholder: {
     id: 'AccountDialog.keyPlaceholder',
     defaultMessage: '(for international accounts)'
-  },
-});
+  }
+})

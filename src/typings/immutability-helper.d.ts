@@ -25,28 +25,28 @@ export module 'immutability-helper' {
   type MapOperators<K, V> = {$add: Array<[K, V]>} | {$remove: K[]}
   type SetOperators<T> = {$add: T[]} | {$remove: T[]}
 
-  declare function update<T>(
+  declare function update<T> (
     data: ReadonlyArray<T>,
-    query: ArrayOperators<T>,
+    query: ArrayOperators<T>
   ): ReadonlyArray<T>
 
-  declare function update<T>(
+  declare function update<T> (
     data: ReadonlySet<T>,
-    query: SetOperators<T>,
+    query: SetOperators<T>
   ): ReadonlySet<T>
 
-  declare function update<K, V>(
+  declare function update<K, V> (
     data: ReadonlyMap<K, V>,
-    query: MapOperators<K, V>,
+    query: MapOperators<K, V>
   ): ReadonlyMap<K, V>
 
-  declare function update<T>(data: T, query: Query<T>): T
+  declare function update<T> (data: T, query: Query<T>): T
 
   declare namespace update {
-    function newContext(): typeof update
-    function extend<T>(
+    function newContext (): typeof update
+    function extend<T> (
       command: Command,
-      handler: (param: CommandArg, old: T) => T,
+      handler: (param: CommandArg, old: T) => T
     ): void
 
     type Command = string

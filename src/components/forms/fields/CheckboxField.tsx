@@ -1,21 +1,21 @@
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Switch } from 'react-native';
-import { ctx } from '../../ctx';
-import { glamorous, ThemeProp } from '../../Theme';
-import { FormField, FormFieldProps, FieldProps } from './FieldProps';
-import { WrappedField } from './WrappedField';
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Switch } from 'react-native'
+import { ctx } from '../../ctx'
+import { glamorous, ThemeProp } from '../../Theme'
+import { FormField, FormFieldProps, FieldProps } from './FieldProps'
+import { WrappedField } from './WrappedField'
 
 const StyledSwitch = glamorous(Switch)({},
   ({ theme }: ThemeProp) => ({
-    marginLeft: 'auto',
+    marginLeft: 'auto'
   })
-);
-StyledSwitch.displayName = 'StyledSwitch';
+)
+StyledSwitch.displayName = 'StyledSwitch'
 
 export namespace CheckboxField {
   export interface Props<T = {}> extends FieldProps<T> {
-    label: FormattedMessage.MessageDescriptor;
+    label: FormattedMessage.MessageDescriptor
   }
 }
 
@@ -27,8 +27,8 @@ const CheckboxFieldComponent: React.SFC<CheckboxField.Props & FormFieldProps> =
         value={fieldApi.getValue()}
       />
     </WrappedField>
-  );
-CheckboxFieldComponent.contextTypes = ctx.intl;
+  )
+CheckboxFieldComponent.contextTypes = ctx.intl
 
-export const CheckboxField = FormField<CheckboxField.Props>(CheckboxFieldComponent);
-CheckboxField.displayName = 'CheckboxField';
+export const CheckboxField = FormField<CheckboxField.Props>(CheckboxFieldComponent)
+CheckboxField.displayName = 'CheckboxField'

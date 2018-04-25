@@ -1,28 +1,28 @@
-import glamorous, { ThemeProvider } from 'glamorous-native';
-import * as React from 'react';
+import glamorous, { ThemeProvider } from 'glamorous-native'
+import * as React from 'react'
 
-export { glamorous };
+export { glamorous }
 
 export interface Theme {
-  controlFontSize: number;
-  controlFontColor: string;
+  controlFontSize: number
+  controlFontColor: string
 
-  labelWidth: number;
-  labelFontSize: number;
-  labelColor: string;
+  labelWidth: number
+  labelFontSize: number
+  labelColor: string
 
-  errorTextColor: string;
+  errorTextColor: string
 
-  boxBorderColor: string;
-  boxBorderWidth: number;
+  boxBorderColor: string
+  boxBorderWidth: number
 
-  boxBorderColorError: string;
+  boxBorderColorError: string
 
-  rowMargin: number;
+  rowMargin: number
 }
 
 export interface ThemeProp {
-  theme: Theme;
+  theme: Theme
 }
 
 const defaultTheme: Theme = {
@@ -40,11 +40,11 @@ const defaultTheme: Theme = {
 
   boxBorderColorError: 'red',
 
-  rowMargin: 10,
-};
+  rowMargin: 10
+}
 
 export const AppThemeProvider: React.SFC = ({ children }) => (
   <ThemeProvider theme={defaultTheme}>
     {children}
   </ThemeProvider>
-);
+)

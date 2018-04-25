@@ -1,28 +1,28 @@
-import * as React from 'react';
-import { Text, Button } from 'react-native';
-import { Switch, Route } from 'react-router';
-import { compose } from 'recompose';
-import { nav, paths } from '../../nav';
-import { Queries, Mutations } from '../../db';
-import { ctx } from '../ctx';
-import { BankDisplay } from '../BankDisplay';
-import { ErrorMessage } from '../ErrorMessage';
-import { AccountsCreatePage } from './AccountsCreatePage';
-import { AccountsUpdatePage } from './AccountsUpdatePage';
-import { AccountPage } from './AccountPage';
+import * as React from 'react'
+import { Text, Button } from 'react-native'
+import { Switch, Route } from 'react-router'
+import { compose } from 'recompose'
+import { nav, paths } from '../../nav'
+import { Queries, Mutations } from '../../db'
+import { ctx } from '../ctx'
+import { BankDisplay } from '../BankDisplay'
+import { ErrorMessage } from '../ErrorMessage'
+import { AccountsCreatePage } from './AccountsCreatePage'
+import { AccountsUpdatePage } from './AccountsUpdatePage'
+import { AccountPage } from './AccountPage'
 
 interface Props {
-  query: Queries.Banks;
-  deleteBank: Mutations.DeleteBank;
+  query: Queries.Banks
+  deleteBank: Mutations.DeleteBank
 }
 
-export const AccountsPageComponent: React.SFC<Props> = (props, {router}: ctx.Router) => {
+export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.Router) => {
   if (props.query.loading) {
-    return null;
+    return null
   }
 
   if (props.query.error) {
-    return <ErrorMessage error={props.query.error} />;
+    return <ErrorMessage error={props.query.error} />
   }
 
   return (
@@ -36,16 +36,16 @@ export const AccountsPageComponent: React.SFC<Props> = (props, {router}: ctx.Rou
           {props.query.data.banks.map(bank =>
             <BankDisplay key={bank.id} bank={bank} deleteBank={props.deleteBank}/>
           )}
-          <Button onPress={() => router.history.push(nav.bankCreate())} title="add bank"/>
+          <Button onPress={() => router.history.push(nav.bankCreate())} title='add bank'/>
         </>
       </Route>
     </Switch>
-  );
-};
-AccountsPageComponent.contextTypes = ctx.router;
+  )
+}
+AccountsPageComponent.contextTypes = ctx.router
 
 export const AccountsPage = compose(
   Queries.withBanks('query'),
-  Mutations.withDeleteBank('deleteBank'),
-)(AccountsPageComponent);
-AccountsPage.displayName = 'AccountsPage';
+  Mutations.withDeleteBank('deleteBank')
+)(AccountsPageComponent)
+AccountsPage.displayName = 'AccountsPage'

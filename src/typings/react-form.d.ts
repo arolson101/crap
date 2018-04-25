@@ -75,7 +75,7 @@ declare module 'react-form' {
   }
 
   export class Form extends React.Component<FormProps> {
-    static childContextTypes;
+    static childContextTypes
   }
 
   export interface ComponentBaseProps {
@@ -98,10 +98,10 @@ declare module 'react-form' {
   export interface FieldComponentProps {
     fieldApi: BoundFormAPI
   }
-  export function FormField(component: React.ComponentType): React.ComponentClass;
+  export function FormField (component: React.ComponentType): React.ComponentClass
 
   export interface TextProps extends ComponentBaseProps {}
   export class Text extends React.Component<TextProps> {}
 
-  export type FormContext = {};
+  export type FormContext = {}
 }

@@ -1,20 +1,20 @@
-import * as React from 'react';
-import { View, Text } from 'react-native';
-import { compose } from 'recompose';
-import { Queries } from '../../db';
-import { ErrorMessage } from '../ErrorMessage';
+import * as React from 'react'
+import { View, Text } from 'react-native'
+import { compose } from 'recompose'
+import { Queries } from '../../db'
+import { ErrorMessage } from '../ErrorMessage'
 
 interface Props {
-  query: Queries.Accounts;
+  query: Queries.Accounts
 }
 
 export const HomePageComponent: React.SFC<Props> = (props) => {
   if (props.query.loading) {
-    return null;
+    return null
   }
 
   if (props.query.error) {
-    return <ErrorMessage error={props.query.error} />;
+    return <ErrorMessage error={props.query.error} />
   }
 
   return (
@@ -37,10 +37,10 @@ export const HomePageComponent: React.SFC<Props> = (props) => {
       )}
       <Text>home page</Text>
     </View>
-  );
-};
+  )
+}
 
 export const HomePage = compose(
-  Queries.withAccounts('query'),
-)(HomePageComponent);
-HomePage.displayName = 'HomePage';
+  Queries.withAccounts('query')
+)(HomePageComponent)
+HomePage.displayName = 'HomePage'

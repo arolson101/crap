@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import * as React from 'react'
+import { View, StyleSheet } from 'react-native'
 
 interface Props {
-  sidebar: React.ReactElement<any>;
-  main: React.ReactElement<any>;
+  sidebar: React.ReactElement<any>
+  main: React.ReactElement<any>
 }
 
 export const AppContainer: React.SFC<Props> = (props) => {
@@ -16,20 +16,20 @@ export const AppContainer: React.SFC<Props> = (props) => {
         {props.main}
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   sidebar: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   main: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'column'
   }
-});
+})

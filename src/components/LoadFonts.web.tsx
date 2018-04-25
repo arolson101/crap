@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { Platform } from 'react-native';
-import { Helmet } from 'react-helmet';
+import * as React from 'react'
+import { Platform } from 'react-native'
+import { Helmet } from 'react-helmet'
 
-export const LoadFonts: React.SFC = ({children}) => (
+export const LoadFonts: React.SFC = ({ children }) => (
   <>
     {Platform.OS === 'web' &&
       <Helmet>
-        <style type="text/css">{`
+        <style type='text/css'>{`
           @font-face {
             src: url(${require('react-native-vector-icons/Fonts/FontAwesome.ttf')});
             font-family: FontAwesome;
@@ -21,4 +21,4 @@ export const LoadFonts: React.SFC = ({children}) => (
     }
     {children}
   </>
-);
+)

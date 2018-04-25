@@ -1,31 +1,31 @@
-import pick from 'lodash-es/pick';
-import * as React from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
-import { Redirect } from 'react-router';
-import { compose } from 'recompose';
-import { nav } from '../../nav';
-import { filist, formatAddress } from '../../fi';
-import { Mutations, Queries, Types, Bank } from '../../db';
-import { ctx } from '../ctx';
-import { ErrorMessage } from '../ErrorMessage';
-import { List } from '../list';
-import { typedFields } from './fields';
+import pick from 'lodash-es/pick'
+import * as React from 'react'
+import { FormattedMessage, defineMessages } from 'react-intl'
+import { Redirect } from 'react-router'
+import { compose } from 'recompose'
+import { nav } from '../../nav'
+import { filist, formatAddress } from '../../fi'
+import { Mutations, Queries, Types, Bank } from '../../db'
+import { ctx } from '../ctx'
+import { ErrorMessage } from '../ErrorMessage'
+import { List } from '../list'
+import { typedFields } from './fields'
 
 interface Props {
-  bankId?: string;
+  bankId?: string
 }
 
 interface ComposedProps extends Props {
-  query: Queries.Bank;
-  saveBank: Mutations.SaveBank;
+  query: Queries.Bank
+  saveBank: Mutations.SaveBank
 }
 
 type BankInput = {
   [P in keyof Types.BankInput]-?: Types.Bank[P]
-};
+}
 
 interface FormValues extends BankInput {
-  fi: number;
+  fi: number
 }
 
 const {
@@ -36,121 +36,121 @@ const {
   SelectField,
   SubmitButton,
   TextField,
-  UrlField,
-} = typedFields<FormValues>();
+  UrlField
+} = typedFields<FormValues>()
 
 export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
   if (props.query.loading) {
-    return null;
+    return null
   }
 
   if (props.bankId && props.query.error) {
-    return <ErrorMessage error={props.query.error} />;
+    return <ErrorMessage error={props.query.error} />
   }
 
   if (props.saveBank.error) {
-    return <ErrorMessage error={props.saveBank.error} />;
+    return <ErrorMessage error={props.saveBank.error} />
   }
 
   if (props.saveBank.called && props.saveBank.data) {
-    return <Redirect to={nav.accounts()} />;
+    return <Redirect to={nav.accounts()} />
   }
 
-  const edit = props.bankId && props.query.data.bank;
-  const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0;
+  const edit = props.bankId && props.query.data.bank
+  const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
   return (
     <Form
       defaultValues={{
         fi: defaultFi,
-        ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) as any : Bank.defaultValues),
+        ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) as any : Bank.defaultValues)
       }}
       validateError={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
-          : undefined,
+          : undefined
       })}
-      onSubmit={({fi, ...input}) => {
+      onSubmit={({ fi, ...input }) => {
         const variables = {
           bankId: props.bankId,
-          input,
-        };
-        props.saveBank.execute({ variables });
+          input
+        }
+        void props.saveBank.execute({ variables })
       }}
     >
       {formApi =>
-        <>
+        <React.Fragment>
           <List>
             <FormattedMessage {...messages.fiHelp} />
             <SelectField
-              field="fi"
+              field='fi'
               items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
               label={messages.fi}
               onValueChange={(value: number) => {
-                const fi = filist[value];
-                formApi.setValue('name', fi.name || '');
-                formApi.setValue('web', fi.profile.siteURL || '');
-                formApi.setValue('favicon', '');
-                formApi.setValue('address', formatAddress(fi) || '');
-                formApi.setValue('fid', fi.fid || '');
-                formApi.setValue('org', fi.org || '');
-                formApi.setValue('ofx', fi.ofx || '');
+                const fi = filist[value]
+                formApi.setValue('name', fi.name || '')
+                formApi.setValue('web', fi.profile.siteURL || '')
+                formApi.setValue('favicon', '')
+                formApi.setValue('address', formatAddress(fi) || '')
+                formApi.setValue('fid', fi.fid || '')
+                formApi.setValue('org', fi.org || '')
+                formApi.setValue('ofx', fi.ofx || '')
               }}
             />
           </List>
           <List>
             <TextField
-              field="name"
+              field='name'
               label={messages.name}
               placeholder={messages.namePlaceholder}
             />
             <MultilineTextField
-              field="address"
+              field='address'
               label={messages.address}
               rows={4}
             />
             <UrlField
-              field="web"
+              field='web'
               // favicoName='favicon'
               label={messages.web}
             />
             <MultilineTextField
-              field="notes"
+              field='notes'
               label={messages.notes}
               rows={4}
             />
           </List>
           <List>
             <CheckboxField
-              field="online"
+              field='online'
               label={messages.online}
             />
           </List>
-          <CollapseField field="online">
+          <CollapseField field='online'>
             <List>
               <TextField
-                field="username"
+                field='username'
                 label={messages.username}
                 placeholder={messages.usernamePlaceholder}
               />
               <TextField
                 secure
-                field="password"
+                field='password'
                 label={messages.password}
                 placeholder={messages.passwordPlaceholder}
               />
             </List>
             <List>
               <TextField
-                field="fid"
+                field='fid'
                 label={messages.fid}
                 placeholder={messages.fidPlaceholder}
               />
               <TextField
-                field="org"
+                field='org'
                 label={messages.org}
                 placeholder={messages.orgPlaceholder}
               />
               <TextField
-                field="ofx"
+                field='ofx'
                 label={messages.ofx}
                 placeholder={messages.ofxPlaceholder}
               />
@@ -161,18 +161,18 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
             onPress={formApi.submitForm}
             title={edit ? messages.save : messages.create}
           />
-        </>
+        </React.Fragment>
       }
     </Form>
-  );
-};
-BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router };
+  )
+}
+BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router }
 
 export const BankForm = compose<ComposedProps, Props>(
   Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
-  Mutations.withSaveBank('saveBank'),
-)(BankFormComponent);
-BankForm.displayName = 'BankForm';
+  Mutations.withSaveBank('saveBank')
+)(BankFormComponent)
+BankForm.displayName = 'BankForm'
 
 const messages = defineMessages({
   save: {
@@ -262,5 +262,5 @@ const messages = defineMessages({
   passwordPlaceholder: {
     id: 'BankForm.passwordPlaceholder',
     defaultMessage: 'Required'
-  },
-});
+  }
+})

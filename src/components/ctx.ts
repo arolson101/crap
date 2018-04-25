@@ -1,21 +1,21 @@
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
-import { Form as ReactForm, FormContext } from 'react-form';
-import { InjectedIntlProps } from 'react-intl';
-import { RouterChildContext } from 'react-router';
+import * as PropTypes from 'prop-types'
+import * as React from 'react'
+import { Form as ReactForm, FormContext } from 'react-form'
+import { InjectedIntlProps } from 'react-intl'
+import { RouterChildContext } from 'react-router'
 
 export namespace ctx {
   export const router = {
-    router: PropTypes.object,
-  };
+    router: PropTypes.object
+  }
   export const intl = {
-    intl: PropTypes.object,
-  };
-  export const form = ReactForm.childContextTypes;
+    intl: PropTypes.object
+  }
+  export const form = ReactForm.childContextTypes
 
-  export type Intl = InjectedIntlProps;
-  export type Router<T = any> = RouterChildContext<T>;
-  export type Form = FormContext;
+  export type Intl = InjectedIntlProps
+  export type Router<T = any> = RouterChildContext<T>
+  export type Form = FormContext
 }
 
-export const Db = React.createContext<{isOpen: boolean}>();
+export const Db = React.createContext<{isOpen: boolean}>()

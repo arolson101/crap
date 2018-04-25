@@ -1,22 +1,22 @@
-import { makeExecutableSchema } from 'graphql-tools';
-import resolvers from './resolvers';
-import { AppDatabase } from '../AppDatabase';
-import typeDefs from './schema.graphql';
+import { makeExecutableSchema } from 'graphql-tools'
+import resolvers from './resolvers'
+import { AppDatabase } from '../AppDatabase'
+import typeDefs from './schema.graphql'
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers
-});
+})
 
-export default schema;
+export default schema
 
 export interface DbDependencies {
-  getTime: () => number;
-  genId: () => string;
-  openDb: typeof AppDatabase.open;
+  getTime: () => number
+  genId: () => string
+  openDb: typeof AppDatabase.open
 }
 
 export interface ResolverContext extends DbDependencies {
-  db: AppDatabase | undefined;
-  setDb: (db: AppDatabase | undefined) => any;
+  db: AppDatabase | undefined
+  setDb: (db: AppDatabase | undefined) => any
 }

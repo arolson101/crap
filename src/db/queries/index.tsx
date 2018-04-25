@@ -1,25 +1,25 @@
-import { DocumentNode } from 'graphql';
-import gql from 'graphql-tag';
-import * as React from 'react';
-import { Query } from 'react-apollo';
+import { DocumentNode } from 'graphql'
+import gql from 'graphql-tag'
+import * as React from 'react'
+import { Query } from 'react-apollo'
 
 interface QueryType<TData> {
-  data: TData;
-  loading: boolean;
-  error?: Error;
+  data: TData
+  loading: boolean
+  error?: Error
 }
 
 const makeQuery = (QUERY: DocumentNode) =>
   (name: string, variablesFcn?: (props: any) => Object | undefined) =>
     (Component: React.ComponentType<any>) =>
       (props: React.Props<{}>) => {
-        const variables = variablesFcn && variablesFcn(props);
-        const skip = variablesFcn && !variables;
+        const variables = variablesFcn && variablesFcn(props)
+        const skip = variablesFcn && !variables
         if (skip) {
-          const componentProps = { ...props, [name]: { loading: false } };
+          const componentProps = { ...props, [name]: { loading: false } }
           return (
             <Component {...componentProps} />
-          );
+          )
         } else {
           return (
             <Query
@@ -28,21 +28,21 @@ const makeQuery = (QUERY: DocumentNode) =>
               // fetchPolicy="network-only"
             >
               {({ data, ...rest }) => {
-                const componentProps = { ...props, [name]: { data, ...rest } };
-                return <Component {...componentProps} />;
+                const componentProps = { ...props, [name]: { data, ...rest } }
+                return <Component {...componentProps} />
               }}
             </Query>
-          );
+          )
         }
-      };
+      }
 
 import {
   AccountQuery,
   AccountsQuery,
   BankQuery,
   BanksQuery,
-  DbsQuery,
-} from './query-types';
+  DbsQuery
+} from './query-types'
 
 export namespace Queries {
   // Account
@@ -59,9 +59,9 @@ export namespace Queries {
         key
       }
     }
-  `;
-  export type Account = QueryType<AccountQuery>;
-  export const withAccount = makeQuery(ACCOUNT);
+  `
+  export type Account = QueryType<AccountQuery>
+  export const withAccount = makeQuery(ACCOUNT)
 
   // Accounts
   const ACCOUNTS = gql`
@@ -76,9 +76,9 @@ export namespace Queries {
         }
       }
     }
-  `;
-  export type Accounts = QueryType<AccountsQuery>;
-  export const withAccounts = makeQuery(ACCOUNTS);
+  `
+  export type Accounts = QueryType<AccountsQuery>
+  export const withAccounts = makeQuery(ACCOUNTS)
 
   // Bank($bankId)
   export const BANK = gql`
@@ -103,9 +103,9 @@ export namespace Queries {
         }
       }
     }
-  `;
-  export type Bank = QueryType<BankQuery>;
-  export const withBank = makeQuery(BANK);
+  `
+  export type Bank = QueryType<BankQuery>
+  export const withBank = makeQuery(BANK)
 
   // Banks
   export const BANKS = gql`
@@ -119,16 +119,16 @@ export namespace Queries {
         }
       }
     }
-  `;
-  export type Banks = QueryType<BanksQuery>;
-  export const withBanks = makeQuery(BANKS);
+  `
+  export type Banks = QueryType<BanksQuery>
+  export const withBanks = makeQuery(BANKS)
 
   // Dbs
   export const DBS = gql`
     query Dbs {
       dbs
     }
-  `;
-  export type Dbs = QueryType<DbsQuery>;
-  export const withDbs = makeQuery(DBS);
+  `
+  export type Dbs = QueryType<DbsQuery>
+  export const withDbs = makeQuery(DBS)
 }

@@ -1,10 +1,10 @@
-import { FormField as RFFormField, FormFieldProps, FieldProps as RFFieldProps } from 'react-form';
+import { FormField as RFFormField, FormFieldProps, FieldProps as RFFieldProps } from 'react-form'
 
-export { FormFieldProps };
+export { FormFieldProps }
 
 export interface FieldProps<T> extends RFFieldProps {
-  field: keyof T;
+  field: keyof T
 }
 
-type FormFieldT = <T>(component: React.ComponentType<any>) => React.ComponentClass<T>;
-export const FormField = RFFormField as FormFieldT;
+type FormFieldT = <T>(component: React.ComponentType<any>) => React.ComponentClass<T>
+export const FormField = RFFormField as FormFieldT

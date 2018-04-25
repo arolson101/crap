@@ -1,92 +1,91 @@
-import * as React from 'react';
-import { defineMessages } from 'react-intl';
-import { Text, View } from 'react-native';
-import { compose } from 'recompose';
-import { Queries, Mutations } from '../../db';
-import { ctx } from '../ctx';
-import { typedFields } from './fields';
+import * as React from 'react'
+import { defineMessages } from 'react-intl'
+import { Text, View } from 'react-native'
+import { compose } from 'recompose'
+import { Queries, Mutations } from '../../db'
+import { ctx } from '../ctx'
+import { typedFields } from './fields'
 
 interface Props {
-  query: Queries.Dbs;
-  openDb: Mutations.OpenDb;
+  query: Queries.Dbs
+  openDb: Mutations.OpenDb
 }
 
 interface FormValues {
-  password: string;
-  passwordConfirm: string;
+  password: string
+  passwordConfirm: string
 }
 
 const {
   Form,
   ErrorMessage,
-  SelectField,
   SubmitButton,
-  TextField,
-} = typedFields<FormValues>();
+  TextField
+} = typedFields<FormValues>()
 
 export class LoginFormComponent extends React.PureComponent<Props> {
-  render() {
+  render () {
     if (this.props.query.loading) {
-      return null;
+      return null
     }
 
     if (this.props.query.error) {
-      return <ErrorMessage error={this.props.query.error} />;
+      return <ErrorMessage error={this.props.query.error} />
     }
 
-    const exists = this.props.query.data.dbs.length > 0;
+    const exists = this.props.query.data.dbs.length > 0
     return (
-      <View style={{flexDirection: 'column', alignItems: 'center', margin: 100}}>
-        <Text style={{fontSize: 80, margin: 20}}>App</Text>
-        <View style={{maxWidth: 400}}>
+      <View style={{ flexDirection: 'column', alignItems: 'center', margin: 100 }}>
+        <Text style={{ fontSize: 80, margin: 20 }}>App</Text>
+        <View style={{ maxWidth: 400 }}>
           {exists
             ? <FormOpen {...this.props}/>
             : <FormCreate {...this.props}/>
           }
         </View>
       </View>
-    );
+    )
   }
 }
 
 export const LoginForm = compose(
   Queries.withDbs('query'),
-  Mutations.withOpenDb('openDb'),
-)(LoginFormComponent);
-LoginForm.displayName = 'LoginForm';
+  Mutations.withOpenDb('openDb')
+)(LoginFormComponent)
+LoginForm.displayName = 'LoginForm'
 
 const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
-  const { intl: { formatMessage } } = context;
+  const { intl: { formatMessage } } = context
 
   return (
     <Form
       defaultValues={{
         password: '',
-        passwordConfirm: '',
+        passwordConfirm: ''
       }}
       validateError={values => ({
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined,
         passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
-          : undefined,
+          : undefined
       })}
       onSubmit={variables => {
-        return props.openDb.execute({ variables });
+        return props.openDb.execute({ variables })
       }}
     >
       {formApi =>
         <View>
-          <Text style={{marginBottom: 20, textAlign: 'center'}}>Welcome!  Create a password to secure your data.</Text>
+          <Text style={{ marginBottom: 20, textAlign: 'center' }}>Welcome!  Create a password to secure your data.</Text>
           <TextField
             autoFocus
             secure
-            field="password"
+            field='password'
             label={messages.passwordLabel}
             placeholder={messages.passwordPlaceholder}
           />
           <TextField
             secure
-            field="passwordConfirm"
+            field='passwordConfirm'
             label={messages.passwordConfirmLabel}
             placeholder={messages.passwordConfirmPlaceholder}
           />
@@ -99,38 +98,37 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
         </View>
       }
     </Form>
-  );
-};
-FormCreate.contextTypes = ctx.intl;
+  )
+}
+FormCreate.contextTypes = ctx.intl
 
-const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
-  const { intl: { formatMessage } } = context;
-  const { router: { history: { push } } } = context;
+const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
+  const { intl: { formatMessage } } = context
 
   return (
     <Form
       defaultValues={{
-        password: '',
+        password: ''
       }}
       validateError={values => ({
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined,
+          : undefined
       })}
       onSubmit={async variables => {
         try {
-          await props.openDb.execute({ variables });
+          await props.openDb.execute({ variables })
         } catch (err) {
-          console.warn(err);
+          console.warn(err)
         }
       }}
     >
       {formApi =>
         <View>
-          <Text style={{marginBottom: 20, textAlign: 'center'}}>Welcome!  Enter your password to access your data.</Text>
+          <Text style={{ marginBottom: 20, textAlign: 'center' }}>Welcome!  Enter your password to access your data.</Text>
           <TextField
             secure
             autoFocus
-            field="password"
+            field='password'
             label={messages.passwordLabel}
             placeholder={messages.passwordPlaceholder}
             // returnKeyType="default"
@@ -145,18 +143,18 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Router & ctx.Intl) => {
         </View>
       }
     </Form>
-  );
-};
-FormOpen.contextTypes = { ...ctx.intl, ...ctx.router };
+  )
+}
+FormOpen.contextTypes = { ...ctx.intl }
 
 const messages = defineMessages({
   create: {
     id: 'LoginForm.create',
-    defaultMessage: 'Create',
+    defaultMessage: 'Create'
   },
   open: {
     id: 'LoginForm.open',
-    defaultMessage: 'Open',
+    defaultMessage: 'Open'
   },
   valueEmpty: {
     id: 'LoginForm.valueEmpty',
@@ -198,4 +196,4 @@ const messages = defineMessages({
     id: 'LoginForm.advanced',
     defaultMessage: 'Advanced'
   }
-});
+})
