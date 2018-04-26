@@ -41,6 +41,7 @@ export interface Mutation {
   deleteBank: boolean;
   saveAccount?: Account | null;
   deleteAccount: boolean;
+  downloadTransactions: boolean;
 }
 
 export interface Split {
@@ -140,6 +141,9 @@ export interface SaveAccountMutationArgs {
 export interface DeleteAccountMutationArgs {
   bankId: string;
   accountId: string;
+}
+export interface DownloadTransactionsMutationArgs {
+  bankId?: string | null;
 }
 
 export enum AccountType {

@@ -20,6 +20,8 @@ type Mutation {
 
   saveAccount(input: AccountInput!, accountId: ID, bankId: ID): Account
   deleteAccount(bankId: ID!, accountId: ID!): Boolean!
+
+  downloadTransactions(bankId: ID): Boolean!
 }
 
 ###############################################################################

@@ -25,6 +25,7 @@ interface Resolvers extends IResolvers<{}, ResolverContext> {
     deleteBank: Resolver<ST.Mutation['deleteBank'], ST.DeleteBankMutationArgs>;
     saveAccount: Resolver<ST.Mutation['saveAccount'], ST.SaveAccountMutationArgs>;
     deleteAccount: Resolver<ST.Mutation['deleteAccount'], ST.DeleteAccountMutationArgs>;
+    downloadTransactions: Resolver<ST.Mutation['downloadTransactions'], ST.DownloadTransactionsMutationArgs>;
   }
 }
 
@@ -95,7 +96,7 @@ const resolvers: Resolvers = {
   },
 
   Mutation: {
-    openDb: async (source, args, context): Promise<ST.Mutation['openDb']> => {
+    openDb: async (source, args, context) => {
       const db = await context.openDb()
       context.setDb(db)
       return true
@@ -182,8 +183,11 @@ const resolvers: Resolvers = {
       ]
       await db.change(changes)
       return true
-    }
+    },
 
+    downloadTransactions: async (source, args, context) => {
+      return true
+    }
   }
 }
 
