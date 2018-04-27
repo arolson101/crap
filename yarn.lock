@@ -907,6 +907,10 @@
     "@types/react-native" "*"
     "@types/react-native-vector-icons" "*"
 
+"@types/faker@^4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@types/faker/-/faker-4.1.2.tgz#f8ab50c9f9af68c160dd71b63f83e24b712d0df5"
+
 "@types/fbemitter@*":
   version "2.0.32"
   resolved "https://registry.yarnpkg.com/@types/fbemitter/-/fbemitter-2.0.32.tgz#8ed204da0f54e9c8eaec31b1eec91e25132d082c"
@@ -5884,6 +5888,10 @@ fake-indexeddb@^2.0.4:
     core-js "^2.4.1"
     realistic-structured-clone "^2.0.1"
     setimmediate "^1.0.5"
+
+faker@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
 
 fancy-log@^1.1.0:
   version "1.3.2"
