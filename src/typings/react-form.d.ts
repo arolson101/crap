@@ -26,7 +26,6 @@ declare module 'react-form' {
     defaultValues?: Partial<V>
     loadState?: (props: P, instance: FormAPI) => FormState | undefined
     preValidate?: (values: V, state: FormState, props: P, instance: FormAPI) => V
-    validateError?: (values: V, state: FormState, props: P, instance: FormAPI) => FormErrors
     validate?: (values: V, state: FormState, props: P, instance: FormAPI) => FormErrors
     onValidationFail?: (values: V, state: FormState, props: P, instance: FormAPI) => void
     onChange?: (state: FormState, props: P, initial: boolean, instance: FormAPI) => void

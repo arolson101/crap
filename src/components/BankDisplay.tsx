@@ -14,6 +14,7 @@ interface Props {
     }>;
   }
   deleteBank: Mutations.DeleteBank
+  deleteAccount: Mutations.DeleteAccount
 }
 
 export const BankDisplay: React.SFC<Props> = (props, { router }: ctx.Router) => {
@@ -31,10 +32,9 @@ export const BankDisplay: React.SFC<Props> = (props, { router }: ctx.Router) => 
             title={account.name}
             onPress={() => router.history.push(nav.accountView(props.bank.id, account.id))}
           />
-
           <Button
             title='delete'
-            onPress={() => router.history.push(nav.accountView(props.bank.id, account.id))}
+            onPress={() => props.deleteAccount.execute({variables: {accountId: account.id}})}
           />
         </View>
       )}

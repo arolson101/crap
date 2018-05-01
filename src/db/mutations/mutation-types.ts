@@ -42,6 +42,14 @@ export interface DeleteBankMutation {
   deleteBank: boolean,
 };
 
+export interface DeleteAccountMutationVariables {
+  accountId: string,
+};
+
+export interface DeleteAccountMutation {
+  deleteAccount: boolean,
+};
+
 export interface OpenDbMutationVariables {
   password: string,
 };

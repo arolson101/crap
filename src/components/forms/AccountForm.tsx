@@ -43,7 +43,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
       defaultValues={{
         ...(edit ? pick(edit, Object.keys(Account.defaultValues)) as any : Account.defaultValues)
       }}
-      validateError={values => ({
+      validate={values => ({
         name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined
       })}

@@ -33,6 +33,7 @@ const makeMutation = (QUERY: DocumentNode, refetchQueries: DocumentNode[] = []) 
 
 import {
   DeleteBankMutation, DeleteBankMutationVariables,
+  DeleteAccountMutation, DeleteAccountMutationVariables,
   OpenDbMutation, OpenDbMutationVariables,
   SaveAccountMutation, SaveAccountMutationVariables,
   SaveBankMutation, SaveBankMutationVariables
@@ -47,6 +48,15 @@ export namespace Mutations {
   `
   export const withDeleteBank = makeMutation(DELETEBANK, [Queries.BANKS])
   export type DeleteBank = MutationType<DeleteBankMutation, DeleteBankMutationVariables>
+
+  // DeleteBank
+  export const DELETEACCOUNT = gql`
+    mutation DeleteAccount($accountId: ID!) {
+      deleteAccount(accountId: $accountId)
+    }
+  `
+  export const withDeleteAccount = makeMutation(DELETEACCOUNT, [Queries.BANKS])
+  export type DeleteAccount = MutationType<DeleteAccountMutation, DeleteAccountMutationVariables>
 
   // OpenDb
   export const OPENDB = gql`

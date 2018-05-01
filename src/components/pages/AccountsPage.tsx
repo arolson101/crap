@@ -14,6 +14,7 @@ import { AccountPage } from './AccountPage'
 interface Props {
   query: Queries.Banks
   deleteBank: Mutations.DeleteBank
+  deleteAccount: Mutations.DeleteAccount
 }
 
 export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.Router) => {
@@ -34,7 +35,7 @@ export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.R
         <>
           <Text>Accounts page</Text>
           {props.query.data.banks.map(bank =>
-            <BankDisplay key={bank.id} bank={bank} deleteBank={props.deleteBank}/>
+            <BankDisplay key={bank.id} bank={bank} deleteBank={props.deleteBank} deleteAccount={props.deleteAccount}/>
           )}
           <Button onPress={() => router.history.push(nav.bankCreate())} title='add bank'/>
         </>
@@ -46,6 +47,7 @@ AccountsPageComponent.contextTypes = ctx.router
 
 export const AccountsPage = compose(
   Queries.withBanks('query'),
-  Mutations.withDeleteBank('deleteBank')
+  Mutations.withDeleteBank('deleteBank'),
+  Mutations.withDeleteAccount('deleteAccount'),
 )(AccountsPageComponent)
 AccountsPage.displayName = 'AccountsPage'

@@ -63,7 +63,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
         fi: defaultFi,
         ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) as any : Bank.defaultValues)
       }}
-      validateError={values => ({
+      validate={values => ({
         name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
           : undefined
       })}

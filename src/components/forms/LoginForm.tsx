@@ -63,7 +63,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
         password: '',
         passwordConfirm: ''
       }}
-      validateError={values => ({
+      validate={values => ({
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined,
         passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
@@ -110,7 +110,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
       defaultValues={{
         password: ''
       }}
-      validateError={values => ({
+      validate={values => ({
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined
       })}

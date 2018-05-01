@@ -46,24 +46,17 @@ export class UrlField extends React.Component<UrlField.Props> {
         {fieldApi => {
           const error = fieldApi.touched && fieldApi.error
           return (
-            <Field field={field}>
-              {fieldApi => {
-                const error = fieldApi.touched && fieldApi.error
-                return (
-                  <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
-                    <StyledTextInput
-                      error={error}
-                      onChangeText={fieldApi.setValue}
-                      value={fieldApi.value}
-                      placeholder={placeholder && intl.formatMessage(placeholder)}
-                      onSubmitEditing={onSubmitEditing}
-                      returnKeyType={returnKeyType}
-                      innerRef={(current) => this.textInput = { current }}
-                    />
-                  </WrappedField>
-                )
-              }}
-            </Field>
+            <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
+              <StyledTextInput
+                error={error}
+                onChangeText={fieldApi.setValue}
+                value={fieldApi.value}
+                placeholder={placeholder && intl.formatMessage(placeholder)}
+                onSubmitEditing={onSubmitEditing}
+                returnKeyType={returnKeyType}
+                innerRef={(current) => this.textInput = { current }}
+              />
+            </WrappedField>
           )
         }}
       </Field>
