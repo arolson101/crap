@@ -2,7 +2,6 @@ import * as RF from 'react-form'
 import { CheckboxField } from './CheckboxField'
 import { CollapseField } from './CollapseField'
 import { ErrorMessage } from '../../ErrorMessage'
-import { MultilineTextField } from './MultilineTextField'
 import { SelectField } from './SelectField'
 import { SubmitButton } from './SubmitButton'
 import { TextField } from './TextField'
@@ -16,10 +15,9 @@ export const typedFields = <V extends {}>() => {
     CheckboxField: CheckboxField as React.StatelessComponent<CheckboxField.Props<V>>,
     CollapseField: CollapseField as React.StatelessComponent<CollapseField.Props<V>>,
     ErrorMessage,
-    TextField: TextField as React.StatelessComponent<TextField.Props<V>>,
+    TextField: TextField as React.ComponentClass<TextField.Props<V>>,
     SelectField: SelectField as React.StatelessComponent<SelectField.Props<V>>,
-    MultilineTextField: MultilineTextField as React.StatelessComponent<MultilineTextField.Props<V>>,
-    UrlField: UrlField as React.StatelessComponent<UrlField.Props<V>>,
+    UrlField: UrlField as React.ComponentClass<UrlField.Props<V>>,
     SubmitButton
     // DateField: DateField as React.ComponentClass<DateFieldProps<V>>,
     // AccountField: AccountField as React.ComponentClass<AccountFieldProps<V>>,

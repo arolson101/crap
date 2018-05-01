@@ -32,17 +32,18 @@ ErrorMessage.displayName = 'ErrorMessage'
 export namespace WrappedField {
   export interface Props {
     label?: FormattedMessage.MessageDescriptor
+    onLabelPress?: () => any;
     fieldApi: FieldAPI<any>
   }
 }
 
 export const WrappedField: React.ComponentType<WrappedField.Props> =
-  ({ fieldApi, label, children }, { intl }: ctx.Intl) => {
+  ({ fieldApi, label, onLabelPress, children }, { intl }: ctx.Intl) => {
     const error = fieldApi.touched && fieldApi.error
     return (
       <Row>
         {label &&
-          <LabelColumn>
+          <LabelColumn onPress={onLabelPress}>
             {intl.formatMessage(label)}
           </LabelColumn>
         }

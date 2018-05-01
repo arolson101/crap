@@ -32,7 +32,6 @@ const {
   Form,
   CheckboxField,
   CollapseField,
-  MultilineTextField,
   SelectField,
   SubmitButton,
   TextField,
@@ -102,7 +101,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
               label={messages.name}
               placeholder={messages.namePlaceholder}
             />
-            <MultilineTextField
+            <TextField
               field='address'
               label={messages.address}
               rows={4}
@@ -112,7 +111,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
               // favicoName='favicon'
               label={messages.web}
             />
-            <MultilineTextField
+            <TextField
               field='notes'
               label={messages.notes}
               rows={4}
