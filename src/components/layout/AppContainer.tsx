@@ -1,5 +1,9 @@
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
+import SplitPane from 'react-split-pane'
+import './AppContainer.css'
+
+// https://github.com/tomkp/react-split-pane/issues/252
+require('react-split-pane').default = require('react-split-pane')
 
 interface Props {
   sidebar: React.ReactElement<any>
@@ -8,28 +12,14 @@ interface Props {
 
 export const AppContainer: React.SFC<Props> = (props) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.sidebar}>
-        {props.sidebar}
-      </View>
-      <View style={styles.main}>
-        {props.main}
-      </View>
-    </View>
+    <SplitPane
+      split='vertical'
+      minSize={50}
+      maxSize={300}
+      defaultSize={150}
+    >
+      {props.sidebar}
+      {props.main}
+    </SplitPane>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  sidebar: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  main: {
-    flex: 1,
-    flexDirection: 'column'
-  }
-})

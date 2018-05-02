@@ -4,12 +4,23 @@ import { ApolloLink } from 'apollo-link'
 import * as React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import Observable from 'zen-observable-ts'
-import schema, { ResolverContext, DbDependencies } from '../db/schema'
+import schema from '../db/schema'
 import { AppDatabase } from './AppDatabase'
 import { runQuery } from 'apollo-server-core'
 import { Db } from '../components/ctx'
 
 export { GraphQLClient }
+
+export interface DbDependencies {
+  getTime: () => number
+  genId: () => string
+  openDb: typeof AppDatabase.open
+}
+
+export interface ResolverContext extends DbDependencies {
+  db: AppDatabase | undefined
+  setDb: (db: AppDatabase | undefined) => any
+}
 
 interface Props {
   dependencies: DbDependencies

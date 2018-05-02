@@ -1,13 +1,15 @@
-require('react-hot-loader/patch')
 import * as React from 'react'
-import { AppContainer } from 'react-hot-loader'
+import { setConfig } from 'react-hot-loader'
 import { IntlProvider } from 'react-intl'
 import { Platform, AppRegistry } from 'react-native'
 import * as shortid from 'shortid'
-import { App } from './components/App'
-import { LoadFonts } from './components/LoadFonts'
-import { Router } from './Router'
-import { AppDatabase, AppDbProvider, DbDependencies } from './db'
+import App from './components/App'
+import { AppDatabase } from './db/AppDatabase'
+import { AppDbProvider, DbDependencies } from './db/AppDbProvider'
+
+if (module.hot && process.env.NODE_ENV !== 'production') {
+  setConfig({ logLevel: 'debug' })
+}
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_')
 
@@ -18,17 +20,11 @@ const dependencies: DbDependencies = {
 }
 
 const Root = () => (
-  <LoadFonts>
-    <AppContainer>
-      <IntlProvider locale='en'>
-        <AppDbProvider dependencies={dependencies}>
-          <Router>
-            <App />
-          </Router>
-        </AppDbProvider>
-      </IntlProvider>
-    </AppContainer>
-  </LoadFonts>
+  <IntlProvider locale='en'>
+    <AppDbProvider dependencies={dependencies}>
+      <App />
+    </AppDbProvider>
+  </IntlProvider>
 )
 
 export default Root

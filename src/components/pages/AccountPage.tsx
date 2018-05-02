@@ -29,7 +29,7 @@ export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Route
 
   return (
     <View>
-      <Text>Account: {account.name}</Text>
+      <Text>Account2: {account.name}</Text>
       <Text>bank: {account.name}</Text>
       <Button title='edit' onPress={() => history.push(nav.accountUpdate(bankId, accountId))} />
     </View>

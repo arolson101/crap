@@ -9,14 +9,3 @@ const schema = makeExecutableSchema({
 })
 
 export default schema
-
-export interface DbDependencies {
-  getTime: () => number
-  genId: () => string
-  openDb: typeof AppDatabase.open
-}
-
-export interface ResolverContext extends DbDependencies {
-  db: AppDatabase | undefined
-  setDb: (db: AppDatabase | undefined) => any
-}

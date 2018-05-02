@@ -1,9 +1,10 @@
-var path = require("path");
+const path = require("path");
 
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireGqlTag = require('react-app-rewire-graphql-tag');
 const rewireTypescript = require('react-app-rewire-typescript');
-var getTransformer = require('ts-transform-graphql-tag').getTransformer;
+const getTransformer = require('ts-transform-graphql-tag').getTransformer;
+const rewireReactHotLoader = require('react-app-rewire-hot-loader');
 
 function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
@@ -25,12 +26,21 @@ const babelModules = [
 ]
 
 module.exports = function override(config, env) {
+
+  config.resolve.extensions = [
+    '.web.ts',
+    '.web.tsx',
+    ...config.resolve.extensions,
+  ]
+
+  config = injectBabelPlugin("react-hot-loader/babel", config)
   config = rewireTypescript(config, env);
   config = rewireGqlTag(config, env);
   config = injectBabelPlugin("transform-class-properties", config)
   config = injectBabelPlugin("dev-expression", config)
   config = injectBabelPlugin("transform-object-rest-spread", config)
   config = injectBabelPlugin(["transform-runtime", { "polyfill": false, "regenerator": true }], config)
+  config = rewireReactHotLoader(config, env);
 
   config.resolve.alias = {
     'react-native/Libraries/Text/TextStylePropTypes': 'react-native-web/dist/exports/Text/TextStylePropTypes.js',
@@ -71,12 +81,6 @@ module.exports = function override(config, env) {
   }
 
   config.module.rules.forEach(ruleSearcher);
-
-  config.resolve.extensions = [
-    '.web.ts',
-    '.web.tsx',
-    ...config.resolve.extensions,
-  ]
 
   // console.log(JSON.stringify(config, null, '  '));
 

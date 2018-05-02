@@ -5,7 +5,7 @@ import { iupdate } from '../../iupdate'
 import { AppDatabase } from '../AppDatabase'
 import { createRecord } from '../Record'
 import { Account, Bank } from '../records'
-import { ResolverContext } from './'
+import { ResolverContext } from '../AppDbProvider'
 
 // see GraphQLTypeResolver
 type Resolver<TRet, TArgs = {}> =
