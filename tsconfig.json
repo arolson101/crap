@@ -16,14 +16,11 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "noUnusedLocals": false,
-    "paths": {
-      "*": ["*", "*.web", "*.native"]
-    }
+    "noUnusedLocals": false
   },
   "exclude": [
     "node_modules",

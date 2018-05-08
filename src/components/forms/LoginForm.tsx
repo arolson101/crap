@@ -5,6 +5,10 @@ import { compose } from 'recompose'
 import { Queries, Mutations } from '../../db'
 import { ctx } from '../ctx'
 import { typedFields } from './fields'
+import { Classes, Intent, Spinner } from "@blueprintjs/core"
+import '@blueprintjs/core/lib/css/blueprint.css'
+import '@blueprintjs/icons/lib/css/blueprint-icons.css'
+import 'normalize.css/normalize.css'
 
 interface Props {
   query: Queries.Dbs
@@ -35,6 +39,7 @@ export class LoginFormComponent extends React.PureComponent<Props> {
 
     const exists = this.props.query.data.dbs.length > 0
     return (
+      // <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />
       <View style={{ flexDirection: 'column', alignItems: 'center', margin: 100 }}>
         <Text style={{ fontSize: 80, margin: 20 }}>App</Text>
         <View style={{ maxWidth: 400 }}>

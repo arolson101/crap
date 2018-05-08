@@ -51,6 +51,7 @@
     "lint": "tslint --fix \"src/**/*{.ts,.tsx}\" --project tsconfig.json"
   },
   "devDependencies": {
+    "@blueprintjs/core": "^2.3.1",
     "@expo/vector-icons": "^6.3.1",
     "@storybook/addon-actions": "^3.4.0",
     "@storybook/addon-knobs": "^3.4.0",
@@ -138,6 +139,7 @@
     "react-app-rewire-typescript": "^2.0.2",
     "react-app-rewired": "^1.5.0",
     "react-dom": "^16.3.1",
+    "react-flexbox-grid": "^2.1.0",
     "react-form": "^3.5.3",
     "react-helmet": "^5.2.0",
     "react-hot-loader": "^4.1.2",
