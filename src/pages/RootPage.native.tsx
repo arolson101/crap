@@ -1,19 +1,15 @@
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { MainView, Sidebar } from '../components'
 
-interface Props {
-  sidebar: React.ReactElement<any>
-  main: React.ReactElement<any>
-}
-
-export const AppContainer: React.SFC<Props> = (props) => {
+export const RootPage: React.SFC = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.sidebar}>
-        {props.sidebar}
+        <Sidebar />
       </View>
       <View style={styles.main}>
-        {props.main}
+        <MainView />
       </View>
     </View>
   )
