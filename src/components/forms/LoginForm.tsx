@@ -3,12 +3,13 @@ import { defineMessages } from 'react-intl'
 import { Text, View } from 'react-native'
 import { compose } from 'recompose'
 import { Queries, Mutations } from '../../db'
-import { ctx } from '../ctx'
+import { ctx } from '../../App/ctx'
 import { typedFields } from './fields'
 import { Classes, Intent, Spinner } from "@blueprintjs/core"
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import 'normalize.css/normalize.css'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 
 interface Props {
   query: Queries.Dbs

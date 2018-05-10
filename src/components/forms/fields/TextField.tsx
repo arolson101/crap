@@ -2,8 +2,7 @@ import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { ReturnKeyType, TextInput } from 'react-native'
-import { ctx } from '../../ctx'
-import { glamorous, ThemeProp } from '../../Theme'
+import { ThemeProp, ctx, glamorous } from '../../../App'
 import { WrappedField } from './WrappedField'
 
 const StyledTextInput = glamorous.textInput<ThemeProp & { error: any, textColor?: string }>({},
@@ -33,15 +32,15 @@ export namespace TextField {
 export class TextField extends React.Component<TextField.Props> {
   static contextTypes = ctx.intl
 
-  private textInput = React.createRef<TextInput>();
+  private textInput = React.createRef<TextInput>()
 
   focusTextInput = () => {
     if (this.textInput.current) {
-      this.textInput.current.focus();
+      this.textInput.current.focus()
     }
   }
 
-  render() {
+  render () {
     const { field, autoFocus, label, textColor, placeholder, secure, rows, onSubmitEditing, returnKeyType } = this.props
     const { intl } = this.context as ctx.Intl
     return (

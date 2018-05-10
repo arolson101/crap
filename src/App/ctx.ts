@@ -18,4 +18,4 @@ export namespace ctx {
   export type Form = FormContext
 }
 
-export const Db = React.createContext<{isOpen: boolean}>()
+export const DbContext = React.createContext<{isOpen: boolean}>()

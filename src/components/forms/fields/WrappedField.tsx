@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { FieldAPI } from 'react-form'
 import { FormattedMessage } from 'react-intl'
-import { ctx } from '../../ctx'
-import { glamorous, ThemeProp } from '../../Theme'
+import { ThemeProp, ctx, glamorous } from '../../../App'
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,
@@ -32,7 +31,7 @@ ErrorMessage.displayName = 'ErrorMessage'
 export namespace WrappedField {
   export interface Props {
     label?: FormattedMessage.MessageDescriptor
-    onLabelPress?: () => any;
+    onLabelPress?: () => any
     fieldApi: FieldAPI<any>
   }
 }

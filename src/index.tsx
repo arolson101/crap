@@ -1,12 +1,11 @@
-import * as React from 'react';
-import { setConfig } from 'react-hot-loader';
-import { IntlProvider } from 'react-intl';
-import { AppRegistry, Platform } from 'react-native';
-import * as shortid from 'shortid';
-import { Router } from './Router';
-import App from './components/App';
-import { AppDatabase } from './db/AppDatabase';
-import { AppDbProvider, DbDependencies } from './db/AppDbProvider';
+import * as React from 'react'
+import { setConfig } from 'react-hot-loader'
+import { IntlProvider } from 'react-intl'
+import { AppRegistry, Platform } from 'react-native'
+import * as shortid from 'shortid'
+import App from './App/App'
+import { Router } from './App/Router'
+import { AppDatabase, AppDbProvider, DbDependencies } from './db'
 
 if (module.hot && process.env.NODE_ENV !== 'production') {
   setConfig({ logLevel: 'debug' })

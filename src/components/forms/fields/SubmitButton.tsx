@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-native'
-import { ctx } from '../../ctx'
+import { ctx } from '../../../App'
 
 interface Props {
   title: FormattedMessage.MessageDescriptor

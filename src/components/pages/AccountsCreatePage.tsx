@@ -6,9 +6,8 @@ import { Queries } from '../../db'
 import { nav } from '../../nav'
 import { BankForm } from '../forms/BankForm'
 import { AccountForm } from '../forms/AccountForm'
-import { ctx } from '../ctx'
+import { ThemeProp, ctx, glamorous } from '../../App'
 import { ErrorMessage } from '../ErrorMessage'
-import { glamorous, ThemeProp } from '../Theme'
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,

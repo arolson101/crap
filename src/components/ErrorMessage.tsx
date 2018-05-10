@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { glamorous, ThemeProp } from './Theme'
+import { glamorous, ThemeProp } from '../App'
 
 const Text = glamorous.text({}, ({ theme }: ThemeProp) => ({
   color: theme.errorTextColor,

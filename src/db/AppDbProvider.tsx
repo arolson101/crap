@@ -7,7 +7,7 @@ import Observable from 'zen-observable-ts'
 import schema from '../db/schema'
 import { AppDatabase } from './AppDatabase'
 import { runQuery } from 'apollo-server-core'
-import { Db } from '../components/ctx'
+import { DbContext } from '../App'
 
 export { GraphQLClient }
 
@@ -74,9 +74,9 @@ export class AppDbProvider extends React.Component<Props, State> {
   render () {
     return (
       <ApolloProvider client={this.client}>
-        <Db.Provider value={{ isOpen: !!this.state.db }}>
+        <DbContext.Provider value={{ isOpen: !!this.state.db }}>
           {this.props.children}
-        </Db.Provider>
+        </DbContext.Provider>
       </ApolloProvider>
     )
   }

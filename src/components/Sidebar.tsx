@@ -3,7 +3,7 @@ import { View, Text, Button, ScrollView } from 'react-native'
 import { compose } from 'recompose'
 import { nav } from '../nav'
 import { Queries } from '../db'
-import { ctx } from './ctx'
+import { ctx } from '../App'
 
 const List = View
 

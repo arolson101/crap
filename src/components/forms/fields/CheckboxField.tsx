@@ -2,8 +2,7 @@ import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { Switch } from 'react-native'
-import { ctx } from '../../ctx'
-import { glamorous, ThemeProp } from '../../Theme'
+import { ctx, glamorous, ThemeProp } from '../../../App'
 import { WrappedField } from './WrappedField'
 
 const StyledSwitch = glamorous(Switch)({},

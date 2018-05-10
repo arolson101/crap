@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Button, View, Text } from 'react-native'
 import { nav } from '../nav'
 import { Mutations } from '../db'
-import { ctx } from './ctx'
+import { ctx } from '../App'
 
 interface Props {
   bank: {

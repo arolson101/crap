@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View, Text } from 'react-native'
 import { BankForm } from '../forms/BankForm'
 import { AccountForm } from '../forms/AccountForm'
-import { ctx } from '../ctx'
+import { ctx } from '../../App'
 
 interface Params {
   bankId: string

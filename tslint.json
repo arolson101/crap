@@ -10,5 +10,6 @@
     "jsx-no-lambda": false,
     "no-use-before-declare": false,
     "trailing-comma": false,
+    "semicolon": [true, "never"]
   }
 }

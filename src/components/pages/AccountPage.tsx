@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router'
 import { compose } from 'recompose'
 import { Queries } from '../../db'
 import { nav } from '../../nav'
-import { ctx } from '../ctx'
+import { ctx } from '../../App'
 import { ErrorMessage } from '../ErrorMessage'
 
 interface Params {
