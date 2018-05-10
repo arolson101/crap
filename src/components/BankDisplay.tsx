@@ -34,7 +34,7 @@ export const BankDisplay: React.SFC<Props> = (props, { router }: ctx.Router) => 
           />
           <Button
             title='delete'
-            onPress={() => props.deleteAccount.execute({variables: {accountId: account.id}})}
+            onPress={() => props.deleteAccount.execute({ variables: { accountId: account.id } })}
           />
         </View>
       )}

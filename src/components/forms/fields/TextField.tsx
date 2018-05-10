@@ -61,6 +61,7 @@ export class TextField extends React.Component<TextField.Props> {
                 onSubmitEditing={onSubmitEditing}
                 returnKeyType={returnKeyType}
                 innerRef={(current) => this.textInput = { current }}
+                textColor={textColor}
               />
             </WrappedField>
           )

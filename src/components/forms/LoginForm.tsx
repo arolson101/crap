@@ -5,7 +5,7 @@ import { compose } from 'recompose'
 import { Queries, Mutations } from '../../db'
 import { ctx } from '../../App/ctx'
 import { typedFields } from './fields'
-import { Classes, Intent, Spinner } from "@blueprintjs/core"
+import { Classes, Intent, Spinner } from '@blueprintjs/core'
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import 'normalize.css/normalize.css'

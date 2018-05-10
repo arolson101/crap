@@ -47,6 +47,7 @@ export class UrlField extends React.Component<UrlField.Props> {
           return (
             <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
               <StyledTextInput
+                autoFocus={autoFocus}
                 error={error}
                 onChangeText={fieldApi.setValue}
                 value={fieldApi.value}

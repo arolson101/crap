@@ -1,7 +1,7 @@
-import { MaterialIcons } from '@expo/vector-icons';
-import { AppLoading, Asset, Font, RequireSource } from 'expo';
-import * as React from 'react';
-import { Image } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'
+import { AppLoading, Asset, Font, RequireSource } from 'expo'
+import * as React from 'react'
+import { Image } from 'react-native'
 
 // https://docs.expo.io/versions/latest/guides/preloading-and-caching-assets.html
 
@@ -28,14 +28,14 @@ export class LoadFonts extends React.Component<{}, State> {
     isReady: false
   }
 
-  async _loadAssetsAsync() {
+  async _loadAssetsAsync () {
     const imageAssets = cacheImages([])
     const fontAssets = cacheFonts([(MaterialIcons as any).font])
 
     await Promise.all([...imageAssets, ...fontAssets])
   }
 
-  render() {
+  render () {
     if (!this.state.isReady) {
       return (
         <AppLoading
