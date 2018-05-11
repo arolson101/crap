@@ -1,8 +1,9 @@
+import glamorous from 'glamorous-native'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { Picker } from 'react-native'
-import { ctx, glamorous, ThemeProp } from '../../App'
+import { ctx, ThemeProp } from '../../App'
 import { WrappedField } from './WrappedField'
 
 const StyledPicker = glamorous(Picker)({},

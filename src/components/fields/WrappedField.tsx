@@ -1,7 +1,8 @@
+import glamorous from 'glamorous-native'
 import * as React from 'react'
 import { FieldAPI } from 'react-form'
 import { FormattedMessage } from 'react-intl'
-import { ThemeProp, ctx, glamorous } from '../../App'
+import { ThemeProp, ctx } from '../../App'
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,

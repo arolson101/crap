@@ -1,3 +1,4 @@
+import glamorous from 'glamorous-native'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { View, Picker } from 'react-native'
@@ -6,7 +7,7 @@ import { Queries } from '../db'
 import { nav } from '../nav'
 import { BankForm } from '../forms/BankForm'
 import { AccountForm } from '../forms/AccountForm'
-import { ThemeProp, ctx, glamorous } from '../App'
+import { ThemeProp, ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({

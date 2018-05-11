@@ -1,9 +1,13 @@
-import glamorous, { ThemeProvider } from 'glamorous-native'
+import { ThemeProvider } from 'glamorous-native'
 import * as React from 'react'
 
-export { glamorous }
-
 export interface Theme {
+  appBannerFontSize: number
+  appBannerMargin: number
+
+  welcomeFontSize: number
+  welcomeMargin: number
+
   controlFontSize: number
   controlFontColor: string
 
@@ -26,6 +30,12 @@ export interface ThemeProp {
 }
 
 const defaultTheme: Theme = {
+  appBannerFontSize: 80,
+  appBannerMargin: 20,
+
+  welcomeFontSize: 16,
+  welcomeMargin: 20,
+
   controlFontSize: 20,
   controlFontColor: 'black',
 

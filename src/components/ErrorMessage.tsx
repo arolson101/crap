@@ -1,10 +1,5 @@
 import * as React from 'react'
-import { glamorous, ThemeProp } from '../App'
-
-const Text = glamorous.text({}, ({ theme }: ThemeProp) => ({
-  color: theme.errorTextColor,
-  margin: 20
-}))
+import { ErrorText } from './text'
 
 interface Props {
   error: Error | undefined
@@ -12,7 +7,7 @@ interface Props {
 
 export const ErrorMessage: React.SFC<Props> = ({ error }) => {
   if (error) {
-    return <Text>{error.message}</Text>
+    return <ErrorText>{error.message}</ErrorText>
   } else {
     return null
   }

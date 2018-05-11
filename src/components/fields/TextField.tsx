@@ -1,8 +1,9 @@
+import glamorous from 'glamorous-native'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { ReturnKeyType, TextInput } from 'react-native'
-import { ThemeProp, ctx, glamorous } from '../../App'
+import { ThemeProp, ctx } from '../../App'
 import { WrappedField } from './WrappedField'
 
 const StyledTextInput = glamorous.textInput<ThemeProp & { error: any, textColor?: string }>({},

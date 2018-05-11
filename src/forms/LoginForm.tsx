@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
-import { Text, View } from 'react-native'
 import { compose } from 'recompose'
 import { Queries, Mutations } from '../db'
 import { ctx } from '../App/ctx'
@@ -10,6 +9,7 @@ import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import 'normalize.css/normalize.css'
 import { Grid, Row, Col } from 'react-flexbox-grid'
+import { AppBannerText, WelcomeText, FormContent } from '../components'
 
 interface Props {
   query: Queries.Dbs
@@ -29,7 +29,7 @@ const {
 } = typedFields<FormValues>()
 
 export class LoginFormComponent extends React.PureComponent<Props> {
-  render () {
+  render() {
     if (this.props.query.loading) {
       return null
     }
@@ -41,15 +41,13 @@ export class LoginFormComponent extends React.PureComponent<Props> {
     const exists = this.props.query.data.dbs.length > 0
     return (
       // <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />
-      <View style={{ flexDirection: 'column', alignItems: 'center', margin: 100 }}>
-        <Text style={{ fontSize: 80, margin: 20 }}>App</Text>
-        <View style={{ maxWidth: 400 }}>
-          {exists
-            ? <FormOpen {...this.props}/>
-            : <FormCreate {...this.props}/>
-          }
-        </View>
-      </View>
+      <>
+        <AppBannerText>App</AppBannerText>
+        {exists
+          ? <FormOpen {...this.props} />
+          : <FormCreate {...this.props} />
+        }
+      </>
     )
   }
 }
@@ -80,8 +78,8 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
       }}
     >
       {formApi =>
-        <View>
-          <Text style={{ marginBottom: 20, textAlign: 'center' }}>Welcome!  Create a password to secure your data.</Text>
+        <FormContent>
+          <WelcomeText>Welcome!  Create a password to secure your data.</WelcomeText>
           <TextField
             autoFocus
             secure
@@ -101,7 +99,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
             onPress={formApi.submitForm}
             title={messages.create}
           />
-        </View>
+        </FormContent>
       }
     </Form>
   )
@@ -129,8 +127,8 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
       }}
     >
       {formApi =>
-        <View>
-          <Text style={{ marginBottom: 20, textAlign: 'center' }}>Welcome!  Enter your password to access your data.</Text>
+        <FormContent>
+          <WelcomeText>Welcome!  Enter your password to access your data.</WelcomeText>
           <TextField
             secure
             autoFocus
@@ -146,7 +144,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
             onPress={formApi.submitForm}
             title={messages.open}
           />
-        </View>
+        </FormContent>
       }
     </Form>
   )
