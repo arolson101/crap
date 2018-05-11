@@ -1,6 +1,7 @@
 import * as React from 'react'
 import SplitPane from 'react-split-pane'
-import { MainView, Sidebar } from '../components'
+import { MainView } from './MainView'
+import { Sidebar } from './Sidebar'
 import './RootPage.web.css'
 
 // https://github.com/tomkp/react-split-pane/issues/252

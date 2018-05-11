@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Bank } from '../../db'
-import { BankForm } from '../../forms/BankForm'
-import { ctx } from '../../App'
+import { Bank } from '../db'
+import { BankForm } from '../forms/BankForm'
+import { ctx } from '../App'
 
 interface Params {
   bankId: string

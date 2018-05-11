@@ -2,12 +2,12 @@ import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { View, Picker } from 'react-native'
 import { compose } from 'recompose'
-import { Queries } from '../../db'
-import { nav } from '../../nav'
-import { BankForm } from '../../forms/BankForm'
-import { AccountForm } from '../../forms/AccountForm'
-import { ThemeProp, ctx, glamorous } from '../../App'
-import { ErrorMessage } from '../ErrorMessage'
+import { Queries } from '../db'
+import { nav } from '../nav'
+import { BankForm } from '../forms/BankForm'
+import { AccountForm } from '../forms/AccountForm'
+import { ThemeProp, ctx, glamorous } from '../App'
+import { ErrorMessage } from '../components/ErrorMessage'
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,

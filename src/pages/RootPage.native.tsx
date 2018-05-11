@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { MainView, Sidebar } from '../components'
+import { MainView } from './MainView'
+import { Sidebar } from './Sidebar'
 
 export const RootPage: React.SFC = (props) => {
   return (
