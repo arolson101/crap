@@ -4,11 +4,11 @@ import { View } from 'react-native'
 import { defineMessages } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
-import { nav } from '../../nav'
-import { Mutations, Queries, Types, Account } from '../../db'
-import { ctx } from '../../App'
-import { ErrorMessage } from '../ErrorMessage'
-import { typedFields, SelectFieldItem } from './fields'
+import { nav } from '../nav'
+import { Mutations, Queries, Types, Account } from '../db'
+import { ctx } from '../App'
+import { ErrorMessage } from '../components/ErrorMessage'
+import { typedFields, SelectFieldItem } from '../components/fields'
 
 interface Props {
   accountId?: string

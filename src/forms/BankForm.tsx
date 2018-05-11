@@ -4,12 +4,12 @@ import { View } from 'react-native'
 import { FormattedMessage, defineMessages } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
-import { nav } from '../../nav'
-import { filist, formatAddress } from '../../fi'
-import { Mutations, Queries, Types, Bank } from '../../db'
-import { ctx } from '../../App'
-import { ErrorMessage } from '../ErrorMessage'
-import { typedFields } from './fields'
+import { nav } from '../nav'
+import { filist, formatAddress } from '../fi'
+import { Mutations, Queries, Types, Bank } from '../db'
+import { ctx } from '../App'
+import { ErrorMessage } from '../components/ErrorMessage'
+import { typedFields } from '../components/fields'
 
 interface Props {
   bankId?: string

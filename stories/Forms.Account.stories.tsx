@@ -1,7 +1,7 @@
 // import { action } from '@storybook/addon-actions';
 // // import { storiesOf } from '@storybook/react';
 // // import * as React from 'react';
-// // import { AccountFormComponent } from '../src/components/forms/AccountForm';
+// // import { AccountFormComponent } from '../src/forms/AccountForm';
 // import { Bank, Account } from '../src/db';
 
 // const bank: Bank = {

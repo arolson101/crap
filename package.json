@@ -48,7 +48,7 @@
     "generate:queries": "apollo-codegen generate \"src/db/queries/*.tsx\" --schema temp/schema.json --target typescript --output src/db/queries/query-types.ts",
     "generate:mutations": "apollo-codegen generate \"src/db/mutations/*.tsx\" --schema temp/schema.json --target typescript --output src/db/mutations/mutation-types.ts",
     "generate:schema": "gql-gen --template typescript --file ./temp/schema.json --out ./src/db/schema/schema-types.ts ./src/db/schema/schema.graphql",
-    "lint": "tslint --fix \"src/**/*{.ts,.tsx}\" --project tsconfig.json"
+    "lint": "tslint --fix \"{src,stories}/**/*{.ts,.tsx}\" --project tsconfig.json"
   },
   "devDependencies": {
     "@blueprintjs/core": "^2.3.1",

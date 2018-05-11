@@ -2,31 +2,34 @@ import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { ReturnKeyType, TextInput } from 'react-native'
-import { ThemeProp, ctx, glamorous } from '../../../App'
+import { ThemeProp, ctx, glamorous } from '../../App'
 import { WrappedField } from './WrappedField'
 
-const StyledTextInput = glamorous.textInput<ThemeProp & { error: any }>({},
-  ({ theme, error }) => ({
+const StyledTextInput = glamorous.textInput<ThemeProp & { error: any, textColor?: string }>({},
+  ({ theme, error, textColor }) => ({
     borderWidth: theme.boxBorderWidth,
     borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
     fontSize: theme.controlFontSize,
-    color: theme.controlFontColor
+    color: textColor ? textColor : theme.controlFontColor
   })
 )
 StyledTextInput.displayName = 'StyledTextInput'
 
-export namespace UrlField {
+export namespace TextField {
   export interface Props<T = {}> {
     field: string
     label: FormattedMessage.MessageDescriptor
     placeholder?: FormattedMessage.MessageDescriptor
+    secure?: boolean
+    rows?: number
+    textColor?: string
     autoFocus?: boolean
     onSubmitEditing?: () => any
     returnKeyType?: ReturnKeyType
   }
 }
 
-export class UrlField extends React.Component<UrlField.Props> {
+export class TextField extends React.Component<TextField.Props> {
   static contextTypes = ctx.intl
 
   private textInput = React.createRef<TextInput>()
@@ -38,7 +41,7 @@ export class UrlField extends React.Component<UrlField.Props> {
   }
 
   render () {
-    const { field, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
+    const { field, autoFocus, label, textColor, placeholder, secure, rows, onSubmitEditing, returnKeyType } = this.props
     const { intl } = this.context as ctx.Intl
     return (
       <Field field={field}>
@@ -47,14 +50,18 @@ export class UrlField extends React.Component<UrlField.Props> {
           return (
             <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
               <StyledTextInput
-                autoFocus={autoFocus}
                 error={error}
+                autoFocus={autoFocus}
+                multiline={(rows ? rows > 0 : undefined)}
+                numberOfLines={rows}
                 onChangeText={fieldApi.setValue}
                 value={fieldApi.value}
+                secureTextEntry={secure}
                 placeholder={placeholder && intl.formatMessage(placeholder)}
                 onSubmitEditing={onSubmitEditing}
                 returnKeyType={returnKeyType}
                 innerRef={(current) => this.textInput = { current }}
+                textColor={textColor}
               />
             </WrappedField>
           )

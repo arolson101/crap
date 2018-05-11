@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LoginForm } from '../components/forms/LoginForm'
+import { LoginForm } from '../forms/LoginForm'
 
 export const LoginPage: React.SFC = (props) => {
   return (
