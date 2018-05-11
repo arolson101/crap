@@ -1,5 +1,6 @@
 import pick from 'lodash-es/pick'
 import * as React from 'react'
+import { View } from 'react-native'
 import { FormattedMessage, defineMessages } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
@@ -8,7 +9,6 @@ import { filist, formatAddress } from '../../fi'
 import { Mutations, Queries, Types, Bank } from '../../db'
 import { ctx } from '../../App'
 import { ErrorMessage } from '../ErrorMessage'
-import { List } from '../list'
 import { typedFields } from './fields'
 
 interface Props {
@@ -77,7 +77,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
     >
       {formApi =>
         <React.Fragment>
-          <List>
+          <View>
             <FormattedMessage {...messages.fiHelp} />
             <SelectField
               field='fi'
@@ -94,8 +94,8 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
                 formApi.setValue('ofx', fi.ofx || '')
               }}
             />
-          </List>
-          <List>
+          </View>
+          <View>
             <TextField
               field='name'
               label={messages.name}
@@ -116,15 +116,15 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
               label={messages.notes}
               rows={4}
             />
-          </List>
-          <List>
+          </View>
+          <View>
             <CheckboxField
               field='online'
               label={messages.online}
             />
-          </List>
+          </View>
           <CollapseField field='online'>
-            <List>
+            <View>
               <TextField
                 field='username'
                 label={messages.username}
@@ -136,8 +136,8 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
                 label={messages.password}
                 placeholder={messages.passwordPlaceholder}
               />
-            </List>
-            <List>
+            </View>
+            <View>
               <TextField
                 field='fid'
                 label={messages.fid}
@@ -153,7 +153,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
                 label={messages.ofx}
                 placeholder={messages.ofxPlaceholder}
               />
-            </List>
+            </View>
           </CollapseField>
           <SubmitButton
             disabled={props.saveBank.loading}

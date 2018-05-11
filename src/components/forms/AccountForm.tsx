@@ -1,5 +1,6 @@
 import pick from 'lodash-es/pick'
 import * as React from 'react'
+import { View } from 'react-native'
 import { defineMessages } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
@@ -7,7 +8,6 @@ import { nav } from '../../nav'
 import { Mutations, Queries, Types, Account } from '../../db'
 import { ctx } from '../../App'
 import { ErrorMessage } from '../ErrorMessage'
-import { List } from '../list'
 import { typedFields, SelectFieldItem } from './fields'
 
 interface Props {
@@ -58,7 +58,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
     >
       {formApi =>
         <>
-          <List>
+          <View>
             <TextField
               field='name'
               label={messages.name}
@@ -106,7 +106,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
               onPress={formApi.submitForm}
               title={edit ? messages.save : messages.create}
             />
-          </List>
+          </View>
         </>
       }
     </Form>
