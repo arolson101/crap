@@ -1,5 +1,5 @@
-import { FI, filist, formatAddress } from '../src/fi';
-import { DbDependencies, Bank, Account } from '../src/db';
+import { FI, filist, formatAddress } from '../src/fi'
+import { DbDependencies, Bank, Account } from '../src/db'
 
 /**
  * Warning from React Router, caused by react-hot-loader.
@@ -8,24 +8,24 @@ import { DbDependencies, Bank, Account } from '../src/db';
  * See https://github.com/gaearon/react-hot-loader/issues/298
  */
 if (module.hot) {
-  const isString = (x: any) => typeof x === 'string';
+  const isString = (x: any) => typeof x === 'string'
 
-  const orgError = console.error; // eslint-disable-line no-console
+  const orgError = console.error // eslint-disable-line no-console
   console.error = (...args: any[]) => { // eslint-disable-line no-console
     if (args && args.length === 1 && isString(args[0]) && args[0].indexOf('You cannot change <Router history>') > -1) {
       // React route changed
     } else {
       // Log the error as normally
-      orgError.apply(console, args);
+      orgError.apply(console, args)
     }
-  };
+  }
 }
 
 export const dependencies: DbDependencies = {
   getTime: Date.now,
   genId: () => Date.now().toString(),
-  openDb: async () => { throw new Error(`can't open databases in storybook`); },
-};
+  openDb: async () => { throw new Error(`can't open databases in storybook`) },
+}
 
 export const initialDbs = (dbs: string[], openError: Error | undefined = undefined) => ({
   db: {
@@ -33,7 +33,7 @@ export const initialDbs = (dbs: string[], openError: Error | undefined = undefin
     isOpening: false,
     openError,
   }
-});
+})
 
 export const openedDb = () => ({
   db: {
@@ -41,7 +41,7 @@ export const openedDb = () => ({
     dbs: [],
     isOpening: false,
   }
-});
+})
 
 const dummyAccount = (id: string, name: string, type: Account.Type): Account => ({
   id: id,
@@ -54,7 +54,7 @@ const dummyAccount = (id: string, name: string, type: Account.Type): Account => 
   bankId: '',
   routing: '',
   key: '',
-});
+})
 
 const dummyBank = (fi: FI, accounts: Account[]): Bank => ({
   id: `bnk${fi.id}`,
@@ -74,13 +74,13 @@ const dummyBank = (fi: FI, accounts: Account[]): Bank => ({
 
   username: `user${fi.id}`,
   password: `pass${fi.id}`,
-});
+})
 
 const types: Account.Type[] = [
   Account.Type.CHECKING,
   Account.Type.SAVINGS,
   Account.Type.CREDITCARD,
-];
+]
 
 const dummyBankAndAccounts = (fi: FI, numAccounts: number, type?: Account.Type) => {
   const accounts = Array.from(Array(numAccounts)).map(
@@ -89,56 +89,56 @@ const dummyBankAndAccounts = (fi: FI, numAccounts: number, type?: Account.Type) 
       `${fi.name} ${type ? type : types[idx % types.length]}`,
       type ? type : types[idx % types.length]
     )
-  );
+  )
 
-  const bank = dummyBank(fi, accounts);
-  return {bank, accounts};
-};
+  const bank = dummyBank(fi, accounts)
+  return { bank, accounts }
+}
 
 export const withDummyDataMin = () => {
-  const accounts: Account[] = [];
+  const accounts: Account[] = []
   const banks: Bank[] = [];
   [
     dummyBankAndAccounts(filist[2], 1),
     dummyBankAndAccounts(filist[500], 1, Account.Type.CREDITCARD),
   ].forEach(a => {
-    accounts.push(...a.accounts);
-    banks.push(a.bank);
-  });
+    accounts.push(...a.accounts)
+    banks.push(a.bank)
+  })
 
   return {
     ...openedDb(),
-  };
-};
+  }
+}
 
 export const withDummyDataMed = () => {
-  const accounts: Account[] = [];
+  const accounts: Account[] = []
   const banks: Bank[] = [];
   [
     dummyBankAndAccounts(filist[2], 3),
     dummyBankAndAccounts(filist[500], 1, Account.Type.CREDITCARD),
     dummyBankAndAccounts(filist[750], 1, Account.Type.CREDITCARD),
   ].forEach(a => {
-    accounts.push(...a.accounts);
-    banks.push(a.bank);
-  });
+    accounts.push(...a.accounts)
+    banks.push(a.bank)
+  })
 
   return {
     ...openedDb(),
-  };
-};
+  }
+}
 
 export const withDummyDataMax = () => {
-  const accounts: Account[] = [];
-  const banks: Bank[] = [];
+  const accounts: Account[] = []
+  const banks: Bank[] = []
   Array.from(Array(10))
   .map((x, idx) => dummyBankAndAccounts(filist[2 + idx * 75], 5))
   .forEach(a => {
-    accounts.push(...a.accounts);
-    banks.push(a.bank);
-  });
+    accounts.push(...a.accounts)
+    banks.push(a.bank)
+  })
 
   return {
     ...openedDb(),
-  };
-};
+  }
+}

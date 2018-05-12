@@ -23,6 +23,8 @@ export interface Theme {
   boxBorderColorError: string
 
   rowMargin: number
+
+  formMaxWidth: number
 }
 
 export interface ThemeProp {
@@ -50,7 +52,9 @@ const defaultTheme: Theme = {
 
   boxBorderColorError: 'red',
 
-  rowMargin: 10
+  rowMargin: 10,
+
+  formMaxWidth: 500,
 }
 
 export const AppThemeProvider: React.SFC = ({ children }) => (
