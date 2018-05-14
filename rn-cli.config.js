@@ -2,9 +2,10 @@ module.exports = {
   extraNodeModules: require('node-libs-react-native'),
 
   getTransformModulePath() {
-    return require.resolve('react-native-typescript-transformer')
+    return require.resolve('./transformer.js')
   },
+
   getSourceExts() {
-    return ['ts', 'tsx'];
+    return ['ts', 'tsx', 'graphql', 'gql'];
   }
 }

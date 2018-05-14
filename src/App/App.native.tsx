@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { hot } from 'react-hot-loader'
 import { RootPage, LoginPage } from '../pages'
 import { LoadFonts } from './LoadFonts'
 import { AppThemeProvider } from './Theme'
@@ -27,4 +26,4 @@ const App = (props: Props) => {
   )
 }
 
-export default hot(module)(App)
+export default App
