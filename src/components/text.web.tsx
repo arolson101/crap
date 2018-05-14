@@ -1,4 +1,3 @@
-import * as React from 'react'
 import glamorous from 'glamorous'
 import { ThemeProp } from '../App'
 

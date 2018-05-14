@@ -29,7 +29,7 @@ const {
 } = typedFields<FormValues>()
 
 export class LoginFormComponent extends React.PureComponent<Props> {
-  render() {
+  render () {
     if (this.props.query.loading) {
       return null
     }

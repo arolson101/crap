@@ -1,14 +1,14 @@
-import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
-import * as React from 'react';
-import { LoginFormComponent } from '../src/forms/LoginForm';
+import { action } from '@storybook/addon-actions'
+import { storiesOf } from '@storybook/react'
+import * as React from 'react'
+import { LoginFormComponent } from '../src/forms/LoginForm'
 
 const props = {
   dbs: ['storied database'],
   dbOpen: action('dbOpen'),
   dbOpenError: undefined,
   navDbAdvanced: action('navDbAdvanced'),
-};
+}
 
 // storiesOf('Forms/Login', module)
 //   .add('Create', () => (
