@@ -8,7 +8,7 @@ import { Image } from 'react-native'
 const cacheImages = (images: (string | RequireSource)[]) => {
   return images.map(image => {
     if (typeof image === 'string') {
-      return Image.prefetch(image)
+      return (Image as any).prefetch(image)
     } else {
       return Asset.fromModule(image).downloadAsync()
     }

@@ -52,7 +52,7 @@ export class TextField extends React.Component<TextField.Props> {
               <input
                 id={id}
                 className={'pt-input pt-fill' + (error ? ' pt-intent-danger' : '')}
-                type='text'
+                type={secure ? 'password' : 'text'}
                 placeholder={placeholder && intl.formatMessage(placeholder)}
                 onChange={(event) => fieldApi.setValue(event.target.value)}
                 value={fieldApi.value}
