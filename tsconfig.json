@@ -20,7 +20,8 @@
     "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "noUnusedLocals": false
+    "noUnusedLocals": false,
+    "emitDecoratorMetadata": true,
   },
   "exclude": [
     "node_modules",

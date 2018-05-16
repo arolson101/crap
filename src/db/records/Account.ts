@@ -4,8 +4,48 @@ import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
 import { Record } from '../Record'
 
+import { Entity, Column, PrimaryColumn, Connection, getRepository, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Input, makeSchema, Type, Field, ID, String, Mutation } from 'graphql-typescript'
+import { ResolverContext } from '../AppDbProvider'
+
 export interface Account extends Account.Props, Record<Account.Props> {
   readonly bankId: string
+}
+
+@Input class AccountInput {
+  @Field readonly name?: String
+  @Field readonly color?: String
+  @Field readonly type?: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Field readonly number?: String
+  @Field readonly visible?: Boolean
+  @Field readonly routing?: String
+  @Field readonly key?: String
+}
+
+type Foo = { [k in keyof AccountInput]-?: AccountInput[k] }
+interface X extends Foo { }
+
+@Type @Entity({ name: 'accounts' })
+export class Account2 {
+  @Field @PrimaryColumn() id: ID
+
+  @Field @Column() name: String
+  @Field @Column({ default: 'red' }) color: String
+  @Field @Column({ default: 'CHECKING' }) type: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Field @Column() number: String
+  @Field @Column({ default: true }) visible: Boolean
+  @Field @Column({ default: '' }) routing: String
+  @Field @Column({ default: '' }) key: String
+
+  @Mutation(Account2)
+  static async create (_: any, args: AccountInput, context: Connection) {
+    if (!args.name) {
+      throw new Error('name is required')
+    }
+    const repo = context.getRepository(Account2)
+    const account = await repo.save({ ...args, id: Math.random().toString() }) as Account2
+    return account
+  }
 }
 
 export namespace Account {

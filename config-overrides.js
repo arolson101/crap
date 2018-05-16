@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireGqlTag = require('react-app-rewire-graphql-tag');
@@ -81,6 +82,17 @@ module.exports = function override(config, env) {
   }
 
   config.module.rules.forEach(ruleSearcher);
+
+  config.plugins = [
+    ...config.plugins,
+
+    new webpack.NormalModuleReplacementPlugin(/typeorm$/, function (result) {
+      result.request = result.request.replace(/typeorm/, "typeorm/browser");
+    }),
+    new webpack.ProvidePlugin({
+      'window.SQL': 'sql.js/js/sql.js'
+    })
+  ]
 
   // console.log(JSON.stringify(config, null, '  '));
 
