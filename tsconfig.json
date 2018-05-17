@@ -3,7 +3,7 @@
     "outDir": "build/dist",
     "baseUrl": ".",
     "module": "esnext",
-    "target": "es5",
+    "target": "es2017",
     "lib": ["es2017", "dom"],
     "sourceMap": true,
     "allowJs": true,
@@ -24,7 +24,6 @@
     "emitDecoratorMetadata": true,
   },
   "exclude": [
-    "node_modules",
     "build",
     "scripts",
     "acceptance-tests",

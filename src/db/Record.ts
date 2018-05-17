@@ -1,6 +1,6 @@
 import { BSON } from 'bson'
 import { iupdate } from '../iupdate'
-import flow from 'lodash-es/flow'
+import { flow } from 'lodash'
 import * as zlib from 'zlib'
 
 type CompressedJson<T> = '<compressed json>' & { _tag: T }

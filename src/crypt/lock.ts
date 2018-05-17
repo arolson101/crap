@@ -1,5 +1,5 @@
 import * as crypto from 'crypto'
-import random from 'lodash-es/random'
+import { random } from 'lodash'
 
 export interface KeyInfo {
   salt: string

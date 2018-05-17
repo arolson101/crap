@@ -1,4 +1,4 @@
-import pick from 'lodash-es/pick'
+import { pick } from 'lodash'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FormattedMessage, defineMessages } from 'react-intl'

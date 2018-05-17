@@ -7,7 +7,7 @@ import Observable from 'zen-observable-ts'
 import schema from '../db/schema'
 import { AppDatabase } from './AppDatabase'
 import { runQuery } from 'apollo-server-core'
-import { DbContext } from '../App'
+import { DbContext } from '../App/ctx'
 
 export { GraphQLClient }
 

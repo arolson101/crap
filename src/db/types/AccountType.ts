@@ -1,33 +1,34 @@
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 import { defineMessages } from 'react-intl'
+import { Column, Connection, Entity, PrimaryColumn } from 'typeorm'
+import { Boolean, Field, Input, Mutation, Nullable, String, Type } from './helpers'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
 import { Record } from '../Record'
 
-import { Entity, Column, PrimaryColumn, Connection, getRepository, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { Input, makeSchema, Boolean, Type, Field, ID, String, Mutation } from 'graphql-typescript'
-import { ResolverContext } from '../AppDbProvider'
-
-export interface Account extends Account.Props, Record<Account.Props> {
-  readonly bankId: string
+@Input export class AccountInput {
+  @Nullable @Field name?: String
+  @Nullable @Field color?: String
+  @Nullable @Field type?: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Nullable @Field number?: String
+  @Nullable @Field visible?: Boolean
+  @Nullable @Field routing?: String
+  @Nullable @Field key?: String
 }
 
-@Input class AccountInput {
-  @Field readonly name?: String
-  @Field readonly color?: String
-  @Field readonly type?: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
-  @Field readonly number?: String
-  @Field readonly visible?: Boolean
-  @Field readonly routing?: String
-  @Field readonly key?: String
+class CreateAccountArgs {
+  @Field bankId: String
+  @Field inputs: AccountInput
 }
-
-type Foo = { [k in keyof AccountInput]-?: AccountInput[k] }
-interface X extends Foo { }
 
 @Type @Entity({ name: 'accounts' })
-export class Account2 {
-  @Field @PrimaryColumn() id: ID
+export class Account implements Record<Account> {
+  @Column() _deleted: number
+  @Column() _base: any
+  @Column() _history: any
+
+  @Field @PrimaryColumn() id: string
+  @Field @Column() bankId: String
 
   @Field @Column() name: String
   @Field @Column({ default: 'red' }) color: String
@@ -37,13 +38,18 @@ export class Account2 {
   @Field @Column({ default: '' }) routing: String
   @Field @Column({ default: '' }) key: String
 
-  @Mutation(Account2)
-  static async create (_: any, args: AccountInput, context: Connection) {
-    if (!args.name) {
+  @Mutation(Account)
+  static async createAccount (_: any, args: CreateAccountArgs, context: Connection) {
+    if (!args.inputs.name) {
       throw new Error('name is required')
     }
-    const repo = context.getRepository(Account2)
-    const account = await repo.save({ ...args, id: Math.random().toString() }) as Account2
+    const repo = context.getRepository(Account)
+    const account = await repo.save({
+      _deleted: 0,
+      ...args.inputs,
+      bankId: args.bankId,
+      id: Math.random().toString()
+    })
     return account
   }
 }
@@ -57,16 +63,6 @@ export namespace Account {
     MONEYMRKT: 'MONEYMRKT' as Type,
     CREDITLINE: 'CREDITLINE' as Type,
     CREDITCARD: 'CREDITCARD' as Type
-  }
-
-  export interface Props {
-    readonly name: string
-    readonly color: string
-    readonly type: Type
-    readonly number: string
-    readonly visible: boolean
-    readonly routing: string
-    readonly key: string
   }
 
   export const messages = defineMessages({
@@ -110,7 +106,7 @@ export namespace Account {
     }
   }
 
-  export type Query = iupdate.Query<Props>
+  export type Query = iupdate.Query<AccountInput>
   export const table = 'accounts'
   export const schema = Record.genSchema('bankId', '[bankId+_deleted]')
 
@@ -134,32 +130,32 @@ export namespace Account {
     })
   }
 
-  export const defaultValues: Props = {
-    name: '',
-    type: Type.CHECKING,
-    color: generateColor(Type.CHECKING),
-    number: '',
-    visible: true,
-    routing: '',
-    key: ''
-  }
+  // export const defaultValues: Props = {
+  //   name: '',
+  //   type: Type.CHECKING,
+  //   color: generateColor(Type.CHECKING),
+  //   number: '',
+  //   visible: true,
+  //   routing: '',
+  //   key: ''
+  // }
 
-  type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null }
+  // type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null }
 
-  export const diff = (account: Account, values: Nullable<Props>): Query => {
-    return Object.keys(values).reduce(
-      (q, prop): Query => {
-        const val = values[prop]
-        if (val !== account[prop]) {
-          return ({
-            ...q,
-            [prop]: { $set: val }
-          })
-        } else {
-          return q
-        }
-      },
-      {} as Query
-    )
-  }
+  // export const diff = (account: Account, values: Nullable<Props>): Query => {
+  //   return Object.keys(values).reduce(
+  //     (q, prop): Query => {
+  //       const val = values[prop]
+  //       if (val !== account[prop]) {
+  //         return ({
+  //           ...q,
+  //           [prop]: { $set: val }
+  //         })
+  //       } else {
+  //         return q
+  //       }
+  //     },
+  //     {} as Query
+  //   )
+  // }
 }
