@@ -37,17 +37,17 @@ const makeQuery = (QUERY: DocumentNode) =>
       }
 
 import {
-  AccountQuery,
-  AccountsQuery,
-  BankQuery,
-  BanksQuery,
-  DbsQuery
+  Account,
+  Accounts,
+  Bank,
+  Banks,
+  Dbs,
 } from './query-types'
 
 export namespace Queries {
   // Account
   export const ACCOUNT = gql`
-    query Account($accountId: ID!) {
+    query Account($accountId: String!) {
       account(accountId: $accountId) {
         id
         name
@@ -60,7 +60,7 @@ export namespace Queries {
       }
     }
   `
-  export type Account = QueryType<AccountQuery>
+  export type Account = QueryType<Account.Query>
   export const withAccount = makeQuery(ACCOUNT)
 
   // Accounts
@@ -77,12 +77,12 @@ export namespace Queries {
       }
     }
   `
-  export type Accounts = QueryType<AccountsQuery>
+  export type Accounts = QueryType<Accounts.Query>
   export const withAccounts = makeQuery(ACCOUNTS)
 
   // Bank($bankId)
   export const BANK = gql`
-    query Bank($bankId: ID!) {
+    query Bank($bankId: String!) {
       bank(bankId: $bankId) {
         id
         name
@@ -104,7 +104,7 @@ export namespace Queries {
       }
     }
   `
-  export type Bank = QueryType<BankQuery>
+  export type Bank = QueryType<Bank.Query>
   export const withBank = makeQuery(BANK)
 
   // Banks
@@ -120,15 +120,17 @@ export namespace Queries {
       }
     }
   `
-  export type Banks = QueryType<BanksQuery>
+  export type Banks = QueryType<Banks.Query>
   export const withBanks = makeQuery(BANKS)
 
   // Dbs
   export const DBS = gql`
     query Dbs {
-      dbs
+      db {
+        all
+      }
     }
   `
-  export type Dbs = QueryType<DbsQuery>
+  export type Dbs = QueryType<Dbs.Query>
   export const withDbs = makeQuery(DBS)
 }

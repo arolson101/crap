@@ -1,5 +1,6 @@
 import { FI, filist, formatAddress } from '../src/fi'
-import { DbDependencies, Bank, Account } from '../src/db'
+import { DbDependencies } from '../src/db'
+import { Bank, Account } from '../src/db/records'
 
 /**
  * Warning from React Router, caused by react-hot-loader.

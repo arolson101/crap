@@ -1,4 +1,4 @@
-import { ThemeProvider } from 'glamorous-native'
+import { ThemeProvider } from 'glamorous'
 import * as React from 'react'
 
 export interface Theme {

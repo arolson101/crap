@@ -55,7 +55,7 @@ export const getAccount = async (db: AppDatabase, id: string): Promise<Account> 
   return account
 }
 
-export const toAccount = (account: Account): Partial<Account> => {
+export const toAccount = (account: Account.Interface): Partial<Account.Interface> => {
   const { bankId, _deleted, _base, _history, type: stringType, ...rest } = account
   // const type = ST.AccountType[stringType]
   // return { ...rest, type }

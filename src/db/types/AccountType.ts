@@ -1,10 +1,11 @@
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 import { defineMessages } from 'react-intl'
 import { Column, Connection, Entity, PrimaryColumn } from 'typeorm'
-import { Boolean, Field, Input, Mutation, Nullable, String, Type } from './helpers'
+import { Boolean, Field, Input, Mutation, Nullable, ResolverContext, String, Type } from './helpers'
+import { getDb, getBank, toBank, getAccount, toAccount } from './DbType'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
-import { Record } from '../Record'
+import { createRecord, Record } from '../Record'
 
 @Input export class AccountInput {
   @Nullable @Field name?: String
@@ -21,40 +22,80 @@ class CreateAccountArgs {
   @Field inputs: AccountInput
 }
 
+class SaveAccountArgs {
+  @Nullable @Field accountId: string
+  @Nullable @Field bankId: string
+  @Field input: AccountInput
+}
+
+class DeleteAccountArgs {
+  @Field accountId: string
+}
+
 @Type @Entity({ name: 'accounts' })
-export class Account implements Record<Account> {
+export class Account implements Record<Account.Props> {
   @Column() _deleted: number
   @Column() _base: any
   @Column() _history: any
 
   @Field @PrimaryColumn() id: string
-  @Field @Column() bankId: String
+  @Field @Column() bankId: string
 
-  @Field @Column() name: String
-  @Field @Column({ default: 'red' }) color: String
-  @Field @Column({ default: 'CHECKING' }) type: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
-  @Field @Column() number: String
-  @Field @Column({ default: true }) visible: Boolean
-  @Field @Column({ default: '' }) routing: String
-  @Field @Column({ default: '' }) key: String
+  @Field @Column() name: string
+  @Field @Column() color: string
+  @Field @Column() type: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Field @Column() number: string
+  @Field @Column() visible: Boolean
+  @Field @Column() routing: string
+  @Field @Column() key: string
 
-  @Mutation(Account)
-  static async createAccount (_: any, args: CreateAccountArgs, context: Connection) {
-    if (!args.inputs.name) {
-      throw new Error('name is required')
+  @Mutation(Account) async saveAccount (_: any, args: SaveAccountArgs, context: ResolverContext) {
+    const db = getDb(context)
+    const t = context.getTime()
+    let account: Account.Interface
+    let changes: Array<any>
+    if (args.accountId) {
+      const edit = await getAccount(db, args.accountId)
+      const q = Account.diff(edit, args.input)
+      changes = [
+        Account.change.edit(t, args.accountId, q)
+      ]
+      account = iupdate(edit, q)
+    } else {
+      if (!args.bankId) {
+        throw new Error('when creating an account, bankId must be specified')
+      }
+      const props: Account.Props = {
+        ...Account.defaultValues,
+        ...args.input
+      }
+      account = {
+        bankId: args.bankId,
+        ...createRecord(context.genId, props)
+      }
+      changes = [
+        Account.change.add(t, account)
+      ]
     }
-    const repo = context.getRepository(Account)
-    const account = await repo.save({
-      _deleted: 0,
-      ...args.inputs,
-      bankId: args.bankId,
-      id: Math.random().toString()
-    })
-    return account
+    await db.change(changes)
+    return toAccount(account)
+  }
+
+  @Mutation(Boolean) async deleteAccount (_: any, args: DeleteAccountArgs, context: ResolverContext) {
+    const db = getDb(context)
+    const t = context.getTime()
+    const changes = [
+      Account.change.remove(t, args.accountId)
+    ]
+    await db.change(changes)
+    return true
   }
 }
 
 export namespace Account {
+  export interface Props extends Pick<AccountInput, keyof AccountInput> {}
+  export interface Interface extends Pick<Account, Exclude<keyof Account, 'saveAccount'>> {}
+
   // see ofx4js.domain.data.banking.AccountType
   export type Type = 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
   export const Type = {
@@ -111,7 +152,7 @@ export namespace Account {
   export const schema = Record.genSchema('bankId', '[bankId+_deleted]')
 
   export namespace change {
-    export const add = (t: number, account: Account): DbChange => ({
+    export const add = (t: number, account: Interface): DbChange => ({
       table,
       t,
       adds: [account]
@@ -130,32 +171,32 @@ export namespace Account {
     })
   }
 
-  // export const defaultValues: Props = {
-  //   name: '',
-  //   type: Type.CHECKING,
-  //   color: generateColor(Type.CHECKING),
-  //   number: '',
-  //   visible: true,
-  //   routing: '',
-  //   key: ''
-  // }
+  export const defaultValues: Props = {
+    name: '',
+    type: Type.CHECKING,
+    color: generateColor(Type.CHECKING),
+    number: '',
+    visible: true,
+    routing: '',
+    key: ''
+  }
 
-  // type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null }
+  type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null }
 
-  // export const diff = (account: Account, values: Nullable<Props>): Query => {
-  //   return Object.keys(values).reduce(
-  //     (q, prop): Query => {
-  //       const val = values[prop]
-  //       if (val !== account[prop]) {
-  //         return ({
-  //           ...q,
-  //           [prop]: { $set: val }
-  //         })
-  //       } else {
-  //         return q
-  //       }
-  //     },
-  //     {} as Query
-  //   )
-  // }
+  export const diff = (account: Account, values: Nullable<Props>): Query => {
+    return Object.keys(values).reduce(
+      (q, prop): Query => {
+        const val = values[prop]
+        if (val !== account[prop]) {
+          return ({
+            ...q,
+            [prop]: { $set: val }
+          })
+        } else {
+          return q
+        }
+      },
+      {} as Query
+    )
+  }
 }

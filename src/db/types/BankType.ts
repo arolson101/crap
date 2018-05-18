@@ -100,8 +100,8 @@ class DeleteBankArgs {
 
 export namespace Bank {
 
-  type Props = { [k in keyof Bank]: Bank[k] }
-  export type Query = iupdate.Query<Bank>
+  export type Props = { [k in keyof Bank]: Bank[k] }
+  export type Query = iupdate.Query<Props>
   export const table = 'banks'
   export const schema = Record.genSchema()
 
