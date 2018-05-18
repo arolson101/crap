@@ -1,26 +1,37 @@
 import Dexie from 'dexie'
 import { AppDatabase } from '../AppDatabase'
-import { ResolverContext, None, Input, Field, Type, makeSchema, Mutation, String, Boolean } from './helpers'
+import { Arg, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation, ObjectType, Query, Resolver, ResolverContext, ResolverInterface, Root } from './helpers'
 import { Bank } from './BankType'
 import { Account } from './AccountType'
 
-class OpenDbArgs {
-  @Field password: String
+@ObjectType()
+class Db {
+  @Field(type => [String]) all: string[]
 }
 
-@Type export class Db {
-  @Field([String]) async all () {
+@Resolver(objectType => Db)
+export class DbResolver {
+
+  @Query(returns => [String])
+  async allDbs (): Promise<string[]> {
     const names = await Dexie.getDatabaseNames()
     return names
   }
 
-  @Mutation(Boolean) async openDb (source: any, args: OpenDbArgs, context: ResolverContext) {
+  @Mutation(returns => Boolean)
+  async openDb (
+    @Arg('password', { description: 'the password for the database' }) password: string,
+    @Ctx() context: ResolverContext
+  ): Promise<Boolean> {
     const db = await context.openDb()
     context.setDb(db)
     return true
   }
 
-  @Mutation(Boolean) async closeDb (source: any, args: None, context: ResolverContext) {
+  @Mutation(returns => Boolean)
+  async closeDb (
+    @Ctx() context: ResolverContext
+  ): Promise<Boolean> {
     context.setDb(undefined)
     return true
   }
@@ -42,7 +53,7 @@ export const getBank = async (db: AppDatabase, id: string): Promise<Bank> => {
   return bank
 }
 
-export const toBank = (dbBank: Bank): Partial<Bank> => {
+export const toBank = (dbBank: Bank): Bank => {
   const { _deleted, _base, _history, ...rest } = dbBank
   return { ...rest } as any
 }
@@ -55,9 +66,9 @@ export const getAccount = async (db: AppDatabase, id: string): Promise<Account> 
   return account
 }
 
-export const toAccount = (account: Account.Interface): Partial<Account.Interface> => {
+export const toAccount = (account: Account.Interface): Account => {
   const { bankId, _deleted, _base, _history, type: stringType, ...rest } = account
   // const type = ST.AccountType[stringType]
   // return { ...rest, type }
-  return { ...rest }
+  return { ...rest } as any
 }

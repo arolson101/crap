@@ -35,7 +35,7 @@ export class LoginFormComponent extends React.PureComponent<Props> {
       return <ErrorMessage error={this.props.query.error} />
     }
 
-    const exists = this.props.query.data.db.all.length > 0
+    const exists = this.props.query.data.allDbs.length > 0
     return (
       // <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />
       <>

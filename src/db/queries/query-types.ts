@@ -1,14 +1,22 @@
 /* tslint:disable */
 
 export interface Query {
-  db: Db;
+  allDbs: string[];
+  account: Account;
   bank: Bank;
   banks: Bank[];
-  account: Account;
 }
 
-export interface Db {
-  all: string[];
+export interface Account {
+  id: string;
+  bankId: string;
+  name: string;
+  color: string;
+  type: string;
+  number: string;
+  visible: boolean;
+  routing: string;
+  key: string;
 }
 
 export interface Bank {
@@ -27,25 +35,27 @@ export interface Bank {
   accounts: Account[];
 }
 
-export interface Account {
-  id: string;
-  bankId: string;
-  name: string;
-  color: string;
-  type: string;
-  number: string;
-  visible: boolean;
-  routing: string;
-  key: string;
-}
-
 export interface Mutation {
   openDb: boolean;
   closeDb: boolean;
-  saveBank: Bank;
-  deleteBank: boolean;
   saveAccount: Account;
   deleteAccount: boolean;
+  saveBank: Bank;
+  deleteBank: boolean;
+}
+
+export interface Db {
+  all: string[];
+}
+
+export interface AccountInput {
+  name?: string | null;
+  color?: string | null;
+  type?: string | null;
+  number?: string | null;
+  visible?: boolean | null;
+  routing?: string | null;
+  key?: string | null;
 }
 
 export interface BankInput {
@@ -61,31 +71,14 @@ export interface BankInput {
   username?: string | null;
   password?: string | null;
 }
-
-export interface AccountInput {
-  name?: string | null;
-  color?: string | null;
-  type?: string | null;
-  number?: string | null;
-  visible?: boolean | null;
-  routing?: string | null;
-  key?: string | null;
+export interface AccountQueryArgs {
+  bankId: string;
 }
 export interface BankQueryArgs {
   bankId: string;
 }
-export interface AccountQueryArgs {
-  accountId: string;
-}
 export interface OpenDbMutationArgs {
-  password: string;
-}
-export interface SaveBankMutationArgs {
-  input: BankInput;
-  bankId?: string | null;
-}
-export interface DeleteBankMutationArgs {
-  bankId: string;
+  password: string /** the password for the database */;
 }
 export interface SaveAccountMutationArgs {
   accountId?: string | null;
@@ -94,6 +87,13 @@ export interface SaveAccountMutationArgs {
 }
 export interface DeleteAccountMutationArgs {
   accountId: string;
+}
+export interface SaveBankMutationArgs {
+  input: BankInput;
+  bankId?: string | null;
+}
+export interface DeleteBankMutationArgs {
+  bankId: string;
 }
 export namespace Account {
   export type Variables = {
@@ -197,11 +197,6 @@ export namespace Dbs {
 
   export type Query = {
     __typename?: "Query";
-    db: Db;
-  };
-
-  export type Db = {
-    __typename?: "Db";
-    all: string[];
+    allDbs: string[];
   };
 }

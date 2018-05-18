@@ -22,7 +22,7 @@ import Dexie from 'dexie'
 }
 
 class OpenDbArgs {
-  @Field password: String
+  @Field password: string
 }
 
 @Type class DbMutations {

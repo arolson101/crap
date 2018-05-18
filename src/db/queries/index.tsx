@@ -126,9 +126,7 @@ export namespace Queries {
   // Dbs
   export const DBS = gql`
     query Dbs {
-      db {
-        all
-      }
+      allDbs
     }
   `
   export type Dbs = QueryType<Dbs.Query>

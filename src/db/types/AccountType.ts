@@ -1,55 +1,78 @@
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 import { defineMessages } from 'react-intl'
 import { Column, Connection, Entity, PrimaryColumn } from 'typeorm'
-import { Boolean, Field, Input, Mutation, Nullable, ResolverContext, String, Type } from './helpers'
+import { Arg, Args, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation, ObjectType, Query, Resolver, ResolverContext, ResolverInterface, Root } from './helpers'
 import { getDb, getBank, toBank, getAccount, toAccount } from './DbType'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
 import { createRecord, Record } from '../Record'
 
-@Input export class AccountInput {
-  @Nullable @Field name?: String
-  @Nullable @Field color?: String
-  @Nullable @Field type?: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
-  @Nullable @Field number?: String
-  @Nullable @Field visible?: Boolean
-  @Nullable @Field routing?: String
-  @Nullable @Field key?: String
+@InputType()
+class AccountInput {
+  @Field({ nullable: true }) name?: string
+  @Field({ nullable: true }) color?: string
+  @Field({ nullable: true }) type?: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Field({ nullable: true }) number?: string
+  @Field({ nullable: true }) visible?: boolean
+  @Field({ nullable: true }) routing?: string
+  @Field({ nullable: true }) key?: string
 }
 
+@ArgsType()
 class CreateAccountArgs {
-  @Field bankId: String
-  @Field inputs: AccountInput
+  @Field() bankId: string
+  @Field() inputs: AccountInput
 }
 
+@ArgsType()
 class SaveAccountArgs {
-  @Nullable @Field accountId: string
-  @Nullable @Field bankId: string
-  @Field input: AccountInput
+  @Field({ nullable: true }) accountId: string
+  @Field({ nullable: true }) bankId: string
+  @Field() input: AccountInput
 }
 
+@ArgsType()
 class DeleteAccountArgs {
-  @Field accountId: string
+  @Field() accountId: string
 }
 
-@Type @Entity({ name: 'accounts' })
+@ObjectType()
+@Entity({ name: 'accounts' })
 export class Account implements Record<Account.Props> {
   @Column() _deleted: number
   @Column() _base: any
   @Column() _history: any
 
-  @Field @PrimaryColumn() id: string
-  @Field @Column() bankId: string
+  @Field() @PrimaryColumn() id: string
+  @Field() @Column() bankId: string
 
-  @Field @Column() name: string
-  @Field @Column() color: string
-  @Field @Column() type: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
-  @Field @Column() number: string
-  @Field @Column() visible: Boolean
-  @Field @Column() routing: string
-  @Field @Column() key: string
+  @Field() @Column() name: string
+  @Field() @Column() color: string
+  @Field() @Column() type: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Field() @Column() number: string
+  @Field() @Column() visible: boolean
+  @Field() @Column() routing: string
+  @Field() @Column() key: string
+}
 
-  @Mutation(Account) async saveAccount (_: any, args: SaveAccountArgs, context: ResolverContext) {
+@Resolver(objectType => Account)
+export class AccountResolver {
+
+  @Query(returns => Account)
+  async account (
+    @Arg('bankId') accountId: string,
+    @Ctx() context: ResolverContext
+  ): Promise<Account> {
+    const db = getDb(context)
+    const res = await getAccount(db, accountId)
+    return toAccount(res)
+  }
+
+  @Mutation(returns => Account)
+  async saveAccount (
+    @Args() args: SaveAccountArgs,
+    @Ctx() context: ResolverContext
+  ): Promise<Account> {
     const db = getDb(context)
     const t = context.getTime()
     let account: Account.Interface
@@ -81,7 +104,11 @@ export class Account implements Record<Account.Props> {
     return toAccount(account)
   }
 
-  @Mutation(Boolean) async deleteAccount (_: any, args: DeleteAccountArgs, context: ResolverContext) {
+  @Mutation(returns => Boolean)
+  async deleteAccount (
+    @Args() args: DeleteAccountArgs,
+    @Ctx() context: ResolverContext
+  ): Promise<Boolean> {
     const db = getDb(context)
     const t = context.getTime()
     const changes = [
