@@ -1,10 +1,10 @@
-import { Column, Connection, Entity, PrimaryColumn } from 'typeorm'
-import { Arg, Args, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation, ObjectType, Query, Resolver, ResolverContext, ResolverInterface, Root } from './helpers'
+import { Column, PrimaryColumn } from 'typeorm'
 import { iupdate } from '../../iupdate'
-import { createRecord, Record } from '../Record'
 import { DbChange } from '../AppDatabase'
-import { getDb, getBank, toBank, getAccount, toAccount } from './DbResolver'
+import { Record, createRecord } from '../Record'
 import { Account } from './AccountResolver'
+import { getBank, getDb, toAccount, toBank } from './DbResolver'
+import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, Root } from './helpers'
 
 @InputType()
 class BankInput {
@@ -22,17 +22,6 @@ class BankInput {
 
   @Field({ nullable: true }) username?: string
   @Field({ nullable: true }) password?: string
-}
-
-@ArgsType()
-class SaveBankArgs {
-  @Field() input: BankInput
-  @Field({ nullable: true }) bankId?: string
-}
-
-@ArgsType()
-class DeleteBankArgs {
-  @Field() bankId: string
 }
 
 @ObjectType()
@@ -91,24 +80,25 @@ export class BankResolver {
 
   @Mutation(returns => Bank)
   async saveBank (
-    @Args() args: SaveBankArgs,
-    @Ctx() context: ResolverContext
+    @Ctx() context: ResolverContext,
+    @Arg('input') input: BankInput,
+    @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Bank> {
     const db = getDb(context)
     const t = context.getTime()
     let bank: Bank.Interface
     let changes: Array<any>
-    if (args.bankId) {
-      const edit = await getBank(db, args.bankId)
-      const q = Bank.diff(edit, args.input)
+    if (bankId) {
+      const edit = await getBank(db, bankId)
+      const q = Bank.diff(edit, input)
       changes = [
-        Bank.change.edit(t, args.bankId, q)
+        Bank.change.edit(t, bankId, q)
       ]
       bank = iupdate(edit, q)
     } else {
       const props: Bank.Props = {
         ...Bank.defaultValues,
-        ...args.input as any
+        ...input
       }
       bank = createRecord(context.genId, props)
       changes = [
@@ -121,13 +111,13 @@ export class BankResolver {
 
   @Mutation(returns => Boolean)
   async deleteBank (
-    @Args() args: DeleteBankArgs,
+    @Arg('bankId') bankId: string,
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
     const db = getDb(context)
     const t = context.getTime()
     const changes = [
-      Bank.change.remove(t, args.bankId)
+      Bank.change.remove(t, bankId)
     ]
     await db.change(changes)
     return true
@@ -135,8 +125,8 @@ export class BankResolver {
 }
 
 export namespace Bank {
-  export interface Props extends Pick<BankInput, keyof BankInput> {}
-  export interface Interface extends Pick<Bank, Exclude<keyof Bank, ['accounts', 'saveBank', 'deleteBank']>> {}
+  export interface Props extends Pick<BankInput, keyof BankInput> { }
+  export interface Interface extends Pick<Bank, Exclude<keyof Bank, ['accounts', 'saveBank', 'deleteBank']>> { }
   export type Query = iupdate.Query<Props>
   export const table = 'banks'
   export const schema = Record.genSchema()

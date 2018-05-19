@@ -12,7 +12,7 @@ export interface Account {
   bankId: string;
   name: string;
   color: string;
-  type: string;
+  type: AccountType;
   number: string;
   visible: boolean;
   routing: string;
@@ -51,7 +51,7 @@ export interface Db {
 export interface AccountInput {
   name?: string | null;
   color?: string | null;
-  type?: string | null;
+  type?: AccountType | null;
   number?: string | null;
   visible?: boolean | null;
   routing?: string | null;
@@ -81,19 +81,27 @@ export interface OpenDbMutationArgs {
   password: string /** the password for the database */;
 }
 export interface SaveAccountMutationArgs {
-  accountId?: string | null;
   bankId?: string | null;
+  accountId?: string | null;
   input: AccountInput;
 }
 export interface DeleteAccountMutationArgs {
   accountId: string;
 }
 export interface SaveBankMutationArgs {
-  input: BankInput;
   bankId?: string | null;
+  input: BankInput;
 }
 export interface DeleteBankMutationArgs {
   bankId: string;
+}
+
+export enum AccountType {
+  CHECKING = "CHECKING",
+  SAVINGS = "SAVINGS",
+  MONEYMRKT = "MONEYMRKT",
+  CREDITLINE = "CREDITLINE",
+  CREDITCARD = "CREDITCARD"
 }
 export namespace Account {
   export type Variables = {
@@ -109,7 +117,7 @@ export namespace Account {
     __typename?: "Account";
     id: string;
     name: string;
-    type: string;
+    type: AccountType;
     color: string;
     number: string;
     visible: boolean;

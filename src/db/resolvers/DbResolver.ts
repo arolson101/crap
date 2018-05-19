@@ -1,8 +1,8 @@
 import Dexie from 'dexie'
 import { AppDatabase } from '../AppDatabase'
-import { Arg, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation, ObjectType, Query, Resolver, ResolverContext, ResolverInterface, Root } from './helpers'
-import { Bank } from './BankResolver'
 import { Account } from './AccountResolver'
+import { Bank } from './BankResolver'
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver, ResolverContext } from './helpers'
 
 @ObjectType()
 class Db {

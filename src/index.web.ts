@@ -70,3 +70,53 @@ async function testTypeORM () {
 }
 
 // testTypeORM()
+
+// import * as localforage from 'localforage'
+
+// interface User {
+//   _id: string
+//   bank: string
+//   date: number
+// }
+
+// async function testLocalForage () {
+//   let db = localforage.createInstance({name: 'test'})
+//   let count = 0
+//   if (count === 0) {
+//     console.time('creating')
+//     for (let bank of ['bank1', 'bank2', 'bank3']) {
+//       const records: User[] = []
+//       for (let i = 0; i <= 50000; i++) {
+//         const user: User = {
+//           _id: `transaction/${bank}/${i}`,
+//           bank: bank,
+//           date: Date.now() - i,
+//         }
+//         await db.setItem(user._id, user)
+//         // db[user._id] = user
+//         // records.push(user)
+
+//         // if (records.length >= 500) {
+//         //   const msg = `putting ${i - records.length} - ${i}`
+//         //   // console.time(msg)
+//         //   db = records.reduce(
+//         //     (d, record) => d[record._id] = record,
+//         //     {}
+//         //   )
+//         //   // console.timeEnd(msg)
+//         //   records.length = 0
+//         // }
+//       }
+//     }
+//     console.time('stringify')
+//     const count = Object.keys(db).length
+//     console.log(`${count} objects`)
+//     const str = JSON.stringify(db)
+//     console.timeEnd('stringify')
+//     console.timeEnd('creating')
+//   }
+
+//   // (db as any).databaseDriver
+// }
+
+// testLocalForage()

@@ -1,6 +1,6 @@
 import 'reflect-metadata'
-import { buildSchemaSync } from './resolvers/helpers'
 import { AccountResolver, BankResolver, DbResolver } from './resolvers'
+import { buildSchemaSync } from './resolvers/helpers'
 
 const schema = buildSchemaSync({
   resolvers: [

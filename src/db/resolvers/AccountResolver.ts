@@ -1,39 +1,31 @@
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 import { defineMessages } from 'react-intl'
-import { Column, Connection, Entity, PrimaryColumn } from 'typeorm'
-import { Arg, Args, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation, ObjectType, Query, Resolver, ResolverContext, ResolverInterface, Root } from './helpers'
-import { getDb, getBank, toBank, getAccount, toAccount } from './DbResolver'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
-import { createRecord, Record } from '../Record'
+import { Record, createRecord } from '../Record'
+import { getAccount, getDb, toAccount } from './DbResolver'
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
+
+// see ofx4js.domain.data.banking.AccountType
+enum AccountType {
+  CHECKING = 'CHECKING',
+  SAVINGS = 'SAVINGS',
+  MONEYMRKT = 'MONEYMRKT',
+  CREDITLINE = 'CREDITLINE',
+  CREDITCARD = 'CREDITCARD',
+}
+registerEnumType(AccountType, { name: 'AccountType' })
 
 @InputType()
 class AccountInput {
   @Field({ nullable: true }) name?: string
   @Field({ nullable: true }) color?: string
-  @Field({ nullable: true }) type?: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Field(type => AccountType, { nullable: true }) type?: AccountType
   @Field({ nullable: true }) number?: string
   @Field({ nullable: true }) visible?: boolean
   @Field({ nullable: true }) routing?: string
   @Field({ nullable: true }) key?: string
-}
-
-@ArgsType()
-class CreateAccountArgs {
-  @Field() bankId: string
-  @Field() inputs: AccountInput
-}
-
-@ArgsType()
-class SaveAccountArgs {
-  @Field({ nullable: true }) accountId: string
-  @Field({ nullable: true }) bankId: string
-  @Field() input: AccountInput
-}
-
-@ArgsType()
-class DeleteAccountArgs {
-  @Field() accountId: string
 }
 
 @ObjectType()
@@ -48,7 +40,7 @@ export class Account implements Record<Account.Props> {
 
   @Field() @Column() name: string
   @Field() @Column() color: string
-  @Field() @Column() type: 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
+  @Field(type => AccountType) @Column() type: AccountType
   @Field() @Column() number: string
   @Field() @Column() visible: boolean
   @Field() @Column() routing: string
@@ -70,30 +62,32 @@ export class AccountResolver {
 
   @Mutation(returns => Account)
   async saveAccount (
-    @Args() args: SaveAccountArgs,
-    @Ctx() context: ResolverContext
+    @Ctx() context: ResolverContext,
+    @Arg('input') input: AccountInput,
+    @Arg('accountId', { nullable: true }) accountId?: string,
+    @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Account> {
     const db = getDb(context)
     const t = context.getTime()
     let account: Account.Interface
     let changes: Array<any>
-    if (args.accountId) {
-      const edit = await getAccount(db, args.accountId)
-      const q = Account.diff(edit, args.input)
+    if (accountId) {
+      const edit = await getAccount(db, accountId)
+      const q = Account.diff(edit, input)
       changes = [
-        Account.change.edit(t, args.accountId, q)
+        Account.change.edit(t, accountId, q)
       ]
       account = iupdate(edit, q)
     } else {
-      if (!args.bankId) {
+      if (!bankId) {
         throw new Error('when creating an account, bankId must be specified')
       }
       const props: Account.Props = {
         ...Account.defaultValues,
-        ...args.input
+        ...input
       }
       account = {
-        bankId: args.bankId,
+        bankId,
         ...createRecord(context.genId, props)
       }
       changes = [
@@ -106,13 +100,13 @@ export class AccountResolver {
 
   @Mutation(returns => Boolean)
   async deleteAccount (
-    @Args() args: DeleteAccountArgs,
+    @Arg('accountId') accountId: string,
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
     const db = getDb(context)
     const t = context.getTime()
     const changes = [
-      Account.change.remove(t, args.accountId)
+      Account.change.remove(t, accountId)
     ]
     await db.change(changes)
     return true
@@ -120,18 +114,10 @@ export class AccountResolver {
 }
 
 export namespace Account {
-  export interface Props extends Pick<AccountInput, keyof AccountInput> {}
-  export interface Interface extends Pick<Account, Exclude<keyof Account, 'saveAccount'>> {}
-
-  // see ofx4js.domain.data.banking.AccountType
-  export type Type = 'CHECKING' | 'SAVINGS' | 'MONEYMRKT' | 'CREDITLINE' | 'CREDITCARD'
-  export const Type = {
-    CHECKING: 'CHECKING' as Type,
-    SAVINGS: 'SAVINGS' as Type,
-    MONEYMRKT: 'MONEYMRKT' as Type,
-    CREDITLINE: 'CREDITLINE' as Type,
-    CREDITCARD: 'CREDITCARD' as Type
-  }
+  export interface Props extends Pick<AccountInput, keyof AccountInput> { }
+  export interface Interface extends Pick<Account, Exclude<keyof Account, 'saveAccount'>> { }
+  export const Type = AccountType
+  export type Type = AccountType
 
   export const messages = defineMessages({
     CHECKING: {
