@@ -38,8 +38,8 @@ class DeleteBankArgs {
 @ObjectType()
 export class Bank implements Record<Bank> {
   @Column() _deleted: number
-  @Column() _base: any
-  @Column() _history: any
+  @Column() _base?: any
+  @Column() _history?: any
 
   @Field() @PrimaryColumn() id: string
 

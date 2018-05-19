@@ -1,5 +1,5 @@
 import { createRecord, updateRecord, dehydrate, hydrate } from './Record'
-import { Bank } from './records/Bank'
+import { Bank } from './resolvers/BankResolver'
 
 test('dehydrate', () => {
   const obj = { foo: 'bar', baz: 123, array: [1, 2, 3] }

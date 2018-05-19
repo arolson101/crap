@@ -40,8 +40,8 @@ class DeleteAccountArgs {
 @Entity({ name: 'accounts' })
 export class Account implements Record<Account.Props> {
   @Column() _deleted: number
-  @Column() _base: any
-  @Column() _history: any
+  @Column() _base?: any
+  @Column() _history?: any
 
   @Field() @PrimaryColumn() id: string
   @Field() @Column() bankId: string

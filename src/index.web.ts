@@ -23,9 +23,7 @@ registerServiceWorker()
 //   })
 // }
 
-import 'reflect-metadata'
 import { createConnection, Entity, Column, PrimaryGeneratedColumn, getRepository, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { makeSchema, Type, Field, ID, String, Mutation } from 'graphql-typescript'
 
 async function testTypeORM () {
   const db = await createConnection({
@@ -33,7 +31,7 @@ async function testTypeORM () {
     // database: 'test',
     location: 'test',
     entities: [
-      User
+      // User
     ],
     // logging: true,
     // dropSchema: true,
@@ -72,39 +70,3 @@ async function testTypeORM () {
 }
 
 // testTypeORM()
-
-class CreateUserArguments {
-  @Field(String) username: string
-  @Field(String) password: string
-}
-
-@Entity({ name: 'User' })
-@Type
-export class User {
-  @PrimaryGeneratedColumn()
-  @Field(ID)
-  id: string
-
-  @Column({ type: 'varchar', unique: true })
-  @Field(String)
-  username: string
-
-  @Column('varchar')
-  password: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
-  @Mutation(User)
-  async createUser(_: any, args: CreateUserArguments) {
-    return getRepository(User).save(args)
-  }
-}
-
-// const schema = makeSchema(User, {
-//   types: []
-// })
-// console.log(schema)

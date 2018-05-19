@@ -1,0 +1,23 @@
+mutation DeleteBank($bankId: String!) {
+  deleteBank(bankId: $bankId)
+}
+
+mutation DeleteAccount($accountId: String!) {
+  deleteAccount(accountId: $accountId)
+}
+
+mutation OpenDb($password: String!) {
+  openDb(password: $password)
+}
+
+mutation SaveAccount($input: AccountInput!, $accountId: String, $bankId: String) {
+  saveAccount(input: $input, accountId: $accountId, bankId: $bankId) {
+    id
+  }
+}
+
+mutation SaveBank($input: BankInput!, $bankId: String) {
+  saveBank(input: $input, bankId: $bankId) {
+    id
+  }
+}

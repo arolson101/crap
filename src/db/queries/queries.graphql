@@ -1,0 +1,62 @@
+
+query Account($accountId: String!) {
+  account(accountId: $accountId) {
+    id
+    name
+    type
+    color
+    number
+    visible
+    routing
+    key
+  }
+}
+
+query Accounts {
+  banks {
+    id
+    name
+    accounts {
+      id
+      name
+      # balance
+    }
+  }
+}
+
+query Bank($bankId: String!) {
+  bank(bankId: $bankId) {
+    id
+    name
+    web
+    address
+    notes
+    favicon
+    online
+    fid
+    org
+    ofx
+    username
+    password
+
+    accounts {
+      id
+      name
+    }
+  }
+}
+
+query Banks {
+  banks {
+    id
+    name
+    accounts {
+      id
+      name
+    }
+  }
+}
+
+query Dbs {
+  allDbs
+}

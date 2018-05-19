@@ -1,11 +1,12 @@
-import { buildSchemaSync } from './types/helpers'
-import { AccountResolver, BankResolver, DbResolver } from './types'
+import 'reflect-metadata'
+import { buildSchemaSync } from './resolvers/helpers'
+import { AccountResolver, BankResolver, DbResolver } from './resolvers'
 
 const schema = buildSchemaSync({
   resolvers: [
-    AccountResolver,
+    DbResolver,
     BankResolver,
-    DbResolver
+    AccountResolver,
   ]
 })
 

@@ -1,14 +1,15 @@
-// graphql.d.ts file
-declare module '*.graphql' {
-  import { DocumentNode } from 'graphql'
+// // graphql.d.ts file
+// declare module '*.graphql' {
+//   import { DocumentNode } from 'graphql'
 
-  const value: DocumentNode
-  export default value
-}
+//   const value: DocumentNode
+//   export default value
 
-declare module '*.graphqls' {
-  import { DocumentNode } from 'graphql'
+//   // mutations.graphql
+//   export const DeleteBank: DocumentNode
+//   export const DeleteAccount: DocumentNode
+//   export const OpenDb: DocumentNode
+//   export const SaveAccount: DocumentNode
+//   export const SaveBank: DocumentNode
 
-  const value: DocumentNode
-  export default value
-}
+// }

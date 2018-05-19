@@ -5,7 +5,7 @@ import { defineMessages } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
 import { nav } from '../nav'
-import { Mutations, Queries, Types, Account } from '../db'
+import { Mutations, Queries, Account } from '../db'
 import { ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { typedFields, SelectFieldItem } from '../components/fields'
@@ -20,10 +20,7 @@ interface ComposedProps extends Props {
   saveAccount: Mutations.SaveAccount
 }
 
-type FormValues = {
-  // tslint:disable-next-line
-  [P in keyof Types.AccountInput]-?: Types.Account[P]
-}
+type FormValues = Account.Props
 
 const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>()
 

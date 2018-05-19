@@ -6,7 +6,7 @@ import { Redirect } from 'react-router'
 import { compose } from 'recompose'
 import { nav } from '../nav'
 import { filist, formatAddress } from '../fi'
-import { Mutations, Queries, Types, Bank } from '../db'
+import { Mutations, Queries, Bank } from '../db'
 import { ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { typedFields } from '../components/fields'
@@ -21,7 +21,7 @@ interface ComposedProps extends Props {
 }
 
 type BankInput = {
-  [P in keyof Types.BankInput]-?: Types.Bank[P]
+  [P in keyof Bank.Props]-?: Bank.Props[P]
 }
 
 interface FormValues extends BankInput {

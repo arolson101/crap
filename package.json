@@ -45,10 +45,10 @@
     "storybook": "npm run storybook-web",
     "pregenerate": "mkdirp temp",
     "generate": "npm run generate:schema && npm run generate:queries && npm run generate:mutations",
-    "generate:queries": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/queries/query-types.ts \"src/db/queries/*.tsx\"",
-    "generate:mutations": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/mutations/mutation-types.ts \"src/db/mutations/*.tsx\"",
+    "generate:queries": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/queries/queries-types.ts \"src/db/queries/queries.graphql\"",
+    "generate:mutations": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/mutations/mutations-types.ts \"src/db/mutations/mutations.graphql\"",
     "generate:schema": "ts-node --project tsconfig.test.json ./genSchema.ts",
-    "graphdoc": "npm run generate:schema && graphdoc --force -s ./temp/schema.json -o ./temp/foo",
+    "graphdoc": "npm run generate:schema && graphdoc --force -s ./temp/schema.json -o ./temp/graphdoc",
     "lint": "tslint --fix \"{src,stories}/**/*{.ts,.tsx}\" --project tsconfig.json"
   },
   "devDependencies": {
