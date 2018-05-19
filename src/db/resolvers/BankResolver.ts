@@ -3,8 +3,8 @@ import { Arg, Args, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation, Ob
 import { iupdate } from '../../iupdate'
 import { createRecord, Record } from '../Record'
 import { DbChange } from '../AppDatabase'
-import { getDb, getBank, toBank, getAccount, toAccount } from './DbType'
-import { Account } from './AccountType'
+import { getDb, getBank, toBank, getAccount, toAccount } from './DbResolver'
+import { Account } from './AccountResolver'
 
 @InputType()
 class BankInput {

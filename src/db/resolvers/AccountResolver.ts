@@ -2,7 +2,7 @@ const randomColor = require<(options?: RandomColorOptions) => string>('randomcol
 import { defineMessages } from 'react-intl'
 import { Column, Connection, Entity, PrimaryColumn } from 'typeorm'
 import { Arg, Args, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation, ObjectType, Query, Resolver, ResolverContext, ResolverInterface, Root } from './helpers'
-import { getDb, getBank, toBank, getAccount, toAccount } from './DbType'
+import { getDb, getBank, toBank, getAccount, toAccount } from './DbResolver'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
 import { createRecord, Record } from '../Record'

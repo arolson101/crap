@@ -23,3 +23,7 @@
 
 ## todo
 * get storybook working on mobile
+* enum
+* id types
+* typeorm
+* just read the object graph into memory? localforage

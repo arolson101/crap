@@ -4,7 +4,7 @@ import { iupdate } from '../iupdate'
 import { Record, updateRecord, deleteRecord } from './Record'
 
 import { Bill, Budget, Category, Transaction } from './records'
-import { Account, Bank } from './types'
+import { Account, Bank } from './resolvers'
 
 export type TableName = typeof Account.table
   | typeof Bank.table
