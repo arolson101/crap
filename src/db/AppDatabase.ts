@@ -1,10 +1,8 @@
 import Dexie from 'dexie'
 import { uniq } from 'lodash'
 import { iupdate } from '../iupdate'
-import { Record, updateRecord, deleteRecord } from './Record'
-
-import { Bill, Budget, Category, Transaction } from './records'
-import { Account, Bank } from './resolvers'
+import { Record, deleteRecord, updateRecord } from './Record'
+import { Account, Bank, Bill, Budget, Category, Transaction } from './resolvers'
 
 export type TableName = typeof Account.table
   | typeof Bank.table

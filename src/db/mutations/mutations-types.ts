@@ -48,6 +48,43 @@ export interface Db {
   all: string[];
 }
 
+export interface Bill {
+  id: string;
+  name: string;
+  group: string;
+  web: string;
+  favicon: string;
+  notes: string;
+  amount: number;
+  account: string;
+  category: string;
+  rruleString: string;
+  showAdvanced: boolean;
+}
+
+export interface Budget {
+  id: string;
+  name: string;
+  sortOrder: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  amount: number;
+}
+
+export interface Transaction {
+  id: string;
+  account: string;
+  serverid: string;
+  time: number;
+  type: string;
+  name: string;
+  memo: string;
+  amount: number;
+}
+
 export interface AccountInput {
   name?: string | null;
   color?: string | null;

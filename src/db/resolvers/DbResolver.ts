@@ -2,14 +2,9 @@ import Dexie from 'dexie'
 import { AppDatabase } from '../AppDatabase'
 import { Account } from './AccountResolver'
 import { Bank } from './BankResolver'
-import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver, ResolverContext } from './helpers'
+import { Arg, Ctx, Mutation, Query, Resolver, ResolverContext } from './helpers'
 
-@ObjectType()
-class Db {
-  @Field(type => [String]) all: string[]
-}
-
-@Resolver(objectType => Db)
+@Resolver()
 export class DbResolver {
 
   @Query(returns => [String])
