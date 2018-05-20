@@ -1,6 +1,6 @@
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 import { defineMessages } from 'react-intl'
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
 import { Record, createRecord } from '../Record'

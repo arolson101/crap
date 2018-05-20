@@ -1,4 +1,4 @@
-import { Column, PrimaryColumn } from 'typeorm'
+import { Column, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
 import { Record, createRecord } from '../Record'

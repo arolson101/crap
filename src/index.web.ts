@@ -23,53 +23,73 @@ registerServiceWorker()
 //   })
 // }
 
-import { createConnection, Entity, Column, PrimaryGeneratedColumn, getRepository, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+if (process.env.NODE_ENV !== 'production') {
+  (window as any).SQL = require('sql.js/js/sql.js')
+}
+import { createConnection, Entity, Column, PrimaryGeneratedColumn, getRepository, CreateDateColumn, UpdateDateColumn } from 'typeorm/browser'
+
+@Entity()
+export class User {
+
+  @PrimaryGeneratedColumn()
+  _id: string
+
+  @Column()
+  bank: string
+
+  @Column()
+  date: number
+}
 
 async function testTypeORM () {
+  console.log('testTypeORM')
   const db = await createConnection({
     type: 'sqljs',
     // database: 'test',
     location: 'test',
     entities: [
-      // User
+      User
     ],
+    autoSave: true,
     // logging: true,
     // dropSchema: true,
     synchronize: true
   })
 
-  // const count = await db.manager.count(User)
-  // console.log(`${count} users in table`)
+  const count = await db.manager.count(User)
+  console.log(`${count} users in table`)
 
-  // if (count === 0) {
-  //   console.time('creating')
-  //   for (let bank of ['bank1', 'bank2', 'bank3']) {
-  //     const records: User[] = []
-  //     for (let i = 0; i <= 10000; i++) {
-  //       const user = new User();
-  //       user._id = `transaction/${bank}/${i}`
-  //       user.bank = bank
-  //       user.date = Date.now() - i
-  //       records.push(user)
+  if (count === 0) {
+    console.time('creating')
+    await db.transaction(async mgr => {
+      for (let bank of ['bank1', 'bank2', 'bank3']) {
+        const records: User[] = []
+        for (let i = 0; i <= 1000; i++) {
+          const user = new User()
+          user._id = `transaction/${bank}/${i}`
+          user.bank = bank
+          user.date = Date.now() - i
+          records.push(user)
 
-  //       if (records.length >= 500) {
-  //         const msg = `putting ${i - records.length} - ${i}`
-  //         console.time(msg)
-  //         await db.transaction(async mgr => {
-  //           await mgr.save(records)
-  //         })
-  //         console.timeEnd(msg)
-  //         records.length = 0
-  //       }
-  //     }
-  //   }
-  //   console.timeEnd('creating')
-  // }
+          if (records.length >= 500) {
+            const msg = `putting ${i - records.length} - ${i}`
+            console.time(msg)
+            await mgr.save(records)
+            console.timeEnd(msg)
+            records.length = 0
+          }
+        }
+      }
+    })
+    console.timeEnd('creating')
+    const count2 = await db.manager.count(User)
+    console.log(`${count} users in table`)
+  }
 
   // (db as any).databaseDriver
 }
 
-// testTypeORM()
+testTypeORM()
 
 // import * as localforage from 'localforage'
 
