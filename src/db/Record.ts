@@ -45,8 +45,17 @@ export abstract class RecordClass<T> implements Record<T> {
   @Column('text') _history?: HistoryType<T>
   @PrimaryColumn() id: string
 
-  update (input: Partial<T>) {
-    const new = iupdate(this, q)
+  createRecord<R extends T & Record<T> & T, T> (genId: () => string, props: T) {
+    this.id = genId()
+    this._base = undefined
+    this._history = undefined
+    this._deleted = 0
+    Object.assign(this, props)
+  }
+
+  update (q: iupdate.Query<T>) {
+    const next = iupdate(this, q)
+    Object.assign(this, next)
   }
 }
 
