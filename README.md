@@ -28,3 +28,4 @@
 * just read the object graph into memory? localforage
 * picker, other form field types
 * fix glamorous/native
+* fix storybook with typedefs

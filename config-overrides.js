@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireGqlTag = require('react-app-rewire-graphql-tag');
@@ -24,7 +25,10 @@ const babelModules = [
   'react-navigation',
   'react-router-native',
   'static-container',
+  // 'type-graphql',
 ]
+
+// const unusedDbDrivers = /^(mongodb|mysql|mysql2|oracledb|pg|pg\-native|pg\-query-stream|redis|mssql)$/
 
 module.exports = function override(config, env) {
 
@@ -83,16 +87,39 @@ module.exports = function override(config, env) {
 
   config.module.rules.forEach(ruleSearcher);
 
-  config.plugins = [
-    ...config.plugins,
+  const pluginsWithoutUglify = config.plugins.filter(plugin => !(plugin.options && plugin.options.compress))
+  const addUglify = (pluginsWithoutUglify.length !== config.plugins.length)
 
-    new webpack.NormalModuleReplacementPlugin(/typeorm$/, function (result) {
-      result.request = result.request.replace(/typeorm/, "typeorm/browser");
-    }),
-    new webpack.ProvidePlugin({
-      'window.SQL': 'sql.js/js/sql.js'
-    })
+  config.plugins = [
+    ...pluginsWithoutUglify,
+
+    // new webpack.IgnorePlugin(unusedDbDrivers),
+    // new webpack.NormalModuleReplacementPlugin(/typeorm$/, function (result) {
+    //   result.request = result.request.replace(/typeorm/, "typeorm/browser");
+    // }),
+    // new webpack.ProvidePlugin({
+    //   'window.SQL': 'sql.js/js/sql.js'
+    // })
   ]
+
+  if (addUglify) {
+    config.plugins.push(
+      new UglifyJSPlugin({
+        parallel: true,
+        uglifyOptions: {
+          ie8: false,
+          ecma: 6,
+          warnings: true,
+          mangle: false,
+          output: {
+            comments: false,
+            beautify: false,  // debug true
+          }
+        },
+        sourceMap: true,
+      })
+    )
+   }
 
   // console.log(JSON.stringify(config, null, '  '));
 
