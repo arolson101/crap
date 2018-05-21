@@ -3,8 +3,6 @@ import { iupdate } from '../../iupdate'
 import { Record, RecordClass } from '../Record'
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
 
-export interface Bill extends Bill.Props, Record<Bill.Props> {}
-
 @InputType()
 class BillInput {
   @Field({ nullable: true }) name?: string
@@ -21,7 +19,7 @@ class BillInput {
 
 @ObjectType()
 @Entity({ name: 'bills' })
-export class Bill implements RecordClass<Bill.Props> {
+export class Bill extends RecordClass<Bill.Props> {
   @PrimaryColumn() @Field() id: string
   @Column() @Field() name: string
   @Column() @Field() group: string

@@ -44,10 +44,13 @@ export class Bank extends RecordClass<Bank> implements Bank.Props {
   @Column() @Field() username: string
   @Column() @Field() password: string
 
-  constructor (props?: Bank.Props) {
+  constructor (props?: BankInput, genId?: () => string) {
     super()
-    if (props) {
-      Object.assign(this, { ...Bank.defaultValues, ...props })
+    if (props && genId) {
+      this.createRecord(genId, {
+        ...Bank.defaultValues,
+        ...props
+      })
     }
   }
 }
@@ -98,21 +101,17 @@ export class BankResolver {
   ): Promise<Bank> {
     const db = getDb(context)
     const t = context.getTime()
-    let bank: Bank.Interface
+    let bank: Bank
     let changes: Array<any>
     if (bankId) {
-      const edit = await getBank(db, bankId)
-      const q = Bank.diff(edit, input)
+      bank = await getBank(db, bankId)
+      const q = Bank.diff(bank, input)
       changes = [
         Bank.change.edit(t, bankId, q)
       ]
-      bank = iupdate(edit, q)
+      bank.update(q)
     } else {
-      const props: Bank.Props = {
-        ...Bank.defaultValues,
-        ...input
-      }
-      bank = createRecord(context.genId, props)
+      bank = new Bank(input, context.genId)
       changes = [
         Bank.change.add(t, bank)
       ]

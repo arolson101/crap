@@ -38,7 +38,7 @@ export interface Record<T = {}, ID = string> {
 }
 
 @Entity()
-// @Index(['_deleted', 'id'])
+@Index(['_deleted', 'id'])
 export abstract class RecordClass<T> implements Record<T> {
   @Column() _deleted: number
   @Column('text') _base?: BaseType<T>

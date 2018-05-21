@@ -42,7 +42,7 @@ export class Account extends RecordClass<Account.Props> {
   @Column() @Field() routing: string
   @Column() @Field() key: string
 
-  constructor (bankId?: string, props?: Account.Props, genId?: () => string) {
+  constructor (bankId?: string, props?: AccountInput, genId?: () => string) {
     super()
     if (bankId && props && genId) {
       this.createRecord(genId, {
@@ -89,11 +89,7 @@ export class AccountResolver {
       if (!bankId) {
         throw new Error('when creating an account, bankId must be specified')
       }
-      const props: Account.Props = {
-        ...Account.defaultValues,
-        ...input
-      }
-      account = new Account(bankId, props, context.genId)
+      account = new Account(bankId, input, context.genId)
       changes = [
         Account.change.add(t, account)
       ]
