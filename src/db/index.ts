@@ -1,6 +1,6 @@
-export * from './AppDb'
 export * from './AppDbProvider'
 export * from './mutations'
+export * from './openDb'
 export * from './queries'
 export * from './resolvers'
 export * from './schema'

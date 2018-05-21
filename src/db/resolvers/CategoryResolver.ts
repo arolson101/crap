@@ -25,6 +25,4 @@ export namespace Category {
   export interface Props extends Pick<CategoryInput, keyof CategoryInput> { }
 
   export type Query = iupdate.Query<Props>
-  export const table = 'categories'
-  export const schema = Record.genSchema()
 }

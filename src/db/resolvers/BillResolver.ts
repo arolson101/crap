@@ -40,6 +40,4 @@ export class BillResolver {
 export namespace Bill {
   export interface Props extends Pick<BillInput, keyof BillInput> { }
   export type Query = iupdate.Query<Props>
-  export const table = 'bills'
-  export const schema = Record.genSchema('account', 'category')
 }

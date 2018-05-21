@@ -41,8 +41,8 @@ export interface Record<T = {}, ID = string> {
 @Index(['_deleted', 'id'])
 export abstract class RecordClass<T> implements Record<T> {
   @Column() _deleted: number
-  @Column('text') _base?: BaseType<T>
-  @Column('text') _history?: HistoryType<T>
+  @Column('text', { nullable: true }) _base?: BaseType<T>
+  @Column('text', { nullable: true }) _history?: HistoryType<T>
   @PrimaryColumn() id: string
 
   createRecord<R extends T & Record<T> & T, T> (genId: () => string, props: T) {

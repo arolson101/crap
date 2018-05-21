@@ -25,6 +25,4 @@ export namespace Budget {
   export interface Props extends Pick<BudgetInput, keyof BudgetInput> { }
 
   export type Query = iupdate.Query<Props>
-  export const table = 'budgets'
-  export const schema = Record.genSchema('*categories')
 }

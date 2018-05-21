@@ -1,10 +1,9 @@
 import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
-import { DbChange } from '../AppDatabase'
 import { Record, RecordClass, createRecord } from '../Record'
 import { Account } from './AccountResolver'
 import { getBank, getDb } from './DbResolver'
-import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, Root, dbWrite } from './helpers'
+import { Arg, Ctx, DbChange, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, Root, dbWrite } from './helpers'
 
 @InputType()
 class BankInput {
@@ -25,7 +24,7 @@ class BankInput {
 }
 
 @ObjectType()
-@Entity({ name: 'accounts' })
+@Entity({ name: 'banks' })
 export class Bank extends RecordClass<Bank> implements Bank.Props {
   @PrimaryColumn() @Field() id: string
 
@@ -74,7 +73,7 @@ export class BankResolver {
     const res = await db.createQueryBuilder()
       .select()
       .from(Bank, 'bank')
-      .where('bank._deleted = 0')
+      // .where('bank._deleted = 0')
       .getMany()
     return res
   }
@@ -116,7 +115,7 @@ export class BankResolver {
         Bank.change.add(t, bank)
       ]
     }
-    await dbWrite(changes)
+    await dbWrite(db, changes)
     return bank
   }
 
@@ -130,7 +129,7 @@ export class BankResolver {
     const changes = [
       Bank.change.remove(t, bankId)
     ]
-    await dbWrite(changes)
+    await dbWrite(db, changes)
     return true
   }
 }
@@ -139,24 +138,22 @@ export namespace Bank {
   export interface Props extends Pick<BankInput, keyof BankInput> { }
   export interface Interface extends Pick<Bank, Exclude<keyof Bank, ['accounts', 'saveBank', 'deleteBank']>> { }
   export type Query = iupdate.Query<Props>
-  export const table = 'banks'
-  export const schema = Record.genSchema()
 
   export namespace change {
     export const add = (t: number, bank: Bank): DbChange => ({
-      table,
+      table: Bank,
       t,
       adds: [bank]
     })
 
     export const edit = (t: number, id: string, q: Query): DbChange => ({
-      table,
+      table: Bank,
       t,
       edits: [{ id, q }]
     })
 
     export const remove = (t: number, id: string): DbChange => ({
-      table,
+      table: Bank,
       t,
       deletes: [id]
     })

@@ -40,6 +40,4 @@ export class TransactionResolver {
 export namespace Transaction {
   export interface Props extends Pick<TransactionInput, keyof TransactionInput> { }
   export type Query = iupdate.Query<Props>
-  export const table = 'transactions'
-  export const schema = Record.genSchema('account', 'time')
 }

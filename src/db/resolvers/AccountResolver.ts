@@ -2,10 +2,9 @@ const randomColor = require<(options?: RandomColorOptions) => string>('randomcol
 import { defineMessages } from 'react-intl'
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
-import { DbChange } from '../AppDatabase'
 import { Record, RecordClass, createRecord } from '../Record'
 import { getAccount, getDb } from './DbResolver'
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
+import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
 
 // see ofx4js.domain.data.banking.AccountType
 enum AccountType {
@@ -94,7 +93,7 @@ export class AccountResolver {
         Account.change.add(t, account)
       ]
     }
-    await dbWrite(changes)
+    await dbWrite(db, changes)
     return account
   }
 
@@ -108,7 +107,7 @@ export class AccountResolver {
     const changes = [
       Account.change.remove(t, accountId)
     ]
-    await dbWrite(changes)
+    await dbWrite(db, changes)
     return true
   }
 }
@@ -161,24 +160,22 @@ export namespace Account {
   }
 
   export type Query = iupdate.Query<AccountInput>
-  export const table = 'accounts'
-  export const schema = Record.genSchema('bankId', '[bankId+_deleted]')
 
   export namespace change {
     export const add = (t: number, account: Interface): DbChange => ({
-      table,
+      table: Account,
       t,
       adds: [account]
     })
 
     export const edit = (t: number, id: string, q: Query): DbChange => ({
-      table,
+      table: Account,
       t,
       edits: [{ id, q }]
     })
 
     export const remove = (t: number, id: string): DbChange => ({
-      table,
+      table: Account,
       t,
       deletes: [id]
     })
