@@ -1,4 +1,4 @@
-import glamorous from 'glamorous-native'
+import glamorous from 'glamorous'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { View, Picker } from 'react-native'
@@ -10,19 +10,19 @@ import { AccountForm } from '../forms/AccountForm'
 import { ThemeProp, ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
 
-const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
+const Row = glamorous.div<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,
   flexDirection: 'row',
   alignItems: 'baseline'
 }))
 
-const LabelColumn = glamorous.text<ThemeProp>({}, ({ theme }) => ({
+const LabelColumn = glamorous.span<ThemeProp>({}, ({ theme }) => ({
   width: theme.labelWidth,
   fontSize: theme.labelFontSize,
   color: theme.labelColor
 }))
 
-const InputColumn = glamorous.view({
+const InputColumn = glamorous.div({
   flexDirection: 'column',
   flex: 1
 })

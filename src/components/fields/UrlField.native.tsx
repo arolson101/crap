@@ -55,7 +55,7 @@ export class UrlField extends React.Component<UrlField.Props> {
                 placeholder={placeholder && intl.formatMessage(placeholder)}
                 onSubmitEditing={onSubmitEditing}
                 returnKeyType={returnKeyType}
-                innerRef={(current) => this.textInput = { current }}
+                innerRef={(current: any) => this.textInput = { current }}
               />
             </WrappedField>
           )

@@ -1,4 +1,4 @@
-import glamorous from 'glamorous-native'
+import glamorous from 'glamorous'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import * as React from 'react'
 import { Field } from 'react-form'
@@ -7,7 +7,7 @@ import { ReturnKeyType, TextInput } from 'react-native'
 import { ThemeProp, ctx } from '../../App'
 import { WrappedField } from './WrappedField'
 
-const StyledTextInput = glamorous.textInput<ThemeProp & { error: any, textColor?: string }>({},
+const StyledTextInput = glamorous.input<ThemeProp & { error: any, textColor?: string }>({},
   ({ theme, error, textColor }) => ({
     borderWidth: theme.boxBorderWidth,
     borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
