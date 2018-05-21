@@ -1,11 +1,11 @@
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 import { defineMessages } from 'react-intl'
-import { Column, Entity, PrimaryColumn } from 'typeorm/browser'
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
-import { Record, createRecord } from '../Record'
-import { getAccount, getDb, toAccount } from './DbResolver'
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
+import { Record, RecordClass, createRecord } from '../Record'
+import { getAccount, getDb } from './DbResolver'
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
 
 // see ofx4js.domain.data.banking.AccountType
 enum AccountType {
@@ -30,21 +30,24 @@ class AccountInput {
 
 @ObjectType()
 @Entity({ name: 'accounts' })
-export class Account implements Record<Account.Props> {
-  @Column() _deleted: number
-  @Column() _base?: any
-  @Column() _history?: any
+export class Account extends RecordClass<Account.Props> {
+  @PrimaryColumn() @Field() id: string
+  @Column() @Field() bankId: string
 
-  @Field() @PrimaryColumn() id: string
-  @Field() @Column() bankId: string
+  @Column() @Field() name: string
+  @Column() @Field() color: string
+  @Column() @Field(type => AccountType) @Column() type: AccountType
+  @Column() @Field() number: string
+  @Column() @Field() visible: boolean
+  @Column() @Field() routing: string
+  @Column() @Field() key: string
 
-  @Field() @Column() name: string
-  @Field() @Column() color: string
-  @Field(type => AccountType) @Column() type: AccountType
-  @Field() @Column() number: string
-  @Field() @Column() visible: boolean
-  @Field() @Column() routing: string
-  @Field() @Column() key: string
+  constructor (props?: Account.Props) {
+    super()
+    if (props) {
+      Object.assign(this, { ...Account.defaultValues, ...props })
+    }
+  }
 }
 
 @Resolver(objectType => Account)
@@ -57,7 +60,7 @@ export class AccountResolver {
   ): Promise<Account> {
     const db = getDb(context)
     const res = await getAccount(db, accountId)
-    return toAccount(res)
+    return res
   }
 
   @Mutation(returns => Account)
@@ -69,14 +72,15 @@ export class AccountResolver {
   ): Promise<Account> {
     const db = getDb(context)
     const t = context.getTime()
-    let account: Account.Interface
+    let account: Account
     let changes: Array<any>
     if (accountId) {
-      const edit = await getAccount(db, accountId)
-      const q = Account.diff(edit, input)
+      const account = await getAccount(db, accountId)
+      const q = Account.update(input)
       changes = [
         Account.change.edit(t, accountId, q)
       ]
+      account.update(q)
       account = iupdate(edit, q)
     } else {
       if (!bankId) {
@@ -94,8 +98,8 @@ export class AccountResolver {
         Account.change.add(t, account)
       ]
     }
-    await db.change(changes)
-    return toAccount(account)
+    await dbWrite(changes)
+    return account
   }
 
   @Mutation(returns => Boolean)
@@ -108,7 +112,7 @@ export class AccountResolver {
     const changes = [
       Account.change.remove(t, accountId)
     ]
-    await db.change(changes)
+    await dbWrite(changes)
     return true
   }
 }

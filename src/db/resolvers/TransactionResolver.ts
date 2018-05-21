@@ -1,5 +1,6 @@
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
-import { Record } from '../Record'
+import { Record, RecordClass } from '../Record'
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
 
 export interface Split {
@@ -19,19 +20,16 @@ class TransactionInput {
 }
 
 @ObjectType()
-export class Transaction implements Record<Transaction.Props> {
-  _deleted: number
-  _base?: any
-  _history?: any
-
-  @Field() id: string
-  @Field() account: string
-  @Field() serverid: string
-  @Field() time: number
-  @Field() type: string
-  @Field() name: string
-  @Field() memo: string
-  @Field() amount: number
+@Entity({ name: 'transactions' })
+export class Transaction extends RecordClass<Transaction.Props> {
+  @PrimaryColumn() @Field() id: string
+  @Column() @Field() account: string
+  @Column() @Field() serverid: string
+  @Column() @Field() time: number
+  @Column() @Field() type: string
+  @Column() @Field() name: string
+  @Column() @Field() memo: string
+  @Column() @Field() amount: number
   split: Split
 }
 

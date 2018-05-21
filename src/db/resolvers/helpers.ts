@@ -18,3 +18,5 @@ import { BuildSchemaOptions } from 'type-graphql/utils/buildSchema'
 export function buildSchemaSync (options: BuildSchemaOptions) {
   return SchemaGenerator.generateFromMetadataSync(options)
 }
+
+export const dbWrite = (...params: any[]) => undefined;

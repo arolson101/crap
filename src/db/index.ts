@@ -1,4 +1,4 @@
-export * from './AppDatabase'
+export * from './AppDb'
 export * from './AppDbProvider'
 export * from './mutations'
 export * from './queries'

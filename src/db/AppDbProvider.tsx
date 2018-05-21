@@ -3,23 +3,21 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink } from 'apollo-link'
 import * as React from 'react'
 import { ApolloProvider } from 'react-apollo'
+import { Connection } from 'typeorm/browser'
 import Observable from 'zen-observable-ts'
 import schema from '../db/schema'
-import { AppDatabase } from './AppDatabase'
 import { runQuery } from 'apollo-server-core'
 import { DbContext } from '../App/ctx'
-
-export { GraphQLClient }
 
 export interface DbDependencies {
   getTime: () => number
   genId: () => string
-  openDb: typeof AppDatabase.open
+  openDb: (name: string, password: string) => Promise<Connection>
 }
 
 export interface ResolverContext extends DbDependencies {
-  db: AppDatabase | undefined
-  setDb: (db: AppDatabase | undefined) => any
+  db: Connection | undefined
+  setDb: (db: Connection | undefined) => any
 }
 
 interface Props {
@@ -27,7 +25,7 @@ interface Props {
 }
 
 interface State {
-  db: AppDatabase | undefined
+  db: Connection | undefined
 }
 
 export class AppDbProvider extends React.Component<Props, State> {
@@ -67,7 +65,7 @@ export class AppDbProvider extends React.Component<Props, State> {
     })
   })
 
-  setDb = (db: AppDatabase | undefined) => {
+  setDb = (db: Connection | undefined) => {
     this.setState({ db })
   }
 

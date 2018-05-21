@@ -1,5 +1,4 @@
-import Dexie from 'dexie'
-import { AppDatabase } from '../AppDatabase'
+import { getConnectionManager, Connection, getConnection } from 'typeorm/browser'
 import { Account } from './AccountResolver'
 import { Bank } from './BankResolver'
 import { Arg, Ctx, Mutation, Query, Resolver, ResolverContext } from './helpers'
@@ -8,9 +7,9 @@ import { Arg, Ctx, Mutation, Query, Resolver, ResolverContext } from './helpers'
 export class DbResolver {
 
   @Query(returns => [String])
-  async allDbs (): Promise<string[]> {
-    const names = await Dexie.getDatabaseNames()
-    return names
+  async allDbs (@Ctx() context: ResolverContext): Promise<string[]> {
+    // hack
+    return ['']
   }
 
   @Mutation(returns => Boolean)
@@ -18,7 +17,7 @@ export class DbResolver {
     @Arg('password', { description: 'the password for the database' }) password: string,
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
-    const db = await context.openDb()
+    const db = await context.openDb('appdb', password)
     context.setDb(db)
     return true
   }
@@ -40,30 +39,12 @@ export const getDb = (context: ResolverContext) => {
   return db
 }
 
-export const getBank = async (db: AppDatabase, id: string): Promise<Bank> => {
-  const bank = await db.banks.where({ id, _deleted: 0 }).first()
-  if (!bank) {
-    throw new Error(`bank ${id} not found`)
-  }
+export const getBank = async (db: Connection, id: string): Promise<Bank> => {
+  const bank = db.manager.findOneOrFail(Bank, id)
   return bank
 }
 
-export const toBank = (dbBank: Bank): Bank => {
-  const { _deleted, _base, _history, ...rest } = dbBank
-  return { ...rest } as any
-}
-
-export const getAccount = async (db: AppDatabase, id: string): Promise<Account> => {
-  const account = await db.accounts.where({ id, _deleted: 0 }).first()
-  if (!account) {
-    throw new Error(`account ${id} not found`)
-  }
+export const getAccount = async (db: Connection, id: string): Promise<Account> => {
+  const account = await db.manager.findOneOrFail(Account, id)
   return account
-}
-
-export const toAccount = (account: Account.Interface): Account => {
-  const { bankId, _deleted, _base, _history, type: stringType, ...rest } = account
-  // const type = ST.AccountType[stringType]
-  // return { ...rest, type }
-  return { ...rest } as any
 }

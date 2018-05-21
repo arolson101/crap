@@ -1,5 +1,6 @@
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
-import { Record } from '../Record'
+import { Record, RecordClass } from '../Record'
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
 
 @InputType()
@@ -9,14 +10,11 @@ class BudgetInput {
 }
 
 @ObjectType()
-export class Budget implements Record<Budget.Props> {
-  _deleted: number
-  _base?: any
-  _history?: any
-
-  @Field() id: string
-  @Field() name: string
-  @Field() sortOrder: number
+@Entity({ name: 'budgets' })
+export class Budget extends RecordClass<Budget.Props> {
+  @PrimaryColumn() @Field() id: string
+  @Column() @Field() name: string
+  @Column() @Field() sortOrder: number
 }
 
 @Resolver(objectType => Budget)

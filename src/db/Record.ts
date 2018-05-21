@@ -1,9 +1,10 @@
+import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
 import { BSON } from 'bson'
 import { iupdate } from '../iupdate'
 import { flow } from 'lodash'
 import * as zlib from 'zlib'
 
-type CompressedJson<T> = '<compressed json>' & { _tag: T }
+export type CompressedJson<T> = '<compressed json>' & { _tag: T }
 
 const bson = new BSON()
 const CJSONToBuffer = (str: CompressedJson<any>) => new Buffer(str, 'base64')
@@ -23,15 +24,30 @@ export const hydrate: <T>(x: CompressedJson<T>) => T = flow(
 
 interface Update<T> {
   readonly t: number
-  // typescript 2.8: iupdate.Query<Mutable<T>>
   readonly q: iupdate.Query<T>
 }
 
-export interface Record<T = {}> {
-  readonly id: string
+export type BaseType<T> = CompressedJson<T>
+export type HistoryType<T> = CompressedJson<{ a: Array<Update<T>> }> // bson doesn't support top-level array
+
+export interface Record<T = {}, ID = string> {
+  readonly id: ID
   readonly _deleted: number
-  readonly _base?: CompressedJson<T>
-  readonly _history?: CompressedJson<{ a: Array<Update<T>> }> // bson doesn't support top-level array
+  readonly _base?: BaseType<T>
+  readonly _history?: HistoryType<T>
+}
+
+@Entity()
+// @Index(['_deleted', 'id'])
+export abstract class RecordClass<T> implements Record<T> {
+  @Column() _deleted: number
+  @Column('text') _base?: BaseType<T>
+  @Column('text') _history?: HistoryType<T>
+  @PrimaryColumn() id: string
+
+  update (input: Partial<T>) {
+    const new = iupdate(this, q)
+  }
 }
 
 export namespace Record {

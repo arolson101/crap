@@ -1,10 +1,10 @@
-import { Column, PrimaryColumn } from 'typeorm/browser'
+import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { DbChange } from '../AppDatabase'
-import { Record, createRecord } from '../Record'
+import { Record, RecordClass, createRecord } from '../Record'
 import { Account } from './AccountResolver'
-import { getBank, getDb, toAccount, toBank } from './DbResolver'
-import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, Root } from './helpers'
+import { getBank, getDb } from './DbResolver'
+import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, Root, dbWrite } from './helpers'
 
 @InputType()
 class BankInput {
@@ -25,27 +25,31 @@ class BankInput {
 }
 
 @ObjectType()
-export class Bank implements Record<Bank> {
-  @Column() _deleted: number
-  @Column() _base?: any
-  @Column() _history?: any
+@Entity({ name: 'accounts' })
+export class Bank extends RecordClass<Bank> implements Bank.Props {
+  @PrimaryColumn() @Field() id: string
 
-  @Field() @PrimaryColumn() id: string
+  @Column() @Field() name: string
+  @Column() @Field() web: string
+  @Column() @Field() address: string
+  @Column() @Field() notes: string
+  @Column() @Field() favicon: string
 
-  @Field() @Column() name: string
-  @Field() @Column() web: string
-  @Field() @Column() address: string
-  @Field() @Column() notes: string
-  @Field() @Column() favicon: string
+  @Column() @Field() online: boolean
 
-  @Field() @Column({ default: true }) online: boolean
+  @Column() @Field() fid: string
+  @Column() @Field() org: string
+  @Column() @Field() ofx: string
 
-  @Field() @Column() fid: string
-  @Field() @Column() org: string
-  @Field() @Column() ofx: string
+  @Column() @Field() username: string
+  @Column() @Field() password: string
 
-  @Field() @Column() username: string
-  @Field() @Column() password: string
+  constructor (props?: Bank.Props) {
+    super()
+    if (props) {
+      Object.assign(this, { ...Bank.defaultValues, ...props })
+    }
+  }
 }
 
 @Resolver(Bank)
@@ -57,15 +61,19 @@ export class BankResolver {
     @Ctx() context: ResolverContext
   ): Promise<Bank> {
     const db = getDb(context)
-    const res = await getBank(db, bankId)
-    return toBank(res)
+    const res = getBank(db, bankId)
+    return res
   }
 
   @Query(returns => [Bank])
   async banks (@Ctx() context: ResolverContext): Promise<Bank[]> {
     const db = getDb(context)
-    const res = await db.banks.where({ _deleted: 0 }).toArray()
-    return res.map(toBank)
+    const res = await db.createQueryBuilder()
+      .select()
+      .from(Bank, 'bank')
+      .where('bank._deleted = 0')
+      .getMany()
+    return res
   }
 
   @FieldResolver(type => [Account])
@@ -74,8 +82,12 @@ export class BankResolver {
     @Ctx() context: ResolverContext
   ): Promise<Account[]> {
     const db = getDb(context)
-    const res = await db.accounts.where({ _deleted: 0, bankId: bank.id }).toArray()
-    return res.map(toAccount)
+    const res = await db.createQueryBuilder()
+      .select()
+      .from(Account, 'account')
+      .where('user._deleted = 0 AND user.bankId=:bankId', { bankId: bank.id })
+      .getMany()
+    return res
   }
 
   @Mutation(returns => Bank)
@@ -105,8 +117,8 @@ export class BankResolver {
         Bank.change.add(t, bank)
       ]
     }
-    await db.change(changes)
-    return toBank(bank)
+    await dbWrite(changes)
+    return bank
   }
 
   @Mutation(returns => Boolean)
@@ -119,7 +131,7 @@ export class BankResolver {
     const changes = [
       Bank.change.remove(t, bankId)
     ]
-    await db.change(changes)
+    await dbWrite(changes)
     return true
   }
 }

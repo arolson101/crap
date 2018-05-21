@@ -1,5 +1,6 @@
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
-import { Record } from '../Record'
+import { Record, RecordClass } from '../Record'
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
 
 @InputType()
@@ -9,14 +10,11 @@ class CategoryInput {
 }
 
 @ObjectType()
-export class Category implements Category.Props, Record<Category.Props> {
-  _deleted: number
-  _base?: any
-  _history?: any
-
-  @Field() id: string
-  @Field() name: string
-  @Field() amount: number
+@Entity({ name: 'categories' })
+export class Category extends RecordClass<Category.Props> {
+  @PrimaryColumn() @Field() id: string
+  @Column() @Field() name: string
+  @Column() @Field() amount: number
 }
 
 @Resolver(objectType => Category)

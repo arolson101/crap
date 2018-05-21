@@ -1,5 +1,6 @@
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
-import { Record } from '../Record'
+import { Record, RecordClass } from '../Record'
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
 
 export interface Bill extends Bill.Props, Record<Bill.Props> {}
@@ -19,22 +20,19 @@ class BillInput {
 }
 
 @ObjectType()
-export class Bill implements Record<Bill.Props> {
-  _deleted: number
-  _base?: any
-  _history?: any
-
-  @Field() id: string
-  @Field() name: string
-  @Field() group: string
-  @Field() web: string
-  @Field() favicon: string
-  @Field() notes: string
-  @Field() amount: number
-  @Field() account: string
-  @Field() category: string
-  @Field() rruleString: string
-  @Field() showAdvanced: boolean
+@Entity({ name: 'bills' })
+export class Bill implements RecordClass<Bill.Props> {
+  @PrimaryColumn() @Field() id: string
+  @Column() @Field() name: string
+  @Column() @Field() group: string
+  @Column() @Field() web: string
+  @Column() @Field() favicon: string
+  @Column() @Field() notes: string
+  @Column() @Field() amount: number
+  @Column() @Field() account: string
+  @Column() @Field() category: string
+  @Column() @Field() rruleString: string
+  @Column() @Field() showAdvanced: boolean
 }
 
 @Resolver(objectType => Bill)
