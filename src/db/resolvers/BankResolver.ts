@@ -2,7 +2,6 @@ import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { Record, RecordClass, createRecord } from '../Record'
 import { Account } from './AccountResolver'
-import { getDb } from './DbResolver'
 import { Arg, Ctx, DbChange, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, Root, dbWrite } from './helpers'
 
 @InputType()
@@ -62,7 +61,7 @@ export class BankResolver {
     @Arg('bankId') bankId: string,
     @Ctx() context: ResolverContext
   ): Promise<Bank> {
-    const db = getDb(context)
+    const db = context.getDb()
     const res = await db.manager.createQueryBuilder(Bank, 'bank')
       .where('bank._deleted = 0 AND bank.id = :bankId', { bankId })
       .getOne()
@@ -74,7 +73,7 @@ export class BankResolver {
 
   @Query(returns => [Bank])
   async banks (@Ctx() context: ResolverContext): Promise<Bank[]> {
-    const db = getDb(context)
+    const db = context.getDb()
     const res = await db.createQueryBuilder(Bank, 'bank')
       .where('bank._deleted = 0')
       .getMany()
@@ -86,7 +85,7 @@ export class BankResolver {
     @Root() bank: Bank,
     @Ctx() context: ResolverContext
   ): Promise<Account[]> {
-    const db = getDb(context)
+    const db = context.getDb()
     const res = await db.createQueryBuilder(Account, 'account')
       .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
       .getMany()
@@ -99,7 +98,7 @@ export class BankResolver {
     @Arg('input') input: BankInput,
     @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Bank> {
-    const db = getDb(context)
+    const db = context.getDb()
     const t = context.getTime()
     let bank: Bank
     let changes: Array<any>
@@ -125,7 +124,7 @@ export class BankResolver {
     @Arg('bankId') bankId: string,
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
-    const db = getDb(context)
+    const db = context.getDb()
     const t = context.getTime()
     const changes = [
       Bank.change.remove(t, bankId)

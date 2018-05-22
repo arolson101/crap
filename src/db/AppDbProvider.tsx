@@ -16,7 +16,7 @@ export interface DbDependencies {
 }
 
 export interface ResolverContext extends DbDependencies {
-  db: Connection | undefined
+  getDb: () => Connection
   setDb: (db: Connection | undefined) => any
 }
 
@@ -29,7 +29,7 @@ interface State {
 }
 
 export class AppDbProvider extends React.Component<Props, State> {
-  state = {
+  state: State = {
     db: undefined
   }
 
@@ -39,7 +39,7 @@ export class AppDbProvider extends React.Component<Props, State> {
       return new Observable(observer => {
         const context: ResolverContext = {
           ...this.props.dependencies,
-          db: this.state.db,
+          getDb: this.getDb,
           setDb: this.setDb
         }
         const opts = {
@@ -67,6 +67,14 @@ export class AppDbProvider extends React.Component<Props, State> {
 
   setDb = (db: Connection | undefined) => {
     this.setState({ db })
+  }
+
+  getDb = (): Connection => {
+    const db = this.state.db
+    if (!db) {
+      throw new Error('db not open')
+    }
+    return db
   }
 
   render () {

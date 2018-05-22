@@ -50,8 +50,7 @@ export const dbWrite = async (db: Connection, changes: DbChange[]) => {
     await db.transaction(async (manager) => {
       for (let change of changes) {
         if (change.adds) {
-          const res = await manager.save(change.table, change.adds)
-          console.log(res)
+          await manager.save(change.table, change.adds)
         }
 
         if (change.deletes) {

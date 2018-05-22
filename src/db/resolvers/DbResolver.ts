@@ -30,11 +30,3 @@ export class DbResolver {
     return true
   }
 }
-
-export const getDb = (context: ResolverContext) => {
-  const db = context.db
-  if (!db) {
-    throw new Error('db not open')
-  }
-  return db
-}

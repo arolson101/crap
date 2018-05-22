@@ -3,7 +3,6 @@ import { defineMessages } from 'react-intl'
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { Record, RecordClass, createRecord } from '../Record'
-import { getDb } from './DbResolver'
 import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
 
 // see ofx4js.domain.data.banking.AccountType
@@ -61,7 +60,7 @@ export class AccountResolver {
     @Arg('accountId') accountId: string,
     @Ctx() context: ResolverContext
   ): Promise<Account> {
-    const db = getDb(context)
+    const db = context.getDb()
     const res = await db.manager.createQueryBuilder(Account, 'account')
       .where('account._deleted = 0 AND accountId=:accountId', { accountId })
       .getOne()
@@ -78,7 +77,7 @@ export class AccountResolver {
     @Arg('accountId', { nullable: true }) accountId?: string,
     @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Account> {
-    const db = getDb(context)
+    const db = context.getDb()
     const t = context.getTime()
     let account: Account
     let changes: Array<any>
@@ -107,7 +106,7 @@ export class AccountResolver {
     @Arg('accountId') accountId: string,
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
-    const db = getDb(context)
+    const db = context.getDb()
     const t = context.getTime()
     const changes = [
       Account.change.remove(t, accountId)
