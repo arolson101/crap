@@ -44,7 +44,7 @@
     "start": "npm run serve",
     "storybook": "npm run storybook-web",
     "pregenerate": "mkdirp temp",
-    "generate": "npm run generate:schema && npm run generate:queries && npm run generate:mutations",
+    "generate": "npm run generate:schema && npm run generate:queries && npm run generate:mutations && npm run graphdoc",
     "generate:queries": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/queries/queries-types.ts \"src/db/queries/queries.graphql\"",
     "generate:mutations": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/mutations/mutations-types.ts \"src/db/mutations/mutations.graphql\"",
     "generate:schema": "ts-node --project tsconfig.test.json -r @babel/register --skip-ignore ./genSchema.ts",

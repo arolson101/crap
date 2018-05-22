@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl'
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { Record, RecordClass, createRecord } from '../Record'
-import { getAccount, getDb } from './DbResolver'
+import { getDb } from './DbResolver'
 import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
 
 // see ofx4js.domain.data.banking.AccountType
@@ -58,11 +58,16 @@ export class AccountResolver {
 
   @Query(returns => Account)
   async account (
-    @Arg('bankId') accountId: string,
+    @Arg('accountId') accountId: string,
     @Ctx() context: ResolverContext
   ): Promise<Account> {
     const db = getDb(context)
-    const res = await getAccount(db, accountId)
+    const res = await db.manager.createQueryBuilder(Account, 'account')
+      .where('account._deleted = 0 AND accountId=:accountId', { accountId })
+      .getOne()
+    if (!res) {
+      throw new Error('account not found')
+    }
     return res
   }
 
@@ -78,7 +83,7 @@ export class AccountResolver {
     let account: Account
     let changes: Array<any>
     if (accountId) {
-      account = await getAccount(db, accountId)
+      account = await db.manager.findOneOrFail(Account, accountId)
       const q = Account.diff(account, input)
       changes = [
         Account.change.edit(t, accountId, q)

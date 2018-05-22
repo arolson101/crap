@@ -38,13 +38,3 @@ export const getDb = (context: ResolverContext) => {
   }
   return db
 }
-
-export const getBank = async (db: Connection, id: string): Promise<Bank> => {
-  const bank = db.manager.findOneOrFail(Bank, id)
-  return bank
-}
-
-export const getAccount = async (db: Connection, id: string): Promise<Account> => {
-  const account = await db.manager.findOneOrFail(Account, id)
-  return account
-}

@@ -13,7 +13,7 @@ export const openDb = async (name: string, password: string) => {
     synchronize: true,
     autoSave: true,
     entities,
-    logging: true,
+    // logging: true,
   })
   return db
 }

@@ -2,7 +2,7 @@ import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
 import { iupdate } from '../../iupdate'
 import { Record, RecordClass, createRecord } from '../Record'
 import { Account } from './AccountResolver'
-import { getBank, getDb } from './DbResolver'
+import { getDb } from './DbResolver'
 import { Arg, Ctx, DbChange, Field, FieldResolver, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, Root, dbWrite } from './helpers'
 
 @InputType()
@@ -63,7 +63,12 @@ export class BankResolver {
     @Ctx() context: ResolverContext
   ): Promise<Bank> {
     const db = getDb(context)
-    const res = getBank(db, bankId)
+    const res = await db.manager.createQueryBuilder(Bank, 'bank')
+      .where('bank._deleted = 0 AND bank.id = :bankId', { bankId })
+      .getOne()
+    if (!res) {
+      throw new Error('account not found')
+    }
     return res
   }
 
@@ -99,7 +104,7 @@ export class BankResolver {
     let bank: Bank
     let changes: Array<any>
     if (bankId) {
-      bank = await getBank(db, bankId)
+      bank = await db.manager.findOneOrFail(Bank, bankId)
       const q = Bank.diff(bank, input)
       changes = [
         Bank.change.edit(t, bankId, q)
