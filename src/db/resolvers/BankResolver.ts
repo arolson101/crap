@@ -70,10 +70,8 @@ export class BankResolver {
   @Query(returns => [Bank])
   async banks (@Ctx() context: ResolverContext): Promise<Bank[]> {
     const db = getDb(context)
-    const res = await db.createQueryBuilder()
-      .select()
-      .from(Bank, 'bank')
-      // .where('bank._deleted = 0')
+    const res = await db.createQueryBuilder(Bank, 'bank')
+      .where('bank._deleted = 0')
       .getMany()
     return res
   }
@@ -84,10 +82,8 @@ export class BankResolver {
     @Ctx() context: ResolverContext
   ): Promise<Account[]> {
     const db = getDb(context)
-    const res = await db.createQueryBuilder()
-      .select()
-      .from(Account, 'account')
-      .where('user._deleted = 0 AND user.bankId=:bankId', { bankId: bank.id })
+    const res = await db.createQueryBuilder(Account, 'account')
+      .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
       .getMany()
     return res
   }

@@ -69,7 +69,7 @@ export const dbWrite = async (db: Connection, changes: DbChange[]) => {
           items.forEach((record, i) => {
             record.update(edits[i].q)
           })
-          await manager.save(change.table, items)
+          const res = await manager.save(change.table, items)
         }
       }
 

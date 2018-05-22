@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import { AccountResolver, BankResolver, DbResolver,
   BillResolver, TransactionResolver, BudgetResolver,
   CategoryResolver

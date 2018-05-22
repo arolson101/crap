@@ -5,6 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "node",
+      "request": "launch",
+      "name": "genSchema",
+      "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
+      "args": [
+        "--project",
+        "tsconfig.test.json",
+        "-r",
+        "@babel/register",
+        "--skip-ignore",
+        "${workspaceFolder}/genSchema.ts"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Chrome",
