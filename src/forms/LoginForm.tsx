@@ -10,6 +10,7 @@ import { AppBannerText, WelcomeText, FormContent } from '../components'
 
 interface Props {
   query: Queries.Dbs
+  createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
 }
 
@@ -51,7 +52,8 @@ export class LoginFormComponent extends React.PureComponent<Props> {
 
 export const LoginForm = compose(
   Queries.withDbs('query'),
-  Mutations.withOpenDb('openDb')
+  Mutations.withOpenDb('openDb'),
+  Mutations.withCreateDb('createDb'),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 
@@ -70,8 +72,9 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
         passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
           : undefined
       })}
-      onSubmit={variables => {
-        return props.openDb.execute({ variables })
+      onSubmit={({ password }) => {
+        const variables = { name: 'appdb', password }
+        return props.createDb.execute({ variables })
       }}
     >
       {formApi =>
@@ -90,9 +93,9 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
             label={messages.passwordConfirmLabel}
             placeholder={messages.passwordConfirmPlaceholder}
           />
-          <ErrorMessage error={props.openDb.error} />
+          <ErrorMessage error={props.createDb.error} />
           <SubmitButton
-            disabled={props.openDb.loading}
+            disabled={props.createDb.loading}
             onPress={formApi.submitForm}
             title={messages.create}
           />
@@ -115,8 +118,10 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined
       })}
-      onSubmit={async variables => {
+      onSubmit={async ({ password }) => {
         try {
+          const dbId = props.query.data.allDbs[0].dbId
+          const variables = { password, dbId }
           await props.openDb.execute({ variables })
         } catch (err) {
           console.warn(err)

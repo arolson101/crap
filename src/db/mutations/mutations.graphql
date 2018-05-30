@@ -6,8 +6,12 @@ mutation DeleteAccount($accountId: String!) {
   deleteAccount(accountId: $accountId)
 }
 
-mutation OpenDb($password: String!) {
-  openDb(password: $password)
+mutation CreateDb($name: String!, $password: String!) {
+  createDb(name: $name, password: $password)
+}
+
+mutation OpenDb($dbId: String!, $password: String!) {
+  openDb(dbId: $dbId, password: $password)
 }
 
 mutation SaveAccount($input: AccountInput!, $accountId: String, $bankId: String) {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Queries } from '../queries'
 import { MutationType, makeMutation } from './makeMutation'
-import { DeleteAccount, DeleteBank, OpenDb, SaveAccount, SaveBank } from './mutations-types'
+import { DeleteAccount, DeleteBank, OpenDb, CreateDb, SaveAccount, SaveBank } from './mutations-types'
 import * as GQL from './mutations.graphql'
 
 export namespace Mutations {
@@ -12,6 +12,10 @@ export namespace Mutations {
   export const DELETEACCOUNT = GQL.DeleteAccount
   export const withDeleteAccount = makeMutation(DELETEACCOUNT, [Queries.BANKS])
   export type DeleteAccount = MutationType<DeleteAccount.Mutation, DeleteAccount.Variables>
+
+  export const CREATEDB = GQL.CreateDb
+  export const withCreateDb = makeMutation(CREATEDB)
+  export type CreateDb = MutationType<CreateDb.Mutation, CreateDb.Variables>
 
   export const OPENDB = GQL.OpenDb
   export const withOpenDb = makeMutation(OPENDB)

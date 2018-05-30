@@ -8,16 +8,15 @@ import Observable from 'zen-observable-ts'
 import schema from '../db/schema'
 import { runQuery } from 'apollo-server-core'
 import { DbContext } from '../App/ctx'
-import { DbInfo } from './resolvers/DbInfo'
 
 export interface DbDependencies {
   getTime: () => number
   genId: () => string
-  openDb: (entities: Function[], name: string, password: string) => Promise<Connection>
+  openDb: (app: boolean, name: string, password: string) => Promise<Connection>
 }
 
 export interface ResolverContext extends DbDependencies {
-  getAllDb: () => Promise<Connection>
+  getIndexDb: () => Promise<Connection>
   getAppDb: () => Connection
   setAppDb: (db: Connection | undefined) => any
 }
@@ -35,7 +34,7 @@ export class AppDbProvider extends React.Component<Props, State> {
     db: undefined
   }
 
-  _allDb: Promise<Connection>
+  indexDb: Promise<Connection>
 
   client = new GraphQLClient({
     cache: new InMemoryCache(),
@@ -43,9 +42,9 @@ export class AppDbProvider extends React.Component<Props, State> {
       return new Observable(observer => {
         const context: ResolverContext = {
           ...this.props.dependencies,
-          getAppDb: this.getDb,
-          setAppDb: this.setDb,
-          getAllDb: this.getAllDb,
+          getAppDb: this.getAppDb,
+          setAppDb: this.setAppDb,
+          getIndexDb: this.getIndexDb,
         }
         const opts = {
           schema,
@@ -70,17 +69,17 @@ export class AppDbProvider extends React.Component<Props, State> {
     })
   })
 
-  getAllDb = () => this._allDb
+  getIndexDb = () => this.indexDb
 
   async componentDidMount () {
-    this._allDb = this.props.dependencies.openDb([DbInfo], 'alldb', '')
+    this.indexDb = this.props.dependencies.openDb(false, 'index', '')
   }
 
-  setDb = (db: Connection | undefined) => {
+  setAppDb = (db: Connection | undefined) => {
     this.setState({ db })
   }
 
-  getDb = (): Connection => {
+  getAppDb = (): Connection => {
     const db = this.state.db
     if (!db) {
       throw new Error('db not open')
