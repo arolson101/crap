@@ -9,14 +9,14 @@ require('react-split-pane').default = require('react-split-pane')
 
 export const RootPage: React.SFC = (props) => {
   return (
-    <SplitPane
-      split='vertical'
-      minSize={50}
-      maxSize={300}
-      defaultSize={150}
-    >
-      <Sidebar />
+    // <SplitPane
+    //   split='vertical'
+    //   minSize={50}
+    //   maxSize={300}
+    //   defaultSize={150}
+    // >
+    //   <Sidebar />
       <MainView />
-    </SplitPane>
+    // </SplitPane>
   )
 }
