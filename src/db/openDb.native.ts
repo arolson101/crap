@@ -1,7 +1,6 @@
 import { createConnection } from 'typeorm/browser'
-import { entities } from './entities'
 
-export const openDb = async (name: string, password: string) => {
+export const openDb = async (entities: Function[], name: string, password: string) => {
   const db = await createConnection({
     type: 'react-native',
     database: name + '.db',

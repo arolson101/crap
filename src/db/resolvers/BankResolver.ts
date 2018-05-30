@@ -61,7 +61,7 @@ export class BankResolver {
     @Arg('bankId') bankId: string,
     @Ctx() context: ResolverContext
   ): Promise<Bank> {
-    const db = context.getDb()
+    const db = context.getAppDb()
     const res = await db.manager.createQueryBuilder(Bank, 'bank')
       .where('bank._deleted = 0 AND bank.id = :bankId', { bankId })
       .getOne()
@@ -73,7 +73,7 @@ export class BankResolver {
 
   @Query(returns => [Bank])
   async banks (@Ctx() context: ResolverContext): Promise<Bank[]> {
-    const db = context.getDb()
+    const db = context.getAppDb()
     const res = await db.createQueryBuilder(Bank, 'bank')
       .where('bank._deleted = 0')
       .getMany()
@@ -85,7 +85,7 @@ export class BankResolver {
     @Root() bank: Bank,
     @Ctx() context: ResolverContext
   ): Promise<Account[]> {
-    const db = context.getDb()
+    const db = context.getAppDb()
     const res = await db.createQueryBuilder(Account, 'account')
       .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
       .getMany()
@@ -98,7 +98,7 @@ export class BankResolver {
     @Arg('input') input: BankInput,
     @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Bank> {
-    const db = context.getDb()
+    const db = context.getAppDb()
     const t = context.getTime()
     let bank: Bank
     let changes: Array<any>
@@ -124,7 +124,7 @@ export class BankResolver {
     @Arg('bankId') bankId: string,
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
-    const db = context.getDb()
+    const db = context.getAppDb()
     const t = context.getTime()
     const changes = [
       Bank.change.remove(t, bankId)

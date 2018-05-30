@@ -8,16 +8,18 @@ import Observable from 'zen-observable-ts'
 import schema from '../db/schema'
 import { runQuery } from 'apollo-server-core'
 import { DbContext } from '../App/ctx'
+import { DbInfo } from './resolvers/DbInfo'
 
 export interface DbDependencies {
   getTime: () => number
   genId: () => string
-  openDb: (name: string, password: string) => Promise<Connection>
+  openDb: (entities: Function[], name: string, password: string) => Promise<Connection>
 }
 
 export interface ResolverContext extends DbDependencies {
-  getDb: () => Connection
-  setDb: (db: Connection | undefined) => any
+  getAllDb: () => Promise<Connection>
+  getAppDb: () => Connection
+  setAppDb: (db: Connection | undefined) => any
 }
 
 interface Props {
@@ -33,14 +35,17 @@ export class AppDbProvider extends React.Component<Props, State> {
     db: undefined
   }
 
+  _allDb: Promise<Connection>
+
   client = new GraphQLClient({
     cache: new InMemoryCache(),
     link: new ApolloLink((operation, forward) => {
       return new Observable(observer => {
         const context: ResolverContext = {
           ...this.props.dependencies,
-          getDb: this.getDb,
-          setDb: this.setDb
+          getAppDb: this.getDb,
+          setAppDb: this.setDb,
+          getAllDb: this.getAllDb,
         }
         const opts = {
           schema,
@@ -64,6 +69,12 @@ export class AppDbProvider extends React.Component<Props, State> {
       })
     })
   })
+
+  getAllDb = () => this._allDb
+
+  async componentDidMount () {
+    this._allDb = this.props.dependencies.openDb([DbInfo], 'alldb', '')
+  }
 
   setDb = (db: Connection | undefined) => {
     this.setState({ db })

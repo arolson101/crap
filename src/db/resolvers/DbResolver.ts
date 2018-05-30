@@ -2,14 +2,17 @@ import { getConnectionManager, Connection, getConnection } from 'typeorm/browser
 import { Account } from './AccountResolver'
 import { Bank } from './BankResolver'
 import { Arg, Ctx, Mutation, Query, Resolver, ResolverContext } from './helpers'
+import { entities } from '../entities'
+import { DbInfo } from './DbInfo'
 
 @Resolver()
 export class DbResolver {
 
   @Query(returns => [String])
   async allDbs (@Ctx() context: ResolverContext): Promise<string[]> {
-    // hack
-    return ['']
+    const allDb = await context.getAllDb()
+    const dbs = await allDb.manager.createQueryBuilder(DbInfo, 'db').getMany()
+    return dbs.map(db => db.dbName)
   }
 
   @Mutation(returns => Boolean)
@@ -17,8 +20,8 @@ export class DbResolver {
     @Arg('password', { description: 'the password for the database' }) password: string,
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
-    const db = await context.openDb('appdb', password)
-    context.setDb(db)
+    const db = await context.openDb(entities, 'appdb', password)
+    context.setAppDb(db)
     return true
   }
 
@@ -26,7 +29,7 @@ export class DbResolver {
   async closeDb (
     @Ctx() context: ResolverContext
   ): Promise<Boolean> {
-    context.setDb(undefined)
+    context.setAppDb(undefined)
     return true
   }
 }
