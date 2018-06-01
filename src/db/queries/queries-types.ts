@@ -48,6 +48,7 @@ export interface Mutation {
   createDb: boolean;
   openDb: boolean;
   closeDb: boolean;
+  deleteDb: boolean;
 }
 
 export interface Bill {
@@ -137,6 +138,9 @@ export interface CreateDbMutationArgs {
 }
 export interface OpenDbMutationArgs {
   password: string /** the password for the database */;
+  dbId: string;
+}
+export interface DeleteDbMutationArgs {
   dbId: string;
 }
 
