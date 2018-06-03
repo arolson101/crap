@@ -51,6 +51,7 @@
     "graphdoc": "npm run generate:schema && graphdoc --force -s ./temp/schema.json -o ./temp/graphdoc",
     "lint": "tslint --fix \"{src,stories}/**/*{.ts,.tsx}\" --project tsconfig.json"
   },
+  "jest": {},
   "devDependencies": {
     "@2fd/graphdoc": "^2.4.0",
     "@babel/cli": "^7.0.0-beta.47",
