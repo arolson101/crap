@@ -1,4 +1,3 @@
-import { ThemeProvider } from 'glamorous'
 import * as React from 'react'
 
 export interface Theme {
@@ -31,7 +30,7 @@ export interface ThemeProp {
   theme: Theme
 }
 
-const defaultTheme: Theme = {
+export const defaultTheme: Theme = {
   appBannerFontSize: 80,
   appBannerMargin: 20,
 
@@ -56,9 +55,3 @@ const defaultTheme: Theme = {
 
   formMaxWidth: 500,
 }
-
-export const AppThemeProvider: React.SFC = ({ children }) => (
-  <ThemeProvider theme={defaultTheme}>
-    {children}
-  </ThemeProvider>
-)

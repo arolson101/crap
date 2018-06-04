@@ -1,4 +1,3 @@
-import glamorous from 'glamorous'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { View, Picker } from 'react-native'
@@ -8,24 +7,8 @@ import { nav } from '../nav'
 import { BankForm } from '../forms/BankForm'
 import { AccountForm } from '../forms/AccountForm'
 import { ThemeProp, ctx } from '../App'
+import { Row, LabelColumn, InputColumn } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
-
-const Row = glamorous.div<ThemeProp>({}, ({ theme }) => ({
-  marginBottom: theme.rowMargin,
-  flexDirection: 'row',
-  alignItems: 'baseline'
-}))
-
-const LabelColumn = glamorous.span<ThemeProp>({}, ({ theme }) => ({
-  width: theme.labelWidth,
-  fontSize: theme.labelFontSize,
-  color: theme.labelColor
-}))
-
-const InputColumn = glamorous.div({
-  flexDirection: 'column',
-  flex: 1
-})
 
 interface Params {
   bankId?: string
@@ -52,7 +35,7 @@ export const AccountsCreatePageComponent: React.SFC<Props> =
         <Row>
           <LabelColumn>
             bank
-        </LabelColumn>
+          </LabelColumn>
           <InputColumn>
             <Picker
               onValueChange={(nextBankId) => router.history.replace(nextBankId

@@ -21,3 +21,23 @@ export const FormContent = glamorous.div<ThemeProp>({},
   })
 )
 FormContent.displayName = 'FormContent'
+
+export const Row = glamorous.div<ThemeProp>({}, ({ theme }) => ({
+  marginBottom: theme.rowMargin,
+  flexDirection: 'row',
+  alignItems: 'baseline'
+}))
+Row.displayName = 'Row'
+
+export const LabelColumn = glamorous.span<ThemeProp>({}, ({ theme }) => ({
+  width: theme.labelWidth,
+  fontSize: theme.labelFontSize,
+  color: theme.labelColor
+}))
+LabelColumn.displayName = 'LabelColumn'
+
+export const InputColumn = glamorous.div({
+  flexDirection: 'column',
+  flex: 1
+})
+InputColumn.displayName = 'InputColumn'

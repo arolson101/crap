@@ -1,7 +1,8 @@
+import { ThemeProvider } from 'glamorous-native'
 import * as React from 'react'
 import { RootPage, LoginPage } from '../pages'
 import { LoadFonts } from './LoadFonts'
-import { AppThemeProvider } from './Theme'
+import { defaultTheme } from './Theme'
 import { DbContext } from './ctx'
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 const App = (props: Props) => {
   return (
     <LoadFonts>
-      <AppThemeProvider>
+      <ThemeProvider theme={defaultTheme}>
         <DbContext.Consumer>
           {db => {
             if (db && db.isOpen) {
@@ -21,7 +22,7 @@ const App = (props: Props) => {
             }
           }}
         </DbContext.Consumer>
-      </AppThemeProvider>
+      </ThemeProvider>
     </LoadFonts>
   )
 }
