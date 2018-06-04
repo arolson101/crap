@@ -136,6 +136,7 @@
     "history": "^4.7.2",
     "immutability-helper": "^2.6.6",
     "intl": "^1.2.5",
+    "isomorphic-webcrypto": "^1.5.0",
     "jest-transform-graphql": "^2.1.0",
     "lodash-es": "^4.17.8",
     "mkdirp": "^0.5.1",
