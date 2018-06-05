@@ -81,3 +81,7 @@ yarn-error.log*
 .expo
 
 temp/
+ios/build
+android/app/build
+android/build
+.gradle
