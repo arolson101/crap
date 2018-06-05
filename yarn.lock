@@ -11138,9 +11138,9 @@ react-native-securerandom@^0.1.1:
   dependencies:
     base64-js "*"
 
-react-native-sqlite-storage@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/react-native-sqlite-storage/-/react-native-sqlite-storage-3.3.4.tgz#fb9c6b3af6f6857e62104e6544da396fff80895d"
+react-native-sqlite-storage@^3.3.6:
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-sqlite-storage/-/react-native-sqlite-storage-3.3.6.tgz#c8ab7d2547fcd91332a7bf759c471749a9abd187"
   dependencies:
     xcode "0.8.9"
 
@@ -13253,9 +13253,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typeorm@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.5.tgz#76d94e6edcf6eff30446de35a2dae7dcfa449348"
+typeorm@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.7.tgz#4bbbace80dc91b1303be13f42d44ebf01d1b2558"
   dependencies:
     app-root-path "^2.0.1"
     buffer "^5.1.0"
