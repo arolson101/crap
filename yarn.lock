@@ -9844,9 +9844,9 @@ ms@2.1.1, ms@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
 
-msrcrypto@^1.4.0:
+msrcrypto@^1.4.0, "msrcrypto@git+https://github.com/bunea/msrCrypto":
   version "1.4.1"
-  resolved "https://registry.yarnpkg.com/msrcrypto/-/msrcrypto-1.4.1.tgz#c1fce34e241b14db8af709553ebcea711d8e0bfc"
+  resolved "git+https://github.com/bunea/msrCrypto#a389f9d03b89ef067cf138ea9a03139ab4d54ad6"
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"
