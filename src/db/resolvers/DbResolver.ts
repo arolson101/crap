@@ -1,5 +1,5 @@
 import crypto from 'isomorphic-webcrypto'
-import * as sanitize from 'sanitize-filename'
+import sanitize from 'sanitize-filename'
 import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
 import { Arg, Ctx, Field, ObjectType, Mutation, Query, Resolver, ResolverContext } from './helpers'
 
