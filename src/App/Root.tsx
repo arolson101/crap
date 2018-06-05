@@ -4,7 +4,7 @@ import { AppRegistry, Platform } from 'react-native'
 import * as shortid from 'shortid'
 import App from './App'
 import { Router } from './Router'
-import { openDb, deleteDb, AppDbProvider, DbDependencies } from '../db'
+import { openDb, AppDbProvider, DbDependencies } from '../db'
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_')
 
@@ -12,7 +12,6 @@ const dependencies: DbDependencies = {
   getTime: () => Date.now(),
   genId: shortid,
   openDb,
-  deleteDb,
 }
 
 const Root = () => (

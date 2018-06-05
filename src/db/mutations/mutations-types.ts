@@ -48,7 +48,6 @@ export interface Mutation {
   createDb: boolean;
   openDb: boolean;
   closeDb: boolean;
-  deleteDb: boolean;
 }
 
 export interface Bill {
@@ -140,9 +139,6 @@ export interface OpenDbMutationArgs {
   password: string /** the password for the database */;
   dbId: string;
 }
-export interface DeleteDbMutationArgs {
-  dbId: string;
-}
 
 export enum AccountType {
   CHECKING = "CHECKING",
@@ -191,16 +187,6 @@ export namespace OpenDb {
   export type Mutation = {
     __typename?: "Mutation";
     openDb: boolean;
-  };
-}
-export namespace DeleteDb {
-  export type Variables = {
-    dbId: string;
-  };
-
-  export type Mutation = {
-    __typename?: "Mutation";
-    deleteDb: boolean;
   };
 }
 export namespace SaveAccount {

@@ -13,7 +13,6 @@ export interface DbDependencies {
   getTime: () => number
   genId: () => string
   openDb: (app: boolean, name: string, password: string) => Promise<Connection>
-  deleteDb: (name: string) => Promise<void>
 }
 
 export interface ResolverContext extends DbDependencies {

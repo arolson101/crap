@@ -12,7 +12,6 @@ interface Props {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
-  deleteDb: Mutations.DeleteDb
 }
 
 interface FormValues {
@@ -55,7 +54,6 @@ export const LoginForm = compose(
   Queries.withDbs('query'),
   Mutations.withOpenDb('openDb'),
   Mutations.withCreateDb('createDb'),
-  Mutations.withDeleteDb('deleteDb'),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 
@@ -111,14 +109,6 @@ FormCreate.contextTypes = ctx.intl
 const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
   const { intl: { formatMessage } } = context
 
-  if (props.deleteDb.loading) {
-    return null
-  }
-
-  if (props.deleteDb.error) {
-    return <ErrorMessage error={props.deleteDb.error} />
-  }
-
   return (
     <Form
       defaultValues={{
@@ -156,14 +146,6 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
             onPress={formApi.submitForm}
             title={messages.open}
           />
-          <SubmitButton
-            onPress={() => {
-              const dbId = props.query.data.allDbs[0].dbId
-              const variables = { dbId }
-              props.deleteDb.execute({ variables })
-            }}
-            title={messages.delete}
-          />
         </FormContent>
       }
     </Form>
@@ -179,10 +161,6 @@ const messages = defineMessages({
   open: {
     id: 'LoginForm.open',
     defaultMessage: 'Open'
-  },
-  delete: {
-    id: 'LoginForm.delete',
-    defaultMessage: 'Delete'
   },
   valueEmpty: {
     id: 'LoginForm.valueEmpty',
