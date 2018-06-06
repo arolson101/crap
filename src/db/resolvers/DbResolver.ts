@@ -108,4 +108,20 @@ export class DbResolver {
     context.setAppDb(undefined)
     return true
   }
+
+  @Mutation(returns => Boolean)
+  async deleteDb (
+    @Arg('dbId') dbId: string,
+    @Ctx() context: ResolverContext
+  ): Promise<Boolean> {
+    const allDb = await context.getIndexDb()
+    const dbInfo = await allDb.getRepository(DbInfo).findOneOrFail(dbId)
+    await context.deleteDb(dbInfo.path)
+    await allDb.createQueryBuilder()
+      .delete()
+      .from(DbInfo)
+      .where('dbId = :dbId', { dbId })
+      .execute()
+    return true
+  }
 }

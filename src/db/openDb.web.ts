@@ -22,3 +22,8 @@ export const openDb = async (app: boolean, name: string, key: string) => {
   })
   return db
 }
+
+export const deleteDb = async (name: string) => {
+  console.log('deleteDb', name)
+  localStorage.removeItem(name + '.db')
+}
