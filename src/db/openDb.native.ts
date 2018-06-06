@@ -21,7 +21,7 @@ export const openDb = async (app: boolean, name: string, key: string) => {
     location: iosDatabaseLocation, // https://github.com/andpor/react-native-sqlite-storage#opening-a-database
     entities,
     extra,
-    logging: true,
+    // logging: true,
   })
   return db
 }
