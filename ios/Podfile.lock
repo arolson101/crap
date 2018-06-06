@@ -1,0 +1,59 @@
+PODS:
+  - React (0.55.4):
+    - React/Core (= 0.55.4)
+  - react-native-sqlite-storage (3.3.6):
+    - React
+  - React/Core (0.55.4):
+    - yoga (= 0.55.4.React)
+  - React/DevSupport (0.55.4):
+    - React/Core
+    - React/RCTWebSocket
+  - React/fishhook (0.55.4)
+  - React/RCTBlob (0.55.4):
+    - React/Core
+  - React/RCTNetwork (0.55.4):
+    - React/Core
+  - React/RCTText (0.55.4):
+    - React/Core
+  - React/RCTWebSocket (0.55.4):
+    - React/Core
+    - React/fishhook
+    - React/RCTBlob
+  - SQLCipher (3.4.2):
+    - SQLCipher/standard (= 3.4.2)
+  - SQLCipher/common (3.4.2)
+  - SQLCipher/standard (3.4.2):
+    - SQLCipher/common
+  - yoga (0.55.4.React)
+
+DEPENDENCIES:
+  - react-native-sqlite-storage (from `../node_modules/react-native-sqlite-storage`)
+  - React/Core (from `../node_modules/react-native`)
+  - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
+  - SQLCipher
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SQLCipher
+
+EXTERNAL SOURCES:
+  React:
+    :path: "../node_modules/react-native"
+  react-native-sqlite-storage:
+    :path: "../node_modules/react-native-sqlite-storage"
+  yoga:
+    :path: "../node_modules/react-native/ReactCommon/yoga"
+
+SPEC CHECKSUMS:
+  React: aa2040dbb6f317b95314968021bd2888816e03d5
+  react-native-sqlite-storage: 848fb96c0b6d17b3f70e169ac41f84434cdad94c
+  SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
+  yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
+
+PODFILE CHECKSUM: 6f3e438b54a9b7e639d135ade4d40079eaf19157
+
+COCOAPODS: 1.5.2

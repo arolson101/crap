@@ -82,6 +82,7 @@ yarn-error.log*
 
 temp/
 ios/build
+ios/Pods
 android/app/build
 android/build
 .gradle
