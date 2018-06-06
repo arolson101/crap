@@ -12,7 +12,7 @@ import { DbContext } from '../App/ctx'
 export interface DbDependencies {
   getTime: () => number
   genId: () => string
-  openDb: (app: boolean, name: string, password: string) => Promise<Connection>
+  openDb: (app: boolean, name: string, key: string) => Promise<Connection>
 }
 
 export interface ResolverContext extends DbDependencies {

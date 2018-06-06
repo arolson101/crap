@@ -5,7 +5,7 @@ import { appEntities, indexEntities } from './entities'
 (window as any).SQL = require('sql.js/js/sql.js')
 // }
 
-export const openDb = async (app: boolean, name: string, password: string) => {
+export const openDb = async (app: boolean, name: string, key: string) => {
   const type = 'sqljs'
   const entities = app ? appEntities : indexEntities
   const db = await createConnection({
@@ -15,6 +15,9 @@ export const openDb = async (app: boolean, name: string, password: string) => {
     synchronize: true,
     autoSave: true,
     entities,
+    extra: {
+      key,
+    }
     // logging: true,
   })
   return db

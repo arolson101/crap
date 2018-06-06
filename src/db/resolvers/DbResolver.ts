@@ -81,7 +81,7 @@ export class DbResolver {
     const key = DbInfo.generateKey()
     dbInfo.setPassword(key, password)
 
-    const db = await context.openDb(true, key, password)
+    const db = await context.openDb(true, dbInfo.path, key)
     indexDb.manager.save(DbInfo, dbInfo)
     context.setAppDb(db)
     return true
