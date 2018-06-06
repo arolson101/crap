@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
+import { defineMessages, FormattedMessage } from 'react-intl'
 import { View, Picker } from 'react-native'
 import { compose } from 'recompose'
 import { Queries } from '../db'
@@ -34,7 +34,7 @@ export const AccountsCreatePageComponent: React.SFC<Props> =
       <View>
         <Row>
           <LabelColumn>
-            bank
+            <FormattedMessage {...messages.selectBank}/>
           </LabelColumn>
           <InputColumn>
             <Picker
@@ -76,5 +76,9 @@ const messages = defineMessages({
   new: {
     id: 'AccountsCreatePage.new',
     defaultMessage: 'New...'
-  }
+  },
+  selectBank: {
+    id: 'AccountsCreatePage.selectBank',
+    defaultMessage: 'Bank'
+  },
 })

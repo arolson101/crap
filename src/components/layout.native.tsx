@@ -27,8 +27,7 @@ Row.displayName = 'Row'
 
 export const LabelColumn = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   width: theme.labelWidth,
-  fontSize: theme.labelFontSize,
-  color: theme.labelColor
+  // color: theme.labelColor
 }))
 LabelColumn.displayName = 'LabelColumn'
 
