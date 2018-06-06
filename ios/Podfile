@@ -15,7 +15,7 @@ target 'crap' do
     'DevSupport'
   ]
   pod 'SQLCipher'
-  pod 'react-native-sqlite-storage', :path => '../node_modules/react-native-sqlite-storage'
+  pod 'react-native-sqlcipher-storage', :path => '../node_modules/react-native-sqlcipher-storage'
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
   post_install do |installer|

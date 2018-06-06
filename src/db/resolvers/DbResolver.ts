@@ -26,7 +26,7 @@ export class DbInfo {
   @Column() tag: string
 
   static generateKey () {
-    return crypto.randomBytes(32).toString('hex')
+    return `x'${crypto.randomBytes(32).toString('hex')}'`
   }
 
   setPassword (key: string, password: string) {
