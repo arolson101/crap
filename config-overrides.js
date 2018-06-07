@@ -12,6 +12,11 @@ function nodeModule(mod) {
   return path.resolve(__dirname, './node_modules/' + mod)
 }
 
+const externals = {
+  'sqlite3': 'require("sqlite3")',
+  'typeorm': 'require("typeorm")',
+}
+
 const babelModules = [
   'glamorous-native',
   'native-base-shoutem-theme',
@@ -28,11 +33,11 @@ const babelModules = [
   // 'type-graphql',
 ]
 
-// const unusedDbDrivers = /^(mongodb|mysql|mysql2|oracledb|pg|pg\-native|pg\-query-stream|redis|mssql)$/
-
 module.exports = function override(config, env) {
 
   config.resolve.extensions = [
+    '.electron.ts',
+    '.electron.tsx',
     '.web.ts',
     '.web.tsx',
     ...config.resolve.extensions,
@@ -47,6 +52,7 @@ module.exports = function override(config, env) {
   config = injectBabelPlugin(["transform-runtime", { "polyfill": false, "regenerator": true }], config)
   config = rewireReactHotLoader(config, env);
 
+  config.target = 'electron'
   config.resolve.alias = {
     'react-native/Libraries/Text/TextStylePropTypes': 'react-native-web/dist/exports/Text/TextStylePropTypes.js',
     'react-native/Libraries/Components/View/ViewStylePropTypes': 'react-native-web/dist/exports/View/ViewStylePropTypes.js',
@@ -87,19 +93,17 @@ module.exports = function override(config, env) {
 
   config.module.rules.forEach(ruleSearcher);
 
+  config.externals = {
+    ...(config.externals || {}),
+    ...externals,
+  }
+
   const pluginsWithoutUglify = config.plugins.filter(plugin => !(plugin.options && plugin.options.compress))
   const addUglify = (pluginsWithoutUglify.length !== config.plugins.length)
 
   config.plugins = [
     ...pluginsWithoutUglify,
 
-    // new webpack.IgnorePlugin(unusedDbDrivers),
-    // new webpack.NormalModuleReplacementPlugin(/typeorm$/, function (result) {
-    //   result.request = result.request.replace(/typeorm/, "typeorm/browser");
-    // }),
-    // new webpack.ProvidePlugin({
-    //   'window.SQL': 'sql.js/js/sql.js'
-    // })
   ]
 
   if (addUglify) {

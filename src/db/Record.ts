@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
+import { Entity, Column, Index, PrimaryColumn } from './typeorm'
 import { BSON } from 'bson'
 import { iupdate } from '../iupdate'
 import { flow } from 'lodash'

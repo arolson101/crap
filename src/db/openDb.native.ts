@@ -1,4 +1,4 @@
-import { createConnection } from 'typeorm/browser'
+import { createConnection } from './typeorm'
 import { appEntities, indexEntities } from './entities'
 import SqlitePlugin from 'react-native-sqlcipher-storage'
 

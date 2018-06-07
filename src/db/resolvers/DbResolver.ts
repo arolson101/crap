@@ -1,6 +1,6 @@
 import * as crypto from 'crypto'
 import sanitize from 'sanitize-filename'
-import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
+import { Entity, Column, Index, PrimaryColumn } from '../typeorm'
 import { Arg, Ctx, Field, ObjectType, Mutation, Query, Resolver, ResolverContext } from './helpers'
 
 const iterations = 10000

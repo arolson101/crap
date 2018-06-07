@@ -6,7 +6,10 @@
   "private": true,
   "dependencies": {
     "electron-is-dev": "^0.3.0",
-    "electron-window-state": "^4.1.1"
+    "electron-window-state": "^4.1.1",
+    "node-pre-gyp": "^0.10.0",
+    "sqlite3": "^4.0.0",
+    "typeorm": "^0.2.7"
   },
   "build": {
     "appId": "com.github.arolson101.crap",
@@ -28,6 +31,7 @@
     "web": "react-app-rewired start",
     "serve": "cross-env BROWSER=none react-app-rewired start",
     "electron": "electron .",
+    "postinstall": "electron-builder install-app-deps",
     "electron-pack": "build -c.extraMetadata.main=build/electron.js --dir",
     "preelectron-pack": "npm run build-web",
     "build-web": "react-app-rewired build",
@@ -92,14 +96,15 @@
     "@types/rx": "^4.1.1",
     "@types/sanitize-filename": "^1.1.28",
     "@types/shortid": "^0.0.29",
+    "@types/sqlite3": "^3.1.3",
     "@types/storybook__addon-actions": "^3.0.3",
     "@types/storybook__addon-knobs": "^3.3.0",
     "@types/storybook__addon-links": "^3.3.0",
     "@types/storybook__addon-options": "^3.2.0",
     "@types/storybook__react": "^3.0.7",
-    "apollo-boost": "^0.1.4",
-    "apollo-client": "^2.2.8",
-    "apollo-link": "^1.2.1",
+    "apollo-boost": "^0.1.7",
+    "apollo-client": "^2.3.2",
+    "apollo-link": "^1.2.2",
     "apollo-server-core": "^1.3.6",
     "apollo-storybook-react": "^0.1.0",
     "babel-cli": "^7.0.0-beta.3",
@@ -186,13 +191,9 @@
     "tslint-config-standard": "^7.0.0",
     "tslint-react": "^3.5.1",
     "type-graphql": "^0.11.3",
-    "typeorm": "^0.2.7",
     "typescript": "^2.8.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "3.10.0",
     "webpack-fix-default-import-plugin": "^1.0.3"
-  },
-  "resolutions": {
-    "msrcrypto": "git+https://github.com/bunea/msrCrypto"
   }
 }

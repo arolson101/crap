@@ -1,5 +1,5 @@
 import { uniq } from 'lodash'
-import { Connection } from 'typeorm/browser'
+import { Connection } from '../typeorm'
 import { iupdate } from '../../iupdate'
 export { ResolverContext } from '../AppDbProvider'
 import { Record, RecordClass, deleteRecord, updateRecord } from '../Record'

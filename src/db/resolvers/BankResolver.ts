@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryColumn } from 'typeorm/browser'
+import { Entity, Column, Index, PrimaryColumn } from '../typeorm'
 import { iupdate } from '../../iupdate'
 import { Record, RecordClass, createRecord } from '../Record'
 import { Account } from './AccountResolver'

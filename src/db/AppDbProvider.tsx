@@ -3,7 +3,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink } from 'apollo-link'
 import * as React from 'react'
 import { ApolloProvider } from 'react-apollo'
-import { Connection } from 'typeorm/browser'
+import { Connection } from './typeorm'
 import Observable from 'zen-observable-ts'
 import schema from '../db/schema'
 import { runQuery } from 'apollo-server-core'
@@ -53,10 +53,10 @@ export class AppDbProvider extends React.Component<Props, State> {
           variables: operation.variables,
           context
         }
-        const exe = runQuery(opts)
+        const exe = runQuery(opts as any)
         if ('then' in exe) {
           exe.then(res => {
-            observer.next(res)
+            observer.next(res as any)
             observer.complete()
           }).catch(err => {
             observer.error(err)
