@@ -3,7 +3,6 @@ import { FormGroup, Intent, TextArea } from '@blueprintjs/core'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
-import { ReturnKeyType, TextInput } from 'react-native'
 import { ThemeProp, ctx } from '../../App'
 import { WrappedField } from './WrappedField'
 
@@ -17,7 +16,7 @@ export namespace TextField {
     textColor?: string
     autoFocus?: boolean
     onSubmitEditing?: () => any
-    returnKeyType?: ReturnKeyType
+    returnKeyType?: any
   }
 }
 

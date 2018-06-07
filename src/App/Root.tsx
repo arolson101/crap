@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { IntlProvider } from 'react-intl'
-import { AppRegistry, Platform } from 'react-native'
 import * as shortid from 'shortid'
 import { openDb, deleteDb, AppDbProvider, DbDependencies } from '../db'
 import App from './App'

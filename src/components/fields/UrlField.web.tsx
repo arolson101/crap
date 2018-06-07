@@ -2,7 +2,6 @@ import glamorous from 'glamorous'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
-import { ReturnKeyType, TextInput } from 'react-native'
 import { ThemeProp, ctx } from '../../App'
 import { WrappedField } from './WrappedField'
 
@@ -23,14 +22,14 @@ export namespace UrlField {
     placeholder?: FormattedMessage.MessageDescriptor
     autoFocus?: boolean
     onSubmitEditing?: () => any
-    returnKeyType?: ReturnKeyType
+    returnKeyType?: any
   }
 }
 
 export class UrlField extends React.Component<UrlField.Props> {
   static contextTypes = ctx.intl
 
-  private textInput = React.createRef<TextInput>()
+  private textInput = React.createRef<any>()
 
   focusTextInput = () => {
     if (this.textInput.current) {
