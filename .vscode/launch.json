@@ -5,39 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "genSchema",
-      "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
-      "args": [
-        "--project",
-        "tsconfig.test.json",
-        "-r",
-        "@babel/register",
-        "--skip-ignore",
-        "${workspaceFolder}/genSchema.ts"
-      ],
-      "sourceMaps": false,
-      "cwd": "${workspaceRoot}",
-      "protocol": "inspector"
-    },
-    {
       "type": "chrome",
       "request": "launch",
       "name": "Chrome",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
-    },
-    {
-      "name": "Electron (Main Process)",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-      "windows": {
-        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
-      },
-      "args" : ["."]
     },
     {
       "name": "Electron",
@@ -53,6 +25,17 @@
         "--debug-brk"
       ],
       "webRoot": "${workspaceRoot}"
+    },
+    {
+      "name": "Electron (Main Process)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "args" : ["."]
     },
     {
       "name": "Tests",
@@ -95,6 +78,53 @@
       },
       "console": "internalConsole",
       "sourceMaps": true
-    }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "genSchema",
+      "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
+      "args": [
+        "--project",
+        "tsconfig.test.json",
+        "-r",
+        "@babel/register",
+        "--skip-ignore",
+        "${workspaceFolder}/genSchema.ts"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "react-app-rewired start",
+      "program": "${workspaceRoot}/node_modules/react-app-rewired/scripts/start.js",
+      "args": [
+        "start"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "env": {
+        "BROWSER": "none"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "react-app-rewired build",
+      "program": "${workspaceRoot}/node_modules/react-app-rewired/scripts/build.js",
+      "args": [
+        "build"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "env": {
+        "BROWSER": "none"
+      }
+    },
   ]
 }
