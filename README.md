@@ -1,9 +1,9 @@
 # crap
 
 ## targets
-* react-native
-* react-native-web
+* react-native (ios & android)
 * electron
+* web?
 
 ## technologies
 * react

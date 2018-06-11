@@ -53,18 +53,6 @@ module.exports = function override(config, env) {
   config = rewireReactHotLoader(config, env);
 
   config.target = 'electron'
-  config.resolve.alias = {
-    'react-native/Libraries/Text/TextStylePropTypes': 'react-native-web/dist/exports/Text/TextStylePropTypes.js',
-    'react-native/Libraries/Components/View/ViewStylePropTypes': 'react-native-web/dist/exports/View/ViewStylePropTypes.js',
-    'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry/index.js',
-    'react-native$': 'react-native-web',
-
-    // 'react-router-native': 'react-router',
-    // 'react-native-vector-icons/Fonts': nodeModule('react-native-vector-icons/Fonts'), // need to avoid aliasing Font dir
-    // 'react-native-vector-icons': 'react-native-vector-icons/dist',
-
-    ...config.resolve.alias,
-  };
 
   let foundBabel = false;
   const ruleSearcher = (rule) => {

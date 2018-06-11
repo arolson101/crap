@@ -24,8 +24,5 @@ module.exports = {
   setupFiles: [
     './src/setupTests.ts'
   ],
-  moduleNameMapper: {
-    "react-native": "<rootDir>/node_modules/react-native-web",
-  },
   testEnvironment: "jsdom",
 }
