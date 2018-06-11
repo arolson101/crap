@@ -1,5 +1,22 @@
+import * as React from 'react'
+import { Button as RNButton, Text as RNText } from 'react-native'
 import glamorous from 'glamorous-native'
 import { ThemeProp } from '../App'
+
+interface ButtonProps {
+  onPress: () => void
+  title: string
+}
+export const Button: React.SFC<ButtonProps> = ({ onPress, title }) => (
+  <RNButton onPress={onPress} title={title} />
+)
+
+export const Text: React.SFC = ({children}) => (
+  <RNText>{children}</RNText>
+)
+
+export const Container = glamorous.view()
+Container.displayName = 'Container'
 
 export const CenteredContent = glamorous.view<ThemeProp>({},
   ({ theme }) => ({
@@ -24,6 +41,11 @@ export const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   alignItems: 'baseline'
 }))
 Row.displayName = 'Row'
+
+export const Column = glamorous.view<ThemeProp>({}, ({ theme }) => ({
+  flexDirection: 'row',
+}))
+Column.displayName = 'Column'
 
 export const LabelColumn = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   width: theme.labelWidth,

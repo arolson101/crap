@@ -1,5 +1,49 @@
 import glamorous from 'glamorous'
+import * as React from 'react'
+import { Button as BPButton } from '@blueprintjs/core'
 import { ThemeProp } from '../App'
+
+interface ButtonProps {
+  onPress: () => void
+  title: string
+}
+export const Button: React.SFC<ButtonProps> = ({ onPress, title }) => (
+  <BPButton type='button' onClick={onPress}>{title}</BPButton>
+)
+
+export const Text: React.SFC = ({ children }) => (
+  <span>{children}</span>
+)
+
+interface PickerProps {
+  onValueChange: (itemValue: any) => void
+  selectedValue?: any
+}
+export class Picker extends React.Component<PickerProps> {
+  render () {
+    return (
+      <select
+        value={this.props.selectedValue}
+        onChange={(e) => this.props.onValueChange(e.currentTarget.value)}
+      >
+        {this.props.children}
+      </select>
+    )
+  }
+}
+
+export namespace Picker {
+  interface ItemProps {
+    label: string
+    value: any
+  }
+  export const Item: React.SFC<ItemProps> = (props) => (
+    <option value={props.value}>{props.label}</option>
+  )
+}
+
+export const Container = glamorous.div()
+Container.displayName = 'Container'
 
 export const CenteredContent = glamorous.div<ThemeProp>({},
   ({ theme }) => ({
@@ -24,10 +68,17 @@ FormContent.displayName = 'FormContent'
 
 export const Row = glamorous.div<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,
+  display: 'flex',
   flexDirection: 'row',
   alignItems: 'baseline'
 }))
 Row.displayName = 'Row'
+
+export const Column = glamorous.div<ThemeProp>({}, ({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+}))
+Column.displayName = 'Column'
 
 export const LabelColumn = glamorous.span<ThemeProp>({}, ({ theme }) => ({
   width: theme.labelWidth,

@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { defineMessages, FormattedMessage } from 'react-intl'
+import { Container, Text } from '../components/layout'
 import { BankForm } from '../forms/BankForm'
 import { AccountForm } from '../forms/AccountForm'
 import { ctx } from '../App'
@@ -10,17 +11,24 @@ interface Params {
 }
 
 export const AccountsUpdatePage: React.SFC =
-  (props, { intl, router }: ctx.Intl & ctx.Router<Params>) => {
+  (props, { router }: ctx.Router<Params>) => {
     const { route } = router
     const { bankId, accountId } = route.match.params
     return (
-      <View>
-        <Text>update account</Text>
+      <Container>
+        <FormattedMessage {...messages.updateAccount}/>
         {accountId
           ? <AccountForm bankId={bankId} accountId={accountId} />
           : <BankForm bankId={bankId} />
         }
-      </View>
+      </Container>
     )
   }
-AccountsUpdatePage.contextTypes = { ...ctx.intl, ...ctx.router }
+AccountsUpdatePage.contextTypes = { ...ctx.router }
+
+const messages = defineMessages({
+  updateAccount: {
+    id: 'AccountUpdatePage.save',
+    defaultMessage: 'Update Account'
+  },
+})

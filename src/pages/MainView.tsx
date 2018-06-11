@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
 import { Route, Switch, withRouter /*Redirect*/ } from 'react-router'
+import { Container, Text } from '../components/layout'
 import { paths } from '../nav'
 import { HomePage } from './HomePage'
 import { BudgetsPage } from './BudgetsPage'
@@ -11,7 +11,7 @@ interface Props {
 
 export const MainViewComponent: React.SFC<Props> = (props) => {
   return (
-    <View>
+    <Container>
       <Switch>
         <Route path={paths.root.home} exact component={HomePage} />
         <Route path={paths.root.budgets} component={BudgetsPage} />
@@ -19,7 +19,7 @@ export const MainViewComponent: React.SFC<Props> = (props) => {
         <Route component={() => <Text>404</Text>}/>>
         {/* <Redirect to="/" /> */}
       </Switch>
-    </View>
+    </Container>
   )
 }
 

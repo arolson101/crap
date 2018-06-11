@@ -1,11 +1,9 @@
 import * as React from 'react'
-import { View, Text, Button, ScrollView } from 'react-native'
 import { compose } from 'recompose'
+import { Column, Button, Text } from '../components/layout'
 import { nav } from '../nav'
 import { Queries } from '../db'
 import { ctx } from '../App'
-
-const List = View
 
 interface Props {
   query: Queries.Accounts
@@ -17,30 +15,26 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
     return null
   }
   return (
-    <View style={{ flex: 1, display: 'flex' }}>
-      <ScrollView>
-        <List>
-          <Button onPress={() => push(nav.home())} title='home'/>
-          <Button onPress={() => push(nav.budgets())} title='budgets'/>
-          <Button onPress={() => push(nav.accounts())} title='accounts'/>
-          {props.query.data.banks.map(bank =>
-            <React.Fragment key={bank.id}>
-              <Text>{bank.name}</Text>
-              {bank.accounts.map(account =>
-                <Button
-                  key={account.id}
-                  onPress={() => push(nav.accountView(bank.id, account.id))}
-                  title={account.name}
-                  // subtitle={'$100.00'}
-                  // subtitleNumberOfLines={3}
-                  // hideChevron
-                />
-              )}
-            </React.Fragment>
+    <Column>
+      <Button onPress={() => push(nav.home())} title='home' />
+      <Button onPress={() => push(nav.budgets())} title='budgets' />
+      <Button onPress={() => push(nav.accounts())} title='accounts' />
+      {props.query.data.banks.map(bank =>
+        <React.Fragment key={bank.id}>
+          <Text>{bank.name}</Text>
+          {bank.accounts.map(account =>
+            <Button
+              key={account.id}
+              onPress={() => push(nav.accountView(bank.id, account.id))}
+              title={account.name}
+            // subtitle={'$100.00'}
+            // subtitleNumberOfLines={3}
+            // hideChevron
+            />
           )}
-        </List>
-      </ScrollView>
-    </View>
+        </React.Fragment>
+      )}
+    </Column>
   )
 }
 SidebarComponent.contextTypes = ctx.router

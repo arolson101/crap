@@ -1,6 +1,5 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { View } from 'react-native'
 import { FormattedMessage, defineMessages } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
@@ -8,6 +7,7 @@ import { nav } from '../nav'
 import { filist, formatAddress } from '../fi'
 import { Mutations, Queries, Bank } from '../db'
 import { ctx } from '../App'
+import { Container } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { typedFields } from '../components/fields'
 
@@ -76,91 +76,81 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
       }}
     >
       {formApi =>
-        <React.Fragment>
-          <View>
-            <FormattedMessage {...messages.fiHelp} />
-            <SelectField
-              field='fi'
-              items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
-              label={messages.fi}
-              onValueChange={(value: number) => {
-                const fi = filist[value]
-                formApi.setValue('name', fi.name || '')
-                formApi.setValue('web', fi.profile.siteURL || '')
-                formApi.setValue('favicon', '')
-                formApi.setValue('address', formatAddress(fi) || '')
-                formApi.setValue('fid', fi.fid || '')
-                formApi.setValue('org', fi.org || '')
-                formApi.setValue('ofx', fi.ofx || '')
-              }}
-            />
-          </View>
-          <View>
-            <TextField
-              field='name'
-              label={messages.name}
-              placeholder={messages.namePlaceholder}
-            />
-            <TextField
-              field='address'
-              label={messages.address}
-              rows={4}
-            />
-            <UrlField
-              field='web'
-              // favicoName='favicon'
-              label={messages.web}
-            />
-            <TextField
-              field='notes'
-              label={messages.notes}
-              rows={4}
-            />
-          </View>
-          <View>
-            <CheckboxField
-              field='online'
-              label={messages.online}
-            />
-          </View>
+        <Container>
+          <FormattedMessage {...messages.fiHelp} />
+          <SelectField
+            field='fi'
+            items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
+            label={messages.fi}
+            onValueChange={(value: number) => {
+              const fi = filist[value]
+              formApi.setValue('name', fi.name || '')
+              formApi.setValue('web', fi.profile.siteURL || '')
+              formApi.setValue('favicon', '')
+              formApi.setValue('address', formatAddress(fi) || '')
+              formApi.setValue('fid', fi.fid || '')
+              formApi.setValue('org', fi.org || '')
+              formApi.setValue('ofx', fi.ofx || '')
+            }}
+          />
+          <TextField
+            field='name'
+            label={messages.name}
+            placeholder={messages.namePlaceholder}
+          />
+          <TextField
+            field='address'
+            label={messages.address}
+            rows={4}
+          />
+          <UrlField
+            field='web'
+            // favicoName='favicon'
+            label={messages.web}
+          />
+          <TextField
+            field='notes'
+            label={messages.notes}
+            rows={4}
+          />
+          <CheckboxField
+            field='online'
+            label={messages.online}
+          />
           <CollapseField field='online'>
-            <View>
-              <TextField
-                field='username'
-                label={messages.username}
-                placeholder={messages.usernamePlaceholder}
-              />
-              <TextField
-                secure
-                field='password'
-                label={messages.password}
-                placeholder={messages.passwordPlaceholder}
-              />
-            </View>
-            <View>
-              <TextField
-                field='fid'
-                label={messages.fid}
-                placeholder={messages.fidPlaceholder}
-              />
-              <TextField
-                field='org'
-                label={messages.org}
-                placeholder={messages.orgPlaceholder}
-              />
-              <TextField
-                field='ofx'
-                label={messages.ofx}
-                placeholder={messages.ofxPlaceholder}
-              />
-            </View>
+            <TextField
+              field='username'
+              label={messages.username}
+              placeholder={messages.usernamePlaceholder}
+            />
+            <TextField
+              secure
+              field='password'
+              label={messages.password}
+              placeholder={messages.passwordPlaceholder}
+            />
+            <TextField
+              field='fid'
+              label={messages.fid}
+              placeholder={messages.fidPlaceholder}
+            />
+            <TextField
+              field='org'
+              label={messages.org}
+              placeholder={messages.orgPlaceholder}
+            />
+            <TextField
+              field='ofx'
+              label={messages.ofx}
+              placeholder={messages.ofxPlaceholder}
+            />
           </CollapseField>
           <SubmitButton
             disabled={props.saveBank.loading}
             onPress={formApi.submitForm}
             title={edit ? messages.save : messages.create}
           />
-        </React.Fragment>
+        </Container>
       }
     </Form>
   )

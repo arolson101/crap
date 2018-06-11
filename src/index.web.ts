@@ -1,15 +1,12 @@
 import * as React from 'react'
-import { IntlProvider } from 'react-intl'
-import { AppRegistry, Platform } from 'react-native'
+import * as ReactDOM from 'react-dom'
 import Root from './App/Root'
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import 'normalize.css/normalize.css'
 
-AppRegistry.registerComponent('App', () => Root)
-
 const runApp = () => {
-  AppRegistry.runApplication('App', { rootTag: document.getElementById('root') })
+  ReactDOM.render(React.createElement(Root, {}), document.getElementById('root'))
 }
 
 runApp()

@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { Text, Button, View } from 'react-native'
 import { Switch, Route } from 'react-router'
 import { compose } from 'recompose'
 import { nav, paths } from '../nav'
 import { Queries, Mutations } from '../db'
 import { ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { Container, Row, Button, Text } from '../components/layout'
 import { AccountsCreatePage } from './AccountsCreatePage'
 import { AccountsUpdatePage } from './AccountsUpdatePage'
 import { AccountPage } from './AccountPage'
@@ -34,15 +34,15 @@ export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.R
         <>
           <Text>Accounts page</Text>
           {props.query.data.banks.map(bank =>
-            <View key={bank.id}>
+            <Container key={bank.id}>
               <Text>{bank.name}</Text>
-              <View style={{ flexDirection: 'row' }}>
+              <Row>
                 <Button title='edit bank' onPress={() => router.history.push(nav.bankUpdate(bank.id))} />
                 <Button title='delete bank' onPress={() => props.deleteBank.execute({ variables: { bankId: bank.id } })} />
                 <Button title='add account' onPress={() => router.history.push(nav.accountCreate(bank.id))} />
-              </View>
+              </Row>
               {bank.accounts.map(account =>
-                <View key={account.id} style={{ flexDirection: 'row' }}>
+                <Row key={account.id}>
                   <Button
                     title={account.name}
                     onPress={() => router.history.push(nav.accountView(bank.id, account.id))}
@@ -51,9 +51,9 @@ export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.R
                     title='delete'
                     onPress={() => props.deleteAccount.execute({ variables: { accountId: account.id } })}
                   />
-                </View>
+                </Row>
               )}
-            </View>
+            </Container>
           )}
           <Button onPress={() => router.history.push(nav.bankCreate())} title='add bank' />
         </>

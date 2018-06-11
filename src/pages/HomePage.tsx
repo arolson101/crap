@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
 import { compose } from 'recompose'
 import { Queries } from '../db'
+import { Container, Text } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
 
 interface Props {
@@ -18,25 +18,25 @@ export const HomePageComponent: React.SFC<Props> = (props) => {
   }
 
   return (
-    <View>
+    <Container>
       {!props.query.data.banks.length &&
         <Text>No banks</Text>
       }
       {props.query.data.banks.map(bank =>
-        <View key={bank.id}>
+        <Container key={bank.id}>
           <Text>{bank.name}</Text>
           {!bank.accounts.length &&
             <Text>No accounts</Text>
           }
           {bank.accounts.map(account =>
-            <View key={account.id}>
+            <Container key={account.id}>
               <Text>{account.name}</Text>
-            </View>
+            </Container>
           )}
-        </View>
+        </Container>
       )}
       <Text>home page</Text>
-    </View>
+    </Container>
   )
 }
 

@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { Container, Text } from '../components/layout'
 
 export const BudgetsPage: React.SFC = (props) => {
   return (
-    <View>
+    <Container>
       <Text>Budgets page</Text>
-    </View>
+    </Container>
   )
 }

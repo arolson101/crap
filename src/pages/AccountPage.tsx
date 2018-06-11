@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Button, View, Text } from 'react-native'
 import { RouteComponentProps } from 'react-router'
 import { compose } from 'recompose'
+import { Container, Button, Text } from '../components/layout'
 import { Queries } from '../db'
 import { nav } from '../nav'
 import { ctx } from '../App'
@@ -28,11 +28,11 @@ export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Route
   const { bankId, accountId } = route.match.params
 
   return (
-    <View>
+    <Container>
       <Text>Account2: {account.name}</Text>
       <Text>bank: {account.name}</Text>
       <Button title='edit' onPress={() => history.push(nav.accountUpdate(bankId, accountId))} />
-    </View>
+    </Container>
   )
 }
 AccountPageComponent.contextTypes = ctx.router

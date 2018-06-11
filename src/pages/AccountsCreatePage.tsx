@@ -1,13 +1,12 @@
 import * as React from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import { View, Picker } from 'react-native'
 import { compose } from 'recompose'
 import { Queries } from '../db'
 import { nav } from '../nav'
 import { BankForm } from '../forms/BankForm'
 import { AccountForm } from '../forms/AccountForm'
 import { ThemeProp, ctx } from '../App'
-import { Row, LabelColumn, InputColumn } from '../components/layout'
+import { Row, LabelColumn, InputColumn, Picker, Container } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
 
 interface Params {
@@ -31,7 +30,7 @@ export const AccountsCreatePageComponent: React.SFC<Props> =
     }
 
     return (
-      <View>
+      <Container>
         <Row>
           <LabelColumn>
             <FormattedMessage {...messages.selectBank}/>
@@ -63,7 +62,7 @@ export const AccountsCreatePageComponent: React.SFC<Props> =
           ? <AccountForm bankId={bankId} />
           : <BankForm />
         }
-      </View>
+      </Container>
     )
   }
 AccountsCreatePageComponent.contextTypes = { ...ctx.intl, ...ctx.router }

@@ -1,12 +1,12 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { View } from 'react-native'
 import { defineMessages } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
 import { nav } from '../nav'
 import { Mutations, Queries, Account } from '../db'
 import { ctx } from '../App'
+import { Container } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { typedFields, SelectFieldItem } from '../components/fields'
 
@@ -54,57 +54,55 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
       }}
     >
       {formApi =>
-        <>
-          <View>
+        <Container>
+          <TextField
+            field='name'
+            label={messages.name}
+            placeholder={messages.namePlaceholder}
+            autoFocus
+          />
+          <TextField
+            field='number'
+            label={messages.number}
+            placeholder={messages.numberPlaceholder}
+          />
+          <SelectField
+            field='type'
+            items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
+              value: acct.toString(),
+              label: intl.formatMessage(Account.messages[acct])
+            }))}
+            label={messages.type}
+            onValueChange={(type: Account.Type) => {
+              formApi.setValue('color', Account.generateColor(type))
+            }}
+          />
+          <TextField
+            field='color'
+            label={messages.color}
+            placeholder={messages.colorPlaceholder}
+            textColor={formApi.values.color}
+          />
+          {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
             <TextField
-              field='name'
-              label={messages.name}
-              placeholder={messages.namePlaceholder}
-              autoFocus
+              field='routing'
+              label={messages.routing}
+              placeholder={messages.routingPlaceholder}
             />
+          }
+          {(formApi.values.type === Account.Type.CREDITCARD) &&
             <TextField
-              field='number'
-              label={messages.number}
-              placeholder={messages.numberPlaceholder}
+              field='key'
+              label={messages.key}
+              placeholder={messages.keyPlaceholder}
             />
-            <SelectField
-              field='type'
-              items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
-                value: acct.toString(),
-                label: intl.formatMessage(Account.messages[acct])
-              }))}
-              label={messages.type}
-              onValueChange={(type: Account.Type) => {
-                formApi.setValue('color', Account.generateColor(type))
-              }}
-            />
-            <TextField
-              field='color'
-              label={messages.color}
-              placeholder={messages.colorPlaceholder}
-              textColor={formApi.values.color}
-            />
-            {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
-              <TextField
-                field='routing'
-                label={messages.routing}
-                placeholder={messages.routingPlaceholder}
-              />
-            }
-            {(formApi.values.type === Account.Type.CREDITCARD) &&
-              <TextField
-                field='key'
-                label={messages.key}
-                placeholder={messages.keyPlaceholder}
-              />
-            }
-            <SubmitButton
-              disabled={props.saveAccount.loading}
-              onPress={formApi.submitForm}
-              title={edit ? messages.save : messages.create}
-            />
-          </View>
-        </>
+          }
+          <SubmitButton
+            disabled={props.saveAccount.loading}
+            onPress={formApi.submitForm}
+            title={edit ? messages.save : messages.create}
+          />
+        </Container>
       }
     </Form>
   )
