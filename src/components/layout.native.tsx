@@ -15,6 +15,8 @@ export const Text: React.SFC = ({ children }) => (
   <RNText>{children}</RNText>
 )
 
+export { Picker } from 'react-native'
+
 export const Container = glamorous.view()
 Container.displayName = 'Container'
 
