@@ -1,17 +1,20 @@
 import { Entity, Column, Index, PrimaryColumn } from './typeorm'
-import { BSON } from 'bson'
 import { iupdate } from '../iupdate'
 import { flow } from 'lodash'
 import * as zlib from 'zlib'
 
 export type CompressedJson<T> = '<compressed json>' & { _tag: T }
 
-const bson = new BSON()
 const CJSONToBuffer = (str: CompressedJson<any>) => new Buffer(str, 'base64')
 const bufferToCJSON = (buffer: Buffer) => buffer.toString('base64') as CompressedJson<any>
+const bufferToString = (buffer: Buffer) => buffer.toString('utf8')
+const stringToBuffer = (str: string) => Buffer.from(str, 'utf8')
+const JSONserialize = (obj: Object) => JSON.stringify(obj, null)
+const JSONdeserialize = (str: string) => JSON.parse(str)
 
 export const dehydrate: <T extends Object>(obj: T) => CompressedJson<T> = flow(
-  bson.serialize,
+  JSONserialize,
+  stringToBuffer,
   zlib.deflateRawSync,
   bufferToCJSON
 )
@@ -19,7 +22,8 @@ export const dehydrate: <T extends Object>(obj: T) => CompressedJson<T> = flow(
 export const hydrate: <T>(x: CompressedJson<T>) => T = flow(
   CJSONToBuffer,
   zlib.inflateRawSync,
-  bson.deserialize
+  bufferToString,
+  JSONdeserialize
 )
 
 interface Update<T> {
@@ -28,7 +32,7 @@ interface Update<T> {
 }
 
 export type BaseType<T> = CompressedJson<T>
-export type HistoryType<T> = CompressedJson<{ a: Array<Update<T>> }> // bson doesn't support top-level array
+export type HistoryType<T> = CompressedJson<Array<Update<T>>>
 
 export interface Record<T = {}, ID = string> {
   readonly id: ID
@@ -79,7 +83,7 @@ const rebuildObject = <T>(props: T, _base: CompressedJson<T> | undefined, change
 
 export const updateRecord = <R extends T & Record<T>, T>(record: R, change: Update<T>): R => {
   const { id, _base, _deleted, _history, ...props } = record as Record<T>
-  const prevHistory = _history ? hydrate(_history).a : []
+  const prevHistory = _history ? hydrate(_history) : []
   const changes = [ ...prevHistory, change ].sort((a, b) => a.t - b.t)
   const isLatest = changes[changes.length - 1] === change
   const next = isLatest ? iupdate(props, change.q) : rebuildObject(props, _base, changes)
@@ -88,7 +92,7 @@ export const updateRecord = <R extends T & Record<T>, T>(record: R, change: Upda
     id,
     _deleted,
     _base: _base || dehydrate(props as T),
-    _history: dehydrate({ a: changes })
+    _history: dehydrate(changes)
   } as R
 }
 

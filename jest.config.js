@@ -10,10 +10,12 @@ module.exports = {
     "\\.(gql|graphql)$": "jest-transform-graphql",
   },
   transformIgnorePatterns: [
-    "<rootDir>/node_modules/(?!(lodash-es)/.*)"
+    "<rootDir>/node_modules/(?!(lodash-es|typeorm)/.*)"
   ],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   moduleFileExtensions: [
+    "web.ts",
+    "web.tsx",
     "ts",
     "tsx",
     "js",
@@ -21,6 +23,9 @@ module.exports = {
     "json",
     "node"
   ],
+  moduleNameMapper: {
+    "\\.(css|less)$": "identity-obj-proxy"
+  },
   setupFiles: [
     './src/setupTests.ts'
   ],
