@@ -11,7 +11,7 @@ export const Button: React.SFC<ButtonProps> = ({ onPress, title }) => (
   <RNButton onPress={onPress} title={title} />
 )
 
-export const Text: React.SFC = ({children}) => (
+export const Text: React.SFC = ({ children }) => (
   <RNText>{children}</RNText>
 )
 
