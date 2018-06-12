@@ -31,7 +31,7 @@ CenteredContent.displayName = 'CenteredContent'
 export const FormContent = glamorous.view<ThemeProp>({},
   ({ theme }) => ({
     flexDirection: 'column',
-    width: '50%',
+    width: '90%',
     maxWidth: theme.formMaxWidth,
   })
 )
@@ -45,7 +45,7 @@ export const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
 Row.displayName = 'Row'
 
 export const Column = glamorous.view<ThemeProp>({}, ({ theme }) => ({
-  flexDirection: 'row',
+  flexDirection: 'column',
 }))
 Column.displayName = 'Column'
 
