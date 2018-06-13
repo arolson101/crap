@@ -10273,6 +10273,13 @@ react-native-randombytes@^2.2.0:
     buffer "^4.9.1"
     sjcl "^1.0.3"
 
+"react-native-randombytes@https://github.com/mvayngrib/react-native-randombytes":
+  version "3.2.0"
+  resolved "https://github.com/mvayngrib/react-native-randombytes#910f430ebead815e24377a9ea956eb1ec5103afb"
+  dependencies:
+    buffer "^4.9.1"
+    sjcl "^1.0.3"
+
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.7.0.tgz#38f5ab9368d6ef9e5d18ab64212938af3ec39421"
