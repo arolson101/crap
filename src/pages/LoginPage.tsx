@@ -100,7 +100,7 @@ const TabStack = createBottomTabNavigator(
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
         let iconName: string
-        if (routeName === 'Home') {
+        if (routeName === 'Main') {
           iconName = `ios-information-circle${focused ? '' : '-outline'}`
         } else if (routeName === 'Settings') {
           iconName = `ios-options${focused ? '' : '-outline'}`
