@@ -1,4 +1,6 @@
 PODS:
+  - React (0.55.4):
+    - React/Core (= 0.55.4)
   - React/Core (0.55.4):
     - yoga (= 0.55.4.React)
   - React/DevSupport (0.55.4):
@@ -15,6 +17,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNVectorIcons (4.5.0):
+    - React
   - SQLCipher (3.4.2):
     - SQLCipher/standard (= 3.4.2)
   - SQLCipher/common (3.4.2)
@@ -28,6 +32,7 @@ DEPENDENCIES:
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - SQLCipher
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -38,14 +43,17 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   React: aa2040dbb6f317b95314968021bd2888816e03d5
+  RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: b9f870d4c61b67c765681903bf92a052b7bbb605
+PODFILE CHECKSUM: c1c1bf395cf4116cfd2ba645a18133ee0bba8145
 
 COCOAPODS: 1.5.2

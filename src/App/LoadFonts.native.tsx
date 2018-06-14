@@ -3,6 +3,8 @@
 import * as React from 'react'
 import { Image } from 'react-native'
 
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
 // // https://docs.expo.io/versions/latest/guides/preloading-and-caching-assets.html
 
 // const cacheImages = (images: (string | RequireSource)[]) => {
@@ -28,23 +30,23 @@ export class LoadFonts extends React.Component<{}, State> {
     isReady: false
   }
 
-  // async _loadAssetsAsync () {
-  //   const imageAssets = cacheImages([])
-  //   const fontAssets = cacheFonts([(MaterialIcons as any).font])
+  componentDidMount () {
+    this._loadAssetsAsync()
+  }
 
-  //   await Promise.all([...imageAssets, ...fontAssets])
-  // }
+  async _loadAssetsAsync () {
+    await Ionicons.loadFont()
+    // const imageAssets = cacheImages([])
+    // const fontAssets = cacheFonts([(MaterialIcons as any).font])
+
+    // await Promise.all([...imageAssets, ...fontAssets])
+    this.setState({ isReady: true })
+  }
 
   render () {
-    // if (!this.state.isReady) {
-    //   return (
-    //     <AppLoading
-    //       startAsync={this._loadAssetsAsync}
-    //       onFinish={() => this.setState({ isReady: true })}
-    //       onError={console.warn}
-    //     />
-    //   )
-    // }
+    if (!this.state.isReady) {
+      return null
+    }
     // tslint:disable-next-line
     return <>{this.props.children}</>;
   }

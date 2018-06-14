@@ -27,7 +27,7 @@ class HomeScreen extends React.Component<NavigationInjectedProps> {
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Home Screen</Text>
@@ -41,7 +41,7 @@ class HomeScreen extends React.Component<NavigationInjectedProps> {
 }
 
 class SettingsScreen extends React.Component {
-  render () {
+  render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Settings!</Text>
@@ -51,7 +51,7 @@ class SettingsScreen extends React.Component {
 }
 
 class ModalScreen extends React.Component<NavigationInjectedProps> {
-  render () {
+  render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={{ fontSize: 30 }}>This is a modal!</Text>
@@ -65,7 +65,7 @@ class ModalScreen extends React.Component<NavigationInjectedProps> {
 }
 
 class DetailsScreen extends React.Component {
-  render () {
+  render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Details Screen</Text>
@@ -88,10 +88,31 @@ const MainStack = createStackNavigator(
   }
 )
 
-const TabStack = createBottomTabNavigator({
-  Main: MainStack,
-  Settings: SettingsScreen,
-})
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
+const TabStack = createBottomTabNavigator(
+  {
+    Main: MainStack,
+    Settings: SettingsScreen,
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state
+        let iconName: string
+        if (routeName === 'Home') {
+          iconName = `ios-information-circle${focused ? '' : '-outline'}`
+        } else if (routeName === 'Settings') {
+          iconName = `ios-options${focused ? '' : '-outline'}`
+        }
+
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return <Ionicons name={iconName!} size={25} color={tintColor!} />
+      },
+    }),
+  }
+)
 
 export const LoginPage = createStackNavigator(
   {

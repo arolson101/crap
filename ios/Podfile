@@ -17,6 +17,7 @@ target 'crap' do
   pod 'SQLCipher'
   # pod 'react-native-sqlcipher-storage', :path => '../node_modules/react-native-sqlcipher-storage'
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
