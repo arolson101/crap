@@ -8,7 +8,7 @@ interface Props {
   query: Queries.Accounts
 }
 
-export const HomePageComponent: React.SFC<Props> = (props) => {
+export const HomeScreenComponent: React.SFC<Props> = (props) => {
   if (props.query.loading) {
     return null
   }
@@ -40,7 +40,7 @@ export const HomePageComponent: React.SFC<Props> = (props) => {
   )
 }
 
-export const HomePage = compose(
+export const HomeScreen = compose(
   Queries.withAccounts('query')
-)(HomePageComponent)
-HomePage.displayName = 'HomePage'
+)(HomeScreenComponent)
+HomeScreen.displayName = 'HomePage'

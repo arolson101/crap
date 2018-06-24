@@ -16,7 +16,7 @@ interface Props {
   query: Queries.Account
 }
 
-export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Router) => {
+export const AccountScreenComponent: React.SFC<Props> = (props, context: ctx.Router) => {
   if (props.query.loading) {
     return null
   }
@@ -35,9 +35,9 @@ export const AccountPageComponent: React.SFC<Props> = (props, context: ctx.Route
     </Container>
   )
 }
-AccountPageComponent.contextTypes = ctx.router
+AccountScreenComponent.contextTypes = ctx.router
 
 export const AccountPage = compose(
   Queries.withAccount('query', (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId }))
-)(AccountPageComponent)
+)(AccountScreenComponent)
 AccountPage.displayName = 'AccountPage'

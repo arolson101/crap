@@ -6,9 +6,9 @@ import { Queries, Mutations } from '../db'
 import { ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Container, Row, Button, Text } from '../components/layout'
-import { AccountsCreatePage } from './AccountsCreatePage'
-import { AccountsUpdatePage } from './AccountsUpdatePage'
-import { AccountPage } from './AccountPage'
+import { AccountsCreateScreen } from './AccountsCreateScreen'
+import { AccountsUpdateScreen } from './AccountsUpdateScreen'
+import { AccountPage } from './AccountScreen'
 
 interface Props {
   query: Queries.Banks
@@ -16,7 +16,7 @@ interface Props {
   deleteAccount: Mutations.DeleteAccount
 }
 
-export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.Router) => {
+export const AccountsScreenComponent: React.SFC<Props> = (props, { router }: ctx.Router) => {
   if (props.query.loading) {
     return null
   }
@@ -27,8 +27,8 @@ export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.R
 
   return (
     <Switch>
-      <Route path={paths.account.create} component={AccountsCreatePage} />
-      <Route path={paths.account.update} component={AccountsUpdatePage} />
+      <Route path={paths.account.create} component={AccountsCreateScreen} />
+      <Route path={paths.account.update} component={AccountsUpdateScreen} />
       <Route path={paths.account.view} component={AccountPage} />
       <Route>
         <>
@@ -61,11 +61,11 @@ export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.R
     </Switch>
   )
 }
-AccountsPageComponent.contextTypes = ctx.router
+AccountsScreenComponent.contextTypes = ctx.router
 
-export const AccountsPage = compose(
+export const AccountsScreen = compose(
   Queries.withBanks('query'),
   Mutations.withDeleteBank('deleteBank'),
   Mutations.withDeleteAccount('deleteAccount'),
-)(AccountsPageComponent)
-AccountsPage.displayName = 'AccountsPage'
+)(AccountsScreenComponent)
+AccountsScreen.displayName = 'AccountsPage'

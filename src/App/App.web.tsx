@@ -1,7 +1,7 @@
 import { ThemeProvider } from 'glamorous'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
-import { LoginPage, RootPage } from '../pages'
+import { LoginPage, RootPage } from '../screens'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 import { DbContext } from './ctx'
