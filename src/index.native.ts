@@ -5,6 +5,9 @@ import Root from './App/Root'
 
 // tslint:disable-next-line:no-duplicate-imports
 import { YellowBox } from 'react-native'
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated'])
+YellowBox.ignoreWarnings(['Module SQLite requires', ])
+YellowBox.ignoreWarnings(['Module RCTImageLoader requires', ])
+YellowBox.ignoreWarnings(['Module RNRandomBytes requires', ])
 
 AppRegistry.registerComponent('crap', () => Root)
