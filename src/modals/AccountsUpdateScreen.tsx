@@ -10,7 +10,7 @@ interface Params {
   accountId?: string
 }
 
-export const AccountsUpdatePage: React.SFC =
+export const AccountsUpdateScreen: React.SFC =
   (props, { router }: ctx.Router<Params>) => {
     const { route } = router
     const { bankId, accountId } = route.match.params
@@ -24,7 +24,7 @@ export const AccountsUpdatePage: React.SFC =
       </Container>
     )
   }
-AccountsUpdatePage.contextTypes = { ...ctx.router }
+AccountsUpdateScreen.contextTypes = { ...ctx.router }
 
 const messages = defineMessages({
   updateAccount: {

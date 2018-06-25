@@ -1,14 +1,15 @@
 import * as React from 'react'
-import { Switch, Route } from 'react-router'
+import { defineMessages } from 'react-intl'
+import { Route, Switch } from 'react-router'
 import { compose } from 'recompose'
-import { nav, paths } from '../nav'
-import { Queries, Mutations } from '../db'
 import { ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { Container, Row, Button, Text } from '../components/layout'
-import { AccountsCreatePage } from './AccountsCreatePage'
-import { AccountsUpdatePage } from './AccountsUpdatePage'
-import { AccountPage } from './AccountPage'
+import { Button, Container, Row, Text } from '../components/layout'
+import { Mutations, Queries } from '../db'
+import { AccountsCreateScreen, AccountsUpdateScreen } from '../modals'
+import { nav, paths } from '../nav'
+import { withTitle } from '../util'
+import { AccountPage } from './AccountScreen'
 
 interface Props {
   query: Queries.Banks
@@ -16,7 +17,7 @@ interface Props {
   deleteAccount: Mutations.DeleteAccount
 }
 
-export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.Router) => {
+export const AccountsScreenComponent: React.SFC<Props> = (props, { router }: ctx.Router) => {
   if (props.query.loading) {
     return null
   }
@@ -27,8 +28,8 @@ export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.R
 
   return (
     <Switch>
-      <Route path={paths.account.create} component={AccountsCreatePage} />
-      <Route path={paths.account.update} component={AccountsUpdatePage} />
+      <Route path={paths.account.create} component={AccountsCreateScreen} />
+      <Route path={paths.account.update} component={AccountsUpdateScreen} />
       <Route path={paths.account.view} component={AccountPage} />
       <Route>
         <>
@@ -61,11 +62,19 @@ export const AccountsPageComponent: React.SFC<Props> = (props, { router }: ctx.R
     </Switch>
   )
 }
-AccountsPageComponent.contextTypes = ctx.router
+AccountsScreenComponent.contextTypes = ctx.router
 
-export const AccountsPage = compose(
+const messages = defineMessages({
+  title: {
+    id: 'AccountsScreen.title',
+    defaultMessage: 'Accounts'
+  },
+})
+
+export const AccountsScreen = compose(
+  withTitle(messages.title),
   Queries.withBanks('query'),
   Mutations.withDeleteBank('deleteBank'),
   Mutations.withDeleteAccount('deleteAccount'),
-)(AccountsPageComponent)
-AccountsPage.displayName = 'AccountsPage'
+)(AccountsScreenComponent)
+AccountsScreen.displayName = 'AccountsPage'

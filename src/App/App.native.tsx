@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'glamorous-native'
 import * as React from 'react'
-import { RootPage, LoginPage } from '../pages'
+import { RootPage, LoginPage } from '../screens'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 import { DbContext } from './ctx'

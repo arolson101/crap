@@ -1,14 +1,16 @@
 import * as React from 'react'
+import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
 import { Queries } from '../db'
 import { Container, Text } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { withTitle } from '../util'
 
 interface Props {
   query: Queries.Accounts
 }
 
-export const HomePageComponent: React.SFC<Props> = (props) => {
+export const HomeScreenComponent: React.SFC<Props> = (props) => {
   if (props.query.loading) {
     return null
   }
@@ -40,7 +42,15 @@ export const HomePageComponent: React.SFC<Props> = (props) => {
   )
 }
 
-export const HomePage = compose(
-  Queries.withAccounts('query')
-)(HomePageComponent)
-HomePage.displayName = 'HomePage'
+const messages = defineMessages({
+  title: {
+    id: 'HomeScreen.title',
+    defaultMessage: 'Home'
+  },
+})
+
+export const HomeScreen = compose(
+  withTitle(messages.title),
+  Queries.withAccounts('query'),
+)(HomeScreenComponent)
+HomeScreen.displayName = 'HomePage'

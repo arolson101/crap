@@ -17,7 +17,7 @@ interface Props {
   query: Queries.Banks
 }
 
-export const AccountsCreatePageComponent: React.SFC<Props> =
+export const AccountsCreateScreenComponent: React.SFC<Props> =
   (props, { intl, router }: ctx.Intl & ctx.Router<Params>) => {
     const { bankId } = router.route.match.params
 
@@ -65,11 +65,11 @@ export const AccountsCreatePageComponent: React.SFC<Props> =
       </Container>
     )
   }
-AccountsCreatePageComponent.contextTypes = { ...ctx.intl, ...ctx.router }
+AccountsCreateScreenComponent.contextTypes = { ...ctx.intl, ...ctx.router }
 
-export const AccountsCreatePage = compose(
+export const AccountsCreateScreen = compose(
   Queries.withBanks('query')
-)(AccountsCreatePageComponent)
+)(AccountsCreateScreenComponent)
 
 const messages = defineMessages({
   new: {

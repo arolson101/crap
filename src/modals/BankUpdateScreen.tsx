@@ -11,7 +11,7 @@ interface Props {
   bank: Bank
 }
 
-export const BankUpdatePage: React.SFC<Props> = ({ bank, children }, context: ctx.Router<Params>) => {
+export const BankUpdateScreen: React.SFC<Props> = ({ bank, children }, context: ctx.Router<Params>) => {
   const { bankId } = context.router.route.match.params
   return (
     <BankForm bankId={bankId}>
@@ -19,4 +19,4 @@ export const BankUpdatePage: React.SFC<Props> = ({ bank, children }, context: ct
     </BankForm>
   )
 }
-BankUpdatePage.contextTypes = ctx.router
+BankUpdateScreen.contextTypes = ctx.router
