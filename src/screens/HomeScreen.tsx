@@ -44,12 +44,8 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
 
 const messages = defineMessages({
   title: {
-    id: 'LoginForm.title',
+    id: 'HomeScreen.title',
     defaultMessage: 'Home'
-  },
-  open: {
-    id: 'LoginForm.open',
-    defaultMessage: 'Open'
   },
 })
 
