@@ -1,63 +1,70 @@
 import * as React from 'react'
-import { LoginForm } from '../forms/LoginForm'
-import { CenteredContent } from '../components'
-import { Button, View, Text } from 'react-native'
-import { HomeScreen } from './HomeScreen'
-import { BudgetsScreen } from './BudgetsScreen'
-import { AccountsScreen } from './AccountsScreen'
-import { createBottomTabNavigator, createStackNavigator, NavigationInjectedProps, NavigationScreenConfigProps } from 'react-navigation'
+import { defineMessages, FormattedMessage } from 'react-intl'
+import { Text } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
+import { AccountsScreen } from './AccountsScreen'
+import { BudgetsScreen } from './BudgetsScreen'
+import { HomeScreen } from './HomeScreen'
 
-const HomeStack = createStackNavigator({
+const messages = defineMessages({
+  home: {
+    id: 'RootPage.native.home',
+    defaultMessage: 'Home'
+  },
+  budgets: {
+    id: 'RootPage.native.budgets',
+    defaultMessage: 'Budgets'
+  },
+  accounts: {
+    id: 'RootPage.native.accounts',
+    defaultMessage: 'Accounts'
+  },
+})
+
+const iconNames = (focused: boolean) => ({
+  home: `ios-home${focused ? '' : '-outline'}`,
+  budgets: `ios-albums${focused ? '' : '-outline'}`,
+  accounts: `ios-paper${focused ? '' : '-outline'}`,
+})
+
+const homeStack = createStackNavigator({
   Home: HomeScreen,
 })
 
-const BudgetsStack = createStackNavigator({
+const budgetsStack = createStackNavigator({
   Budgets: BudgetsScreen
 })
 
-const AccountsStack = createStackNavigator({
+const accountsStack = createStackNavigator({
   Accounts: AccountsScreen
 })
 
 const TabStack = createBottomTabNavigator(
   {
-    Home: HomeStack,
-    Budgets: BudgetsStack,
-    Accounts: AccountsStack,
+    home: homeStack,
+    budgets: budgetsStack,
+    accounts: accountsStack,
   },
   {
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
-        let iconName: string
-        if (routeName === 'Home') {
-          iconName = `ios-home${focused ? '' : '-outline'}`
-        } else if (routeName === 'Budgets') {
-          iconName = `ios-albums${focused ? '' : '-outline'}`
-        } else if (routeName === 'Accounts') {
-          iconName = `ios-paper${focused ? '' : '-outline'}`
-        }
-
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
-        return <Ionicons name={iconName!} size={25} color={tintColor!} />
+        let iconName: string = iconNames(focused)[routeName]
+        return <Ionicons name={iconName} size={25} color={tintColor!} />
       },
 
+      tabBarLabel: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state
+        return (
+          <Text style={{ color: tintColor! }}>
+            <FormattedMessage {...messages[routeName]} />
+          </Text>
+        )
+      }
     }),
   }
 )
-
-TabStack.navigationOptions = ({ navigation }: NavigationInjectedProps) => {
-  let { routeName } = navigation.state.routes[navigation.state.index]
-
-  // You can do whatever you like here to pick the title based on the route name
-  let headerTitle = routeName + '!'
-
-  return {
-    headerTitle,
-  }
-}
 
 export const RootPage = createStackNavigator(
   {
