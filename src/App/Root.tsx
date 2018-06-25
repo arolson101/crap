@@ -4,7 +4,7 @@ import * as shortid from 'shortid'
 import { openDb, deleteDb, AppDbProvider, DbDependencies } from '../db'
 import App from './App'
 import { Router } from './Router'
-import { textComponent } from './textComponent'
+import { textComponent } from '../components/textComponent'
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_')
 

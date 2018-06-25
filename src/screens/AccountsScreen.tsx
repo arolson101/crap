@@ -6,8 +6,7 @@ import { Queries, Mutations } from '../db'
 import { ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Container, Row, Button, Text } from '../components/layout'
-import { AccountsCreateScreen } from './AccountsCreateScreen'
-import { AccountsUpdateScreen } from './AccountsUpdateScreen'
+import { AccountsCreateScreen, AccountsUpdateScreen } from '../modals'
 import { AccountPage } from './AccountScreen'
 
 interface Props {

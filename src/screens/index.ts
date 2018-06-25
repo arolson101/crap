@@ -1,6 +1,5 @@
 export * from './AccountScreen'
 export * from './AccountsScreen'
-export * from './BankUpdateScreen'
 export * from './BudgetsScreen'
 export * from './HomeScreen'
 export * from './LoginScreen'
