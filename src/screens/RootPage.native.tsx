@@ -6,6 +6,9 @@ import { createBottomTabNavigator, createStackNavigator } from 'react-navigation
 import { AccountsScreen } from './AccountsScreen'
 import { BudgetsScreen } from './BudgetsScreen'
 import { HomeScreen } from './HomeScreen'
+import { ctx } from '../App/ctx'
+
+type ScreenProps = ctx.Intl
 
 const messages = defineMessages({
   home: {
@@ -47,26 +50,24 @@ const TabStack = createBottomTabNavigator(
     accounts: accountsStack,
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state
-        let iconName: string = iconNames(focused)[routeName]
-        return <Ionicons name={iconName} size={25} color={tintColor!} />
-      },
+    navigationOptions: ({ navigation, screenProps }) => {
+      const { intl } = screenProps as ScreenProps
+      const { routeName } = navigation.state
+      const title = intl.formatMessage(messages[routeName])
+      return ({
+        tabBarIcon: ({ focused, tintColor }) => {
+          const { routeName } = navigation.state
+          let iconName: string = iconNames(focused)[routeName]
+          return <Ionicons name={iconName} size={25} color={tintColor!} />
+        },
 
-      tabBarLabel: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state
-        return (
-          <Text style={{ color: tintColor! }}>
-            <FormattedMessage {...messages[routeName]} />
-          </Text>
-        )
-      }
-    }),
+        title,
+      })
+    }
   }
 )
 
-export const RootPage = createStackNavigator(
+const ModalsStack = createStackNavigator(
   {
     Tabs: {
       screen: TabStack,
@@ -80,3 +81,12 @@ export const RootPage = createStackNavigator(
     headerMode: 'none',
   }
 )
+
+export const RootPage: React.SFC = (props, context) => {
+  const { intl } = context as ctx.Intl
+  const screenProps: ScreenProps = ({
+    intl
+  })
+  return <ModalsStack screenProps={screenProps} />
+}
+RootPage.contextTypes = ctx.intl

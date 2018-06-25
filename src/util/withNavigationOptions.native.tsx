@@ -1,9 +1,11 @@
 import * as React from 'react'
-import { NavigationScreenConfig } from 'react-navigation'
 import { FormattedMessage } from 'react-intl'
-import { Text } from 'react-native'
+import { NavigationScreenConfig, NavigationScreenOptions } from 'react-navigation'
+import { ctx } from '../App/ctx'
 
-export const withNavigationOptions = (navigationOptions: NavigationScreenConfig<any>) => (
+type ScreenProps = ctx.Intl
+
+export const withNavigationOptions = (navigationOptions: NavigationScreenConfig<NavigationScreenOptions>) => (
   <P extends object>(Component: React.ComponentType<P>) => (
     class WithNavigationOptions extends React.Component<P> {
       static navigationOptions = navigationOptions
@@ -15,7 +17,10 @@ export const withNavigationOptions = (navigationOptions: NavigationScreenConfig<
 )
 
 export const withTitle = (title: FormattedMessage.MessageDescriptor) => (
-  withNavigationOptions({
-    headerTitle: <Text><FormattedMessage {...title}/></Text>
+  withNavigationOptions(({ screenProps }) => {
+    const { intl } = screenProps as ScreenProps
+    return ({
+      title: intl.formatMessage(title)
+    })
   })
 )
