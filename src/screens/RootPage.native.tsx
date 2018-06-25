@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import { Text } from 'react-native'
+import { Text, Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { AccountsScreen } from './AccountsScreen'
 import { BudgetsScreen } from './BudgetsScreen'
@@ -25,11 +26,28 @@ const messages = defineMessages({
   },
 })
 
-const iconNames = (focused: boolean) => ({
-  home: `ios-home${focused ? '' : '-outline'}`,
-  budgets: `ios-albums${focused ? '' : '-outline'}`,
-  accounts: `ios-paper${focused ? '' : '-outline'}`,
-})
+const HeaderIcon: React.SFC<{routeName: string, focused: boolean, size: number, color: string | null}> = (props) => {
+  const { routeName, size, focused, color } = props
+  const iosIconNames = {
+    home: `ios-home${focused ? '' : '-outline'}`,
+    budgets: `ios-albums${focused ? '' : '-outline'}`,
+    accounts: `ios-paper${focused ? '' : '-outline'}`,
+  }
+  const androidIconNames = {
+    home: `home`,
+    budgets: `receipt`,
+    accounts: `account-balance`,
+  }
+
+  switch (Platform.OS) {
+    default:
+    case 'ios':
+      return <Ionicons color={color!} size={size} name={iosIconNames[routeName]}/>
+
+    case 'android':
+      return <MaterialIcons color={color!} size={size} name={androidIconNames[routeName]}/>
+  }
+}
 
 const homeStack = createStackNavigator({
   Home: HomeScreen,
@@ -57,11 +75,10 @@ const TabStack = createBottomTabNavigator(
       return ({
         tabBarIcon: ({ focused, tintColor }) => {
           const { routeName } = navigation.state
-          let iconName: string = iconNames(focused)[routeName]
-          return <Ionicons name={iconName} size={25} color={tintColor!} />
+          return <HeaderIcon size={25} color={tintColor} routeName={routeName} focused={focused}/>
         },
 
-        title,
+        title
       })
     }
   }
