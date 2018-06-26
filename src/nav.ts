@@ -14,6 +14,10 @@ export const paths = {
     update: '/accounts/update/:bankId/:accountId?'
   },
 
+  modal: {
+    accountCreate: '/accountCreate',
+  },
+
   dbAdvanced: '/db/:dbName',
 }
 

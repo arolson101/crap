@@ -9,9 +9,10 @@ import { connect } from 'react-redux'
 import { ctx } from '../App/ctx'
 import { paths } from '../nav'
 import { navActions } from '../redux/actions/navActions.native'
-import { AccountsScreen, BudgetsScreen, HomeScreen, LoginScreen } from '../screens'
+import * as screens from '../screens'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
+import * as modals from '../modals'
 
 type ScreenProps = ctx.Intl
 
@@ -54,18 +55,18 @@ const HeaderIcon: React.SFC<{ routeName: string, focused: boolean, size: number,
 }
 
 const homeStack = createStackNavigator({
-  Home: HomeScreen,
+  Home: screens.HomeScreen,
 })
 
 const budgetsStack = createStackNavigator({
-  Budgets: BudgetsScreen
+  Budgets: screens.BudgetsScreen
 })
 
 const accountsStack = createStackNavigator({
-  Accounts: AccountsScreen
+  Accounts: screens.AccountsScreen
 })
 
-const TabStack = createBottomTabNavigator(
+const tabStack = createBottomTabNavigator(
   {
     [paths.root.home]: homeStack,
     [paths.root.budgets]: budgetsStack,
@@ -88,11 +89,46 @@ const TabStack = createBottomTabNavigator(
   }
 )
 
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import { actions } from '../redux/actions/index';
+class AnatomyExampleComponent extends React.Component<any> {
+  render() {
+    const { AccountsCreateScreen } = modals
+    return (
+      <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={this.props.navBack}>
+              <Icon name='' ios='ios-arrow-back' android='md-arrow-back' />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Header</Title>
+          </Body>
+          <Right />
+        </Header>
+        <Content>
+          <AccountsCreateScreen/>
+        </Content>
+        <Footer>
+          <FooterTab>
+            <Button full>
+              <Text>Footer</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
+    );
+  }
+}
+const AnatomyExample = connect(null, { navBack: actions.navBack })(AnatomyExampleComponent)
+
 const modalsStack = createStackNavigator(
   {
     Tabs: {
-      screen: TabStack,
+      screen: tabStack,
     },
+    [paths.modal.accountCreate]: AnatomyExample,
     // MyModal: {
     //   screen: ModalScreen,
     // },
@@ -100,11 +136,12 @@ const modalsStack = createStackNavigator(
   {
     mode: 'modal',
     headerMode: 'none',
+    initialRouteName: 'Tabs',
   }
 )
 
 const loginStack = createStackNavigator({
-  Login: LoginScreen
+  Login: screens.LoginScreen
 })
 
 const AuthStack = createSwitchNavigator({

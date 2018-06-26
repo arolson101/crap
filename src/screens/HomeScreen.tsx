@@ -11,7 +11,7 @@ import { actions } from '../redux/actions'
 
 interface Props {
   query: Queries.Accounts
-  navAccounts: () => any
+  modalAccountCreate: () => any
 }
 
 export const HomeScreenComponent: React.SFC<Props> = (props) => {
@@ -26,7 +26,7 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
   return (
     <Container>
       <Text>home page</Text>
-      <Button title='accounts' onPress={props.navAccounts}/>
+      <Button title='modal' onPress={props.modalAccountCreate}/>
       {!props.query.data.banks.length &&
         <Text>No banks</Text>
       }
@@ -57,6 +57,6 @@ const messages = defineMessages({
 export const HomeScreen = compose(
   withTitle(messages.title),
   Queries.withAccounts('query'),
-  connect(null, { navAccounts: actions.navAccounts })
+  connect(null, { modalAccountCreate: actions.modalAccountCreate })
 )(HomeScreenComponent)
 HomeScreen.displayName = 'HomePage'
