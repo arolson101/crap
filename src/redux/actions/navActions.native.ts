@@ -1,5 +1,5 @@
-import { ActionType, action, createAction } from 'typesafe-actions'
 import { NavigationActions, NavigationContainerComponent, NavigationNavigateAction } from 'react-navigation'
+import { ActionType, createAction } from 'typesafe-actions'
 import { paths } from '../../nav'
 
 export const navActions = {

@@ -8,4 +8,4 @@ export const navActions = {
   budgets: () => push(paths.root.budgets),
 }
 
-export type NavActions = ActionType<typeof navActions>
+export type NavAction = ActionType<typeof navActions>
