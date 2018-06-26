@@ -10,7 +10,7 @@ import { BudgetsScreen } from './BudgetsScreen'
 import { HomeScreen } from './HomeScreen'
 import { ctx } from '../App/ctx'
 import { navActions } from '../redux/actions/navActions.native'
-import { paths } from '../nav';
+import { paths } from '../nav'
 
 type ScreenProps = ctx.Intl
 
@@ -106,7 +106,7 @@ interface RootPageProps {
   setTopNavigator: (topNavigator: NavigationContainerComponent) => any
 }
 
-const RootPageComponent: React.SFC<RootPageProps> = ({setTopNavigator}, context) => {
+const RootPageComponent: React.SFC<RootPageProps> = ({ setTopNavigator }, context) => {
   const { intl } = context as ctx.Intl
   const screenProps: ScreenProps = ({
     intl

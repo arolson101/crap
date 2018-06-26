@@ -9,7 +9,6 @@ export interface NavState {
 const initialState: NavState = {}
 
 export const navReducer = (state: NavState = initialState, action: NavAction): NavState => {
-  console.log('nav', action)
   switch (action.type) {
     case getType(navActions.setTopNavigator):
       return { ...state, navigator: action.payload }

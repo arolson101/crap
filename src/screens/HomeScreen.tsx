@@ -57,6 +57,6 @@ const messages = defineMessages({
 export const HomeScreen = compose(
   withTitle(messages.title),
   Queries.withAccounts('query'),
-  connect(null, { navAccounts: navActions.home })
+  connect(null, { navAccounts: navActions.accounts })
 )(HomeScreenComponent)
 HomeScreen.displayName = 'HomePage'
