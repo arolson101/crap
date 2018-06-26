@@ -1,26 +1,29 @@
 import * as React from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { Text, Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator, NavigationContainerComponent } from 'react-navigation'
 import { AccountsScreen } from './AccountsScreen'
 import { BudgetsScreen } from './BudgetsScreen'
 import { HomeScreen } from './HomeScreen'
 import { ctx } from '../App/ctx'
+import { navActions } from '../redux/actions/navActions.native'
+import { paths } from '../nav';
 
 type ScreenProps = ctx.Intl
 
 const messages = defineMessages({
-  home: {
+  [paths.root.home]: {
     id: 'RootPage.native.home',
     defaultMessage: 'Home'
   },
-  budgets: {
+  [paths.root.budgets]: {
     id: 'RootPage.native.budgets',
     defaultMessage: 'Budgets'
   },
-  accounts: {
+  [paths.root.accounts]: {
     id: 'RootPage.native.accounts',
     defaultMessage: 'Accounts'
   },
@@ -29,14 +32,14 @@ const messages = defineMessages({
 const HeaderIcon: React.SFC<{routeName: string, focused: boolean, size: number, color: string | null}> = (props) => {
   const { routeName, size, focused, color } = props
   const iosIconNames = {
-    home: `ios-home${focused ? '' : '-outline'}`,
-    budgets: `ios-albums${focused ? '' : '-outline'}`,
-    accounts: `ios-paper${focused ? '' : '-outline'}`,
+    [paths.root.home]: `ios-home${focused ? '' : '-outline'}`,
+    [paths.root.budgets]: `ios-albums${focused ? '' : '-outline'}`,
+    [paths.root.accounts]: `ios-paper${focused ? '' : '-outline'}`,
   }
   const androidIconNames = {
-    home: `home`,
-    budgets: `receipt`,
-    accounts: `account-balance`,
+    [paths.root.home]: `home`,
+    [paths.root.budgets]: `receipt`,
+    [paths.root.accounts]: `account-balance`,
   }
 
   switch (Platform.OS) {
@@ -63,9 +66,9 @@ const accountsStack = createStackNavigator({
 
 const TabStack = createBottomTabNavigator(
   {
-    home: homeStack,
-    budgets: budgetsStack,
-    accounts: accountsStack,
+    [paths.root.home]: homeStack,
+    [paths.root.budgets]: budgetsStack,
+    [paths.root.accounts]: accountsStack,
   },
   {
     navigationOptions: ({ navigation, screenProps }) => {
@@ -99,11 +102,25 @@ const ModalsStack = createStackNavigator(
   }
 )
 
-export const RootPage: React.SFC = (props, context) => {
+interface RootPageProps {
+  setTopNavigator: (topNavigator: NavigationContainerComponent) => any
+}
+
+const RootPageComponent: React.SFC<RootPageProps> = ({setTopNavigator}, context) => {
   const { intl } = context as ctx.Intl
   const screenProps: ScreenProps = ({
     intl
   })
-  return <ModalsStack screenProps={screenProps} />
+  return (
+    <ModalsStack screenProps={screenProps} ref={setTopNavigator} />
+  )
 }
-RootPage.contextTypes = ctx.intl
+RootPageComponent.contextTypes = ctx.intl
+
+export const RootPage = connect(
+  null,
+  ({
+    setTopNavigator: navActions.setTopNavigator,
+  })
+)(RootPageComponent)
+RootPage.displayName = 'RootPage'

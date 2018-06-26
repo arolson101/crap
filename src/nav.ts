@@ -1,6 +1,6 @@
 export const paths = {
   root: {
-    home: '/',
+    home: '/home',
     accounts: '/accounts',
     budgets: '/budgets'
   },
