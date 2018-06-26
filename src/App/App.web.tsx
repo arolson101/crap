@@ -1,7 +1,7 @@
 import { ThemeProvider } from 'glamorous'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
-import { LoginPage, RootPage } from '../screens'
+import { LoginScreen, RootPage } from '../screens'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 import { DbContext } from './ctx'
@@ -19,7 +19,7 @@ const App = (props: Props) => {
             if (db && db.isOpen) {
               return <RootPage />
             } else {
-              return <LoginPage />
+              return <LoginScreen />
             }
           }}
         </DbContext.Consumer>

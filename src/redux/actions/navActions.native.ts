@@ -10,9 +10,9 @@ export const navActions = {
     (topNavigator: NavigationContainerComponent) => resolve(topNavigator)
   ),
 
-  home: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.home })),
-  accounts: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.accounts })),
-  budgets: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.budgets })),
+  navHome: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.home })),
+  navAccounts: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.accounts })),
+  navBudgets: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.budgets })),
 }
 
 export type NavAction = ActionType<typeof navActions>

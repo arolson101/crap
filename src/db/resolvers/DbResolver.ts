@@ -2,6 +2,8 @@ import * as crypto from 'crypto'
 import sanitize from 'sanitize-filename'
 import { Entity, Column, Index, PrimaryColumn } from '../typeorm'
 import { Arg, Ctx, Field, ObjectType, Mutation, Query, Resolver, ResolverContext } from './helpers'
+import { selectors } from '../../redux/reducers/index';
+import { actions } from '../../redux/actions/index';
 
 const iterations = 10000
 const keylen = 32
@@ -59,8 +61,7 @@ export class DbInfo {
 export class DbResolver {
 
   @Query(returns => [DbInfo])
-  async allDbs (@Ctx() context: ResolverContext): Promise<DbInfo[]> {
-    const indexDb = await context.getIndexDb()
+  async allDbs (@Ctx() { indexDb }: ResolverContext): Promise<DbInfo[]> {
     const dbs = await indexDb.getRepository(DbInfo)
       .find()
     return dbs
@@ -70,10 +71,8 @@ export class DbResolver {
   async createDb (
     @Arg('name') name: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
-    @Ctx() context: ResolverContext
+    @Ctx() { indexDb, openDb, setAppDb }: ResolverContext
   ): Promise<Boolean> {
-    const indexDb = await context.getIndexDb()
-
     const dbInfo = new DbInfo()
     dbInfo.dbId = crypto.randomBytes(8).toString('base64')
     dbInfo.name = name
@@ -81,9 +80,9 @@ export class DbResolver {
     const key = DbInfo.generateKey()
     dbInfo.setPassword(key, password)
 
-    const db = await context.openDb(true, dbInfo.path, key)
+    const db = await openDb(true, dbInfo.path, key)
     indexDb.manager.save(DbInfo, dbInfo)
-    context.setAppDb(db)
+    setAppDb(db)
     return true
   }
 
@@ -91,33 +90,31 @@ export class DbResolver {
   async openDb (
     @Arg('dbId') dbId: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
-    @Ctx() context: ResolverContext
+    @Ctx() { indexDb, openDb, setAppDb }: ResolverContext
   ): Promise<Boolean> {
-    const allDb = await context.getIndexDb()
-    const dbInfo = await allDb.getRepository(DbInfo).findOneOrFail(dbId)
+    const dbInfo = await indexDb.getRepository(DbInfo).findOneOrFail(dbId)
     const key = dbInfo.getKey(password)
-    const db = await context.openDb(true, dbInfo.path, key)
-    context.setAppDb(db)
+    const db = await openDb(true, dbInfo.path, key)
+    setAppDb(db)
     return true
   }
 
   @Mutation(returns => Boolean)
   async closeDb (
-    @Ctx() context: ResolverContext
+    @Ctx() { setAppDb }: ResolverContext
   ): Promise<Boolean> {
-    context.setAppDb(undefined)
+    setAppDb(null)
     return true
   }
 
   @Mutation(returns => Boolean)
   async deleteDb (
     @Arg('dbId') dbId: string,
-    @Ctx() context: ResolverContext
+    @Ctx() { indexDb, deleteDb }: ResolverContext
   ): Promise<Boolean> {
-    const allDb = await context.getIndexDb()
-    const dbInfo = await allDb.getRepository(DbInfo).findOneOrFail(dbId)
-    await context.deleteDb(dbInfo.path)
-    await allDb.createQueryBuilder()
+    const dbInfo = await indexDb.getRepository(DbInfo).findOneOrFail(dbId)
+    await deleteDb(dbInfo.path)
+    await indexDb.createQueryBuilder()
       .delete()
       .from(DbInfo)
       .where('dbId = :dbId', { dbId })

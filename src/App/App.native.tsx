@@ -4,13 +4,12 @@ import { defineMessages } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator, createStackNavigator, NavigationContainerComponent } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator, NavigationContainerComponent, createSwitchNavigator } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ctx } from '../App/ctx'
 import { paths } from '../nav'
 import { navActions } from '../redux/actions/navActions.native'
-import { AccountsScreen, BudgetsScreen, HomeScreen, LoginPage } from '../screens'
-import { DbContext } from './ctx'
+import { AccountsScreen, BudgetsScreen, HomeScreen, LoginScreen } from '../screens'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 
@@ -89,7 +88,7 @@ const TabStack = createBottomTabNavigator(
   }
 )
 
-const ModalsStack = createStackNavigator(
+const modalsStack = createStackNavigator(
   {
     Tabs: {
       screen: TabStack,
@@ -104,6 +103,15 @@ const ModalsStack = createStackNavigator(
   }
 )
 
+const loginStack = createStackNavigator({
+  Login: LoginScreen
+})
+
+const AuthStack = createSwitchNavigator({
+  [paths.login]: loginStack,
+  [paths.app]: modalsStack,
+})
+
 interface RootPageProps {
   setTopNavigator: (topNavigator: NavigationContainerComponent) => any
 }
@@ -114,7 +122,7 @@ const TopNavigatorComponent: React.SFC<RootPageProps> = ({ setTopNavigator }, co
     intl
   })
   return (
-    <ModalsStack screenProps={screenProps} ref={setTopNavigator} />
+    <AuthStack screenProps={screenProps} ref={setTopNavigator} />
   )
 }
 TopNavigatorComponent.contextTypes = ctx.intl
@@ -131,15 +139,7 @@ const App: React.SFC = () => {
   return (
     <LoadFonts>
       <ThemeProvider theme={defaultTheme}>
-        <DbContext.Consumer>
-          {db => {
-            if (db && db.isOpen) {
-              return <TopNavigator />
-            } else {
-              return <LoginPage />
-            }
-          }}
-        </DbContext.Consumer>
+        <TopNavigator />
       </ThemeProvider>
     </LoadFonts>
   )

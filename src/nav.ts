@@ -1,4 +1,7 @@
 export const paths = {
+  login: '/login',
+  app: '/app',
+
   root: {
     home: '/home',
     accounts: '/accounts',
@@ -11,7 +14,7 @@ export const paths = {
     update: '/accounts/update/:bankId/:accountId?'
   },
 
-  dbAdvanced: '/db/:dbName'
+  dbAdvanced: '/db/:dbName',
 }
 
 export const nav = {

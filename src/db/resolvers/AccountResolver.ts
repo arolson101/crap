@@ -4,6 +4,7 @@ import { Column, Entity, Index, PrimaryColumn } from '../typeorm'
 import { iupdate } from '../../iupdate'
 import { Record, RecordClass, createRecord } from '../Record'
 import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
+import { selectors } from '../../redux/reducers/index';
 
 // see ofx4js.domain.data.banking.AccountType
 enum AccountType {
@@ -57,11 +58,11 @@ export class AccountResolver {
 
   @Query(returns => Account)
   async account (
+    @Ctx() { appDb }: ResolverContext,
     @Arg('accountId') accountId: string,
-    @Ctx() context: ResolverContext
   ): Promise<Account> {
-    const db = context.getAppDb()
-    const res = await db.manager.createQueryBuilder(Account, 'account')
+    if (!appDb) { throw new Error('appDb not open') }
+    const res = await appDb.manager.createQueryBuilder(Account, 'account')
       .where('account._deleted = 0 AND accountId=:accountId', { accountId })
       .getOne()
     if (!res) {
@@ -72,17 +73,17 @@ export class AccountResolver {
 
   @Mutation(returns => Account)
   async saveAccount (
-    @Ctx() context: ResolverContext,
+    @Ctx() { appDb, getTime, genId }: ResolverContext,
     @Arg('input') input: AccountInput,
     @Arg('accountId', { nullable: true }) accountId?: string,
     @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Account> {
-    const db = context.getAppDb()
-    const t = context.getTime()
+    if (!appDb) { throw new Error('appDb not open') }
     let account: Account
     let changes: Array<any>
+    const t = getTime()
     if (accountId) {
-      account = await db.manager.findOneOrFail(Account, accountId)
+      account = await appDb.manager.findOneOrFail(Account, accountId)
       const q = Account.diff(account, input)
       changes = [
         Account.change.edit(t, accountId, q)
@@ -92,26 +93,26 @@ export class AccountResolver {
       if (!bankId) {
         throw new Error('when creating an account, bankId must be specified')
       }
-      account = new Account(bankId, input, context.genId)
+      account = new Account(bankId, input, genId)
       changes = [
         Account.change.add(t, account)
       ]
     }
-    await dbWrite(db, changes)
+    await dbWrite(appDb, changes)
     return account
   }
 
   @Mutation(returns => Boolean)
   async deleteAccount (
+    @Ctx() { appDb, getTime }: ResolverContext,
     @Arg('accountId') accountId: string,
-    @Ctx() context: ResolverContext
   ): Promise<Boolean> {
-    const db = context.getAppDb()
-    const t = context.getTime()
+    if (!appDb) { throw new Error('appDb not open') }
+    const t = getTime()
     const changes = [
       Account.change.remove(t, accountId)
     ]
-    await dbWrite(db, changes)
+    await dbWrite(appDb, changes)
     return true
   }
 }

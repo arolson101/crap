@@ -7,7 +7,7 @@ import { Queries } from '../db'
 import { Container, Text } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { withTitle } from '../util'
-import { navActions } from '../redux/actions'
+import { actions } from '../redux/actions'
 
 interface Props {
   query: Queries.Accounts
@@ -57,6 +57,6 @@ const messages = defineMessages({
 export const HomeScreen = compose(
   withTitle(messages.title),
   Queries.withAccounts('query'),
-  connect(null, { navAccounts: navActions.accounts })
+  connect(null, { navAccounts: actions.navAccounts })
 )(HomeScreenComponent)
 HomeScreen.displayName = 'HomePage'
