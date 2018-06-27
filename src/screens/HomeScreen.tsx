@@ -3,11 +3,11 @@ import { defineMessages } from 'react-intl'
 import { Button } from 'react-native'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { Queries } from '../db'
-import { Container, Text } from '../components/layout'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { withTitle } from '../util'
+import { Container, Text } from '../components/layout'
+import { Queries } from '../db'
 import { actions } from '../redux/actions'
+import { Screen, fixScreen } from './Screen'
 
 interface Props {
   query: Queries.Accounts
@@ -24,7 +24,7 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
   }
 
   return (
-    <Container>
+    <Screen title={messages.title}>
       <Text>home page</Text>
       <Button title='modal' onPress={props.modalAccountCreate}/>
       {!props.query.data.banks.length &&
@@ -43,9 +43,16 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
           )}
         </Container>
       )}
-    </Container>
+    </Screen>
   )
 }
+
+export const HomeScreen = compose(
+  fixScreen,
+  Queries.withAccounts('query'),
+  connect(null, { modalAccountCreate: actions.modalAccountCreate })
+)(HomeScreenComponent)
+HomeScreen.displayName = 'HomePage'
 
 const messages = defineMessages({
   title: {
@@ -53,10 +60,3 @@ const messages = defineMessages({
     defaultMessage: 'Home'
   },
 })
-
-export const HomeScreen = compose(
-  withTitle(messages.title),
-  Queries.withAccounts('query'),
-  connect(null, { modalAccountCreate: actions.modalAccountCreate })
-)(HomeScreenComponent)
-HomeScreen.displayName = 'HomePage'

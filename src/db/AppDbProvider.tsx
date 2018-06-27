@@ -94,4 +94,4 @@ export const AppDbProvider = connect(
     setIndexDb: actions.setIndexDb,
     setAppDb: actions.setAppDb,
   }
-)(AppDbProviderComponent)
+)(AppDbProviderComponent) as any

@@ -1,5 +1,6 @@
 import { dbActions, DbAction } from './dbActions'
-import { navActions, NavAction } from './navActions'
+import { navActions } from './navActions'
+import { NativeAction } from './nativeActions'
 
 export const actions = {
   ...dbActions,
@@ -8,4 +9,4 @@ export const actions = {
 
 export type AppAction =
   DbAction
-  | NavAction
+  | NativeAction

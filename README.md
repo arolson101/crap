@@ -29,3 +29,6 @@
 * picker, other form field types
 * fix glamorous/native
 * fix storybook with typedefs
+* remove react-router from native
+* handle errors in Query
+* have mutation pass function

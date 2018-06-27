@@ -74,7 +74,7 @@ declare module 'react-form' {
   }
 
   export class Form extends React.Component<FormProps> {
-    static childContextTypes
+    static childContextTypes: any
   }
 
   export interface ComponentBaseProps {
@@ -86,7 +86,7 @@ declare module 'react-form' {
     onChange?: Function
   }
 
-  export interface FieldProps extends FormPropsBase<V> {
+  export interface FieldProps extends FormPropsBase<any> {
     field: string
     children?: (fieldApi: FieldAPI<any>) => React.ReactNode
   }

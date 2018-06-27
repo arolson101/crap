@@ -1,22 +1,24 @@
-import { NavigationActions, NavigationContainerComponent, NavigationBackActionPayload } from 'react-navigation'
-import { ActionType, createAction } from 'typesafe-actions'
+import { NavigationActions } from 'react-navigation'
 import { paths } from '../../nav'
+import { nativeActions } from './nativeActions'
+import { NavApi } from './navActions'
 
-export const navActions = {
-  navigate: createAction('nav/navigate', resolve =>
-    (navAction: NavigationBackActionPayload) => resolve(navAction)
-  ),
-  setTopNavigator: createAction('nav/setTopNavigator', resolve =>
-    (topNavigator: NavigationContainerComponent) => resolve(topNavigator)
-  ),
+export const navActions: NavApi = {
+  navBack: () => nativeActions.navigate(NavigationActions.back()),
 
-  navBack: () => navActions.navigate(NavigationActions.back()),
+  navHome: () => nativeActions.navigate(NavigationActions.navigate({ routeName: paths.root.home })),
+  navAccounts: () => nativeActions.navigate(NavigationActions.navigate({ routeName: paths.root.accounts })),
+  navBudgets: () => nativeActions.navigate(NavigationActions.navigate({ routeName: paths.root.budgets })),
 
-  navHome: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.home })),
-  navAccounts: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.accounts })),
-  navBudgets: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.root.budgets })),
+  navAccountView: (bankId: string, accountId: string) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.root.accounts,
+    action: NavigationActions.navigate({
+      routeName: paths.account.view,
+      params: { bankId, accountId }
+    })
+  })),
 
-  modalAccountCreate: () => navActions.navigate(NavigationActions.navigate({ routeName: paths.modal.accountCreate })),
+  modalAccountCreate: () => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.modal.accountCreate
+  })),
 }
-
-export type NavAction = ActionType<typeof navActions>

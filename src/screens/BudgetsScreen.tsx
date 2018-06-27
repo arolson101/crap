@@ -1,16 +1,21 @@
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
-import { Container, Text } from '../components/layout'
-import { withTitle } from '../util'
+import { Text } from '../components/layout'
+import { Screen, fixScreen } from './Screen'
 
 export const BudgetsScreenComponent: React.SFC = (props) => {
   return (
-    <Container>
+    <Screen title={messages.title}>
       <Text>Budgets page</Text>
-    </Container>
+    </Screen>
   )
 }
+
+export const BudgetsScreen = compose(
+  fixScreen,
+)(BudgetsScreenComponent)
+BudgetsScreen.displayName = 'BudgetsScreen'
 
 const messages = defineMessages({
   title: {
@@ -18,8 +23,3 @@ const messages = defineMessages({
     defaultMessage: 'Budgets'
   },
 })
-
-export const BudgetsScreen = compose(
-  withTitle(messages.title),
-)(BudgetsScreenComponent)
-BudgetsScreen.displayName = 'BudgetsScreen'

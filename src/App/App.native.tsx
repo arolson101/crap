@@ -4,17 +4,16 @@ import { defineMessages } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator, createStackNavigator, NavigationContainerComponent, createSwitchNavigator, withNavigation } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent } from 'react-navigation'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
-
 import { connect } from 'react-redux'
 import { ctx } from '../App/ctx'
+import * as modals from '../modals'
 import { paths } from '../nav'
-import { navActions } from '../redux/actions/navActions.native'
+import { nativeActions } from '../redux/actions/nativeActions'
 import * as screens from '../screens'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
-import * as modals from '../modals'
 
 type ScreenProps = ctx.Intl
 
@@ -56,50 +55,15 @@ const HeaderIcon: React.SFC<{ routeName: string, focused: boolean, size: number,
   }
 }
 
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
-import { actions } from '../redux/actions/index';
-import { compose } from 'redux';
-import { withNavigationOptions } from '../util/index';
-class AnatomyExampleComponent extends React.Component<any> {
-  render() {
-    const { AccountsCreateScreen } = modals
-    return (
-      <Container>
-        <Content>
-          <AccountsCreateScreen />
-        </Content>
-        <Footer>
-          <FooterTab>
-            <Button full>
-              <Text>Footer</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
-    );
+const getCurrentParams = (state: any): any => {
+  if (state.routes) {
+    return getCurrentParams(state.routes[state.index])
   }
+  return state.params || {}
 }
 
-const AnatomyExample = compose(
-  connect(null, { navBack: actions.navBack }),
-  withNavigationOptions(({ navigation }) => ({
-    // header: (
-    //   <Header>
-    //     <Left>
-    //       <Button transparent onPress={() => navigation.goBack()}>
-    //         <Icon name='arrow-back' />
-    //       </Button>
-    //     </Left>
-    //     <Right />
-    //   </Header>
-    // ),
-    title: 'foo'
-  })),
-)(AnatomyExampleComponent);
-
 const homeStack = createStackNavigator({
-  Home: screens.HomeScreen,
-  [paths.modal.accountCreate]: AnatomyExample,
+  Home: screens.HomeScreen
 })
 
 const budgetsStack = createStackNavigator({
@@ -110,6 +74,12 @@ const accountsStack = createStackNavigator({
   Accounts: screens.AccountsScreen
 })
 
+const transitionConfig = () => ({
+  containerStyle: {
+    backgroundColor: 'red',
+  }
+})
+
 const createBottomTabNavigatorFcn = Platform.OS === 'android' ? createMaterialBottomTabNavigator : createBottomTabNavigator
 const tabStack = createBottomTabNavigatorFcn(
   {
@@ -118,6 +88,17 @@ const tabStack = createBottomTabNavigatorFcn(
     [paths.root.accounts]: accountsStack,
   },
   {
+    animationEnabled: false,
+    lazy: false,
+    tabBarOptions: {
+      activeBackgroundColor: 'red',
+      inactiveBackgroundColor: 'red',
+      activeTintColor: 'red',
+      inactiveTintColor: 'red',
+      style: {
+        backgroundColor: 'red'
+      }
+    },
     navigationOptions: ({ navigation, screenProps }) => {
       const { intl } = screenProps as ScreenProps
       const { routeName } = navigation.state
@@ -136,13 +117,8 @@ const tabStack = createBottomTabNavigatorFcn(
 
 const modalsStack = createStackNavigator(
   {
-    Tabs: {
-      screen: tabStack,
-    },
-    // [paths.modal.accountCreate]: AnatomyExample,
-    // MyModal: {
-    //   screen: ModalScreen,
-    // },
+    Tabs: tabStack,
+    [paths.modal.accountCreate]: modals.BankForm
   },
   {
     mode: 'modal',
@@ -153,7 +129,7 @@ const modalsStack = createStackNavigator(
 
 const loginStack = createStackNavigator({
   Login: screens.LoginScreen
-})
+}, { headerMode: 'none' })
 
 const AuthStack = createSwitchNavigator({
   [paths.login]: loginStack,
@@ -166,9 +142,7 @@ interface RootPageProps {
 
 const TopNavigatorComponent: React.SFC<RootPageProps> = ({ setTopNavigator }, context) => {
   const { intl } = context as ctx.Intl
-  const screenProps: ScreenProps = ({
-    intl
-  })
+  const screenProps: ScreenProps = ({ intl })
   return (
     <AuthStack screenProps={screenProps} ref={setTopNavigator} />
   )
@@ -178,10 +152,10 @@ TopNavigatorComponent.contextTypes = ctx.intl
 const TopNavigator = connect(
   null,
   ({
-    setTopNavigator: navActions.setTopNavigator,
+    setTopNavigator: nativeActions.setTopNavigator,
   })
 )(TopNavigatorComponent)
-TopNavigator.displayName = 'RootPage'
+TopNavigator.displayName = 'TopNavigator'
 
 const App: React.SFC = () => {
   return (

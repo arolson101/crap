@@ -1,11 +1,13 @@
 import * as React from 'react'
+import { defineMessages } from 'react-intl'
 import { RouteComponentProps } from 'react-router'
 import { compose } from 'recompose'
-import { Container, Button, Text } from '../components/layout'
-import { Queries } from '../db'
-import { nav } from '../nav'
 import { ctx } from '../App'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { Button, Text } from '../components/layout'
+import { Queries } from '../db'
+import { nav } from '../nav'
+import { fixScreen, Screen } from './Screen'
 
 interface Params {
   bankId: string
@@ -28,16 +30,24 @@ export const AccountScreenComponent: React.SFC<Props> = (props, context: ctx.Rou
   const { bankId, accountId } = route.match.params
 
   return (
-    <Container>
+    <Screen title={messages.title}>
       <Text>Account2: {account.name}</Text>
       <Text>bank: {account.name}</Text>
       <Button title='edit' onPress={() => history.push(nav.accountUpdate(bankId, accountId))} />
-    </Container>
+    </Screen>
   )
 }
 AccountScreenComponent.contextTypes = ctx.router
 
 export const AccountPage = compose(
+  fixScreen,
   Queries.withAccount('query', (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId }))
 )(AccountScreenComponent)
 AccountPage.displayName = 'AccountPage'
+
+const messages = defineMessages({
+  title: {
+    id: 'AccountScreen.title',
+    defaultMessage: 'Accounts'
+  },
+})

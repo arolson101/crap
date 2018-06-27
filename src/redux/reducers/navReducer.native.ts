@@ -1,8 +1,8 @@
+import { NavigationActions, NavigationContainerComponent } from 'react-navigation'
 import { getType } from 'typesafe-actions'
-import { NavigationActions, NavigationContainerComponent, NavigationNavigateAction } from 'react-navigation'
-import { navActions, NavAction } from '../actions/navActions.native'
-import { dbActions, DbAction } from '../actions/dbActions'
-import { paths } from '../../nav';
+import { paths } from '../../nav'
+import { DbAction, dbActions } from '../actions/dbActions'
+import { NativeAction, nativeActions } from '../actions/nativeActions'
 
 export interface NavState {
   navigator?: NavigationContainerComponent
@@ -10,12 +10,12 @@ export interface NavState {
 
 const initialState: NavState = {}
 
-export const navReducer = (state: NavState = initialState, action: NavAction | DbAction): NavState => {
+export const navReducer = (state: NavState = initialState, action: NativeAction | DbAction): NavState => {
   switch (action.type) {
-    case getType(navActions.setTopNavigator):
+    case getType(nativeActions.setTopNavigator):
       return { ...state, navigator: action.payload }
 
-    case getType(navActions.navigate):
+    case getType(nativeActions.navigate):
       if (state.navigator) {
         state.navigator.dispatch(action.payload)
       }
