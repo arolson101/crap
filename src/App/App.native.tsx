@@ -4,7 +4,9 @@ import { defineMessages } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator, createStackNavigator, NavigationContainerComponent, createSwitchNavigator } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator, NavigationContainerComponent, createSwitchNavigator, withNavigation } from 'react-navigation'
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
+
 import { connect } from 'react-redux'
 import { ctx } from '../App/ctx'
 import { paths } from '../nav'
@@ -54,8 +56,50 @@ const HeaderIcon: React.SFC<{ routeName: string, focused: boolean, size: number,
   }
 }
 
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import { actions } from '../redux/actions/index';
+import { compose } from 'redux';
+import { withNavigationOptions } from '../util/index';
+class AnatomyExampleComponent extends React.Component<any> {
+  render() {
+    const { AccountsCreateScreen } = modals
+    return (
+      <Container>
+        <Content>
+          <AccountsCreateScreen />
+        </Content>
+        <Footer>
+          <FooterTab>
+            <Button full>
+              <Text>Footer</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
+    );
+  }
+}
+
+const AnatomyExample = compose(
+  connect(null, { navBack: actions.navBack }),
+  withNavigationOptions(({ navigation }) => ({
+    // header: (
+    //   <Header>
+    //     <Left>
+    //       <Button transparent onPress={() => navigation.goBack()}>
+    //         <Icon name='arrow-back' />
+    //       </Button>
+    //     </Left>
+    //     <Right />
+    //   </Header>
+    // ),
+    title: 'foo'
+  })),
+)(AnatomyExampleComponent);
+
 const homeStack = createStackNavigator({
   Home: screens.HomeScreen,
+  [paths.modal.accountCreate]: AnatomyExample,
 })
 
 const budgetsStack = createStackNavigator({
@@ -66,7 +110,8 @@ const accountsStack = createStackNavigator({
   Accounts: screens.AccountsScreen
 })
 
-const tabStack = createBottomTabNavigator(
+const createBottomTabNavigatorFcn = Platform.OS === 'android' ? createMaterialBottomTabNavigator : createBottomTabNavigator
+const tabStack = createBottomTabNavigatorFcn(
   {
     [paths.root.home]: homeStack,
     [paths.root.budgets]: budgetsStack,
@@ -89,46 +134,12 @@ const tabStack = createBottomTabNavigator(
   }
 )
 
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
-import { actions } from '../redux/actions/index';
-class AnatomyExampleComponent extends React.Component<any> {
-  render() {
-    const { AccountsCreateScreen } = modals
-    return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent onPress={this.props.navBack}>
-              <Icon name='' ios='ios-arrow-back' android='md-arrow-back' />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Header</Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content>
-          <AccountsCreateScreen/>
-        </Content>
-        <Footer>
-          <FooterTab>
-            <Button full>
-              <Text>Footer</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
-    );
-  }
-}
-const AnatomyExample = connect(null, { navBack: actions.navBack })(AnatomyExampleComponent)
-
 const modalsStack = createStackNavigator(
   {
     Tabs: {
       screen: tabStack,
     },
-    [paths.modal.accountCreate]: AnatomyExample,
+    // [paths.modal.accountCreate]: AnatomyExample,
     // MyModal: {
     //   screen: ModalScreen,
     // },
