@@ -11,7 +11,7 @@ import { Screen, fixScreen } from './Screen'
 
 interface Props {
   query: Queries.Accounts
-  modalAccountCreate: () => any
+  navBudgets: () => any
 }
 
 export const HomeScreenComponent: React.SFC<Props> = (props) => {
@@ -26,7 +26,7 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
   return (
     <Screen title={messages.title}>
       <Text>home page</Text>
-      <Button title='modal' onPress={props.modalAccountCreate}/>
+      <Button title='modal' onPress={props.navBudgets}/>
       {!props.query.data.banks.length &&
         <Text>No banks</Text>
       }
@@ -50,7 +50,7 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
 export const HomeScreen = compose(
   fixScreen,
   Queries.withAccounts('query'),
-  connect(null, { modalAccountCreate: actions.modalAccountCreate })
+  connect(null, { navBudgets: actions.navBudgets })
 )(HomeScreenComponent)
 HomeScreen.displayName = 'HomePage'
 

@@ -15,7 +15,7 @@ import * as screens from '../screens'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 
-type ScreenProps = ctx.Intl
+export type ScreenProps = ctx.Intl
 
 const messages = defineMessages({
   [paths.root.home]: {
@@ -63,42 +63,26 @@ const getCurrentParams = (state: any): any => {
 }
 
 const homeStack = createStackNavigator({
-  Home: screens.HomeScreen
+  Home: screens.HomeScreen,
+  [paths.root.budgets]: screens.BudgetsScreen
 })
 
-const budgetsStack = createStackNavigator({
-  Budgets: screens.BudgetsScreen
-})
+// const budgetsStack = createStackNavigator({
+//   Budgets: screens.BudgetsScreen
+// })
 
 const accountsStack = createStackNavigator({
   Accounts: screens.AccountsScreen
-})
-
-const transitionConfig = () => ({
-  containerStyle: {
-    backgroundColor: 'red',
-  }
 })
 
 const createBottomTabNavigatorFcn = Platform.OS === 'android' ? createMaterialBottomTabNavigator : createBottomTabNavigator
 const tabStack = createBottomTabNavigatorFcn(
   {
     [paths.root.home]: homeStack,
-    [paths.root.budgets]: budgetsStack,
+    // [paths.root.budgets]: budgetsStack,
     [paths.root.accounts]: accountsStack,
   },
   {
-    animationEnabled: false,
-    lazy: false,
-    tabBarOptions: {
-      activeBackgroundColor: 'red',
-      inactiveBackgroundColor: 'red',
-      activeTintColor: 'red',
-      inactiveTintColor: 'red',
-      style: {
-        backgroundColor: 'red'
-      }
-    },
     navigationOptions: ({ navigation, screenProps }) => {
       const { intl } = screenProps as ScreenProps
       const { routeName } = navigation.state
