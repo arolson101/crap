@@ -1,3 +1,5 @@
+import { defineMessages } from 'react-intl';
+
 export const paths = {
   login: '/login',
   app: '/app',
@@ -34,3 +36,22 @@ export const nav = {
   accountUpdate: (bankId: string, accountId: string) =>
     paths.account.update.replace(':bankId', bankId).replace(':accountId?', accountId)
 }
+
+export const navMessages = defineMessages({
+  home: {
+    id: 'nav.home',
+    defaultMessage: 'Home',
+  },
+  accounts: {
+    id: 'nav.accounts',
+    defaultMessage: 'Accounts',
+  },
+  budgets: {
+    id: 'nav.budgets',
+    defaultMessage: 'Budgets',
+  },
+  account: {
+    id: 'nav.account',
+    defaultMessage: 'Account',
+  },
+})

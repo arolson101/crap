@@ -11,7 +11,7 @@ import { AccountsCreateScreen, AccountsUpdateScreen } from '../modals'
 import { nav, paths } from '../nav'
 import { actions } from '../redux/actions/index'
 import { AccountPage } from './AccountScreen'
-import { Screen, fixScreen } from './Screen'
+import { makeScreen } from './Screen'
 
 interface Props {
   query: Queries.Banks
@@ -30,7 +30,7 @@ export const AccountsScreenComponent: React.SFC<Props> = (props, { router }: ctx
   }
 
   return (
-    <Screen title={messages.title}>
+    <>
       <Switch>
         <Route path={paths.account.create} component={AccountsCreateScreen} />
         <Route path={paths.account.update} component={AccountsUpdateScreen} />
@@ -64,13 +64,20 @@ export const AccountsScreenComponent: React.SFC<Props> = (props, { router }: ctx
           </>
         </Route>
       </Switch>
-    </Screen>
+    </>
   )
 }
 AccountsScreenComponent.contextTypes = ctx.router
 
+const messages = defineMessages({
+  title: {
+    id: 'AccountsScreen.title',
+    defaultMessage: 'Accounts'
+  },
+})
+
 export const AccountsScreen = compose(
-  fixScreen,
+  makeScreen({ title: messages.title }),
   Queries.withBanks('query'),
   Mutations.withDeleteBank('deleteBank'),
   Mutations.withDeleteAccount('deleteAccount'),
@@ -79,10 +86,3 @@ export const AccountsScreen = compose(
   })
 )(AccountsScreenComponent)
 AccountsScreen.displayName = 'AccountsPage'
-
-const messages = defineMessages({
-  title: {
-    id: 'AccountsScreen.title',
-    defaultMessage: 'Accounts'
-  },
-})

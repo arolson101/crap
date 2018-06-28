@@ -7,7 +7,7 @@ import { ErrorMessage } from '../components/ErrorMessage'
 import { Container, Text } from '../components/layout'
 import { Queries } from '../db'
 import { actions } from '../redux/actions'
-import { Screen, fixScreen } from './Screen'
+import { makeScreen } from './Screen'
 
 interface Props {
   query: Queries.Accounts
@@ -24,7 +24,7 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
   }
 
   return (
-    <Screen title={messages.title}>
+    <>
       <Text>home page</Text>
       <Button title='modal' onPress={props.navBudgets}/>
       {!props.query.data.banks.length &&
@@ -43,16 +43,9 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
           )}
         </Container>
       )}
-    </Screen>
+    </>
   )
 }
-
-export const HomeScreen = compose(
-  fixScreen,
-  Queries.withAccounts('query'),
-  connect(null, { navBudgets: actions.navBudgets })
-)(HomeScreenComponent)
-HomeScreen.displayName = 'HomePage'
 
 const messages = defineMessages({
   title: {
@@ -60,3 +53,10 @@ const messages = defineMessages({
     defaultMessage: 'Home'
   },
 })
+
+export const HomeScreen = compose(
+  makeScreen({ title: messages.title }),
+  Queries.withAccounts('query'),
+  connect(null, { navBudgets: actions.navBudgets })
+)(HomeScreenComponent)
+HomeScreen.displayName = 'HomePage'
