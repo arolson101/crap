@@ -1,10 +1,11 @@
 import { ThemeProvider } from 'glamorous-native'
+import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import { connect } from 'react-redux'
 import { ctx } from '../App/ctx'
@@ -62,52 +63,63 @@ const getCurrentParams = (state: any): any => {
   return state.params || {}
 }
 
-const homeStack = createStackNavigator({
+const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>(initialRouteName: N, icon: string, routeConfigMap: C) => {
+  console.log('makeTab')
+  const primaryScreen = routeConfigMap[initialRouteName]
+  const stack = createStackNavigator(routeConfigMap, { initialRouteName })
+  stack.navigationOptions = ({ screenProps }: NavigationScreenConfigProps) => ({
+    tabBarIcon: ({ tintColor }) => {
+      return <MaterialIcons color={tintColor!} size={25} name={icon} />
+    },
+    tabBarLabel: (screenProps as ScreenProps).intl.formatMessage(primaryScreen.title),
+  }) as NavigationScreenConfig<NavigationScreenOptions>
+  return stack
+}
+
+const homeStack = makeTab('Home', 'home', {
   Home: screens.HomeScreen,
   [paths.root.budgets]: screens.BudgetsScreen
 })
 
-// const budgetsStack = createStackNavigator({
+// const budgetsStack = makeTab('Budgets', 'receipt', {
 //   Budgets: screens.BudgetsScreen
 // })
 
-const accountsStack = createStackNavigator({
+const accountsStack = makeTab('Accounts', 'account-balance', {
   Accounts: screens.AccountsScreen
 })
 
 const createBottomTabNavigatorFcn = Platform.OS === 'android' ? createMaterialBottomTabNavigator : createBottomTabNavigator
-const tabStack = createBottomTabNavigatorFcn(
+const mainStack = createBottomTabNavigatorFcn(
   {
     [paths.root.home]: homeStack,
     // [paths.root.budgets]: budgetsStack,
     [paths.root.accounts]: accountsStack,
   },
   {
-    navigationOptions: ({ navigation, screenProps }) => {
-      const { intl } = screenProps as ScreenProps
-      const { routeName } = navigation.state
-      const title = intl.formatMessage(messages[routeName])
-      return ({
-        tabBarIcon: ({ focused, tintColor }) => {
-          const { routeName } = navigation.state
-          return <HeaderIcon size={25} color={tintColor} routeName={routeName} focused={focused} />
-        },
-
-        title
-      })
-    }
-  }
+    initialRouteName: paths.root.home,
+    order: [
+      paths.root.home,
+      // paths.root.budgets,
+      paths.root.accounts
+    ],
+    barStyle: {
+      backgroundColor: platform.tabActiveBgColor
+    },
+    activeTintColor: platform.tabBarActiveTextColor,
+    inactiveTintColor: platform.tabBarTextColor,
+  } as TabNavigatorConfig
 )
 
 const modalsStack = createStackNavigator(
   {
-    Tabs: tabStack,
+    main: mainStack,
     [paths.modal.accountCreate]: modals.BankForm
   },
   {
     mode: 'modal',
     headerMode: 'none',
-    initialRouteName: 'Tabs',
+    initialRouteName: 'main',
   }
 )
 

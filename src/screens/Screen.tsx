@@ -30,18 +30,21 @@ const styles = StyleSheet.create({
 //   </HeaderButtons>
 // )
 
+export type ScreenComponent<P = any> = NavigationScreenComponent<NavigationParams, {}, P>
+  & { title: FormattedMessage.MessageDescriptor }
+
 export const makeScreen = (params: Params) => {
   const { title } = params
 
   return <P extends object>(Component: React.ComponentType<P>) => {
-    const screen: NavigationScreenComponent<NavigationParams, {}, P> = (props) => (
+    const nav: ScreenComponent<P> = ((props) => (
       <Container>
         <Body>
           <Component {...props} />
         </Body>
       </Container>
-    )
-    screen.navigationOptions = ({ navigation, screenProps }) => {
+    )) as NavigationScreenComponent<NavigationParams, {}, P> as any
+    nav.navigationOptions = ({ navigation, screenProps }) => {
       const { intl } = screenProps as ScreenProps
       return ({
         headerStyle: styles.headerStyle,
@@ -51,6 +54,7 @@ export const makeScreen = (params: Params) => {
         headerTitle: intl.formatMessage(title),
       })
     }
-    return screen
+    nav.title = title
+    return nav
   }
 }
