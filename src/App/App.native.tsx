@@ -1,7 +1,6 @@
 import { ThemeProvider } from 'glamorous-native'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -18,44 +17,6 @@ import { defaultTheme } from './Theme'
 
 export type ScreenProps = ctx.Intl
 
-const messages = defineMessages({
-  [paths.root.home]: {
-    id: 'App.native.home',
-    defaultMessage: 'Home'
-  },
-  [paths.root.budgets]: {
-    id: 'App.native.budgets',
-    defaultMessage: 'Budgets'
-  },
-  [paths.root.accounts]: {
-    id: 'App.native.accounts',
-    defaultMessage: 'Accounts'
-  },
-})
-
-const HeaderIcon: React.SFC<{ routeName: string, focused: boolean, size: number, color: string | null }> = (props) => {
-  const { routeName, size, focused, color } = props
-  const iosIconNames = {
-    [paths.root.home]: `ios-home${focused ? '' : '-outline'}`,
-    [paths.root.budgets]: `ios-albums${focused ? '' : '-outline'}`,
-    [paths.root.accounts]: `ios-paper${focused ? '' : '-outline'}`,
-  }
-  const androidIconNames = {
-    [paths.root.home]: `home`,
-    [paths.root.budgets]: `receipt`,
-    [paths.root.accounts]: `account-balance`,
-  }
-
-  switch (Platform.OS) {
-    default:
-    case 'ios':
-      return <Ionicons color={color!} size={size} name={iosIconNames[routeName]} />
-
-    case 'android':
-      return <MaterialIcons color={color!} size={size} name={androidIconNames[routeName]} />
-  }
-}
-
 const getCurrentParams = (state: any): any => {
   if (state.routes) {
     return getCurrentParams(state.routes[state.index])
@@ -63,31 +24,61 @@ const getCurrentParams = (state: any): any => {
   return state.params || {}
 }
 
-const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>(initialRouteName: N, icon: string, routeConfigMap: C) => {
-  console.log('makeTab')
+const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>(
+  initialRouteName: N,
+  icon: (focused: boolean) => string,
+  routeConfigMap: C
+) => {
   const primaryScreen = routeConfigMap[initialRouteName]
   const stack = createStackNavigator(routeConfigMap, { initialRouteName })
   stack.navigationOptions = ({ screenProps }: NavigationScreenConfigProps) => ({
-    tabBarIcon: ({ tintColor }) => {
-      return <MaterialIcons color={tintColor!} size={25} name={icon} />
+    tabBarIcon: ({ focused, tintColor }) => {
+      const name = icon(focused)
+      // return <HeaderIcon routeName={'/'+initialRouteName.toLowerCase()} focused={focused} size={25} color={tintColor}/>
+      const IconClass = Platform.select({
+        android: MaterialIcons,
+        ios: Ionicons,
+      })
+      return <IconClass color={tintColor!} size={25} name={name} />
     },
     tabBarLabel: (screenProps as ScreenProps).intl.formatMessage(primaryScreen.title),
   }) as NavigationScreenConfig<NavigationScreenOptions>
   return stack
 }
 
-const homeStack = makeTab('Home', 'home', {
-  Home: screens.HomeScreen,
-  [paths.root.budgets]: screens.BudgetsScreen
-})
+const homeStack = makeTab(
+  'Home',
+  (focused) => Platform.select({
+    ios: `ios-home${focused ? '' : '-outline'}`,
+    android: `home`,
+  }),
+  {
+    Home: screens.HomeScreen,
+    [paths.root.budgets]: screens.BudgetsScreen
+  }
+)
 
-// const budgetsStack = makeTab('Budgets', 'receipt', {
-//   Budgets: screens.BudgetsScreen
-// })
+// const budgetsStack = makeTab(
+//   'Budgets',
+//   (focused) => Platform.select({
+//     ios: `ios-albums${focused ? '' : '-outline'}`,
+//     android: `receipt`,
+//   }),
+//   {
+//     Budgets: screens.BudgetsScreen
+//   }
+// )
 
-const accountsStack = makeTab('Accounts', 'account-balance', {
-  Accounts: screens.AccountsScreen
-})
+const accountsStack = makeTab(
+  'Accounts',
+  (focused) => Platform.select({
+    ios: `ios-paper${focused ? '' : '-outline'}`,
+    android: `account-balance`,
+  }),
+  {
+    Accounts: screens.AccountsScreen
+  }
+)
 
 const createBottomTabNavigatorFcn = Platform.OS === 'android' ? createMaterialBottomTabNavigator : createBottomTabNavigator
 const mainStack = createBottomTabNavigatorFcn(
@@ -132,11 +123,11 @@ const AuthStack = createSwitchNavigator({
   [paths.app]: modalsStack,
 })
 
-interface RootPageProps {
+interface TopNavigatorComponentProps {
   setTopNavigator: (topNavigator: NavigationContainerComponent) => any
 }
 
-const TopNavigatorComponent: React.SFC<RootPageProps> = ({ setTopNavigator }, context) => {
+const TopNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator }, context) => {
   const { intl } = context as ctx.Intl
   const screenProps: ScreenProps = ({ intl })
   return (
