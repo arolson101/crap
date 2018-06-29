@@ -9,8 +9,24 @@ export interface QueryType<TData> {
   error?: Error
 }
 
+const foo = <N extends string, P extends Record<N, boolean>>(name: N) => {
+  const withLoading = (Component: React.ComponentType<P>) => {
+    class WithLoading extends React.Component<P> {
+      render () {
+        const props = {
+          [name]: true,
+          ...(this.props as object)
+        }
+        return <Component {...props} />
+      }
+    }
+    return WithLoading
+  }
+  return withLoading
+}
+
 export const makeQuery = (QUERY: DocumentNode) =>
-  (name: string, variablesFcn?: (props: any) => Object | undefined) =>
+  <P extends {} = {}>(name: keyof P, variablesFcn?: (props: any) => Object | undefined) =>
     (Component: React.ComponentType<any>) => {
       class WrappedQuery extends React.Component<{}> {
         render() {
