@@ -86,11 +86,11 @@ const mainStack = createBottomTabNavigatorFcn(
     [paths.root.accounts]: accountsStack,
   },
   {
-    initialRouteName: paths.root.home,
+    initialRouteName: paths.root.accounts,
     order: [
       paths.root.home,
       paths.root.budgets,
-      paths.root.accounts
+      paths.root.accounts,
     ],
     barStyle: {
       backgroundColor: platform.tabActiveBgColor
@@ -100,10 +100,12 @@ const mainStack = createBottomTabNavigatorFcn(
   } as TabNavigatorConfig
 )
 
+const modalAddBank = createStackNavigator({ main: modals.BankForm })
+
 const modalsStack = createStackNavigator(
   {
     main: mainStack,
-    [paths.modal.accountCreate]: modals.BankForm
+    [paths.modal.accountCreate]: modalAddBank
   },
   {
     mode: 'modal',

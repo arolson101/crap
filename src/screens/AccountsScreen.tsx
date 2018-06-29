@@ -84,7 +84,7 @@ const messages = defineMessages({
 })
 
 export const AccountsScreen = compose(
-  makeScreen({ title: messages.title, addButton: 'onAdd' }),
+  makeScreen({ title: messages.title, addButton: true }),
   Queries.withBanks('query'),
   Mutations.withDeleteBank('deleteBank'),
   Mutations.withDeleteAccount('deleteAccount'),

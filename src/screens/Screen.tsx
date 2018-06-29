@@ -13,9 +13,15 @@ export interface AddButtonProps {
   setAdd: (callback: () => any) => any
 }
 
+export interface SaveButtonProps {
+  setSave: (callback: () => any) => any
+}
+
 interface Params {
   title: FormattedMessage.MessageDescriptor,
-  addButton?: string
+  addButton?: boolean
+  saveButton?: boolean
+  cancelButton?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -25,7 +31,9 @@ const styles = StyleSheet.create({
     // height: platform.toolbarHeight,
   },
   headerTitleStyle: {
-    color: platform.toolbarBtnTextColor,
+    color: platform.titleFontColor,
+    fontSize: platform.titleFontSize,
+    fontFamily: platform.titleFontfamily,
   },
   headerBackTitleStyle: {
     // height: platform.iconHeaderSize,
@@ -43,10 +51,12 @@ export type ScreenComponent<P = any> = NavigationScreenComponent<NavigationParam
 
 export const makeScreen = (params: Params) => {
   const { title } = params
-  console.log('makeScreen')
   let onAdd = () => { console.warn('no add function') }
-  const setAdd = (addfcn: () => any ) => { onAdd = addfcn }
-  const moreProps = params.addButton ? { setAdd } : {}
+  let onSave = () => { console.warn('no save function') }
+  const moreProps = {
+    setAdd: params.addButton ? ((addfcn: () => any) => { onAdd = addfcn }) : null,
+    setSave: params.saveButton ? ((saveFcn: () => any) => { onSave = saveFcn }) : null,
+  }
 
   const IconComponent = Platform.OS === 'ios' ? Ionicons : MaterialIcons
   const addIconName = Platform.OS === 'ios' ? 'ios-add' : 'add'
@@ -60,10 +70,28 @@ export const makeScreen = (params: Params) => {
       </Container>
     )) as NavigationScreenComponent<NavigationParams, {}, P> as any
 
-    const addNavigationOptions = params.addButton ? ({
+    const headerLeft = (params.cancelButton) ? ({
+      headerLeft: (
+        <HeaderButtons IconComponent={IconComponent} iconSize={platform.iconHeaderSize} color={platform.toolbarBtnColor}>
+          {Platform.OS === 'android' &&
+            <HeaderButtons.Item title='add' iconName='close' onPress={() => console.warn('close')} />
+          }
+          {Platform.OS === 'ios' &&
+            <HeaderButtons.Item title='close' onPress={() => console.warn('close')} />
+          }
+        </HeaderButtons>
+      )
+    }) : ({})
+
+    const headerRight = (params.addButton || params.saveButton) ? ({
       headerRight: (
         <HeaderButtons IconComponent={IconComponent} iconSize={platform.iconHeaderSize} color={platform.toolbarBtnColor}>
-          <HeaderButtons.Item title='add' iconName={addIconName} onPress={() => onAdd()} />
+          {params.addButton &&
+            <HeaderButtons.Item title='add' iconName={addIconName} onPress={() => onAdd()} />
+          }
+          {params.saveButton &&
+            <HeaderButtons.Item title='save' onPress={() => onSave()} />
+          }
         </HeaderButtons>
       )
     }) : ({})
@@ -76,10 +104,12 @@ export const makeScreen = (params: Params) => {
         headerBackTitleStyle: styles.headerBackTitleStyle,
         headerTintColor: platform.toolbarBtnColor,
         headerTitle: intl.formatMessage(title),
-        ...addNavigationOptions,
+        ...headerLeft,
+        ...headerRight,
       })
     }
     nav.title = title
+    nav.displayName = `Screen(${Component.displayName})`
     return nav
   }
 }
