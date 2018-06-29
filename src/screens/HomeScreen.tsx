@@ -1,17 +1,14 @@
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
-import { Button } from 'react-native'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Container, Text } from '../components/layout'
 import { Queries } from '../db'
-import { actions } from '../redux/actions'
 import { makeScreen, ScreenComponent } from './Screen'
 
 interface Props {
   query: Queries.Accounts
-  navBudgets: () => any
 }
 
 export const HomeScreenComponent: React.SFC<Props> = (props) => {
@@ -26,7 +23,6 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
   return (
     <>
       <Text>home page</Text>
-      <Button title='push page' onPress={props.navBudgets}/>
       {!props.query.data.banks.length &&
         <Text>No banks</Text>
       }
@@ -57,6 +53,6 @@ const messages = defineMessages({
 export const HomeScreen = compose(
   makeScreen({ title: messages.title }),
   Queries.withAccounts('query'),
-  connect(null, { navBudgets: actions.navBudgets }),
+  connect(null, { }),
 )(HomeScreenComponent) as ScreenComponent
 HomeScreen.displayName = 'HomePage'

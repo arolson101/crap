@@ -34,7 +34,6 @@ const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>
   stack.navigationOptions = ({ screenProps }: NavigationScreenConfigProps) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const name = icon(focused)
-      // return <HeaderIcon routeName={'/'+initialRouteName.toLowerCase()} focused={focused} size={25} color={tintColor}/>
       const IconClass = Platform.select({
         android: MaterialIcons,
         ios: Ionicons,
@@ -54,20 +53,19 @@ const homeStack = makeTab(
   }),
   {
     Home: screens.HomeScreen,
-    [paths.root.budgets]: screens.BudgetsScreen
   }
 )
 
-// const budgetsStack = makeTab(
-//   'Budgets',
-//   (focused) => Platform.select({
-//     ios: `ios-albums${focused ? '' : '-outline'}`,
-//     android: `receipt`,
-//   }),
-//   {
-//     Budgets: screens.BudgetsScreen
-//   }
-// )
+const budgetsStack = makeTab(
+  'Budgets',
+  (focused) => Platform.select({
+    ios: `ios-albums${focused ? '' : '-outline'}`,
+    android: `receipt`,
+  }),
+  {
+    Budgets: screens.BudgetsScreen
+  }
+)
 
 const accountsStack = makeTab(
   'Accounts',
@@ -84,14 +82,14 @@ const createBottomTabNavigatorFcn = Platform.OS === 'android' ? createMaterialBo
 const mainStack = createBottomTabNavigatorFcn(
   {
     [paths.root.home]: homeStack,
-    // [paths.root.budgets]: budgetsStack,
+    [paths.root.budgets]: budgetsStack,
     [paths.root.accounts]: accountsStack,
   },
   {
     initialRouteName: paths.root.home,
     order: [
       paths.root.home,
-      // paths.root.budgets,
+      paths.root.budgets,
       paths.root.accounts
     ],
     barStyle: {
