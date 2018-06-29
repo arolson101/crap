@@ -12,10 +12,9 @@ import * as modals from '../modals'
 import { paths } from '../nav'
 import { nativeActions } from '../redux/actions/nativeActions'
 import * as screens from '../screens'
+import { ScreenProps, ScreenComponent } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
-
-export type ScreenProps = ctx.Intl
 
 const getCurrentParams = (state: any): any => {
   if (state.routes) {
@@ -29,7 +28,7 @@ const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>
   icon: (focused: boolean) => string,
   routeConfigMap: C
 ) => {
-  const primaryScreen = routeConfigMap[initialRouteName]
+  const primaryScreen = routeConfigMap[initialRouteName] as ScreenComponent
   const stack = createStackNavigator(routeConfigMap, { initialRouteName })
   stack.navigationOptions = ({ screenProps }: NavigationScreenConfigProps) => ({
     tabBarIcon: ({ focused, tintColor }) => {
@@ -42,6 +41,7 @@ const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>
     },
     tabBarLabel: (screenProps as ScreenProps).intl.formatMessage(primaryScreen.title),
   }) as NavigationScreenConfig<NavigationScreenOptions>
+  stack.displayName = `makeTab(${initialRouteName})`
   return stack
 }
 
@@ -59,7 +59,7 @@ const homeStack = makeTab(
 const budgetsStack = makeTab(
   'Budgets',
   (focused) => Platform.select({
-    ios: `ios-albums${focused ? '' : '-outline'}`,
+    ios: `ios-cash${focused ? '' : '-outline'}`,
     android: `receipt`,
   }),
   {
@@ -99,8 +99,10 @@ const mainStack = createBottomTabNavigatorFcn(
     inactiveTintColor: platform.tabBarTextColor,
   } as TabNavigatorConfig
 )
+mainStack.displayName = 'mainStack'
 
 const modalAddBank = createStackNavigator({ main: modals.BankForm })
+modalAddBank.displayName = 'modalAddBank'
 
 const modalsStack = createStackNavigator(
   {
@@ -113,6 +115,7 @@ const modalsStack = createStackNavigator(
     initialRouteName: 'main',
   }
 )
+modalsStack.displayName = 'modalsStack'
 
 const loginStack = createStackNavigator({
   Login: screens.LoginScreen
@@ -122,6 +125,7 @@ const AuthStack = createSwitchNavigator({
   [paths.login]: loginStack,
   [paths.app]: modalsStack,
 })
+AuthStack.displayName = 'AuthStack'
 
 interface TopNavigatorComponentProps {
   setTopNavigator: (topNavigator: NavigationContainerComponent) => any
