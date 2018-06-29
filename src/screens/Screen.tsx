@@ -55,9 +55,6 @@ export const makeScreen = (params: Params) => {
   }
 
   const IconComponent = Platform.OS === 'ios' ? Ionicons : MaterialIcons
-  const backIconName = Platform.OS === 'ios' ? 'ios-arrow-back' : 'arrow-back'
-  const addIconName = Platform.OS === 'ios' ? 'ios-add' : 'add'
-  const saveIconName = Platform.OS === 'ios' ? 'ios-download-outline' : 'check'
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<P> = ((props) => (
@@ -74,7 +71,11 @@ export const makeScreen = (params: Params) => {
       const headerLeft = (params.cancelButton && !navigation.state.index) ? ({
         headerLeft: (
           <HeaderButtons IconComponent={IconComponent} iconSize={platform.iconHeaderSize} color={platform.toolbarBtnColor}>
-            <HeaderButtons.Item title='close' iconName={backIconName} onPress={() => navigation.goBack(null)} />
+            <HeaderButtons.Item
+              title='cancel'
+              iconName={Platform.OS === 'android' ? 'arrow-back' : undefined}
+              onPress={() => navigation.goBack(null)}
+            />
           </HeaderButtons>
         )
       }) : ({})
@@ -83,10 +84,18 @@ export const makeScreen = (params: Params) => {
         headerRight: (
           <HeaderButtons IconComponent={IconComponent} iconSize={platform.iconHeaderSize} color={platform.toolbarBtnColor}>
             {params.addButton &&
-              <HeaderButtons.Item title='add' iconName={addIconName} onPress={() => onAdd()} />
+              <HeaderButtons.Item
+                title='add'
+                iconName={Platform.OS === 'android' ? 'add' : 'ios-add'}
+                onPress={() => onAdd()}
+              />
             }
             {params.saveButton &&
-              <HeaderButtons.Item title='save' iconName={saveIconName} onPress={() => onSave()} />
+              <HeaderButtons.Item
+                title='save'
+                iconName={Platform.OS === 'android' ? 'check' : undefined}
+                onPress={() => onSave()}
+              />
             }
           </HeaderButtons>
         )
