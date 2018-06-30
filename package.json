@@ -198,6 +198,7 @@
     "typesafe-actions": "^2.0.4",
     "typescript": "^2.9.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
+    "utility-types": "^2.0.0",
     "webpack-fix-default-import-plugin": "^1.0.3"
   }
 }

@@ -1,7 +1,8 @@
 import { DocumentNode } from 'graphql'
+import hoistStatics from 'hoist-non-react-statics'
 import * as React from 'react'
 import { Query } from 'react-apollo'
-const hoistStatics = require('hoist-non-react-statics')
+import { Omit } from 'utility-types'
 
 export interface QueryType<TData> {
   data: TData
@@ -9,31 +10,18 @@ export interface QueryType<TData> {
   error?: Error
 }
 
-const foo = <N extends string, P extends Record<N, boolean>>(name: N) => {
-  const withLoading = (Component: React.ComponentType<P>) => {
-    class WithLoading extends React.Component<P> {
-      render () {
-        const props = {
-          [name]: true,
-          ...(this.props as object)
-        }
-        return <Component {...props} />
-      }
-    }
-    return WithLoading
-  }
-  return withLoading
-}
-
 export const makeQuery = (QUERY: DocumentNode) =>
-  <P extends {} = {}>(name: keyof P, variablesFcn?: (props: any) => Object | undefined) =>
-    (Component: React.ComponentType<any>) => {
-      class WrappedQuery extends React.Component<{}> {
-        render() {
+  <N extends keyof O, O extends Record<N, QueryType<any>>, R = Omit<O, N>>(
+    name: N,
+    variablesFcn?: (props: R) => Object | undefined
+  ) =>
+    (Component: React.ComponentType<O>) => {
+      class WrappedQuery extends React.Component<R> {
+        render () {
           const variables = variablesFcn && variablesFcn(this.props)
           const skip = variablesFcn && !variables
           if (skip) {
-            const componentProps = { ...this.props, [name]: { loading: false } }
+            const componentProps: O = { ...(this.props as any), [name]: { loading: false } }
             return (
               <Component {...componentProps} />
             )
@@ -45,7 +33,7 @@ export const makeQuery = (QUERY: DocumentNode) =>
                 // fetchPolicy="network-only"
               >
                 {({ data, ...rest }) => {
-                  const componentProps = { ...this.props, [name]: { data, ...rest } }
+                  const componentProps: O = { ...(this.props as any), [name]: { data, ...rest } }
                   return <Component {...componentProps} />
                 }}
               </Query>
@@ -55,5 +43,6 @@ export const makeQuery = (QUERY: DocumentNode) =>
       }
 
       // WrappedQuery.displayName =
-      return hoistStatics(WrappedQuery, Component)
+      return hoistStatics(WrappedQuery, Component as any)
+      return WrappedQuery as React.ComponentType<R>
     }
