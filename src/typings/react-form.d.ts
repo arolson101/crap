@@ -37,6 +37,8 @@ declare module 'react-form' {
     component?: string | false | React.ComponentType<any>
     render?: (props: FormAPI<V>) => React.ReactNode
     getApi?: (formApi: FormAPI<V>) => any
+    validateOnSubmit?: boolean
+    onSubmitFailure?: (errors: FormErrors, error: Error, formApi: FormAPI) => void
   }
 
   export interface FormProps<V = FormValues> extends FormPropsBase<V> {

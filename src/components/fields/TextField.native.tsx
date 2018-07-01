@@ -5,16 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { ReturnKeyType, TextInput } from 'react-native'
 import { ThemeProp, ctx } from '../../App'
 import { WrappedField } from './WrappedField'
-
-const StyledTextInput = glamorous.textInput<ThemeProp & { error: any, textColor?: string }>({},
-  ({ theme, error, textColor }) => ({
-    borderWidth: theme.boxBorderWidth,
-    borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
-    fontSize: theme.controlFontSize,
-    color: textColor ? textColor : theme.controlFontColor
-  })
-)
-StyledTextInput.displayName = 'StyledTextInput'
+import { Item, Label, Input, Icon } from 'native-base';
 
 export namespace TextField {
   export interface Props<T = {}> {
@@ -49,22 +40,30 @@ export class TextField extends React.Component<TextField.Props> {
         {fieldApi => {
           const error = fieldApi.touched && fieldApi.error
           return (
-            <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
-              <StyledTextInput
-                error={error}
-                autoFocus={autoFocus}
-                multiline={(rows ? rows > 0 : undefined)}
-                numberOfLines={rows}
-                onChangeText={fieldApi.setValue}
-                value={fieldApi.value}
+            // <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
+              <Item
+                floatingLabel
+                error={!!error}
+                // error={error}
+                // autoFocus={autoFocus}
+                // multiline={(rows ? rows > 0 : undefined)}
+                // numberOfLines={rows}
+                // onChangeText={fieldApi.setValue}
+                // value={fieldApi.value}
                 secureTextEntry={secure}
                 placeholder={placeholder && intl.formatMessage(placeholder)}
-                onSubmitEditing={onSubmitEditing}
-                returnKeyType={returnKeyType}
-                innerRef={(current) => this.textInput = { current }}
-                textColor={textColor}
-              />
-            </WrappedField>
+                // onSubmitEditing={onSubmitEditing}
+                // returnKeyType={returnKeyType}
+                // innerRef={(current) => this.textInput = { current }}
+                // textColor={textColor}
+              >
+                <Label>{intl.formatMessage(label)}</Label>
+                <Input/>
+                {error &&
+                  <Icon name='close-circle' />
+                }
+              </Item>
+            // </WrappedField>
           )
         }}
       </Field>

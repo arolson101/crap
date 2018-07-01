@@ -15,6 +15,7 @@ import * as screens from '../screens'
 import { ScreenProps, ScreenComponent } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
+import { Root } from 'native-base';
 
 const getCurrentParams = (state: any): any => {
   if (state.routes) {
@@ -152,7 +153,9 @@ const App: React.SFC = () => {
   return (
     <LoadFonts>
       <ThemeProvider theme={defaultTheme}>
-        <TopNavigator />
+        <Root>
+          <TopNavigator />
+        </Root>
       </ThemeProvider>
     </LoadFonts>
   )

@@ -1,11 +1,11 @@
-import { Body, Container } from 'native-base'
+import { Body, Container, Content, Header } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Platform, StyleSheet } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { NavigationParams, NavigationScreenComponent } from 'react-navigation'
+import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react-navigation'
 import HeaderButtons from 'react-navigation-header-buttons'
 import { ctx } from '../App/ctx'
 
@@ -58,10 +58,12 @@ export const makeScreen = (params: Params) => {
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<P> = ((props) => (
-      <Container>
-        <Body>
-          <Component {...props} {...moreProps} />
-        </Body>
+      <Container style={{ backgroundColor: platform.cardDefaultBg }}>
+        <Content>
+          <SafeAreaView>
+            <Component {...props} {...moreProps} />
+          </SafeAreaView>
+        </Content>
       </Container>
     )) as NavigationScreenComponent<NavigationParams, {}, P> as any
 
