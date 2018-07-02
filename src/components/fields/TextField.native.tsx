@@ -42,7 +42,7 @@ export class TextField extends React.Component<TextField.Props> {
           return (
             // <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
               <Item
-                floatingLabel
+                stackedLabel
                 error={!!error}
                 // error={error}
                 // autoFocus={autoFocus}
@@ -58,10 +58,17 @@ export class TextField extends React.Component<TextField.Props> {
                 // textColor={textColor}
               >
                 <Label>{intl.formatMessage(label)}</Label>
-                <Input/>
-                {error &&
-                  <Icon name='close-circle' />
-                }
+                <Input
+                  onChangeText={fieldApi.setValue}
+                  value={fieldApi.value}
+                  onSubmitEditing={onSubmitEditing}
+                  secureTextEntry={secure}
+                  numberOfLines={rows}
+                  multiline={(rows ? rows > 0 : undefined)}
+                  returnKeyType={returnKeyType}
+                  // ref={current => this.textInput = current._root}
+                  style={{color: textColor}}
+                />
               </Item>
             // </WrappedField>
           )

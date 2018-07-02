@@ -4,23 +4,37 @@ import * as NB from 'native-base'
 
 type Props = RF.FormProps
 
-export const Form: React.SFC<Props> = (props) => {
-  return (
-    <NB.Form>
-      <RF.Form
-        {...props}
-        validateOnSubmit
-        onSubmitFailure={(errors) => {
-          console.log(errors)
-          for (let field in errors) {
-            NB.Toast.show({
-              text: errors[field] as string,
-              buttonText: 'Okay',
-              duration: 0,
+export class Form extends React.Component<Props> {
+  formApi: RF.FormAPI
+
+  render () {
+    return (
+      <NB.Form>
+        <RF.Form
+          {...this.props}
+          validateOnSubmit
+          onSubmitFailure={(errors) => {
+            console.log(errors)
+            Object.keys(errors).forEach(field => {
+              NB.Toast.show({
+                text: errors[field] as string,
+                buttonText: 'Okay',
+                duration: 0,
+                type: 'danger',
+                onClose: () => {
+                  this.formApi.setError(field, null)
+                }
+              })
             })
-          }
-        }}
-      />
-    </NB.Form>
-  )
+          }}
+          getApi={(formApi) => {
+            this.formApi = formApi
+            if (this.props.getApi) {
+              this.props.getApi(formApi)
+            }
+          }}
+        />
+      </NB.Form>
+    )
+  }
 }

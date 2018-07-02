@@ -62,6 +62,7 @@ declare module 'react-form' {
     addValue: <T = any>(field: FieldSpec, value: T) => void
     removeValue: (field: FieldSpec, index: number) => void
     swapValues: (field: FieldSpec, i: number, j: number) => void
+    setError: (field: FieldSpec, value: string | null) => void
   }
 
   export interface BoundFormAPI<V = FormValues> extends BaseFormAPI<V> {
