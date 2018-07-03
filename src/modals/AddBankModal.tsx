@@ -1,21 +1,14 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { defineMessages, FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl'
+import { FormAPI } from 'react-form'
+import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
-import { ctx } from '../App'
-import { ErrorMessage } from '../components/ErrorMessage'
 import { typedFields } from '../components/fields'
-import { Container } from '../components/layout'
 import { Bank, Mutations, Queries } from '../db'
 import { filist, formatAddress } from '../fi'
 import { nav } from '../nav'
-import { FormProps, FormAPI } from 'react-form'
-import { Header, Left, Button, Text, Body, Title, Right, Content, Icon } from 'native-base'
-import { withNavigation } from 'react-navigation'
-import { connect } from 'react-redux';
-import { actions } from '../redux/actions/index';
-import { makeScreen, SaveButtonProps } from '../screens/Screen';
+import { makeScreen, SaveButtonProps } from '../screens/Screen'
 
 interface Props {
   bankId?: string
@@ -44,39 +37,6 @@ const {
   UrlField
 } = typedFields<FormValues>()
 
-// const ModalForm: React.ComponentType<FormProps<FormValues>> =
-//   connect(null, { navBack: actions.navBack })(
-//     withNavigation(
-//       ({ children, ...props }) => {
-//         return (
-//           <Form {...props}>
-//             {formApi =>
-//               <>
-//                 <Header>
-//                   <Left>
-//                     <Button transparent onPress={props.navBack}>
-//                       <Icon name='close' />
-//                     </Button>
-//                   </Left>
-//                   <Body>
-//                     <Title>Title 2</Title>
-//                   </Body>
-//                   <Right>
-//                     <Button transparent onPress={formApi.submitForm}>
-//                       <Text>save</Text>
-//                     </Button>
-//                   </Right>
-//                 </Header>
-//                 <Content>
-//                   {children && (children as any)(formApi)}
-//                 </Content>
-//               </>
-//             }
-//           </Form>
-//         )
-//       })
-//   )
-
 export class BankFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
   getApi = (formApi: FormAPI<FormValues>) => {
     this.props.setSave(formApi.submitForm)
@@ -86,23 +46,11 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     const { props } = this
     const { intl } = props
 
-    if (props.query.loading) {
-      return null
-    }
-
-    if (props.bankId && props.query.error) {
-      return <ErrorMessage error={props.query.error} />
-    }
-
-    if (props.saveBank.error) {
-      return <ErrorMessage error={props.saveBank.error} />
-    }
-
     if (props.saveBank.called && props.saveBank.data) {
       return <Redirect to={nav.accounts()} />
     }
 
-    const edit = props.bankId && props.query.data.bank
+    const edit = props.bankId && props.query.bank
     const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
     return (
       <Form

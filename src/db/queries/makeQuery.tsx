@@ -1,8 +1,9 @@
 import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
 import * as React from 'react'
-import { Query } from 'react-apollo'
+import { Query, QueryResult } from 'react-apollo'
 import { Omit } from 'utility-types'
+import { ErrorMessage } from '../../components/index'
 
 export interface QueryType<TData> {
   data: TData
@@ -26,15 +27,24 @@ export const makeQuery = (QUERY: DocumentNode) =>
               <Component {...componentProps} />
             )
           } else {
+            const QueryComponent = Query as any as Query<QueryType<any>>
             return (
               <Query
                 query={QUERY}
                 variables={variables}
                 // fetchPolicy="network-only"
               >
-                {({ data, ...rest }) => {
-                  const componentProps: O = { ...(this.props as any), [name]: { data, ...rest } }
-                  return <Component {...componentProps} />
+                {(result: QueryResult<QueryType<any>>) => {
+                  if (!result.data) {
+                    return <ErrorMessage error={new Error('no data')} />
+                  } else if (result.error) {
+                    return <ErrorMessage error={result.error} />
+                  } else if (result.loading) {
+                    return null
+                  } else {
+                    const componentProps: O = { ...(this.props as any), [name]: { ...result.data } }
+                    return <Component {...componentProps} />
+                  }
                 }}
               </Query>
             )

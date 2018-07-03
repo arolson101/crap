@@ -39,14 +39,6 @@ const {
 } = typedFields<FormValues>()
 
 export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
-  if (props.query.loading) {
-    return null
-  }
-
-  if (props.bankId && props.query.error) {
-    return <ErrorMessage error={props.query.error} />
-  }
-
   if (props.saveBank.error) {
     return <ErrorMessage error={props.saveBank.error} />
   }
@@ -55,7 +47,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
     return <Redirect to={nav.accounts()} />
   }
 
-  const edit = props.bankId && props.query.data.bank
+  const edit = props.bankId && props.query.bank
   const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
   return (
     <Form

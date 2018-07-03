@@ -1,12 +1,10 @@
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
-import { Queries, Mutations } from '../db'
 import { ctx } from '../App/ctx'
+import { AppBannerText, FormContent, WelcomeText } from '../components'
 import { typedFields } from '../components/fields'
-import { Classes, Intent, Spinner } from '@blueprintjs/core'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import { AppBannerText, WelcomeText, FormContent } from '../components'
+import { Mutations, Queries } from '../db'
 
 interface Props {
   query: Queries.Dbs
@@ -29,17 +27,8 @@ const {
 
 export class LoginFormComponent extends React.PureComponent<Props> {
   render () {
-    if (this.props.query.loading) {
-      return null
-    }
-
-    if (this.props.query.error) {
-      return <ErrorMessage error={this.props.query.error} />
-    }
-
-    const exists = this.props.query.data.allDbs.length > 0
+    const exists = this.props.query.allDbs.length > 0
     return (
-      // <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />
       <>
         <AppBannerText>App</AppBannerText>
         {exists
@@ -130,7 +119,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
       })}
       onSubmit={async ({ password }) => {
         try {
-          const dbId = props.query.data.allDbs[0].dbId
+          const dbId = props.query.allDbs[0].dbId
           const variables = { password, dbId }
           await props.openDb.execute({ variables })
         } catch (err) {
@@ -158,7 +147,7 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
           />
           <SubmitButton
             onPress={() => {
-              const dbId = props.query.data.allDbs[0].dbId
+              const dbId = props.query.allDbs[0].dbId
               const variables = { dbId }
               props.deleteDb.execute({ variables })
             }}

@@ -19,14 +19,8 @@ interface Props {
 }
 
 export const AccountScreenComponent: React.SFC<Props> = (props, context: ctx.Router) => {
-  if (props.query.loading) {
-    return null
-  }
-  if (props.query.error) {
-    return <ErrorMessage error={props.query.error}/>
-  }
   const { router: { history, route } } = context
-  const { account } = props.query.data
+  const { account } = props.query
   const { bankId, accountId } = route.match.params
 
   return (

@@ -29,11 +29,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
     return <Redirect to={nav.accountView(props.bankId, props.saveAccount.data.saveAccount!.id)} />
   }
 
-  if (props.accountId && props.query.error) {
-    return <ErrorMessage error={props.query.error} />
-  }
-
-  const edit = props.accountId && props.query.data.account
+  const edit = props.accountId && props.query.account
 
   return (
     <Form

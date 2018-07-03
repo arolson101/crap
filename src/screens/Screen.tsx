@@ -58,7 +58,7 @@ export const makeScreen = (params: Params) => {
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<P> = ((props) => (
-      <Container style={{ backgroundColor: platform.cardDefaultBg }}>
+      <Container>
         <Content>
           <SafeAreaView>
             <Component {...props} {...moreProps} />
