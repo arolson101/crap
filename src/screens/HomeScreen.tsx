@@ -2,7 +2,6 @@ import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { ErrorMessage } from '../components/ErrorMessage'
 import { Container, Text } from '../components/layout'
 import { Queries } from '../db'
 import { makeScreen, ScreenComponent } from './Screen'
@@ -12,21 +11,13 @@ interface Props {
 }
 
 export const HomeScreenComponent: React.SFC<Props> = (props) => {
-  if (props.query.loading) {
-    return null
-  }
-
-  if (props.query.error) {
-    return <ErrorMessage error={props.query.error} />
-  }
-
   return (
     <>
       <Text>home page</Text>
-      {!props.query.data.banks.length &&
+      {!props.query.banks.length &&
         <Text>No banks</Text>
       }
-      {props.query.data.banks.map(bank =>
+      {props.query.banks.map(bank =>
         <Container key={bank.id}>
           <Text>{bank.name}</Text>
           {!bank.accounts.length &&

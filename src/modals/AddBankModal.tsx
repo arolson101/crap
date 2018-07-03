@@ -2,12 +2,14 @@ import { pick } from 'lodash'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
 import { compose } from 'recompose'
 import { typedFields } from '../components/fields'
 import { Bank, Mutations, Queries } from '../db'
 import { filist, formatAddress } from '../fi'
 import { nav } from '../nav'
+import { actions } from '../redux/actions/index'
 import { makeScreen, SaveButtonProps } from '../screens/Screen'
 
 interface Props {
@@ -17,6 +19,7 @@ interface Props {
 interface ComposedProps extends Props {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
+  navAccounts: () => any
 }
 
 type BankInput = {
@@ -46,10 +49,6 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     const { props } = this
     const { intl } = props
 
-    if (props.saveBank.called && props.saveBank.data) {
-      return <Redirect to={nav.accounts()} />
-    }
-
     const edit = props.bankId && props.query.bank
     const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
     return (
@@ -57,7 +56,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
         getApi={this.getApi}
         defaultValues={{
           fi: defaultFi,
-          ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) as any : Bank.defaultValues)
+          ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) : Bank.defaultValues)
         }}
         validate={values => ({
           name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
@@ -68,7 +67,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
             bankId: props.bankId,
             input
           }
-          void props.saveBank.execute({ variables })
+          props.saveBank(variables, props.navAccounts)
         }}
       >
         {formApi =>
@@ -142,7 +141,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
               />
             </CollapseField>
             <SubmitButton
-              disabled={props.saveBank.loading}
+              // disabled={props.saveBank.loading}
               onPress={formApi.submitForm}
               title={edit ? messages.save : messages.create}
             />
@@ -251,6 +250,7 @@ const messages = defineMessages({
 export const BankForm = compose<ComposedProps, Props>(
   makeScreen({ title: messages.title, saveButton: true, cancelButton: true }),
   injectIntl,
+  connect(null, { navAccounts: actions.navAccounts }),
   Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
   Mutations.withSaveBank('saveBank')
 )(BankFormComponent)

@@ -3,7 +3,6 @@ import { defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
 import { Route, Switch } from 'react-router'
 import { compose } from 'recompose'
-import { ErrorMessage } from '../components/ErrorMessage'
 import { Button, Container, Row, Text } from '../components/layout'
 import { Mutations, Queries } from '../db'
 import { AccountsCreateScreen, AccountsUpdateScreen } from '../modals'
@@ -34,14 +33,6 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
   }
 
   render () {
-    if (this.props.query.loading) {
-      return null
-    }
-
-    if (this.props.query.error) {
-      return <ErrorMessage error={this.props.query.error} />
-    }
-
     return (
       <>
         <Switch>
@@ -51,7 +42,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
           <Route>
             <>
               <Text>Accounts page</Text>
-              {this.props.query.data.banks.map(bank =>
+              {this.props.query.banks.map(bank =>
                 <Container key={bank.id}>
                   <Text>{bank.name}</Text>
                   <Row>

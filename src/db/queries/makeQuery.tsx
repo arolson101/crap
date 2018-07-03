@@ -11,27 +11,28 @@ export interface QueryType<TData> {
   error?: Error
 }
 
-export const makeQuery = (QUERY: DocumentNode) =>
+type Falsey = '' | 0 | false | null | undefined
+
+export const makeQuery = <V extends {}>(QUERY: DocumentNode) =>
   <N extends keyof O, O extends Record<N, QueryType<any>>, R = Omit<O, N>>(
     name: N,
-    variablesFcn?: (props: R) => Object | undefined
+    getVariables?: V | ((props: Readonly<R>) => V | Falsey)
   ) =>
     (Component: React.ComponentType<O>) => {
       class WrappedQuery extends React.Component<R> {
+        static displayName: string = `WrappedQuery(${Component.displayName || ''})`
         render () {
-          const variables = variablesFcn && variablesFcn(this.props)
-          const skip = variablesFcn && !variables
-          if (skip) {
+          const variables = typeof getVariables === 'function' ? getVariables(this.props) : getVariables
+          if (getVariables && !variables) {
             const componentProps: O = { ...(this.props as any), [name]: { loading: false } }
             return (
               <Component {...componentProps} />
             )
           } else {
-            const QueryComponent = Query as any as Query<QueryType<any>>
             return (
               <Query
                 query={QUERY}
-                variables={variables}
+                variables={variables as V}
                 // fetchPolicy="network-only"
               >
                 {(result: QueryResult<QueryType<any>>) => {
@@ -52,7 +53,5 @@ export const makeQuery = (QUERY: DocumentNode) =>
         }
       }
 
-      // WrappedQuery.displayName =
       return hoistStatics(WrappedQuery, Component as any)
-      return WrappedQuery as React.ComponentType<R>
     }
