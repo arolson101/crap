@@ -1,4 +1,4 @@
-import { Body, Container, Content, Header } from 'native-base'
+import { Container, Content } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
@@ -58,7 +58,7 @@ export const makeScreen = (params: Params) => {
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<P> = ((props) => (
-      <Container style={{ backgroundColor: platform.cardDefaultBg }}>
+      <Container>
         <Content>
           <SafeAreaView>
             <Component {...props} {...moreProps} />
@@ -114,7 +114,7 @@ export const makeScreen = (params: Params) => {
       })
     }
     nav.title = title
-    nav.displayName = `Screen(${Component.displayName})`
+    nav.displayName = `Screen(${Component.displayName || Component.name})`
     return nav
   }
 }

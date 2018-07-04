@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as RF from 'react-form'
 import * as NB from 'native-base'
+import platform from 'native-base/dist/src/theme/variables/platform'
 
 type Props = RF.FormProps
 
@@ -9,7 +10,7 @@ export class Form extends React.Component<Props> {
 
   render () {
     return (
-      <NB.Form>
+      <NB.Form style={{ backgroundColor: platform.cardDefaultBg }}>
         <RF.Form
           {...this.props}
           validateOnSubmit
