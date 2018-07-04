@@ -1,29 +1,57 @@
 import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
+import { Toast } from 'native-base'
 import * as React from 'react'
-import { Mutation, MutationFunc } from 'react-apollo'
+import { Mutation, MutationFn, OperationVariables } from 'react-apollo'
 import { Omit } from 'utility-types'
 
-export interface MutationType<TData, TVariables> {
-  execute: MutationFunc<TData, TVariables>
-  loading: boolean
-  error?: Error
-  called: boolean
-  data: TData | undefined
-}
+type CompletionFcn<TRet> = (result: TRet) => any
 
-export const makeMutation = (QUERY: DocumentNode, refetchQueries: DocumentNode[] = []) =>
-  <N extends keyof O, O extends Record<N, MutationType<any, any>>, R = Omit<O, N>>(name: N) =>
+export type MutationFcn<TRet, TVars> = (vars: TVars, onCompleted?: CompletionFcn<TRet>) => void
+
+export const makeMutation = <TRet, TVariables>(QUERY: DocumentNode, refetchQueries: DocumentNode[] = []) =>
+  <N extends keyof O, O extends Record<N, MutationFcn<TRet, TVariables>>>(name: N) =>
     (Component: React.ComponentType<O>) => {
-      class WrappedMutation extends React.Component<R> {
+      type Props = Omit<O, N>
+      type State = { onCompleted?: CompletionFcn<TRet> }
+      class WrappedMutation extends React.Component<Props, State> {
+        state: State = {}
+        execute: MutationFn<any, OperationVariables> | undefined
+
+        wrapExecute = (variables: TVariables, onCompleted?: CompletionFcn<TRet>) => {
+          if (this.execute) {
+            this.setState({ onCompleted })
+            this.execute({ variables })
+          }
+        }
+
+        onError = (error: Error) => {
+          Toast.show({
+            text: error.message,
+            buttonText: 'Okay',
+            duration: 0,
+            type: 'danger'
+          })
+        }
+
         render () {
           return (
             <Mutation
               mutation={QUERY}
               refetchQueries={refetchQueries.map(query => ({ query }))}
+              onCompleted={this.state.onCompleted}
+              onError={this.onError}
             >
               {(execute, result) => {
-                const componentProps = { ...(this.props as any), [name]: { execute, ...result } }
+                // this.execute = execute
+                if (result.loading) {
+                  return null
+                }
+                const exe = (variables: TVariables, onCompleted?: CompletionFcn<TRet>) =>  {
+                  this.setState({ onCompleted })
+                  execute({ variables })
+                }
+                const componentProps: O = { ...(this.props as any), [name]: exe }
                 return <Component {...componentProps} />
               }}
             </Mutation>
@@ -31,5 +59,5 @@ export const makeMutation = (QUERY: DocumentNode, refetchQueries: DocumentNode[]
         }
       }
 
-      return hoistStatics(WrappedMutation, Component as any)
+      return hoistStatics(WrappedMutation, Component)
     }

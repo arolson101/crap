@@ -1,12 +1,10 @@
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
-import { Queries, Mutations } from '../db'
 import { ctx } from '../App/ctx'
+import { AppBannerText, FormContent, WelcomeText } from '../components'
 import { typedFields } from '../components/fields'
-import { Classes, Intent, Spinner } from '@blueprintjs/core'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import { AppBannerText, WelcomeText, FormContent } from '../components'
+import { Mutations, Queries } from '../db'
 
 interface Props {
   query: Queries.Dbs
@@ -22,24 +20,14 @@ interface FormValues {
 
 const {
   Form,
-  ErrorMessage,
   SubmitButton,
   TextField
 } = typedFields<FormValues>()
 
 export class LoginFormComponent extends React.PureComponent<Props> {
   render () {
-    if (this.props.query.loading) {
-      return null
-    }
-
-    if (this.props.query.error) {
-      return <ErrorMessage error={this.props.query.error} />
-    }
-
-    const exists = this.props.query.data.allDbs.length > 0
+    const exists = this.props.query.allDbs.length > 0
     return (
-      // <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />
       <>
         <AppBannerText>App</AppBannerText>
         {exists
@@ -76,7 +64,7 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
       })}
       onSubmit={({ password }) => {
         const variables = { name: 'appdb', password }
-        return props.createDb.execute({ variables })
+        props.createDb(variables)
       }}
     >
       {formApi =>
@@ -95,9 +83,8 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
             label={messages.passwordConfirmLabel}
             placeholder={messages.passwordConfirmPlaceholder}
           />
-          <ErrorMessage error={props.createDb.error} />
           <SubmitButton
-            disabled={props.createDb.loading}
+            // disabled={props.createDb.loading}
             onPress={formApi.submitForm}
             title={messages.create}
           />
@@ -111,14 +98,6 @@ FormCreate.contextTypes = ctx.intl
 const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
   const { intl: { formatMessage } } = context
 
-  if (props.deleteDb.loading) {
-    return null
-  }
-
-  if (props.deleteDb.error) {
-    return <ErrorMessage error={props.deleteDb.error} />
-  }
-
   return (
     <Form
       defaultValues={{
@@ -128,14 +107,9 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
         password: !values.password.trim() ? formatMessage(messages.valueEmpty)
           : undefined
       })}
-      onSubmit={async ({ password }) => {
-        try {
-          const dbId = props.query.data.allDbs[0].dbId
-          const variables = { password, dbId }
-          await props.openDb.execute({ variables })
-        } catch (err) {
-          console.warn(err)
-        }
+      onSubmit={({ password }) => {
+        const dbId = props.query.allDbs[0].dbId
+        props.openDb({ password, dbId })
       }}
     >
       {formApi =>
@@ -150,17 +124,16 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
             // returnKeyType="default"
             onSubmitEditing={formApi.submitForm}
           />
-          <ErrorMessage error={props.openDb.error} />
           <SubmitButton
-            disabled={props.openDb.loading}
+            // disabled={props.openDb.loading}
             onPress={formApi.submitForm}
             title={messages.open}
           />
           <SubmitButton
             onPress={() => {
-              const dbId = props.query.data.allDbs[0].dbId
+              const dbId = props.query.allDbs[0].dbId
               const variables = { dbId }
-              props.deleteDb.execute({ variables })
+              props.deleteDb(variables)
             }}
             title={messages.delete}
           />

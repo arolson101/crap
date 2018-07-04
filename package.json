@@ -142,7 +142,7 @@
     "jest-transform-graphql": "^2.1.0",
     "lodash-es": "^4.17.10",
     "mkdirp": "^0.5.1",
-    "native-base": "^2.4.5",
+    "native-base": "^2.6.1",
     "node-libs-react-native": "^1.0.2",
     "prop-types": "^15.6.1",
     "qs": "^6.5.2",

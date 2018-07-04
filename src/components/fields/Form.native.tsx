@@ -9,10 +9,11 @@ export class Form extends React.Component<Props> {
   formApi: RF.FormAPI
 
   render () {
+    const { children, ...props } = this.props
     return (
       <NB.Form style={{ backgroundColor: platform.cardDefaultBg }}>
         <RF.Form
-          {...this.props}
+          {...props}
           validateOnSubmit
           onSubmitFailure={(errors) => {
             console.log(errors)
@@ -34,7 +35,11 @@ export class Form extends React.Component<Props> {
               this.props.getApi(formApi)
             }
           }}
-        />
+        >
+        {formApi =>
+          children && children(formApi)
+        }
+        </RF.Form>
       </NB.Form>
     )
   }

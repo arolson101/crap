@@ -1,15 +1,14 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { FormattedMessage, defineMessages } from 'react-intl'
-import { Redirect } from 'react-router'
+import { defineMessages, FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { nav } from '../nav'
-import { filist, formatAddress } from '../fi'
-import { Mutations, Queries, Bank } from '../db'
 import { ctx } from '../App'
-import { Container } from '../components/layout'
-import { ErrorMessage } from '../components/ErrorMessage'
 import { typedFields } from '../components/fields'
+import { Container } from '../components/layout'
+import { Bank, Mutations, Queries } from '../db'
+import { filist, formatAddress } from '../fi'
+import { actions } from '../redux/actions/index'
 
 interface Props {
   bankId?: string
@@ -18,6 +17,7 @@ interface Props {
 interface ComposedProps extends Props {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
+  navAccounts: () => any
 }
 
 type BankInput = {
@@ -38,24 +38,8 @@ const {
   UrlField
 } = typedFields<FormValues>()
 
-export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
-  if (props.query.loading) {
-    return null
-  }
-
-  if (props.bankId && props.query.error) {
-    return <ErrorMessage error={props.query.error} />
-  }
-
-  if (props.saveBank.error) {
-    return <ErrorMessage error={props.saveBank.error} />
-  }
-
-  if (props.saveBank.called && props.saveBank.data) {
-    return <Redirect to={nav.accounts()} />
-  }
-
-  const edit = props.bankId && props.query.data.bank
+export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl }: ctx.Intl) => {
+  const edit = props.bankId && props.query.bank
   const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
   return (
     <Form
@@ -72,7 +56,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
           bankId: props.bankId,
           input
         }
-        void props.saveBank.execute({ variables })
+        props.saveBank(variables, props.navAccounts)
       }}
     >
       {formApi =>
@@ -146,7 +130,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
             />
           </CollapseField>
           <SubmitButton
-            disabled={props.saveBank.loading}
+            // disabled={props.saveBank.loading}
             onPress={formApi.submitForm}
             title={edit ? messages.save : messages.create}
           />
@@ -155,9 +139,10 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl, route
     </Form>
   )
 }
-BankFormComponent.contextTypes = { ...ctx.intl, ...ctx.router }
+BankFormComponent.contextTypes = { ...ctx.intl }
 
 export const BankForm = compose<ComposedProps, Props>(
+  connect(null, { navAccounts: actions.navAccounts }),
   Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
   Mutations.withSaveBank('saveBank')
 )(BankFormComponent)

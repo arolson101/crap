@@ -3,7 +3,6 @@ import { defineMessages } from 'react-intl'
 import { RouteComponentProps } from 'react-router'
 import { compose } from 'recompose'
 import { ctx } from '../App'
-import { ErrorMessage } from '../components/ErrorMessage'
 import { Button, Text } from '../components/layout'
 import { Queries } from '../db'
 import { nav } from '../nav'
@@ -19,14 +18,8 @@ interface Props {
 }
 
 export const AccountScreenComponent: React.SFC<Props> = (props, context: ctx.Router) => {
-  if (props.query.loading) {
-    return null
-  }
-  if (props.query.error) {
-    return <ErrorMessage error={props.query.error}/>
-  }
   const { router: { history, route } } = context
-  const { account } = props.query.data
+  const { account } = props.query
   const { bankId, accountId } = route.match.params
 
   return (

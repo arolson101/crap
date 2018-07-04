@@ -1,11 +1,10 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { Column, Button, Text } from '../components/layout'
-import { nav } from '../nav'
-import { Queries } from '../db'
 import { ctx } from '../App'
-import { connect } from 'react-redux';
-import { actions } from '../redux/actions/index';
+import { Button, Column, Text } from '../components/layout'
+import { Queries } from '../db'
+import { actions } from '../redux/actions/index'
 
 interface Props {
   query: Queries.Accounts
@@ -17,15 +16,12 @@ interface Props {
 
 export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) => {
   const { router: { history: { push } } } = context
-  if (props.query.loading) {
-    return null
-  }
   return (
     <Column>
       <Button onPress={props.navHome} title='home' />
       <Button onPress={props.navBudgets} title='budgets' />
       <Button onPress={props.navAccounts} title='accounts' />
-      {props.query.data.banks.map(bank =>
+      {props.query.banks.map(bank =>
         <React.Fragment key={bank.id}>
           <Text>{bank.name}</Text>
           {bank.accounts.map(account =>

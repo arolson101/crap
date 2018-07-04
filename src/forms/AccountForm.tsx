@@ -1,14 +1,13 @@
 import { pick } from 'lodash'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
-import { Redirect } from 'react-router'
+import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { nav } from '../nav'
-import { Mutations, Queries, Account } from '../db'
 import { ctx } from '../App'
+import { SelectFieldItem, typedFields } from '../components/fields'
 import { Container } from '../components/layout'
-import { ErrorMessage } from '../components/ErrorMessage'
-import { typedFields, SelectFieldItem } from '../components/fields'
+import { Account, Mutations, Queries } from '../db'
+import { actions } from '../redux/actions/index'
 
 interface Props {
   accountId?: string
@@ -18,22 +17,15 @@ interface Props {
 interface ComposedProps extends Props {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
+  navAccountView: (bankId: string, accountId: string) => any
 }
 
 type FormValues = Account.Props
 
 const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>()
 
-export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, router }: ctx.Intl & ctx.Router) => {
-  if (props.saveAccount.called && props.saveAccount.data) {
-    return <Redirect to={nav.accountView(props.bankId, props.saveAccount.data.saveAccount!.id)} />
-  }
-
-  if (props.accountId && props.query.error) {
-    return <ErrorMessage error={props.query.error} />
-  }
-
-  const edit = props.accountId && props.query.data.account
+export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl }: ctx.Intl) => {
+  const edit = props.accountId && props.query.account
 
   return (
     <Form
@@ -50,7 +42,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
           accountId: edit ? edit.id : null,
           input
         }
-        void props.saveAccount.execute({ variables })
+        props.saveAccount(variables, result => props.navAccountView(props.bankId, result.saveAccount.id))
       }}
     >
       {formApi =>
@@ -98,7 +90,6 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
             />
           }
           <SubmitButton
-            disabled={props.saveAccount.loading}
             onPress={formApi.submitForm}
             title={edit ? messages.save : messages.create}
           />
@@ -107,9 +98,10 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl, ro
     </Form>
   )
 }
-AccountFormComponent.contextTypes = { ...ctx.intl, ...ctx.router }
+AccountFormComponent.contextTypes = { ...ctx.intl }
 
 export const AccountForm = compose<ComposedProps, Props>(
+  connect(null, { navAccountView: actions.navAccountView }),
   Mutations.withSaveAccount('saveAccount'),
   Queries.withAccount('query', ({ accountId }: Props) => accountId && ({ accountId }))
 )(AccountFormComponent)
