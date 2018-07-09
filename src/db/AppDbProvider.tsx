@@ -42,7 +42,6 @@ class AppDbProviderComponent extends React.Component<Props> {
     cache: new InMemoryCache(),
     link: new ApolloLink((operation, forward) => {
       return new Observable(observer => {
-        console.log('AppDbProviderComponent')
         const context: ResolverContext = {
           ...this.props.dependencies,
           indexDb: this.props.indexDb!,
