@@ -1,8 +1,9 @@
 {
   "presets": [
-    "react-native"
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   "plugins": [
-    "transform-new-target"
+    "@babel/plugin-transform-new-target"
   ]
 }
