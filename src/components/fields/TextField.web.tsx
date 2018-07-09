@@ -1,10 +1,7 @@
-import glamorous from 'glamorous'
 import { FormGroup, Intent, TextArea } from '@blueprintjs/core'
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage } from 'react-intl'
-import { ThemeProp, ctx } from '../../App'
-import { WrappedField } from './WrappedField'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 
 export namespace TextField {
   export interface Props<T = {}> {
@@ -20,12 +17,9 @@ export namespace TextField {
   }
 }
 
-export class TextField extends React.Component<TextField.Props> {
-  static contextTypes = ctx.intl
-
+export class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
   render () {
-    const { field, autoFocus, label, textColor, placeholder, secure, rows, onSubmitEditing, returnKeyType } = this.props
-    const { intl } = this.context as ctx.Intl
+    const { field, intl, autoFocus, label, textColor, placeholder, secure, rows, onSubmitEditing, returnKeyType } = this.props
     const id = `${field}-input`
     return (
       <Field field={field}>
@@ -63,3 +57,5 @@ export class TextField extends React.Component<TextField.Props> {
     )
   }
 }
+
+export const TextField = injectIntl<TextField.Props>(TextFieldComponent)

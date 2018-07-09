@@ -1,7 +1,7 @@
 import { Item, Label, Right } from 'native-base'
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { Switch } from 'react-native'
 import { ctx } from '../../App'
 
@@ -12,8 +12,8 @@ export namespace CheckboxField {
   }
 }
 
-export const CheckboxField: React.SFC<CheckboxField.Props> =
-  ({ field, label }, { intl }: ctx.Intl) => (
+const CheckboxFieldComponent: React.SFC<CheckboxField.Props & InjectedIntlProps> =
+  ({ field, label, intl }) => (
     <Field field={field}>
       {fieldApi => {
         const error = !!(fieldApi.touched && fieldApi.error)
@@ -34,4 +34,5 @@ export const CheckboxField: React.SFC<CheckboxField.Props> =
       }}
     </Field>
   )
-CheckboxField.contextTypes = ctx.intl
+
+export const CheckboxField = injectIntl(CheckboxFieldComponent)

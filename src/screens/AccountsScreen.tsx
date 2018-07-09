@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router'
 import { compose } from 'recompose'
 import { Button, Container, Row, Text } from '../components/layout'
 import { Mutations, Queries } from '../db'
-import { AccountsCreateScreen, AccountsUpdateScreen } from '../modals'
+import { AccountsUpdateScreen } from '../modals'
 import { paths } from '../nav'
 import { actions } from '../redux/actions/index'
 import { AccountPage } from './AccountScreen'
@@ -36,7 +36,6 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
     return (
       <>
         <Switch>
-          <Route path={paths.account.create} component={AccountsCreateScreen} />
           <Route path={paths.account.update} component={AccountsUpdateScreen} />
           <Route path={paths.account.view} component={AccountPage} />
           <Route>

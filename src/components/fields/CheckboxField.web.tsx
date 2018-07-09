@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { Switch } from '@blueprintjs/core'
-import { ctx, ThemeProp } from '../../App'
 import { WrappedField } from './WrappedField'
 
 export namespace CheckboxField {
@@ -12,8 +11,8 @@ export namespace CheckboxField {
   }
 }
 
-export const CheckboxField: React.SFC<CheckboxField.Props> =
-  ({ field, label }, { intl }: ctx.Intl) => (
+const CheckboxFieldComponent: React.SFC<CheckboxField.Props & InjectedIntlProps> =
+  ({ field, label, intl }) => (
     <Field field={field}>
       {fieldApi => (
           <WrappedField fieldApi={fieldApi}>
@@ -28,4 +27,5 @@ export const CheckboxField: React.SFC<CheckboxField.Props> =
       }
     </Field>
   )
-CheckboxField.contextTypes = ctx.intl
+
+export const CheckboxField = injectIntl<CheckboxField.Props>(CheckboxFieldComponent)

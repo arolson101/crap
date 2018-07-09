@@ -1,6 +1,6 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
+import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { ctx } from '../App'
@@ -14,7 +14,7 @@ interface Props {
   bankId: string
 }
 
-interface ComposedProps extends Props {
+interface ComposedProps extends Props, InjectedIntlProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
   navAccountView: (bankId: string, accountId: string) => any
@@ -24,8 +24,9 @@ type FormValues = Account.Props
 
 const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>()
 
-export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl }: ctx.Intl) => {
+export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
   const edit = props.accountId && props.query.account
+  const { intl } = props
 
   return (
     <Form
@@ -98,9 +99,9 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props, { intl }: 
     </Form>
   )
 }
-AccountFormComponent.contextTypes = { ...ctx.intl }
 
 export const AccountForm = compose<ComposedProps, Props>(
+  injectIntl,
   connect(null, { navAccountView: actions.navAccountView }),
   Mutations.withSaveAccount('saveAccount'),
   Queries.withAccount('query', ({ accountId }: Props) => accountId && ({ accountId }))

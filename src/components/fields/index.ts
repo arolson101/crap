@@ -14,7 +14,7 @@ export type SelectFieldItem = SelectField.Item
 export const typedFields = <V extends {}>() => {
   return {
     Form: Form as any as React.ComponentClass<RF.FormProps<V>>,
-    CheckboxField: CheckboxField as React.StatelessComponent<CheckboxField.Props<V>>,
+    CheckboxField: CheckboxField as React.ComponentClass<CheckboxField.Props<V>>,
     CollapseField: CollapseField as React.StatelessComponent<CollapseField.Props<V>>,
     Divider,
     ErrorMessage,

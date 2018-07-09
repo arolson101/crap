@@ -1,8 +1,8 @@
 import glamorous from 'glamorous'
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage } from 'react-intl'
-import { ThemeProp, ctx } from '../../App'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { ThemeProp } from '../../App'
 import { WrappedField } from './WrappedField'
 
 const StyledTextInput = glamorous.input<ThemeProp & { error: any }>({},
@@ -26,9 +26,7 @@ export namespace UrlField {
   }
 }
 
-export class UrlField extends React.Component<UrlField.Props> {
-  static contextTypes = ctx.intl
-
+class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlProps> {
   private textInput = React.createRef<any>()
 
   focusTextInput = () => {
@@ -38,8 +36,7 @@ export class UrlField extends React.Component<UrlField.Props> {
   }
 
   render () {
-    const { field, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
-    const { intl } = this.context as ctx.Intl
+    const { field, intl, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
     return (
       <Field field={field}>
         {fieldApi => {
@@ -61,3 +58,5 @@ export class UrlField extends React.Component<UrlField.Props> {
     )
   }
 }
+
+export const UrlField = injectIntl<UrlField.Props>(UrlFieldComponent)

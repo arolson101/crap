@@ -1,6 +1,6 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { ctx } from '../App'
@@ -14,7 +14,7 @@ interface Props {
   bankId?: string
 }
 
-interface ComposedProps extends Props {
+interface ComposedProps extends Props, InjectedIntlProps {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
   navAccounts: () => any
@@ -38,9 +38,10 @@ const {
   UrlField
 } = typedFields<FormValues>()
 
-export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl }: ctx.Intl) => {
+export const BankFormComponent: React.SFC<ComposedProps> = (props) => {
   const edit = props.bankId && props.query.bank
   const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
+  const { intl } = props
   return (
     <Form
       defaultValues={{
@@ -139,9 +140,9 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props, { intl }: ctx
     </Form>
   )
 }
-BankFormComponent.contextTypes = { ...ctx.intl }
 
 export const BankForm = compose<ComposedProps, Props>(
+  injectIntl,
   connect(null, { navAccounts: actions.navAccounts }),
   Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
   Mutations.withSaveBank('saveBank')

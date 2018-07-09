@@ -1,8 +1,8 @@
 import glamorous from 'glamorous-native'
 import * as React from 'react'
 import { FieldAPI } from 'react-form'
-import { FormattedMessage } from 'react-intl'
-import { ThemeProp, ctx } from '../../App'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { ThemeProp } from '../../App'
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,
@@ -37,8 +37,8 @@ export namespace WrappedField {
   }
 }
 
-export const WrappedField: React.ComponentType<WrappedField.Props> =
-  ({ fieldApi, label, onLabelPress, children }, { intl }: ctx.Intl) => {
+const WrappedFieldComponent: React.ComponentType<WrappedField.Props & InjectedIntlProps> =
+  ({ fieldApi, label, onLabelPress, children, intl }) => {
     const error = fieldApi.touched && fieldApi.error
     return (
       <Row>
@@ -58,4 +58,5 @@ export const WrappedField: React.ComponentType<WrappedField.Props> =
       </Row>
     )
   }
-WrappedField.contextTypes = ctx.intl
+
+export const WrappedField = injectIntl<WrappedField.Props>(WrappedFieldComponent)

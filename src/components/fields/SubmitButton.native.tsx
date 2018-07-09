@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { Button } from 'react-native'
-import { ctx } from '../../App'
 
 interface Props {
   title: FormattedMessage.MessageDescriptor
@@ -9,12 +8,13 @@ interface Props {
   disabled?: boolean
 }
 
-export const SubmitButton: React.ComponentType<Props> =
-  ({ title, disabled, onPress }: Props, { intl }: ctx.Intl) => (
+export const SubmitButtonComponent: React.ComponentType<Props & InjectedIntlProps> =
+  ({ title, disabled, onPress, intl }) => (
     <Button
       disabled={disabled}
       title={intl.formatMessage(title)}
       onPress={() => onPress()}
     />
   )
-SubmitButton.contextTypes = ctx.intl
+
+export const SubmitButton = injectIntl<Props>(SubmitButtonComponent)

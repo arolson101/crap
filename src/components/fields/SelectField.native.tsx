@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { Picker } from 'react-native'
-import { ctx, ThemeProp } from '../../App'
+import { ThemeProp } from '../../App'
 import { WrappedField } from './WrappedField'
 
 const StyledPicker = glamorous(Picker)({},
@@ -29,7 +29,7 @@ export namespace SelectField {
 }
 
 export const SelectField: React.SFC<SelectField.Props> =
-  ({ field, label, items, onValueChange }, { intl }: ctx.Intl) => (
+  ({ field, label, items, onValueChange }) => (
     <Field field={field}>
       {fieldApi => {
         const error = fieldApi.touched && fieldApi.error
@@ -58,4 +58,3 @@ export const SelectField: React.SFC<SelectField.Props> =
       }}
     </Field>
   )
-SelectField.contextTypes = ctx.intl

@@ -1,11 +1,8 @@
-import glamorous from 'glamorous-native'
+import { Input, Item, Label } from 'native-base'
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { ReturnKeyType, TextInput } from 'react-native'
-import { ThemeProp, ctx } from '../../App'
-import { WrappedField } from './WrappedField'
-import { Item, Label, Input } from 'native-base'
 
 export namespace UrlField {
   export interface Props<T = {}> {
@@ -18,9 +15,7 @@ export namespace UrlField {
   }
 }
 
-export class UrlField extends React.Component<UrlField.Props> {
-  static contextTypes = ctx.intl
-
+class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlProps> {
   private textInput: TextInput
 
   focusTextInput = () => {
@@ -30,8 +25,7 @@ export class UrlField extends React.Component<UrlField.Props> {
   }
 
   render () {
-    const { field, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
-    const { intl } = this.context as ctx.Intl
+    const { field, intl, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
     return (
       <Field field={field}>
         {fieldApi => {
@@ -70,3 +64,5 @@ export class UrlField extends React.Component<UrlField.Props> {
     )
   }
 }
+
+export const UrlField = injectIntl<UrlField.Props>(UrlFieldComponent)

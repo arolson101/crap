@@ -16,6 +16,8 @@ import { ScreenProps, ScreenComponent } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 import { Root } from 'native-base';
+import { compose } from 'redux';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 const getCurrentParams = (state: any): any => {
   if (state.routes) {
@@ -128,24 +130,20 @@ const AuthStack = createSwitchNavigator({
 })
 AuthStack.displayName = 'AuthStack'
 
-interface TopNavigatorComponentProps {
+interface TopNavigatorComponentProps extends InjectedIntlProps {
   setTopNavigator: (topNavigator: NavigationContainerComponent) => any
 }
 
-const TopNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator }, context) => {
-  const { intl } = context as ctx.Intl
+const TopNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator, intl }) => {
   const screenProps: ScreenProps = ({ intl })
   return (
     <AuthStack screenProps={screenProps} ref={setTopNavigator} />
   )
 }
-TopNavigatorComponent.contextTypes = ctx.intl
 
-const TopNavigator = connect(
-  null,
-  ({
-    setTopNavigator: nativeActions.setTopNavigator,
-  })
+const TopNavigator = compose(
+  injectIntl,
+  connect(null, { setTopNavigator: nativeActions.setTopNavigator })
 )(TopNavigatorComponent)
 TopNavigator.displayName = 'TopNavigator'
 

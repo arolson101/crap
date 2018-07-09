@@ -53,7 +53,7 @@ const renderItem: ItemRenderer<SelectField.Item> = (item, { handleClick, modifie
 }
 
 export const SelectField: React.SFC<SelectField.Props> =
-  ({ field, label, items, onValueChange }, { intl }: ctx.Intl) => (
+  ({ field, label, items, onValueChange }) => (
     <Field field={field}>
       {fieldApi => {
         const error = fieldApi.touched && fieldApi.error
@@ -80,4 +80,3 @@ export const SelectField: React.SFC<SelectField.Props> =
       }}
     </Field>
   )
-SelectField.contextTypes = ctx.intl

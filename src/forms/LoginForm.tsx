@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
+import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl'
 import { compose } from 'recompose'
 import { ctx } from '../App/ctx'
 import { AppBannerText, FormContent, WelcomeText } from '../components'
 import { typedFields } from '../components/fields'
 import { Mutations, Queries } from '../db'
 
-interface Props {
+interface Props extends InjectedIntlProps {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
@@ -40,6 +40,7 @@ export class LoginFormComponent extends React.PureComponent<Props> {
 }
 
 export const LoginForm = compose(
+  injectIntl,
   Queries.withDbs('query'),
   Mutations.withOpenDb('openDb'),
   Mutations.withCreateDb('createDb'),
@@ -47,8 +48,8 @@ export const LoginForm = compose(
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 
-const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
-  const { intl: { formatMessage } } = context
+const FormCreate: React.SFC<Props> = (props) => {
+  const { intl: { formatMessage } } = props
 
   return (
     <Form
@@ -93,10 +94,9 @@ const FormCreate: React.SFC<Props> = (props, context: ctx.Intl) => {
     </Form>
   )
 }
-FormCreate.contextTypes = ctx.intl
 
-const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
-  const { intl: { formatMessage } } = context
+const FormOpen: React.SFC<Props> = (props) => {
+  const { intl: { formatMessage } } = props
 
   return (
     <Form
@@ -142,7 +142,6 @@ const FormOpen: React.SFC<Props> = (props, context: ctx.Intl) => {
     </Form>
   )
 }
-FormOpen.contextTypes = { ...ctx.intl }
 
 const messages = defineMessages({
   create: {
