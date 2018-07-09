@@ -11,6 +11,7 @@ import { filist, formatAddress } from '../fi'
 import { nav } from '../nav'
 import { actions } from '../redux/actions/index'
 import { makeScreen, SaveButtonProps } from '../screens/Screen'
+import { ListItem, Text } from 'native-base';
 
 interface Props {
   bankId?: string
@@ -34,6 +35,7 @@ const {
   Form,
   CheckboxField,
   CollapseField,
+  Divider,
   SelectField,
   SubmitButton,
   TextField,
@@ -108,6 +110,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
               label={messages.notes}
               rows={4}
             />
+            <Divider/>
             <CheckboxField
               field='online'
               label={messages.online}
