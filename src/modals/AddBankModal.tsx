@@ -3,15 +3,12 @@ import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router'
 import { compose } from 'recompose'
 import { typedFields } from '../components/fields'
 import { Bank, Mutations, Queries } from '../db'
 import { filist, formatAddress } from '../fi'
-import { nav } from '../nav'
 import { actions } from '../redux/actions/index'
 import { makeScreen, SaveButtonProps } from '../screens/Screen'
-import { ListItem, Text } from 'native-base';
 
 interface Props {
   bankId?: string
