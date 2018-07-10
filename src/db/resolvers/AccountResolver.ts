@@ -1,3 +1,4 @@
+import cuid from 'cuid'
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 import { defineMessages } from 'react-intl'
 import { Column, Entity, PrimaryColumn } from '../typeorm'
@@ -72,7 +73,7 @@ export class AccountResolver {
 
   @Mutation(returns => Account)
   async saveAccount (
-    @Ctx() { appDb, getTime, genId }: ResolverContext,
+    @Ctx() { appDb }: ResolverContext,
     @Arg('input') input: AccountInput,
     @Arg('accountId', { nullable: true }) accountId?: string,
     @Arg('bankId', { nullable: true }) bankId?: string,
@@ -80,7 +81,7 @@ export class AccountResolver {
     if (!appDb) { throw new Error('appDb not open') }
     let account: Account
     let changes: Array<any>
-    const t = getTime()
+    const t = Date.now()
     if (accountId) {
       account = await appDb.manager.findOneOrFail(Account, accountId)
       const q = Account.diff(account, input)
@@ -92,7 +93,7 @@ export class AccountResolver {
       if (!bankId) {
         throw new Error('when creating an account, bankId must be specified')
       }
-      account = new Account(bankId, input, genId)
+      account = new Account(bankId, input, cuid)
       changes = [
         Account.change.add(t, account)
       ]
@@ -103,11 +104,11 @@ export class AccountResolver {
 
   @Mutation(returns => Boolean)
   async deleteAccount (
-    @Ctx() { appDb, getTime }: ResolverContext,
+    @Ctx() { appDb }: ResolverContext,
     @Arg('accountId') accountId: string,
   ): Promise<Boolean> {
     if (!appDb) { throw new Error('appDb not open') }
-    const t = getTime()
+    const t = Date.now()
     const changes = [
       Account.change.remove(t, accountId)
     ]

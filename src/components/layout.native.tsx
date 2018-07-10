@@ -11,11 +11,10 @@ interface ButtonProps {
 }
 export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
   <NBButton block={block} onPress={onPress}>
-    <Text>
-      {typeof title === 'string' ? title :
-        <FormattedMessage {...title} />
-      }
-    </Text>
+    {typeof title === 'string'
+      ? <Text>{title}</Text>
+      : <FormattedMessage {...title} />
+    }
   </NBButton>
 )
 

@@ -1,8 +1,7 @@
-import { ThemeProvider } from 'glamorous-native'
-import { Root } from 'native-base'
+import { Root, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { InjectedIntlProps, injectIntl, IntlProvider } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -10,13 +9,14 @@ import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, 
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+import { AppDbProvider } from '../db/index'
 import * as modals from '../modals/index'
 import { paths } from '../nav'
 import { nativeActions } from '../redux/actions/nativeActions'
+import { ReduxProvider } from '../redux/index'
 import * as screens from '../screens/index'
 import { ScreenComponent, ScreenProps } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
-import { defaultTheme } from './Theme'
 
 const getCurrentParams = (state: any): any => {
   if (state.routes) {
@@ -107,18 +107,18 @@ const mainStack = createBottomTabNavigatorFcn(
 )
 mainStack.displayName = 'mainStack'
 
-const modalWrapper = createStackNavigator({
+const modalStack = createStackNavigator({
   [paths.bankCreate]: modals.BankModal,
   [paths.bankEdit]: modals.BankModal,
   [paths.accountCreate]: modals.AccountModal,
   [paths.accountEdit]: modals.AccountModal,
 })
-modalWrapper.displayName = 'modalWrapper'
+modalStack.displayName = 'modalStack'
 
-const modalsStack = createStackNavigator(
+const appStack = createStackNavigator(
   {
     main: mainStack,
-    [paths.modal]: modalWrapper,
+    [paths.modal]: modalStack,
   },
   {
     mode: 'modal',
@@ -126,15 +126,16 @@ const modalsStack = createStackNavigator(
     initialRouteName: 'main',
   }
 )
-modalsStack.displayName = 'modalsStack'
+appStack.displayName = 'appStack'
 
 const loginStack = createStackNavigator({
   Login: screens.LoginScreen
 }, { headerMode: 'none' })
+loginStack.displayName = 'loginStack'
 
 const AuthStack = createSwitchNavigator({
   [paths.login]: loginStack,
-  [paths.app]: modalsStack,
+  [paths.app]: appStack,
 })
 AuthStack.displayName = 'AuthStack'
 
@@ -158,11 +159,15 @@ TopNavigator.displayName = 'TopNavigator'
 const App: React.SFC = () => {
   return (
     <LoadFonts>
-      <ThemeProvider theme={defaultTheme}>
-        <Root>
-          <TopNavigator />
-        </Root>
-      </ThemeProvider>
+      <ReduxProvider>
+        <IntlProvider locale='en' textComponent={Text}>
+          <AppDbProvider>
+            <Root>
+              <TopNavigator />
+            </Root>
+          </AppDbProvider>
+        </IntlProvider>
+      </ReduxProvider>
     </LoadFonts>
   )
 }

@@ -4,6 +4,7 @@ import { Entity, Column, Index, PrimaryColumn } from '../typeorm'
 import { Arg, Ctx, Field, ObjectType, Mutation, Query, Resolver, ResolverContext } from './helpers'
 import { selectors } from '../../redux/reducers/index';
 import { actions } from '../../redux/actions/index';
+import { openDb, deleteDb } from '../openDb';
 
 const iterations = 10000
 const keylen = 32
@@ -71,7 +72,7 @@ export class DbResolver {
   async createDb (
     @Arg('name') name: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
-    @Ctx() { indexDb, openDb, setAppDb }: ResolverContext
+    @Ctx() { indexDb, setAppDb }: ResolverContext
   ): Promise<Boolean> {
     const dbInfo = new DbInfo()
     dbInfo.dbId = crypto.randomBytes(8).toString('base64')
@@ -90,7 +91,7 @@ export class DbResolver {
   async openDb (
     @Arg('dbId') dbId: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
-    @Ctx() { indexDb, openDb, setAppDb }: ResolverContext
+    @Ctx() { indexDb, setAppDb }: ResolverContext
   ): Promise<Boolean> {
     const dbInfo = await indexDb.getRepository(DbInfo).findOneOrFail(dbId)
     const key = dbInfo.getKey(password)
@@ -110,7 +111,7 @@ export class DbResolver {
   @Mutation(returns => Boolean)
   async deleteDb (
     @Arg('dbId') dbId: string,
-    @Ctx() { indexDb, deleteDb }: ResolverContext
+    @Ctx() { indexDb }: ResolverContext
   ): Promise<Boolean> {
     const dbInfo = await indexDb.getRepository(DbInfo).findOneOrFail(dbId)
     await deleteDb(dbInfo.path)

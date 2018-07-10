@@ -1,3 +1,4 @@
+import cuid from 'cuid'
 import { iupdate } from '../../iupdate'
 import { RecordClass } from '../Record'
 import { Column, Entity, PrimaryColumn } from '../typeorm'
@@ -94,12 +95,12 @@ export class BankResolver {
 
   @Mutation(returns => Bank)
   async saveBank (
-    @Ctx() { appDb, getTime, genId }: ResolverContext,
+    @Ctx() { appDb }: ResolverContext,
     @Arg('input') input: BankInput,
     @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Bank> {
     if (!appDb) { throw new Error('appDb not open') }
-    const t = getTime()
+    const t = Date.now()
     let bank: Bank
     let changes: Array<any>
     if (bankId) {
@@ -110,7 +111,7 @@ export class BankResolver {
       ]
       bank.update(q)
     } else {
-      bank = new Bank(input, genId)
+      bank = new Bank(input, cuid)
       changes = [
         Bank.change.add(t, bank)
       ]
@@ -121,11 +122,11 @@ export class BankResolver {
 
   @Mutation(returns => Boolean)
   async deleteBank (
-    @Ctx() { appDb, getTime }: ResolverContext,
+    @Ctx() { appDb }: ResolverContext,
     @Arg('bankId') bankId: string,
   ): Promise<Boolean> {
     if (!appDb) { throw new Error('appDb not open') }
-    const t = getTime()
+    const t = Date.now()
     const changes = [
       Bank.change.remove(t, bankId)
     ]

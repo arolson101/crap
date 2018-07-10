@@ -7,27 +7,19 @@ import { ApolloProvider } from 'react-apollo'
 import { Text } from 'react-native'
 import { connect } from 'react-redux'
 import Observable from 'zen-observable-ts'
-import schema from './schema'
 import { actions } from '../redux/actions/index'
 import { AppState, selectors } from '../redux/reducers/index'
+import { openDb } from './openDb'
+import schema from './schema'
 import { Connection } from './typeorm'
 
-export interface DbDependencies {
-  getTime: () => number
-  genId: () => string
-  openDb: (app: boolean, name: string, key: string) => Promise<Connection>
-  deleteDb: (name: string) => Promise<void>
-}
-
-export interface ResolverContext extends DbDependencies {
+export interface ResolverContext {
   indexDb: Connection
   appDb: Connection | null
   setAppDb: (appDb: Connection | null) => any
 }
 
 interface Props {
-  dependencies: DbDependencies
-
   setIndexDb: (indexDb: Connection) => any
   indexDb: Connection | null
   appDb: Connection | null
@@ -40,7 +32,6 @@ class AppDbProviderComponent extends React.Component<Props> {
     link: new ApolloLink((operation, forward) => {
       return new Observable(observer => {
         const context: ResolverContext = {
-          ...this.props.dependencies,
           indexDb: this.props.indexDb!,
           appDb: this.props.appDb,
           setAppDb: this.props.setAppDb,
@@ -66,7 +57,7 @@ class AppDbProviderComponent extends React.Component<Props> {
   })
 
   async componentDidMount () {
-    const indexDb = await this.props.dependencies.openDb(false, 'index', '')
+    const indexDb = await openDb(false, 'index', '')
     this.props.setIndexDb(indexDb)
   }
 
