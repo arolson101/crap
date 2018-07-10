@@ -1,20 +1,21 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { defineMessages, FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl'
+import { FormAPI } from 'react-form'
+import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { ctx } from '../App'
 import { typedFields } from '../components/fields'
-import { Container, Button } from '../components/layout'
 import { Bank, Mutations, Queries } from '../db'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
+import { makeScreen, SaveButtonProps } from '../screens/Screen'
+import { Button } from '../components/layout'
 
 interface Props {
   bankId?: string
 }
 
-interface ComposedProps extends Props, InjectedIntlProps {
+interface ComposedProps extends Props {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
   navAccounts: () => any
@@ -32,112 +33,124 @@ const {
   Form,
   CheckboxField,
   CollapseField,
+  Divider,
   SelectField,
   TextField,
   UrlField
 } = typedFields<FormValues>()
 
-export const BankFormComponent: React.SFC<ComposedProps> = (props) => {
-  const edit = props.bankId && props.query.bank
-  const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
-  const { intl } = props
-  return (
-    <Form
-      defaultValues={{
-        fi: defaultFi,
-        ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) as any : Bank.defaultValues)
-      }}
-      validate={values => ({
-        name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
-          : undefined
-      })}
-      onSubmit={({ fi, ...input }) => {
-        const variables = {
-          bankId: props.bankId,
-          input
+export class BankFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
+  getApi = (formApi: FormAPI<FormValues>) => {
+    this.props.setSave(formApi.submitForm)
+  }
+
+  render () {
+    const { props } = this
+    const { intl } = props
+
+    const edit = props.bankId && props.query.bank
+    const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
+    return (
+      <Form
+        getApi={this.getApi}
+        defaultValues={{
+          fi: defaultFi,
+          ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) : Bank.defaultValues)
+        }}
+        validate={values => ({
+          name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
+            : undefined
+        })}
+        onSubmit={({ fi, ...input }) => {
+          const variables = {
+            bankId: props.bankId,
+            input
+          }
+          props.saveBank(variables, props.navAccounts)
+        }}
+      >
+        {formApi =>
+          <>
+            <Divider><FormattedMessage {...messages.fiHelp} /></Divider>
+            <SelectField
+              field='fi'
+              items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
+              label={messages.fi}
+              onValueChange={(value: number) => {
+                const fi = filist[value]
+                formApi.setValue('name', fi.name || '')
+                formApi.setValue('web', fi.profile.siteURL || '')
+                formApi.setValue('favicon', '')
+                formApi.setValue('address', formatAddress(fi) || '')
+                formApi.setValue('fid', fi.fid || '')
+                formApi.setValue('org', fi.org || '')
+                formApi.setValue('ofx', fi.ofx || '')
+              }}
+            />
+            <Divider/>
+            <TextField
+              field='name'
+              label={messages.name}
+              placeholder={messages.namePlaceholder}
+            />
+            <TextField
+              field='address'
+              label={messages.address}
+              rows={4}
+            />
+            <UrlField
+              field='web'
+              // favicoName='favicon'
+              label={messages.web}
+            />
+            <TextField
+              field='notes'
+              label={messages.notes}
+              rows={4}
+            />
+            <Divider/>
+            <CheckboxField
+              field='online'
+              label={messages.online}
+            />
+            <CollapseField field='online'>
+              <TextField
+                field='username'
+                label={messages.username}
+                placeholder={messages.usernamePlaceholder}
+              />
+              <TextField
+                secure
+                field='password'
+                label={messages.password}
+                placeholder={messages.passwordPlaceholder}
+              />
+              <TextField
+                field='fid'
+                label={messages.fid}
+                placeholder={messages.fidPlaceholder}
+              />
+              <TextField
+                field='org'
+                label={messages.org}
+                placeholder={messages.orgPlaceholder}
+              />
+              <TextField
+                field='ofx'
+                label={messages.ofx}
+                placeholder={messages.ofxPlaceholder}
+              />
+            </CollapseField>
+            <Button
+              // disabled={props.saveBank.loading}
+              onPress={formApi.submitForm}
+              title={edit ? messages.save : messages.create}
+            />
+          </>
         }
-        props.saveBank(variables, props.navAccounts)
-      }}
-    >
-      {formApi =>
-        <Container>
-          <FormattedMessage {...messages.fiHelp} />
-          <SelectField
-            field='fi'
-            items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
-            label={messages.fi}
-            onValueChange={(value: number) => {
-              const fi = filist[value]
-              formApi.setValue('name', fi.name || '')
-              formApi.setValue('web', fi.profile.siteURL || '')
-              formApi.setValue('favicon', '')
-              formApi.setValue('address', formatAddress(fi) || '')
-              formApi.setValue('fid', fi.fid || '')
-              formApi.setValue('org', fi.org || '')
-              formApi.setValue('ofx', fi.ofx || '')
-            }}
-          />
-          <TextField
-            field='name'
-            label={messages.name}
-            placeholder={messages.namePlaceholder}
-          />
-          <TextField
-            field='address'
-            label={messages.address}
-            rows={4}
-          />
-          <UrlField
-            field='web'
-            // favicoName='favicon'
-            label={messages.web}
-          />
-          <TextField
-            field='notes'
-            label={messages.notes}
-            rows={4}
-          />
-          <CheckboxField
-            field='online'
-            label={messages.online}
-          />
-          <CollapseField field='online'>
-            <TextField
-              field='username'
-              label={messages.username}
-              placeholder={messages.usernamePlaceholder}
-            />
-            <TextField
-              secure
-              field='password'
-              label={messages.password}
-              placeholder={messages.passwordPlaceholder}
-            />
-            <TextField
-              field='fid'
-              label={messages.fid}
-              placeholder={messages.fidPlaceholder}
-            />
-            <TextField
-              field='org'
-              label={messages.org}
-              placeholder={messages.orgPlaceholder}
-            />
-            <TextField
-              field='ofx'
-              label={messages.ofx}
-              placeholder={messages.ofxPlaceholder}
-            />
-          </CollapseField>
-          <Button
-            // disabled={props.saveBank.loading}
-            onPress={formApi.submitForm}
-            title={edit ? messages.save : messages.create}
-          />
-        </Container>
-      }
-    </Form>
-  )
+      </Form>
+    )
+  }
 }
 
 export const BankForm = compose<ComposedProps, Props>(

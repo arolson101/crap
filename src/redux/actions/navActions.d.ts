@@ -6,6 +6,7 @@ export interface NavApi {
   navHome: () => any
   navAccounts: () => any
   navBudgets: () => any
+  navBank: (bankId: string) => any
   navAccountView: (bankId: string, accountId: string) => any
   modalAccountCreate: () => any
 }

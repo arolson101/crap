@@ -1,23 +1,22 @@
 import { ThemeProvider } from 'glamorous-native'
+import { Root } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
+import { InjectedIntlProps, injectIntl } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import { connect } from 'react-redux'
-import { ctx } from '../App/ctx'
+import { compose } from 'redux'
 import * as modals from '../modals'
 import { paths } from '../nav'
 import { nativeActions } from '../redux/actions/nativeActions'
 import * as screens from '../screens'
-import { ScreenProps, ScreenComponent } from '../screens/Screen'
+import { ScreenComponent, ScreenProps } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
-import { Root } from 'native-base';
-import { compose } from 'redux';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 const getCurrentParams = (state: any): any => {
   if (state.routes) {
@@ -31,19 +30,23 @@ const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>
   icon: (focused: boolean) => string,
   routeConfigMap: C
 ) => {
-  const primaryScreen = routeConfigMap[initialRouteName] as ScreenComponent
+  const primaryScreen = routeConfigMap[initialRouteName] as ScreenComponent<any>
   const stack = createStackNavigator(routeConfigMap, { initialRouteName })
-  stack.navigationOptions = ({ screenProps }: NavigationScreenConfigProps) => ({
-    tabBarIcon: ({ focused, tintColor }) => {
-      const name = icon(focused)
-      const IconClass = Platform.select({
-        android: MaterialIcons,
-        ios: Ionicons,
-      })
-      return <IconClass color={tintColor!} size={25} name={name} />
-    },
-    tabBarLabel: (screenProps as ScreenProps).intl.formatMessage(primaryScreen.title()),
-  }) as NavigationScreenConfig<NavigationScreenOptions>
+  stack.navigationOptions = ({ navigation, screenProps }: NavigationScreenConfigProps): NavigationScreenConfig<NavigationScreenOptions> => {
+    const title = primaryScreen.title(navigation.state.params!)
+    const tabBarLabel = (typeof title === 'string') ? title : (screenProps as ScreenProps).intl.formatMessage(title)
+    return ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const name = icon(focused)
+        const IconClass = Platform.select({
+          android: MaterialIcons,
+          ios: Ionicons,
+        })
+        return <IconClass color={tintColor!} size={25} name={name} />
+      },
+      tabBarLabel,
+    })
+  }
   stack.displayName = `makeTab(${initialRouteName})`
   return stack
 }
@@ -104,7 +107,7 @@ const mainStack = createBottomTabNavigatorFcn(
 )
 mainStack.displayName = 'mainStack'
 
-const modalAddBank = createStackNavigator({ main: modals.BankForm })
+const modalAddBank = createStackNavigator({ main: modals.AddBankModal })
 modalAddBank.displayName = 'modalAddBank'
 
 const modalsStack = createStackNavigator(

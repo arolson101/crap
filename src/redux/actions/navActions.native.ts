@@ -8,15 +8,17 @@ export const navActions: NavApi = {
 
   navHome: () => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.root.home,
-    // params: { title: navMessages.home },
   })),
   navAccounts: () => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.root.accounts,
-    // params: { title: navMessages.accounts },
   })),
   navBudgets: () => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.root.budgets,
-    // params: { title: navMessages.budgets },
+  })),
+
+  navBank: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.modal.accountCreate,
+    params: { bankId }
   })),
 
   navAccountView: (bankId: string, accountId: string) => nativeActions.navigate(NavigationActions.navigate({

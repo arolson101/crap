@@ -10,6 +10,11 @@ export const paths = {
     budgets: '/budgets'
   },
 
+  bank: {
+    view: '/bank/view',
+    update: '/bank/edit'
+  },
+
   account: {
     view: '/account',
     create: '/accounts/create/:bankId?',

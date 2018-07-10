@@ -11,6 +11,8 @@ import { ctx } from '../App/ctx'
 
 export type ScreenProps = InjectedIntlProps
 
+export type TitleFcn<T> = (params: T) => string | FormattedMessage.MessageDescriptor
+
 export interface AddButtonProps {
   setAdd: (callback: () => any) => any
 }
@@ -19,8 +21,8 @@ export interface SaveButtonProps {
   setSave: (callback: () => any) => any
 }
 
-interface Params {
-  title: () => FormattedMessage.MessageDescriptor,
+interface Params<T> {
+  title: TitleFcn<T>,
   addButton?: boolean
   saveButton?: boolean
   cancelButton?: boolean
@@ -42,11 +44,10 @@ const styles = StyleSheet.create({
   },
 })
 
-export type ScreenComponent<P = any> = NavigationScreenComponent<NavigationParams, {}, P>
-& { title: () => FormattedMessage.MessageDescriptor }
+export type ScreenComponent<T, P = any> = NavigationScreenComponent<NavigationParams, {}, P>
+& { title: TitleFcn<T> }
 
-export const makeScreen = (params: Params) => {
-  const { title } = params
+export const makeScreen = <T extends {}>(params: Params<T>) => {
   let onAdd = () => { console.warn('no add function') }
   let onSave = () => { console.warn('no save function') }
   const moreProps = {
@@ -57,15 +58,19 @@ export const makeScreen = (params: Params) => {
   const IconComponent = Platform.OS === 'ios' ? Ionicons : MaterialIcons
 
   return <P extends object>(Component: React.ComponentType<P>) => {
-    const nav: ScreenComponent<P> = ((props) => (
+    const nav: ScreenComponent<T, P> = ((props) => (
       <Container>
         <Content>
           <SafeAreaView>
-            <Component {...props} {...moreProps} />
+            <Component
+              {...props}
+              {...moreProps}
+              {...props.navigation.state.params}
+            />
           </SafeAreaView>
         </Content>
       </Container>
-    )) as NavigationScreenComponent<NavigationParams, {}, P> as any
+    )) as NavigationScreenComponent<T, {}, P> as any
 
     nav.navigationOptions = ({ navigation, screenProps }) => {
       const { intl } = screenProps as ScreenProps
@@ -103,17 +108,20 @@ export const makeScreen = (params: Params) => {
         )
       }) : ({})
 
+      const title = params.title((navigation.state.params || {}) as T)
+      const headerTitle = (typeof title === 'string') ? title : intl.formatMessage(title)
+
       return ({
         headerStyle: styles.headerStyle,
         headerTitleStyle: styles.headerTitleStyle,
         headerBackTitleStyle: styles.headerBackTitleStyle,
         headerTintColor: platform.toolbarBtnColor,
-        headerTitle: intl.formatMessage(title()),
+        headerTitle,
         ...headerLeft,
         ...headerRight,
       })
     }
-    nav.title = title
+    nav.title = params.title
     nav.displayName = `Screen(${Component.displayName || Component.name})`
     return nav
   }

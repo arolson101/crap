@@ -73,6 +73,7 @@ export const AccountsScreen = compose(
   Mutations.withDeleteAccount('deleteAccount'),
   connect(null, {
     modalAccountCreate: actions.modalAccountCreate,
+    navBank: actions.navBank,
   })
 )(AccountsScreenComponent)
 AccountsScreen.displayName = 'AccountsPage'
