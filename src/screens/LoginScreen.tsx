@@ -19,4 +19,4 @@ const messages = defineMessages({
   }
 })
 
-export const LoginScreen = makeScreen({ title: messages.title })(LoginScreenComponent)
+export const LoginScreen = makeScreen({ title: () => messages.title })(LoginScreenComponent)

@@ -153,6 +153,15 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
   }
 }
 
+export const BankForm = compose<ComposedProps, Props>(
+  makeScreen({ title: () => messages.title, saveButton: true, cancelButton: true }),
+  injectIntl,
+  connect(null, { navAccounts: actions.navAccounts }),
+  Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
+  Mutations.withSaveBank('saveBank')
+)(BankFormComponent)
+BankForm.displayName = 'BankForm'
+
 const messages = defineMessages({
   title: {
     id: 'BankForm.title',
@@ -247,12 +256,3 @@ const messages = defineMessages({
     defaultMessage: 'Required'
   }
 })
-
-export const BankForm = compose<ComposedProps, Props>(
-  makeScreen({ title: messages.title, saveButton: true, cancelButton: true }),
-  injectIntl,
-  connect(null, { navAccounts: actions.navAccounts }),
-  Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
-  Mutations.withSaveBank('saveBank')
-)(BankFormComponent)
-BankForm.displayName = 'BankForm'

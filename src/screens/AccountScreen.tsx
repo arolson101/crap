@@ -32,15 +32,15 @@ export const AccountScreenComponent: React.SFC<Props> = (props, context: ctx.Rou
 }
 AccountScreenComponent.contextTypes = ctx.router
 
+export const AccountPage = compose(
+  makeScreen({ title: () => messages.title }),
+  Queries.withAccount('query', (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId }))
+)(AccountScreenComponent)
+AccountPage.displayName = 'AccountPage'
+
 const messages = defineMessages({
   title: {
     id: 'AccountScreen.title',
     defaultMessage: 'Accounts'
   },
 })
-
-export const AccountPage = compose(
-  makeScreen({ title: messages.title }),
-  Queries.withAccount('query', (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId }))
-)(AccountScreenComponent)
-AccountPage.displayName = 'AccountPage'

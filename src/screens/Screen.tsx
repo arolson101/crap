@@ -1,7 +1,7 @@
 import { Container, Content } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, InjectedIntlProps } from 'react-intl'
 import { Platform, StyleSheet } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -9,7 +9,7 @@ import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react
 import HeaderButtons from 'react-navigation-header-buttons'
 import { ctx } from '../App/ctx'
 
-export type ScreenProps = ctx.Intl
+export type ScreenProps = InjectedIntlProps
 
 export interface AddButtonProps {
   setAdd: (callback: () => any) => any
@@ -20,7 +20,7 @@ export interface SaveButtonProps {
 }
 
 interface Params {
-  title: FormattedMessage.MessageDescriptor,
+  title: () => FormattedMessage.MessageDescriptor,
   addButton?: boolean
   saveButton?: boolean
   cancelButton?: boolean
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 })
 
 export type ScreenComponent<P = any> = NavigationScreenComponent<NavigationParams, {}, P>
-  & { title: FormattedMessage.MessageDescriptor }
+& { title: () => FormattedMessage.MessageDescriptor }
 
 export const makeScreen = (params: Params) => {
   const { title } = params
@@ -108,7 +108,7 @@ export const makeScreen = (params: Params) => {
         headerTitleStyle: styles.headerTitleStyle,
         headerBackTitleStyle: styles.headerBackTitleStyle,
         headerTintColor: platform.toolbarBtnColor,
-        headerTitle: intl.formatMessage(title),
+        headerTitle: intl.formatMessage(title()),
         ...headerLeft,
         ...headerRight,
       })

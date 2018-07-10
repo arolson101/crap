@@ -42,7 +42,7 @@ const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>
       })
       return <IconClass color={tintColor!} size={25} name={name} />
     },
-    tabBarLabel: (screenProps as ScreenProps).intl.formatMessage(primaryScreen.title),
+    tabBarLabel: (screenProps as ScreenProps).intl.formatMessage(primaryScreen.title()),
   }) as NavigationScreenConfig<NavigationScreenOptions>
   stack.displayName = `makeTab(${initialRouteName})`
   return stack

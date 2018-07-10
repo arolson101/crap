@@ -34,16 +34,16 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
   )
 }
 
+export const HomeScreen = compose(
+  makeScreen({ title: () => messages.title }),
+  Queries.withAccounts('query'),
+  connect(null, { }),
+)(HomeScreenComponent) as ScreenComponent
+HomeScreen.displayName = 'HomePage'
+
 const messages = defineMessages({
   title: {
     id: 'HomeScreen.title',
     defaultMessage: 'Home'
   },
 })
-
-export const HomeScreen = compose(
-  makeScreen({ title: messages.title }),
-  Queries.withAccounts('query'),
-  connect(null, { }),
-)(HomeScreenComponent) as ScreenComponent
-HomeScreen.displayName = 'HomePage'

@@ -12,14 +12,14 @@ export const BudgetsScreenComponent: React.SFC = (props) => {
   )
 }
 
+export const BudgetsScreen = compose(
+  makeScreen({ title: () => messages.title }),
+)(BudgetsScreenComponent)
+BudgetsScreen.displayName = 'BudgetsScreen'
+
 const messages = defineMessages({
   title: {
     id: 'BudgetsScreen.title',
     defaultMessage: 'Budgets'
   },
 })
-
-export const BudgetsScreen = compose(
-  makeScreen({ title: messages.title }),
-)(BudgetsScreenComponent)
-BudgetsScreen.displayName = 'BudgetsScreen'

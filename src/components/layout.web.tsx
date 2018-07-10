@@ -1,4 +1,4 @@
-import { Button as BPButton, IButtonProps } from '@blueprintjs/core'
+import { Button as BPButton } from '@blueprintjs/core'
 import glamorous from 'glamorous'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
@@ -11,8 +11,9 @@ interface ButtonProps {
 }
 export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
   <BPButton type='button' onClick={onPress}>
-    {typeof title === 'string' ? title :
-      <FormattedMessage {...title} />
+    {typeof title === 'string'
+      ? title
+      : <FormattedMessage {...title} />
     }
   </BPButton>
 )

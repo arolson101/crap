@@ -66,15 +66,8 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
   }
 }
 
-const messages = defineMessages({
-  title: {
-    id: 'AccountsScreen.title',
-    defaultMessage: 'Accounts'
-  },
-})
-
 export const AccountsScreen = compose(
-  makeScreen({ title: messages.title, addButton: true }),
+  makeScreen({ title: () => messages.title, addButton: true }),
   Queries.withBanks('query'),
   Mutations.withDeleteBank('deleteBank'),
   Mutations.withDeleteAccount('deleteAccount'),
@@ -83,3 +76,10 @@ export const AccountsScreen = compose(
   })
 )(AccountsScreenComponent)
 AccountsScreen.displayName = 'AccountsPage'
+
+const messages = defineMessages({
+  title: {
+    id: 'AccountsScreen.title',
+    defaultMessage: 'Accounts'
+  },
+})
