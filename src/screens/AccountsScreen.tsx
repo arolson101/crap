@@ -2,12 +2,13 @@ import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { Button, Container, Row, Text } from '../components/layout'
+import { Button, List, ListItem, Row, Text } from '../components/layout.native'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 import { AddButtonProps, makeScreen } from './Screen'
+import { Right, Icon, Left } from 'native-base'
 
 interface Props {
 }
@@ -34,31 +35,42 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
   render () {
     return (
       <>
-        <Text>Accounts page</Text>
-        {this.props.query.banks.map(bank =>
-          <Container key={bank.id}>
-            <Text>{bank.name}</Text>
-            <Row>
-              <Button
-                title='edit'
-                onPress={() => this.props.modalBankEdit(bank.id)}
-              />
-              <Button
-                title='add account'
-                onPress={() => this.props.modalAccountCreate(bank.id)}
-              />
-            </Row>
-            {bank.accounts.map(account =>
-              <Row key={account.id}>
+        {this.props.query.banks.length === 0 &&
+          <Text>No accounts</Text>
+        }
+        <List>
+          {this.props.query.banks.map(bank =>
+            <React.Fragment key={bank.id}>
+              <ListItem onPress={() => this.props.modalBankEdit(bank.id)}>
+                <Left>
+                  <Text>
+                    {bank.name}
+                  </Text>
+                </Left>
+                <Right>
+                  <Icon name='arrow-forward' />
+                </Right>
+              </ListItem>
+              {/* <Row>
                 <Button
-                  title={account.name}
-                  onPress={() => this.props.navAccount(account.id)}
+                  title='edit'
+                  onPress={() => this.props.modalBankEdit(bank.id)}
                 />
-              </Row>
-            )}
-          </Container>
-        )}
-        <Button onPress={this.props.modalBankCreate} title='add bank' />
+                <Button
+                  title='add account'
+                  onPress={() => this.props.modalAccountCreate(bank.id)}
+                />
+              </Row> */}
+              {bank.accounts.map(account =>
+                <ListItem key={account.id} onPress={() => this.props.navAccount(account.id)}>
+                  <Text>
+                    {account.name}
+                  </Text>
+                </ListItem>
+              )}
+            </React.Fragment>
+          )}
+        </List>
       </>
     )
   }

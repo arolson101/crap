@@ -1,8 +1,9 @@
 import glamorous from 'glamorous-native'
-import { Button as NBButton, Text as NBText } from 'native-base'
+import * as NB from 'native-base'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { ThemeProp } from '../App/index'
+import platform from 'native-base/dist/src/theme/variables/platform';
 
 interface ButtonProps {
   block?: boolean
@@ -10,16 +11,24 @@ interface ButtonProps {
   title: string | FormattedMessage.MessageDescriptor
 }
 export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
-  <NBButton block={block} onPress={onPress}>
+  <NB.Button block={block} onPress={onPress}>
     {typeof title === 'string'
       ? <Text>{title}</Text>
       : <FormattedMessage {...title} />
     }
-  </NBButton>
+  </NB.Button>
 )
 
-export const Text: React.SFC = ({ children }) => (
-  <NBText>{children}</NBText>
+export const Text: React.SFC = (props) => (
+  <NB.Text {...props} />
+)
+
+export const List: React.SFC = (props) => (
+  <NB.List {...props} style={{ backgroundColor: platform.cardDefaultBg }} />
+)
+
+export const ListItem: React.SFC<any> = (props) => (
+  <NB.ListItem {...props}/>
 )
 
 export { Picker } from 'react-native'

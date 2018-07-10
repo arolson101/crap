@@ -22,6 +22,13 @@ export const Text: React.SFC = ({ children }) => (
   <span>{children}</span>
 )
 
+export const List: React.SFC = ({ children }) => (
+  <ul>{children}</ul>
+)
+export const ListItem: React.SFC = ({ children }) => (
+  <li>{children}</li>
+)
+
 interface PickerProps {
   onValueChange: (itemValue: any) => void
   selectedValue?: any
