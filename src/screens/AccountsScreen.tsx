@@ -17,19 +17,19 @@ interface ConnectedProps {
   query: Queries.Banks
   deleteBank: Mutations.DeleteBank
   deleteAccount: Mutations.DeleteAccount
-  modalBankCreate: () => any
-  modalAccountCreate: (bankId: string) => any
-  modalBankEdit: (bankId: string) => any
+  navBankCreate: () => any
+  navAccountCreate: (bankId: string) => any
+  navBankEdit: (bankId: string) => any
   navAccount: (accountId: string) => any
 }
 
 class AccountsScreenComponent extends React.Component<Props & ConnectedProps & AddButtonProps> {
   componentDidMount () {
-    this.props.setAdd(this.props.modalBankCreate)
+    this.props.setAdd(this.props.navBankCreate)
   }
 
   componentDidUpdate () {
-    this.props.setAdd(this.props.modalBankCreate)
+    this.props.setAdd(this.props.navBankCreate)
   }
 
   render () {
@@ -41,7 +41,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
         <List>
           {this.props.query.banks.map(bank =>
             <React.Fragment key={bank.id}>
-              <ListItem onPress={() => this.props.modalBankEdit(bank.id)}>
+              <ListItem onPress={() => this.props.navBankEdit(bank.id)}>
                 <Left>
                   <Text>
                     {bank.name}
@@ -54,11 +54,11 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
               {/* <Row>
                 <Button
                   title='edit'
-                  onPress={() => this.props.modalBankEdit(bank.id)}
+                  onPress={() => this.props.navBankEdit(bank.id)}
                 />
                 <Button
                   title='add account'
-                  onPress={() => this.props.modalAccountCreate(bank.id)}
+                  onPress={() => this.props.navAccountCreate(bank.id)}
                 />
               </Row> */}
               {bank.accounts.map(account =>
@@ -82,9 +82,9 @@ export const AccountsScreen = compose(
   withMutation({ deleteBank: Mutations.deleteBank }),
   withMutation({ deleteAccount: Mutations.deleteAccount }),
   connect(null, {
-    modalBankCreate: actions.modalBankCreate,
-    modalAccountCreate: actions.modalAccountCreate,
-    modalBankEdit: actions.modalBankEdit,
+    navBankCreate: actions.navBankCreate,
+    navAccountCreate: actions.navAccountCreate,
+    navBankEdit: actions.navBankEdit,
     navAccount: actions.navAccount,
   })
 )(AccountsScreenComponent)

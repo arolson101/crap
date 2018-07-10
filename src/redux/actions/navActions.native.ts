@@ -21,7 +21,7 @@ export const navActions: NavApi = {
     params: { bankId }
   })),
 
-  modalBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
+  navBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.modal,
     action: NavigationActions.navigate({
       routeName: paths.bankCreate,
@@ -29,7 +29,7 @@ export const navActions: NavApi = {
     })
   })),
 
-  modalBankEdit: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
+  navBankEdit: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.modal,
     action: NavigationActions.navigate({
       routeName: paths.bankEdit,
@@ -45,7 +45,7 @@ export const navActions: NavApi = {
     })
   })),
 
-  modalAccountEdit: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
+  navAccountEdit: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.modal,
     action: NavigationActions.navigate({
       routeName: paths.accountEdit,
@@ -53,7 +53,7 @@ export const navActions: NavApi = {
     })
   })),
 
-  modalAccountCreate: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
+  navAccountCreate: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.modal,
     action: NavigationActions.navigate({
       routeName: paths.accountCreate,

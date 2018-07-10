@@ -7,11 +7,11 @@ export interface NavApi {
   navAccounts: () => any
   navBudgets: () => any
   navBank: (bankId: string) => any
-  modalBankCreate: () => any
-  modalBankEdit: (bankId: string) => any
+  navBankCreate: () => any
+  navBankEdit: (bankId: string) => any
   navAccount: (accountId: string) => any
-  modalAccountEdit: (accountId: string) => any
-  modalAccountCreate: (bankId: string) => any
+  navAccountEdit: (accountId: string) => any
+  navAccountCreate: (bankId: string) => any
 }
 
 declare var _test: typeof web

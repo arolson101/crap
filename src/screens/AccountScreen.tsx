@@ -15,7 +15,7 @@ interface Params {
 
 interface Props extends Params {
   query: Queries.Account
-  modalAccountEdit: (accountId: string) => any
+  navAccountEdit: (accountId: string) => any
 }
 
 export const AccountScreenComponent: React.SFC<Props> = (props) => {
@@ -25,7 +25,7 @@ export const AccountScreenComponent: React.SFC<Props> = (props) => {
     <>
       <Text>Account2: {account.name}</Text>
       <Text>bank: {account.name}</Text>
-      <Button title='edit' onPress={() => props.modalAccountEdit(props.accountId)} />
+      <Button title='edit' onPress={() => props.navAccountEdit(props.accountId)} />
     </>
   )
 }
@@ -33,7 +33,7 @@ export const AccountScreenComponent: React.SFC<Props> = (props) => {
 export const AccountPage = compose(
   makeScreen({ title: () => messages.title }),
   withQuery({ query: Queries.account }, (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId })),
-  connect(null, { modalAccountEdit: actions.modalAccountEdit })
+  connect(null, { navAccountEdit: actions.navAccountEdit })
 )(AccountScreenComponent)
 AccountPage.displayName = 'AccountPage'
 
