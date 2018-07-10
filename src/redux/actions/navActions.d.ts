@@ -11,7 +11,7 @@ export interface NavApi {
   modalBankEdit: (bankId: string) => any
   navAccount: (accountId: string) => any
   modalAccountEdit: (accountId: string) => any
-  modalAccountCreate: () => any
+  modalAccountCreate: (bankId: string) => any
 }
 
 declare var _test: typeof web

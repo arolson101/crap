@@ -1,2 +1,2 @@
-export * from './AccountsUpdateScreen'
+export * from './AccountModal'
 export * from './BankModal'

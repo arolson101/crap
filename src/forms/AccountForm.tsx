@@ -32,7 +32,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
   return (
     <Form
       defaultValues={{
-        ...(edit ? pick(edit, Object.keys(Account.defaultValues)) as any : Account.defaultValues)
+        ...(edit ? pick(edit, Object.keys(Account.defaultValues())) as any : Account.defaultValues())
       }}
       validate={values => ({
         name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
@@ -75,7 +75,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
             field='color'
             label={messages.color}
             placeholder={messages.colorPlaceholder}
-            textColor={formApi.values.color}
+            color={formApi.values.color}
           />
           {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
             <TextField

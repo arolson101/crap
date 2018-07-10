@@ -17,34 +17,47 @@ export const navActions: NavApi = {
   })),
 
   navBank: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.bank.view,
+    routeName: paths.bank,
     params: { bankId }
   })),
 
   modalBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal.bankCreate,
-    params: {}
+    routeName: paths.modal,
+    action: NavigationActions.navigate({
+      routeName: paths.bankCreate,
+      params: {}
+    })
   })),
 
   modalBankEdit: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal.bankEdit,
-    params: { bankId }
+    routeName: paths.modal,
+    action: NavigationActions.navigate({
+      routeName: paths.bankEdit,
+      params: { bankId }
+    })
   })),
 
   navAccount: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.root.accounts,
     action: NavigationActions.navigate({
-      routeName: paths.account.view,
+      routeName: paths.account,
       params: { accountId }
     })
   })),
 
   modalAccountEdit: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal.accountEdit,
-    params: { accountId }
+    routeName: paths.modal,
+    action: NavigationActions.navigate({
+      routeName: paths.accountEdit,
+      params: { accountId }
+    })
   })),
 
-  modalAccountCreate: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal.accountCreate
+  modalAccountCreate: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.modal,
+    action: NavigationActions.navigate({
+      routeName: paths.accountCreate,
+      params: { bankId }
+    })
   })),
 }

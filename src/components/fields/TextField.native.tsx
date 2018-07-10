@@ -12,7 +12,7 @@ export namespace TextField {
     placeholder?: FormattedMessage.MessageDescriptor
     secure?: boolean
     rows?: number
-    textColor?: string
+    color?: string
     autoFocus?: boolean
     onSubmitEditing?: () => any
     returnKeyType?: ReturnKeyType
@@ -29,13 +29,14 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
   }
 
   render () {
-    const { field, autoFocus, label, textColor, placeholder, secure, rows, onSubmitEditing, returnKeyType, intl } = this.props
+    const { field, autoFocus, label, color, placeholder, secure, rows, onSubmitEditing, returnKeyType, intl } = this.props
     return (
       <Field field={field}>
         {fieldApi => {
           const error = !!(fieldApi.touched && fieldApi.error)
           const labelProps = { onPress: this.focusTextInput }
           const inputProps = { autoFocus }
+          const inputStyle = color ? { color } : {}
           return (
             <Item
               // style={rows ? { minHeight: 20 * rows } : {}}
@@ -45,7 +46,10 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
             >
               <Label
                 {...labelProps}
-                style={(error ? ({ color: platform.brandDanger }) : ({} as any))}
+                style={(error
+                  ? ({ color: platform.brandDanger })
+                  : ({}) as any
+                )}
               >
                 {intl.formatMessage(label)}
               </Label>
@@ -58,7 +62,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
                   ref={(ref: any) => this.textInput = ref && ref._root}
                 />
                 : <Input
-                  style={{ flex: 1 }}
+                  style={{ flex: 1, ...inputStyle }}
                   onChangeText={fieldApi.setValue}
                   value={fieldApi.value}
                   onSubmitEditing={onSubmitEditing}
@@ -68,7 +72,6 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
                   returnKeyType={returnKeyType}
                   ref={(ref: any) => this.textInput = ref && ref._root}
                   {...inputProps}
-                // style={{color: textColor}}
                 />
               }
               {error &&

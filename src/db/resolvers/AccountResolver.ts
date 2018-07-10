@@ -44,7 +44,7 @@ export class Account extends RecordClass<Account.Props> {
     super()
     if (bankId && props && genId) {
       this.createRecord(genId, {
-        ...Account.defaultValues,
+        ...Account.defaultValues(),
         ...props,
         bankId
       })
@@ -185,7 +185,7 @@ export namespace Account {
     })
   }
 
-  export const defaultValues: Props = {
+  export const defaultValues = (): Props => ({
     name: '',
     type: Type.CHECKING,
     color: generateColor(Type.CHECKING),
@@ -193,7 +193,7 @@ export namespace Account {
     visible: true,
     routing: '',
     key: ''
-  }
+  })
 
   type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null }
 

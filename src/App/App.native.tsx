@@ -107,14 +107,18 @@ const mainStack = createBottomTabNavigatorFcn(
 )
 mainStack.displayName = 'mainStack'
 
-const modalBank = createStackNavigator({ main: modals.BankModal })
-modalBank.displayName = 'modalBank'
+const modalWrapper = createStackNavigator({
+  [paths.bankCreate]: modals.BankModal,
+  [paths.bankEdit]: modals.BankModal,
+  [paths.accountCreate]: modals.AccountModal,
+  [paths.accountEdit]: modals.AccountModal,
+})
+modalWrapper.displayName = 'modalWrapper'
 
 const modalsStack = createStackNavigator(
   {
     main: mainStack,
-    [paths.modal.bankCreate]: modalBank,
-    [paths.modal.bankEdit]: modalBank,
+    [paths.modal]: modalWrapper,
   },
   {
     mode: 'modal',

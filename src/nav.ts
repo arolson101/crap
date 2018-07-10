@@ -1,6 +1,7 @@
 export const paths = {
   login: '/login',
   app: '/app',
+  modal: '/modal',
 
   root: {
     home: '/home',
@@ -8,20 +9,13 @@ export const paths = {
     budgets: '/budgets'
   },
 
-  bank: {
-    view: '/bank/view',
-  },
+  bank: '/bank/view',
+  bankCreate: '/bank/create',
+  bankEdit: '/bank/edit',
 
-  account: {
-    view: '/account/view',
-  },
-
-  modal: {
-    bankCreate: '/bank/create',
-    bankEdit: '/bank/edit',
-    accountCreate: '/accountCreate',
-    accountEdit: '/accounts/edit',
-  },
+  account: '/account/view',
+  accountCreate: '/account/create',
+  accountEdit: '/account/edit',
 
   dbAdvanced: '/db/:dbName',
 }

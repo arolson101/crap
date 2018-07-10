@@ -8,22 +8,13 @@ interface Params {
   bankId?: string
 }
 
-const BankModalComponent: React.SFC = (props) => {
-  return (
-    <BankForm {...props} />
-  )
-}
-
 export const BankModal = compose(
   makeScreen<Params>({
-    title: (props) => {
-      console.log('foo')
-      return props.bankId ? messages.edit : messages.create
-    },
+    title: (props) => props.bankId ? messages.edit : messages.create,
     saveButton: true,
     cancelButton: true,
   }),
-)(BankModalComponent)
+)(BankForm)
 BankModal.displayName = 'BankModal'
 
 const messages = defineMessages({

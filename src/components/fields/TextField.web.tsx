@@ -10,7 +10,7 @@ export namespace TextField {
     placeholder?: FormattedMessage.MessageDescriptor
     secure?: boolean
     rows?: number
-    textColor?: string
+    color?: string
     autoFocus?: boolean
     onSubmitEditing?: () => any
     returnKeyType?: any
@@ -19,7 +19,7 @@ export namespace TextField {
 
 export class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
   render () {
-    const { field, intl, autoFocus, label, textColor, placeholder, secure, rows, onSubmitEditing, returnKeyType } = this.props
+    const { field, intl, autoFocus, label, color, placeholder, secure, rows, onSubmitEditing, returnKeyType } = this.props
     const id = `${field}-input`
     return (
       <Field field={field}>
