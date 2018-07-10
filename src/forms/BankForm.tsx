@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { ctx } from '../App'
 import { typedFields } from '../components/fields'
-import { Container } from '../components/layout'
+import { Container, Button } from '../components/layout'
 import { Bank, Mutations, Queries } from '../db'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
@@ -33,7 +33,6 @@ const {
   CheckboxField,
   CollapseField,
   SelectField,
-  SubmitButton,
   TextField,
   UrlField
 } = typedFields<FormValues>()
@@ -130,7 +129,7 @@ export const BankFormComponent: React.SFC<ComposedProps> = (props) => {
               placeholder={messages.ofxPlaceholder}
             />
           </CollapseField>
-          <SubmitButton
+          <Button
             // disabled={props.saveBank.loading}
             onPress={formApi.submitForm}
             title={edit ? messages.save : messages.create}

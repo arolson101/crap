@@ -1,8 +1,8 @@
-import { Icon, Item, Label, Picker, View, Header, Left, Body, Text, Title, Right } from 'native-base';
-import platform from 'native-base/dist/src/theme/variables/platform';
-import * as React from 'react';
-import { Field } from 'react-form';
-import { FormattedMessage, InjectedIntlProps, injectIntl, defineMessages } from 'react-intl';
+import { Icon, Item, Label, Picker, View } from 'native-base'
+import platform from 'native-base/dist/src/theme/variables/platform'
+import * as React from 'react'
+import { Field } from 'react-form'
+import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 
 export namespace SelectField {
   export interface Item {

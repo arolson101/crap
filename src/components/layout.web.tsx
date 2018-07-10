@@ -1,14 +1,20 @@
+import { Button as BPButton, IButtonProps } from '@blueprintjs/core'
 import glamorous from 'glamorous'
 import * as React from 'react'
-import { Button as BPButton } from '@blueprintjs/core'
+import { FormattedMessage } from 'react-intl'
 import { ThemeProp } from '../App'
 
 interface ButtonProps {
+  block?: boolean
   onPress: () => void
-  title: string
+  title: string | FormattedMessage.MessageDescriptor
 }
-export const Button: React.SFC<ButtonProps> = ({ onPress, title }) => (
-  <BPButton type='button' onClick={onPress}>{title}</BPButton>
+export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
+  <BPButton type='button' onClick={onPress}>
+    {typeof title === 'string' ? title :
+      <FormattedMessage {...title} />
+    }
+  </BPButton>
 )
 
 export const Text: React.SFC = ({ children }) => (

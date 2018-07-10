@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl'
 import { compose } from 'recompose'
-import { ctx } from '../App/ctx'
-import { AppBannerText, FormContent, WelcomeText } from '../components'
+import { AppBannerText, FormContent, WelcomeText, Button } from '../components'
 import { typedFields } from '../components/fields'
 import { Mutations, Queries } from '../db'
+import { View } from 'native-base';
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -20,7 +20,6 @@ interface FormValues {
 
 const {
   Form,
-  SubmitButton,
   TextField
 } = typedFields<FormValues>()
 
@@ -84,7 +83,8 @@ const FormCreate: React.SFC<Props> = (props) => {
             label={messages.passwordConfirmLabel}
             placeholder={messages.passwordConfirmPlaceholder}
           />
-          <SubmitButton
+          <Button
+            block
             // disabled={props.createDb.loading}
             onPress={formApi.submitForm}
             title={messages.create}
@@ -124,12 +124,14 @@ const FormOpen: React.SFC<Props> = (props) => {
             // returnKeyType="default"
             onSubmitEditing={formApi.submitForm}
           />
-          <SubmitButton
+          <Button
+            block
             // disabled={props.openDb.loading}
             onPress={formApi.submitForm}
             title={messages.open}
           />
-          <SubmitButton
+          <Button
+            block
             onPress={() => {
               const dbId = props.query.allDbs[0].dbId
               const variables = { dbId }

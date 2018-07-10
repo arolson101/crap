@@ -9,6 +9,7 @@ import { Bank, Mutations, Queries } from '../db'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { makeScreen, SaveButtonProps } from '../screens/Screen'
+import { Button } from '../components/layout'
 
 interface Props {
   bankId?: string
@@ -34,7 +35,6 @@ const {
   CollapseField,
   Divider,
   SelectField,
-  SubmitButton,
   TextField,
   UrlField
 } = typedFields<FormValues>()
@@ -141,7 +141,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
                 placeholder={messages.ofxPlaceholder}
               />
             </CollapseField>
-            <SubmitButton
+            <Button
               // disabled={props.saveBank.loading}
               onPress={formApi.submitForm}
               title={edit ? messages.save : messages.create}

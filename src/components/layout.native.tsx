@@ -1,18 +1,26 @@
-import * as React from 'react'
-import { Button as RNButton, Text as RNText } from 'react-native'
 import glamorous from 'glamorous-native'
+import { Button as NBButton, Text as NBText } from 'native-base'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { ThemeProp } from '../App'
 
 interface ButtonProps {
+  block?: boolean
   onPress: () => void
-  title: string
+  title: string | FormattedMessage.MessageDescriptor
 }
-export const Button: React.SFC<ButtonProps> = ({ onPress, title }) => (
-  <RNButton onPress={onPress} title={title} />
+export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
+  <NBButton block={block} onPress={onPress}>
+    <Text>
+      {typeof title === 'string' ? title :
+        <FormattedMessage {...title} />
+      }
+    </Text>
+  </NBButton>
 )
 
 export const Text: React.SFC = ({ children }) => (
-  <RNText>{children}</RNText>
+  <NBText>{children}</NBText>
 )
 
 export { Picker } from 'react-native'
