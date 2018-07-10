@@ -1,5 +1,5 @@
 import glamorous from 'glamorous'
-import { ThemeProp } from '../App'
+import { ThemeProp } from '../App/index'
 
 export const AppBannerText = glamorous.span<ThemeProp>({},
   ({ theme }) => ({

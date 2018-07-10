@@ -3,17 +3,16 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import { Container, Text } from '../components/layout'
 import { BankForm } from '../forms/BankForm'
 import { AccountForm } from '../forms/AccountForm'
-import { ctx } from '../App'
 
 interface Params {
   bankId: string
   accountId?: string
 }
 
-export const AccountsUpdateScreen: React.SFC =
-  (props, { router }: ctx.Router<Params>) => {
-    const { route } = router
-    const { bankId, accountId } = route.match.params
+interface Props extends Params {}
+
+export const AccountsUpdateScreen: React.SFC<Props> =
+  ({ bankId, accountId }) => {
     return (
       <Container>
         <FormattedMessage {...messages.updateAccount}/>
@@ -24,7 +23,6 @@ export const AccountsUpdateScreen: React.SFC =
       </Container>
     )
   }
-AccountsUpdateScreen.contextTypes = { ...ctx.router }
 
 const messages = defineMessages({
   updateAccount: {

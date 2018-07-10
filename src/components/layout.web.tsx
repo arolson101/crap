@@ -2,7 +2,7 @@ import { Button as BPButton } from '@blueprintjs/core'
 import glamorous from 'glamorous'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { ThemeProp } from '../App'
+import { ThemeProp } from '../App/index'
 
 interface ButtonProps {
   block?: boolean

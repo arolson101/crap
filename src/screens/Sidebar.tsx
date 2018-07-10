@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { ctx } from '../App'
 import { Button, Column, Text } from '../components/layout'
-import { Queries } from '../db'
+import { Queries } from '../db/index'
 import { actions } from '../redux/actions/index'
 import { withQuery } from '../db/queries/makeQuery'
 
@@ -12,11 +11,10 @@ interface Props {
   navHome: () => any
   navBudgets: () => any
   navAccounts: () => any
-  navAccountView: (bankId: string, accountId: string) => any
+  navAccount: (accountId: string) => any
 }
 
-export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) => {
-  const { router: { history: { push } } } = context
+export const SidebarComponent: React.SFC<Props> = (props) => {
   return (
     <Column>
       <Button onPress={props.navHome} title='home' />
@@ -28,11 +26,11 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
           {bank.accounts.map(account =>
             <Button
               key={account.id}
-              onPress={() => push(props.navAccountView(bank.id, account.id))}
+              onPress={() => props.navAccount(account.id)}
               title={account.name}
-            // subtitle={'$100.00'}
-            // subtitleNumberOfLines={3}
-            // hideChevron
+              // subtitle={'$100.00'}
+              // subtitleNumberOfLines={3}
+              // hideChevron
             />
           )}
         </React.Fragment>
@@ -40,7 +38,6 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
     </Column>
   )
 }
-SidebarComponent.contextTypes = ctx.router
 
 export const Sidebar = compose(
   withQuery({ query: Queries.accounts }),
@@ -48,7 +45,7 @@ export const Sidebar = compose(
     navHome: actions.navHome,
     navAccounts: actions.navAccounts,
     navBudgets: actions.navBudgets,
-    navAccountView: actions.navAccountView,
+    navAccount: actions.navAccount,
   })
 )(SidebarComponent)
 Sidebar.displayName = 'Sidebar'

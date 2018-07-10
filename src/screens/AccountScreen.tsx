@@ -1,41 +1,39 @@
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
+import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import { compose } from 'recompose'
-import { ctx } from '../App'
 import { Button, Text } from '../components/layout'
-import { Queries } from '../db'
+import { Queries } from '../db/index'
 import { withQuery } from '../db/queries/makeQuery'
-import { nav } from '../nav'
+import { actions } from '../redux/actions/index'
 import { makeScreen } from './Screen'
 
 interface Params {
-  bankId: string
   accountId: string
 }
 
-interface Props {
+interface Props extends Params {
   query: Queries.Account
+  modalAccountEdit: (accountId: string) => any
 }
 
-export const AccountScreenComponent: React.SFC<Props> = (props, context: ctx.Router) => {
-  const { router: { history, route } } = context
+export const AccountScreenComponent: React.SFC<Props> = (props) => {
   const { account } = props.query
-  const { bankId, accountId } = route.match.params
 
   return (
     <>
       <Text>Account2: {account.name}</Text>
       <Text>bank: {account.name}</Text>
-      <Button title='edit' onPress={() => history.push(nav.accountUpdate(bankId, accountId))} />
+      <Button title='edit' onPress={() => props.modalAccountEdit(props.accountId)} />
     </>
   )
 }
-AccountScreenComponent.contextTypes = ctx.router
 
 export const AccountPage = compose(
   makeScreen({ title: () => messages.title }),
-  withQuery({ query: Queries.account }, (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId }))
+  withQuery({ query: Queries.account }, (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId })),
+  connect(null, { modalAccountEdit: actions.modalAccountEdit })
 )(AccountScreenComponent)
 AccountPage.displayName = 'AccountPage'
 

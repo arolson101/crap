@@ -3,9 +3,9 @@ import * as React from 'react'
 import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { SelectFieldItem, typedFields } from '../components/fields'
+import { SelectFieldItem, typedFields } from '../components/fields/index'
 import { Container } from '../components/layout'
-import { Account, Mutations, Queries } from '../db'
+import { Account, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
@@ -18,7 +18,7 @@ interface Props {
 interface ComposedProps extends Props, InjectedIntlProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
-  navAccountView: (bankId: string, accountId: string) => any
+  navAccount: (bankId: string, accountId: string) => any
 }
 
 type FormValues = Account.Props
@@ -44,7 +44,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
           accountId: edit ? edit.id : null,
           input
         }
-        props.saveAccount(variables, result => props.navAccountView(props.bankId, result.saveAccount.id))
+        props.saveAccount(variables, result => props.navAccount(props.bankId, result.saveAccount.id))
       }}
     >
       {formApi =>
@@ -99,7 +99,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
 
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, { navAccountView: actions.navAccountView }),
+  connect(null, { navAccount: actions.navAccount }),
   withMutation({ saveAccount: Mutations.saveAccount }),
   withQuery({ query: Queries.account }, ({ accountId }: Props) => accountId && ({ accountId })),
 )(AccountFormComponent)

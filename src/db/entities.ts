@@ -1,4 +1,4 @@
-import * as Resolvers from './resolvers'
+import * as Resolvers from './resolvers/index'
 
 export const appEntities = [
   Resolvers.Account,

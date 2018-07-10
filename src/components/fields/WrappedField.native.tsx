@@ -2,7 +2,7 @@ import glamorous from 'glamorous-native'
 import * as React from 'react'
 import { FieldAPI } from 'react-form'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { ThemeProp } from '../../App'
+import { ThemeProp } from '../../App/index'
 
 const Row = glamorous.view<ThemeProp>({}, ({ theme }) => ({
   marginBottom: theme.rowMargin,

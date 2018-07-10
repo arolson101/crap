@@ -1,6 +1,6 @@
 import * as React from 'react'
 import glamorous from 'glamorous-native'
-import { ThemeProp } from '../App'
+import { ThemeProp } from '../App/index'
 import { Container, Header, Content, H1, H2, H3, Text } from 'native-base'
 
 export const AppBannerText: React.SFC = (props) => <H1 {...props}/>

@@ -10,10 +10,10 @@ import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, 
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import * as modals from '../modals'
+import * as modals from '../modals/index'
 import { paths } from '../nav'
 import { nativeActions } from '../redux/actions/nativeActions'
-import * as screens from '../screens'
+import * as screens from '../screens/index'
 import { ScreenComponent, ScreenProps } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
@@ -107,13 +107,14 @@ const mainStack = createBottomTabNavigatorFcn(
 )
 mainStack.displayName = 'mainStack'
 
-const modalAddBank = createStackNavigator({ main: modals.AddBankModal })
-modalAddBank.displayName = 'modalAddBank'
+const modalBank = createStackNavigator({ main: modals.BankModal })
+modalBank.displayName = 'modalBank'
 
 const modalsStack = createStackNavigator(
   {
     main: mainStack,
-    [paths.modal.accountCreate]: modalAddBank
+    [paths.modal.bankCreate]: modalBank,
+    [paths.modal.bankEdit]: modalBank,
   },
   {
     mode: 'modal',

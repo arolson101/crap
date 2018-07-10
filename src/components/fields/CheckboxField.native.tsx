@@ -3,7 +3,6 @@ import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { Switch } from 'react-native'
-import { ctx } from '../../App'
 
 export namespace CheckboxField {
   export interface Props<T = {}> {

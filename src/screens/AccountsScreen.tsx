@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import { Route, Switch } from 'react-router'
 import { compose } from 'recompose'
 import { Button, Container, Row, Text } from '../components/layout'
-import { Mutations, Queries } from '../db'
+import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
-import { AccountsUpdateScreen } from '../modals'
+import { AccountsUpdateScreen } from '../modals/index'
 import { paths } from '../nav'
 import { actions } from '../redux/actions/index'
 import { AccountPage } from './AccountScreen'
@@ -20,25 +20,26 @@ interface ConnectedProps {
   query: Queries.Banks
   deleteBank: Mutations.DeleteBank
   deleteAccount: Mutations.DeleteAccount
+  modalBankCreate: () => any
   modalAccountCreate: () => any
-  navBank: (bankId: string) => any
+  modalBankEdit: (bankId: string) => any
   navAccount: (accountId: string) => any
 }
 
 class AccountsScreenComponent extends React.Component<Props & ConnectedProps & AddButtonProps> {
   componentDidMount () {
-    this.props.setAdd(this.props.modalAccountCreate)
+    this.props.setAdd(this.props.modalBankCreate)
   }
 
   componentDidUpdate () {
-    this.props.setAdd(this.props.modalAccountCreate)
+    this.props.setAdd(this.props.modalBankCreate)
   }
 
   render () {
     return (
       <>
         <Switch>
-          <Route path={paths.account.update} component={AccountsUpdateScreen} />
+          {/* <Route path={paths.account.edit} component={AccountsUpdateScreen} /> */}
           <Route path={paths.account.view} component={AccountPage} />
           <Route>
             <>
@@ -47,7 +48,10 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
                 <Container key={bank.id}>
                   <Text>{bank.name}</Text>
                   <Row>
-                    <Button title='bank' onPress={() => this.props.navBank(bank.id)} />
+                    <Button
+                      title='edit'
+                      onPress={() => this.props.modalBankEdit(bank.id)}
+                    />
                   </Row>
                   {bank.accounts.map(account =>
                     <Row key={account.id}>
@@ -59,7 +63,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
                   )}
                 </Container>
               )}
-              <Button onPress={this.props.modalAccountCreate} title='add bank' />
+              <Button onPress={this.props.modalBankCreate} title='add bank' />
             </>
           </Route>
         </Switch>
@@ -74,8 +78,10 @@ export const AccountsScreen = compose(
   withMutation({ deleteBank: Mutations.deleteBank }),
   withMutation({ deleteAccount: Mutations.deleteAccount }),
   connect(null, {
+    modalBankCreate: actions.modalBankCreate,
     modalAccountCreate: actions.modalAccountCreate,
-    navBank: actions.navBank,
+    modalBankEdit: actions.modalBankEdit,
+    navAccount: actions.navAccount,
   })
 )(AccountsScreenComponent)
 AccountsScreen.displayName = 'AccountsPage'

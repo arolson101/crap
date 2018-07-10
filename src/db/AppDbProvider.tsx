@@ -7,10 +7,9 @@ import { ApolloProvider } from 'react-apollo'
 import { Text } from 'react-native'
 import { connect } from 'react-redux'
 import Observable from 'zen-observable-ts'
-import { ctx } from '../App/ctx'
-import schema from '../db/schema'
+import schema from './schema'
 import { actions } from '../redux/actions/index'
-import { AppState, AppStore, selectors } from '../redux/reducers/index'
+import { AppState, selectors } from '../redux/reducers/index'
 import { Connection } from './typeorm'
 
 export interface DbDependencies {
@@ -36,8 +35,6 @@ interface Props {
 }
 
 class AppDbProviderComponent extends React.Component<Props> {
-  static contextTypes = ctx.store
-
   client = new GraphQLClient({
     cache: new InMemoryCache(),
     link: new ApolloLink((operation, forward) => {

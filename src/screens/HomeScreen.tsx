@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Container, Text } from '../components/layout'
-import { Queries } from '../db'
+import { Queries } from '../db/index'
 import { withQuery } from '../db/queries/makeQuery'
 import { makeScreen, ScreenComponent } from './Screen'
 

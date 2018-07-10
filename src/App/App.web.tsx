@@ -1,10 +1,9 @@
 import { ThemeProvider } from 'glamorous'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
-import { LoginScreen, RootPage } from '../screens'
+import { LoginScreen, RootPage } from '../screens/index'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
-import { DbContext } from './ctx'
 
 interface Props {
   isOpen?: boolean

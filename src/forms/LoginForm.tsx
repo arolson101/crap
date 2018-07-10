@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'redux'
-import { AppBannerText, Button, FormContent, WelcomeText } from '../components'
-import { typedFields } from '../components/fields'
-import { Mutations, Queries } from '../db'
+import { AppBannerText, Button, FormContent, WelcomeText } from '../components/index'
+import { typedFields } from '../components/fields/index'
+import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 

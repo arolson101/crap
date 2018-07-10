@@ -2,7 +2,7 @@ import glamorous from 'glamorous-native'
 import { Button as NBButton, Text as NBText } from 'native-base'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { ThemeProp } from '../App'
+import { ThemeProp } from '../App/index'
 
 interface ButtonProps {
   block?: boolean

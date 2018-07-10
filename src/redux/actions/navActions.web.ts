@@ -11,9 +11,28 @@ export const navActions: NavApi = {
   navAccounts: () => push(paths.root.accounts),
   navBudgets: () => push(paths.root.budgets),
 
-  navAccountView: (bankId: string, accountId: string) => push({
-    pathname: paths.root.accounts,
-    search: qs.stringify({ bankId, accountId })
+  navBank: (bankId: string) => push({
+    pathname: paths.account.view,
+    search: qs.stringify({ bankId })
+  }),
+
+  modalBankCreate: () => push({
+    pathname: paths.modal.bankCreate,
+  }),
+
+  modalBankEdit: (bankId: string) => push({
+    pathname: paths.modal.bankEdit,
+    search: qs.stringify({ bankId })
+  }),
+
+  navAccount: (accountId: string) => push({
+    pathname: paths.account.view,
+    search: qs.stringify({ accountId })
+  }),
+
+  modalAccountEdit: (accountId: string) => push({
+    pathname: paths.modal.accountEdit,
+    search: qs.stringify({ accountId })
   }),
 
   modalAccountCreate: () => push(paths.modal.accountCreate),

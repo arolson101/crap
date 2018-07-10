@@ -1,7 +1,7 @@
 import { combineReducers, Store } from 'redux'
 import { dbReducer, dbSelectors, DbState } from './dbReducer'
 import { navReducer, NavState } from './navReducer'
-import { AppAction } from '../actions'
+import { AppAction } from '../actions/index'
 
 export interface AppState {
   db: DbState,

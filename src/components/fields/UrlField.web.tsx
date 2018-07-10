@@ -2,7 +2,7 @@ import glamorous from 'glamorous'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { ThemeProp } from '../../App'
+import { ThemeProp } from '../../App/index'
 import { WrappedField } from './WrappedField'
 
 const StyledTextInput = glamorous.input<ThemeProp & { error: any }>({},

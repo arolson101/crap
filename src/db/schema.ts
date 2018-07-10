@@ -1,7 +1,7 @@
 import { AccountResolver, BankResolver, DbResolver,
   BillResolver, TransactionResolver, BudgetResolver,
   CategoryResolver
-} from './resolvers'
+} from './resolvers/index'
 import { buildSchemaSync } from './resolvers/helpers'
 
 const schema = buildSchemaSync({

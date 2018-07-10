@@ -1,11 +1,9 @@
 import { Button, Classes, MenuItem } from '@blueprintjs/core'
 import { Suggest, ItemPredicate, ItemRenderer } from '@blueprintjs/select'
 import '@blueprintjs/select/lib/css/blueprint-select.css'
-import glamorous from 'glamorous'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
-import { ctx, ThemeProp } from '../../App'
 import { WrappedField } from './WrappedField'
 import './SelectField.web.css'
 

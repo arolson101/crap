@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { NavigationScreenConfig, NavigationScreenOptions } from 'react-navigation'
-import { ctx } from '../App/ctx'
-
-type ScreenProps = ctx.Intl
+import { ScreenProps } from '../screens/Screen'
 
 export const withNavigationOptions = (navigationOptions: NavigationScreenConfig<NavigationScreenOptions>) => (
   <P extends object>(Component: React.ComponentType<P>) => (

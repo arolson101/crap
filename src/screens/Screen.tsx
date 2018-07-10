@@ -7,7 +7,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react-navigation'
 import HeaderButtons from 'react-navigation-header-buttons'
-import { ctx } from '../App/ctx'
 
 export type ScreenProps = InjectedIntlProps
 
