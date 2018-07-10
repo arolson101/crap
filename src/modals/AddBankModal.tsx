@@ -71,7 +71,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
       >
         {formApi =>
           <>
-            <FormattedMessage {...messages.fiHelp} />
+            <Divider><FormattedMessage {...messages.fiHelp} /></Divider>
             <SelectField
               field='fi'
               items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
@@ -87,6 +87,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
                 formApi.setValue('ofx', fi.ofx || '')
               }}
             />
+            <Divider/>
             <TextField
               field='name'
               label={messages.name}
