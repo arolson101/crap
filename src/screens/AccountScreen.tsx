@@ -5,6 +5,7 @@ import { compose } from 'recompose'
 import { ctx } from '../App'
 import { Button, Text } from '../components/layout'
 import { Queries } from '../db'
+import { withQuery } from '../db/queries/makeQuery'
 import { nav } from '../nav'
 import { makeScreen } from './Screen'
 
@@ -34,7 +35,7 @@ AccountScreenComponent.contextTypes = ctx.router
 
 export const AccountPage = compose(
   makeScreen({ title: () => messages.title }),
-  Queries.withAccount('query', (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId }))
+  withQuery({ query: Queries.account }, (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId }))
 )(AccountScreenComponent)
 AccountPage.displayName = 'AccountPage'
 

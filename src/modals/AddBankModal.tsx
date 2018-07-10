@@ -1,16 +1,8 @@
-import { pick } from 'lodash'
 import * as React from 'react'
-import { FormAPI } from 'react-form'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { connect } from 'react-redux'
+import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
-import { typedFields } from '../components/fields'
-import { Bank, Mutations, Queries } from '../db'
-import { filist, formatAddress } from '../fi'
-import { actions } from '../redux/actions/index'
-import { makeScreen, SaveButtonProps } from '../screens/Screen'
-import { Button } from '../components/layout'
-import { BankForm } from '../forms/BankForm';
+import { BankForm } from '../forms/BankForm'
+import { makeScreen } from '../screens/Screen'
 
 interface Params {
   bankId?: string

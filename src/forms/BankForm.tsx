@@ -5,11 +5,12 @@ import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { typedFields } from '../components/fields'
+import { Button } from '../components/layout'
 import { Bank, Mutations, Queries } from '../db'
+import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
-import { makeScreen, SaveButtonProps } from '../screens/Screen'
-import { Button } from '../components/layout'
+import { SaveButtonProps } from '../screens/Screen'
 
 interface Props {
   bankId?: string
@@ -156,7 +157,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, { navAccounts: actions.navAccounts }),
-  Queries.withBank('query', ({ bankId }: Props) => bankId && ({ bankId })),
+  withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   Mutations.withSaveBank('saveBank')
 )(BankFormComponent)
 BankForm.displayName = 'BankForm'

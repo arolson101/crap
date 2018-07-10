@@ -43,16 +43,12 @@ export const makeMutation = <TRet, TVariables>(QUERY: DocumentNode, refetchQueri
               onError={this.onError}
             >
               {(execute, result) => {
-                // this.execute = execute
+                this.execute = execute
                 if (result.loading) {
                   return null
                 }
-                const exe = (variables: TVariables, onCompleted?: CompletionFcn<TRet>) =>  {
-                  this.setState({ onCompleted })
-                  execute({ variables })
-                }
-                const componentProps: O = { ...(this.props as any), [name]: exe }
-                return <Component {...componentProps} />
+                const componentProps = { [name]: this.wrapExecute }
+                return <Component {...this.props} {...componentProps} />
               }}
             </Mutation>
           )

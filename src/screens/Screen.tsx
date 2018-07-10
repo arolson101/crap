@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export type ScreenComponent<T, P = any> = NavigationScreenComponent<NavigationParams, {}, P>
+export type ScreenComponent<T = {}, P = any> = NavigationScreenComponent<NavigationParams, {}, P>
 & { title: TitleFcn<T> }
 
 export const makeScreen = <T extends {}>(params: Params<T>) => {

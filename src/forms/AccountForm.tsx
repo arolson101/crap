@@ -1,12 +1,12 @@
 import { pick } from 'lodash'
 import * as React from 'react'
-import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl'
+import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { ctx } from '../App'
 import { SelectFieldItem, typedFields } from '../components/fields'
 import { Container } from '../components/layout'
 import { Account, Mutations, Queries } from '../db'
+import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 
 interface Props {
@@ -22,7 +22,7 @@ interface ComposedProps extends Props, InjectedIntlProps {
 
 type FormValues = Account.Props
 
-const { Form, SelectField, SubmitButton, TextField } = typedFields<FormValues>()
+const { Form, SelectField, TextField } = typedFields<FormValues>()
 
 export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
   const edit = props.accountId && props.query.account
@@ -90,10 +90,6 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
               placeholder={messages.keyPlaceholder}
             />
           }
-          <SubmitButton
-            onPress={formApi.submitForm}
-            title={edit ? messages.save : messages.create}
-          />
         </Container>
       }
     </Form>
@@ -104,7 +100,7 @@ export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, { navAccountView: actions.navAccountView }),
   Mutations.withSaveAccount('saveAccount'),
-  Queries.withAccount('query', ({ accountId }: Props) => accountId && ({ accountId }))
+  withQuery({ query: Queries.account }, ({ accountId }: Props) => accountId && ({ accountId })),
 )(AccountFormComponent)
 AccountForm.displayName = 'AccountForm'
 

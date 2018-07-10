@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl'
-import { compose } from 'recompose'
-import { AppBannerText, FormContent, WelcomeText, Button } from '../components'
+import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
+import { compose } from 'redux'
+import { AppBannerText, Button, FormContent, WelcomeText } from '../components'
 import { typedFields } from '../components/fields'
 import { Mutations, Queries } from '../db'
-import { View } from 'native-base';
+import { withQuery } from '../db/queries/makeQuery'
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -23,24 +23,22 @@ const {
   TextField
 } = typedFields<FormValues>()
 
-export class LoginFormComponent extends React.PureComponent<Props> {
-  render () {
-    const exists = this.props.query.allDbs.length > 0
-    return (
-      <>
-        <AppBannerText>App</AppBannerText>
-        {exists
-          ? <FormOpen {...this.props} />
-          : <FormCreate {...this.props} />
-        }
-      </>
-    )
-  }
+export const LoginFormComponent: React.SFC<Props> = (props) => {
+  const exists = props.query.allDbs.length > 0
+  return (
+    <>
+      <AppBannerText>App</AppBannerText>
+      {exists
+        ? <FormOpen {...props} />
+        : <FormCreate {...props} />
+      }
+    </>
+  )
 }
 
 export const LoginForm = compose(
   injectIntl,
-  Queries.withDbs('query'),
+  withQuery({ query: Queries.dbs }),
   Mutations.withOpenDb('openDb'),
   Mutations.withCreateDb('createDb'),
   Mutations.withDeleteDb('deleteDb'),

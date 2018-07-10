@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Container, Text } from '../components/layout'
 import { Queries } from '../db'
+import { withQuery } from '../db/queries/makeQuery'
 import { makeScreen, ScreenComponent } from './Screen'
 
 interface Props {
@@ -36,7 +37,7 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
 
 export const HomeScreen = compose(
   makeScreen({ title: () => messages.title }),
-  Queries.withAccounts('query'),
+  withQuery({ query: Queries.accounts }),
   connect(null, { }),
 )(HomeScreenComponent) as ScreenComponent
 HomeScreen.displayName = 'HomePage'

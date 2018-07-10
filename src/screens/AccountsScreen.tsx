@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router'
 import { compose } from 'recompose'
 import { Button, Container, Row, Text } from '../components/layout'
 import { Mutations, Queries } from '../db'
+import { withQuery } from '../db/queries/makeQuery'
 import { AccountsUpdateScreen } from '../modals'
 import { paths } from '../nav'
 import { actions } from '../redux/actions/index'
@@ -68,7 +69,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
 
 export const AccountsScreen = compose(
   makeScreen({ title: () => messages.title, addButton: true }),
-  Queries.withBanks('query'),
+  withQuery({ query: Queries.banks }),
   Mutations.withDeleteBank('deleteBank'),
   Mutations.withDeleteAccount('deleteAccount'),
   connect(null, {

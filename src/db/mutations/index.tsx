@@ -15,11 +15,11 @@ import * as GQL from './mutations.graphql'
 export namespace Mutations {
   export const DELETEBANK = GQL.DeleteBank
   export type DeleteBank = MutationFcn<DeleteBank.Mutation, DeleteBank.Variables>
-  export const withDeleteBank = makeMutation<DeleteBank.Mutation, DeleteBank.Variables>(DELETEBANK, [Queries.BANKS])
+  export const withDeleteBank = makeMutation<DeleteBank.Mutation, DeleteBank.Variables>(DELETEBANK, [Queries.banks.query])
 
   export const DELETEACCOUNT = GQL.DeleteAccount
   export type DeleteAccount = MutationFcn<DeleteAccount.Mutation, DeleteAccount.Variables>
-  export const withDeleteAccount = makeMutation<DeleteAccount.Mutation, DeleteAccount.Variables>(DELETEACCOUNT, [Queries.BANKS])
+  export const withDeleteAccount = makeMutation<DeleteAccount.Mutation, DeleteAccount.Variables>(DELETEACCOUNT, [Queries.banks.query])
 
   export const CREATEDB = GQL.CreateDb
   export type CreateDb = MutationFcn<CreateDb.Mutation, CreateDb.Variables>
@@ -31,13 +31,13 @@ export namespace Mutations {
 
   export const DELETEDB = GQL.DeleteDb
   export type DeleteDb = MutationFcn<DeleteDb.Mutation, DeleteDb.Variables>
-  export const withDeleteDb = makeMutation<DeleteDb.Mutation, DeleteDb.Variables>(DELETEDB, [Queries.DBS])
+  export const withDeleteDb = makeMutation<DeleteDb.Mutation, DeleteDb.Variables>(DELETEDB, [Queries.dbs.query])
 
   export const SAVEACCOUNT = GQL.SaveAccount
   export type SaveAccount = MutationFcn<SaveAccount.Mutation, SaveAccount.Variables>
-  export const withSaveAccount = makeMutation<SaveAccount.Mutation, SaveAccount.Variables>(SAVEACCOUNT, [Queries.BANKS])
+  export const withSaveAccount = makeMutation<SaveAccount.Mutation, SaveAccount.Variables>(SAVEACCOUNT, [Queries.banks.query])
 
   export const SAVEBANK = GQL.SaveBank
   export type SaveBank = MutationFcn<SaveBank.Mutation, SaveBank.Variables>
-  export const withSaveBank = makeMutation<SaveBank.Mutation, SaveBank.Variables>(SAVEBANK, [Queries.BANKS])
+  export const withSaveBank = makeMutation<SaveBank.Mutation, SaveBank.Variables>(SAVEBANK, [Queries.banks.query])
 }

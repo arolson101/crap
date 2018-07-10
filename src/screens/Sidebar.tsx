@@ -5,6 +5,7 @@ import { ctx } from '../App'
 import { Button, Column, Text } from '../components/layout'
 import { Queries } from '../db'
 import { actions } from '../redux/actions/index'
+import { withQuery } from '../db/queries/makeQuery'
 
 interface Props {
   query: Queries.Accounts
@@ -42,7 +43,7 @@ export const SidebarComponent: React.SFC<Props> = (props, context: ctx.Router) =
 SidebarComponent.contextTypes = ctx.router
 
 export const Sidebar = compose(
-  Queries.withAccounts('query'),
+  withQuery({ query: Queries.accounts }),
   connect(null, {
     navHome: actions.navHome,
     navAccounts: actions.navAccounts,
