@@ -3,10 +3,7 @@ import { compose } from 'redux'
 import { AccountForm } from '../forms/AccountForm'
 import { makeScreen } from '../screens/Screen'
 
-interface Params {
-  bankId: string
-  accountId?: string
-}
+type Params = AccountForm.Props
 
 export const AccountModal = compose(
   makeScreen<Params>({

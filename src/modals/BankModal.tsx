@@ -1,12 +1,9 @@
-import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
 import { BankForm } from '../forms/BankForm'
 import { makeScreen } from '../screens/Screen'
 
-interface Params {
-  bankId?: string
-}
+type Params = BankForm.Props
 
 export const BankModal = compose(
   makeScreen<Params>({

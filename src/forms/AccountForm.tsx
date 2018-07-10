@@ -10,10 +10,14 @@ import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 
-interface Props {
-  accountId?: string
-  bankId: string
+export namespace AccountForm {
+  export interface Props {
+    accountId?: string
+    bankId: string
+  }
 }
+
+type Props = AccountForm.Props
 
 interface ComposedProps extends Props, InjectedIntlProps {
   query: Queries.Account

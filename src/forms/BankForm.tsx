@@ -13,9 +13,13 @@ import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
 
-interface Props {
-  bankId?: string
+export namespace BankForm {
+  export interface Props {
+    bankId?: string
+  }
 }
+
+type Props = BankForm.Props
 
 interface ComposedProps extends Props {
   query: Queries.Bank
