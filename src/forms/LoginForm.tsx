@@ -4,6 +4,7 @@ import { compose } from 'redux'
 import { AppBannerText, Button, FormContent, WelcomeText } from '../components'
 import { typedFields } from '../components/fields'
 import { Mutations, Queries } from '../db'
+import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 
 interface Props extends InjectedIntlProps {
@@ -39,9 +40,9 @@ export const LoginFormComponent: React.SFC<Props> = (props) => {
 export const LoginForm = compose(
   injectIntl,
   withQuery({ query: Queries.dbs }),
-  Mutations.withOpenDb('openDb'),
-  Mutations.withCreateDb('createDb'),
-  Mutations.withDeleteDb('deleteDb'),
+  withMutation({ openDb: Mutations.openDb }),
+  withMutation({ createDb: Mutations.createDb }),
+  withMutation({ deleteDb: Mutations.deleteDb }),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

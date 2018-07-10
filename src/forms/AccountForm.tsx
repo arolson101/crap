@@ -6,6 +6,7 @@ import { compose } from 'recompose'
 import { SelectFieldItem, typedFields } from '../components/fields'
 import { Container } from '../components/layout'
 import { Account, Mutations, Queries } from '../db'
+import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 
@@ -99,7 +100,7 @@ export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, { navAccountView: actions.navAccountView }),
-  Mutations.withSaveAccount('saveAccount'),
+  withMutation({ saveAccount: Mutations.saveAccount }),
   withQuery({ query: Queries.account }, ({ accountId }: Props) => accountId && ({ accountId })),
 )(AccountFormComponent)
 AccountForm.displayName = 'AccountForm'

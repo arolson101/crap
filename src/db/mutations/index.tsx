@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Queries } from '../queries'
-import { MutationFcn, makeMutation } from './makeMutation'
+import { MutationFcn, MutationDesc } from './makeMutation'
 import {
   DeleteAccount,
   DeleteBank,
@@ -13,31 +13,24 @@ import {
 import * as GQL from './mutations.graphql'
 
 export namespace Mutations {
-  export const DELETEBANK = GQL.DeleteBank
   export type DeleteBank = MutationFcn<DeleteBank.Mutation, DeleteBank.Variables>
-  export const withDeleteBank = makeMutation<DeleteBank.Mutation, DeleteBank.Variables>(DELETEBANK, [Queries.banks.query])
+  export const deleteBank: MutationDesc<DeleteBank.Mutation, DeleteBank.Variables> = { mutation: GQL.DeleteBank, refetchQueries: [Queries.banks.query] }
 
-  export const DELETEACCOUNT = GQL.DeleteAccount
   export type DeleteAccount = MutationFcn<DeleteAccount.Mutation, DeleteAccount.Variables>
-  export const withDeleteAccount = makeMutation<DeleteAccount.Mutation, DeleteAccount.Variables>(DELETEACCOUNT, [Queries.banks.query])
+  export const deleteAccount: MutationDesc<DeleteAccount.Mutation, DeleteAccount.Variables> = { mutation: GQL.DeleteAccount, refetchQueries: [Queries.banks.query] }
 
-  export const CREATEDB = GQL.CreateDb
   export type CreateDb = MutationFcn<CreateDb.Mutation, CreateDb.Variables>
-  export const withCreateDb = makeMutation<CreateDb.Mutation, CreateDb.Variables>(CREATEDB)
+  export const createDb: MutationDesc<CreateDb.Mutation, CreateDb.Variables> = { mutation: GQL.CreateDb, refetchQueries: [] }
 
-  export const OPENDB = GQL.OpenDb
   export type OpenDb = MutationFcn<OpenDb.Mutation, OpenDb.Variables>
-  export const withOpenDb = makeMutation<OpenDb.Mutation, OpenDb.Variables>(OPENDB)
+  export const openDb: MutationDesc<OpenDb.Mutation, OpenDb.Variables> = { mutation: GQL.OpenDb, refetchQueries: [] }
 
-  export const DELETEDB = GQL.DeleteDb
   export type DeleteDb = MutationFcn<DeleteDb.Mutation, DeleteDb.Variables>
-  export const withDeleteDb = makeMutation<DeleteDb.Mutation, DeleteDb.Variables>(DELETEDB, [Queries.dbs.query])
+  export const deleteDb: MutationDesc<DeleteDb.Mutation, DeleteDb.Variables> = { mutation: GQL.DeleteDb, refetchQueries: [Queries.dbs.query] }
 
-  export const SAVEACCOUNT = GQL.SaveAccount
   export type SaveAccount = MutationFcn<SaveAccount.Mutation, SaveAccount.Variables>
-  export const withSaveAccount = makeMutation<SaveAccount.Mutation, SaveAccount.Variables>(SAVEACCOUNT, [Queries.banks.query])
+  export const saveAccount: MutationDesc<SaveAccount.Mutation, SaveAccount.Variables> = { mutation: GQL.SaveAccount, refetchQueries: [Queries.banks.query] }
 
-  export const SAVEBANK = GQL.SaveBank
   export type SaveBank = MutationFcn<SaveBank.Mutation, SaveBank.Variables>
-  export const withSaveBank = makeMutation<SaveBank.Mutation, SaveBank.Variables>(SAVEBANK, [Queries.banks.query])
+  export const saveBank: MutationDesc<SaveBank.Mutation, SaveBank.Variables> = { mutation: GQL.SaveBank, refetchQueries: [Queries.banks.query] }
 }

@@ -3,57 +3,79 @@ import hoistStatics from 'hoist-non-react-statics'
 import { Toast } from 'native-base'
 import * as React from 'react'
 import { Mutation, MutationFn, OperationVariables } from 'react-apollo'
-import { Omit } from 'utility-types'
+import { $Values, Subtract } from 'utility-types'
+import { Defined } from '../queries/makeQuery'
 
 type CompletionFcn<TRet> = (result: TRet) => any
 
 export type MutationFcn<TRet, TVars> = (vars: TVars, onCompleted?: CompletionFcn<TRet>) => void
 
-export const makeMutation = <TRet, TVariables>(QUERY: DocumentNode, refetchQueries: DocumentNode[] = []) =>
-  <N extends keyof O, O extends Record<N, MutationFcn<TRet, TVariables>>>(name: N) =>
-    (Component: React.ComponentType<O>) => {
-      type Props = Omit<O, N>
-      type State = { onCompleted?: CompletionFcn<TRet> }
-      class WrappedMutation extends React.Component<Props, State> {
-        state: State = {}
-        execute: MutationFn<any, OperationVariables> | undefined
+export type MutationDesc<TRes, TVars> = {
+  mutation: DocumentNode
+  refetchQueries: DocumentNode[]
+  __variables?: TVars
+  __results?: TRes
+}
 
-        wrapExecute = (variables: TVariables, onCompleted?: CompletionFcn<TRet>) => {
-          if (this.execute) {
-            this.setState({ onCompleted })
-            this.execute({ variables })
-          }
-        }
+export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 extends {}, R1 extends {}>(
+  mutationDesc: R
+) => {
+  type MD = $Values<R>
+  type TRes = Defined<MD['__results']>
+  type TVariables = MD['__variables']
+  type WrappedProps = { [K in keyof R]: MutationFcn<TRes, TVariables> }
 
-        onError = (error: Error) => {
-          Toast.show({
-            text: error.message,
-            buttonText: 'Okay',
-            duration: 0,
-            type: 'danger'
-          })
-        }
+  const name = Object.keys(mutationDesc)[0]
+  const desc = mutationDesc[name]
+  const refetchQueries = desc.refetchQueries.map(query => ({ query }))
 
-        render () {
-          return (
-            <Mutation
-              mutation={QUERY}
-              refetchQueries={refetchQueries.map(query => ({ query }))}
-              onCompleted={this.state.onCompleted}
-              onError={this.onError}
-            >
-              {(execute, result) => {
-                this.execute = execute
-                if (result.loading) {
-                  return null
-                }
-                const componentProps = { [name]: this.wrapExecute }
-                return <Component {...this.props} {...componentProps} />
-              }}
-            </Mutation>
-          )
+  return <P extends WrappedProps>(Component: React.ComponentType<P>) => {
+    type HocProps = Subtract<P, WrappedProps>
+    type State = { onCompleted?: CompletionFcn<TRes> }
+
+    class WrappedMutation extends React.Component<HocProps, State> {
+      static displayName: string = `WrappedMutation(${Component.displayName || Component.name || ''})`
+
+      state: State = {}
+      execute: MutationFn<any, OperationVariables> | undefined
+
+      wrapExecute = (variables: TVariables, onCompleted?: CompletionFcn<TRes>) => {
+        if (this.execute) {
+          this.setState({ onCompleted })
+          this.execute({ variables })
         }
       }
 
-      return hoistStatics(WrappedMutation, Component)
+      onError = (error: Error) => {
+        Toast.show({
+          text: error.message,
+          buttonText: 'Okay',
+          duration: 0,
+          type: 'danger'
+        })
+      }
+
+      render () {
+        return (
+          <Mutation
+            mutation={desc.mutation}
+            refetchQueries={refetchQueries}
+            onCompleted={this.state.onCompleted}
+            onError={this.onError}
+          >
+            {(execute, result) => {
+              this.execute = execute
+              if (result.loading) {
+                return null
+              }
+              const componentProps = { [name]: this.wrapExecute }
+              return <Component {...this.props} {...componentProps} />
+            }}
+          </Mutation>
+        )
+      }
     }
+
+    return hoistStatics(WrappedMutation, Component)
+  }
+}

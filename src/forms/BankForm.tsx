@@ -7,6 +7,7 @@ import { compose } from 'recompose'
 import { typedFields } from '../components/fields'
 import { Button } from '../components/layout'
 import { Bank, Mutations, Queries } from '../db'
+import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
@@ -158,7 +159,7 @@ export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, { navAccounts: actions.navAccounts }),
   withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
-  Mutations.withSaveBank('saveBank')
+  withMutation({ saveBank: Mutations.saveBank }),
 )(BankFormComponent)
 BankForm.displayName = 'BankForm'
 

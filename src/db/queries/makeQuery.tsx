@@ -17,7 +17,7 @@ export type QueryDesc<V, Q> = {
   __results?: Q
 }
 
-type Defined<T> = T extends undefined ? never : T
+export type Defined<T> = T extends undefined ? never : T
 
 export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extends {}, Q1 extends {}>(
   queryDesc: R,
