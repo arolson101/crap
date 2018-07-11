@@ -52,7 +52,8 @@
     "generate:mutations": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/mutations/mutations-types.ts \"src/db/mutations/mutations.graphql\"",
     "generate:schema": "ts-node --project tsconfig.test.json -r @babel/register --skip-ignore ./genSchema.ts",
     "graphdoc": "npm run generate:schema && graphdoc --force -s ./temp/schema.json -o ./temp/graphdoc",
-    "lint": "tslint --fix \"{src,stories}/**/*{.ts,.tsx}\" --project tsconfig.json"
+    "lint": "tslint --fix \"{src,stories}/**/*{.ts,.tsx}\" --project tsconfig.json",
+    "react-devtools": "react-devtools"
   },
   "jest": {},
   "devDependencies": {
@@ -154,6 +155,7 @@
     "react-app-rewire-hot-loader": "^1.0.1",
     "react-app-rewire-typescript": "^2.0.2",
     "react-app-rewired": "^1.5.2",
+    "react-devtools": "^3.2.3",
     "react-dom": "^16.4.1",
     "react-flexbox-grid": "^2.1.2",
     "react-form": "^3.5.6",
