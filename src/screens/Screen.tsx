@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 })
 
 export type ScreenComponent<T = {}, P = any> = NavigationScreenComponent<NavigationParams, {}, P>
-& { title: TitleFcn<T> }
+  & { title: TitleFcn<T> }
 
 export const makeScreen = <T extends {}>(params: Params<T>) => {
   let onAdd = () => { console.warn('no add function') }
@@ -65,17 +65,17 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<T, P> = ((props) => (
-      <Container>
-        <Content>
-          <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Container>
+          <Content contentContainerStyle={{ flex: 1 }}>
             <Component
               {...props}
               {...moreProps}
               {...props.navigation.state.params}
             />
-          </SafeAreaView>
-        </Content>
-      </Container>
+          </Content>
+        </Container>
+      </SafeAreaView>
     )) as NavigationScreenComponent<T, {}, P> as any
 
     nav.navigationOptions = ({ navigation, screenProps }) => {
