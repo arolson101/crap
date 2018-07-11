@@ -63,7 +63,7 @@ export class AccountResolver {
   ): Promise<Account> {
     if (!appDb) { throw new Error('appDb not open') }
     const res = await appDb.manager.createQueryBuilder(Account, 'account')
-      .where('account._deleted = 0 AND accountId=:accountId', { accountId })
+      .where('account._deleted = 0 AND account.id=:accountId', { accountId })
       .getOne()
     if (!res) {
       throw new Error('account not found')

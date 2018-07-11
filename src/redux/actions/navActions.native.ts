@@ -37,11 +37,11 @@ export const navActions: NavApi = {
     })
   })),
 
-  navAccount: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
+  navAccount: (accountId: string, accountName: string) => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.root.accounts,
     action: NavigationActions.navigate({
       routeName: paths.account,
-      params: { accountId }
+      params: { accountId, accountName }
     })
   })),
 

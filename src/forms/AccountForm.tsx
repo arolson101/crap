@@ -24,7 +24,7 @@ type Props = AccountForm.Props
 interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
-  navAccount: (bankId: string, accountId: string) => any
+  navAccount: (accountId: string, accountName: string) => any
 }
 
 type FormValues = Account.Props
@@ -57,7 +57,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
             accountId: edit ? edit.id : null,
             input
           }
-          props.saveAccount(variables, result => props.navAccount(props.bankId, result.saveAccount.id))
+          props.saveAccount(variables, result => props.navAccount(result.saveAccount.id, result.saveAccount.name))
         }}
       >
         {formApi =>

@@ -25,9 +25,9 @@ export const navActions: NavApi = {
     search: qs.stringify({ bankId })
   }),
 
-  navAccount: (accountId: string) => push({
+  navAccount: (accountId: string, accountName: string) => push({
     pathname: paths.account,
-    search: qs.stringify({ accountId })
+    search: qs.stringify({ accountId, accountName })
   }),
 
   navAccountEdit: (accountId: string) => push({

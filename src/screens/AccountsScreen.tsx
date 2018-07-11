@@ -20,7 +20,7 @@ interface ConnectedProps {
   navBankCreate: () => any
   navAccountCreate: (bankId: string) => any
   navBank: (bankId: string) => any
-  navAccount: (accountId: string) => any
+  navAccount: (accountId: string, accountName: string) => any
 }
 
 class AccountsScreenComponent extends React.Component<Props & ConnectedProps & AddButtonProps> {
@@ -62,7 +62,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
                 />
               </Row> */}
               {bank.accounts.map(account =>
-                <ListItem key={account.id} onPress={() => this.props.navAccount(account.id)}>
+                <ListItem key={account.id} onPress={() => this.props.navAccount(account.id, account.name)}>
                   <Text>
                     {account.name}
                   </Text>

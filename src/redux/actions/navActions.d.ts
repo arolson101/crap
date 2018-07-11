@@ -9,7 +9,7 @@ export interface NavApi {
   navBank: (bankId: string) => any
   navBankCreate: () => any
   navBankEdit: (bankId: string) => any
-  navAccount: (accountId: string) => any
+  navAccount: (accountId: string, accountName: string) => any
   navAccountEdit: (accountId: string) => any
   navAccountCreate: (bankId: string) => any
 }

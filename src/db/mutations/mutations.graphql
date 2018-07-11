@@ -21,11 +21,13 @@ mutation DeleteDb($dbId: String!) {
 mutation SaveAccount($input: AccountInput!, $accountId: String, $bankId: String) {
   saveAccount(input: $input, accountId: $accountId, bankId: $bankId) {
     id
+    name
   }
 }
 
 mutation SaveBank($input: BankInput!, $bankId: String) {
   saveBank(input: $input, bankId: $bankId) {
     id
+    name
   }
 }

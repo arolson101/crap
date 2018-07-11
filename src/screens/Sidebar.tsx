@@ -11,7 +11,7 @@ interface Props {
   navHome: () => any
   navBudgets: () => any
   navAccounts: () => any
-  navAccount: (accountId: string) => any
+  navAccount: (accountId: string, accountName: string) => any
 }
 
 export const SidebarComponent: React.SFC<Props> = (props) => {
@@ -26,7 +26,7 @@ export const SidebarComponent: React.SFC<Props> = (props) => {
           {bank.accounts.map(account =>
             <Button
               key={account.id}
-              onPress={() => props.navAccount(account.id)}
+              onPress={() => props.navAccount(account.id, account.name)}
               title={account.name}
               // subtitle={'$100.00'}
               // subtitleNumberOfLines={3}

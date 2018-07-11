@@ -11,6 +11,7 @@ import { makeScreen } from './Screen'
 
 interface Params {
   accountId: string
+  accountName: string
 }
 
 interface Props extends Params {
@@ -32,7 +33,7 @@ class AccountScreenComponent extends React.PureComponent<Props> {
 }
 
 export const AccountScreen = compose(
-  makeScreen({ title: () => messages.title }),
+  makeScreen({ title: (params: Params) => params.accountName }),
   withQuery({ query: Queries.account }, (props: Props) => ({ accountId: props.accountId })),
   connect(null, { navAccountEdit: actions.navAccountEdit })
 )(AccountScreenComponent)
@@ -41,6 +42,6 @@ AccountScreen.displayName = 'AccountScreen'
 const messages = defineMessages({
   title: {
     id: 'AccountScreen.title',
-    defaultMessage: 'Accounts'
+    defaultMessage: 'Account'
   },
 })
