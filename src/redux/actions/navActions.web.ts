@@ -17,7 +17,7 @@ export const navActions: NavApi = {
   }),
 
   navBankCreate: () => push({
-    pathname: paths.bankCreate,
+    pathname: paths.bankEdit,
   }),
 
   navBankEdit: (bankId: string) => push({

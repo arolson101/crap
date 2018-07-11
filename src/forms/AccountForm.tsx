@@ -9,6 +9,8 @@ import { Account, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
+import { SaveButtonProps } from '../screens/Screen';
+import { FormAPI } from 'react-form';
 
 export namespace AccountForm {
   export interface Props {
@@ -19,7 +21,7 @@ export namespace AccountForm {
 
 type Props = AccountForm.Props
 
-interface ComposedProps extends Props, InjectedIntlProps {
+interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
   navAccount: (bankId: string, accountId: string) => any
@@ -29,78 +31,85 @@ type FormValues = Account.Props
 
 const { Form, SelectField, TextField } = typedFields<FormValues>()
 
-export const AccountFormComponent: React.SFC<ComposedProps> = (props) => {
-  const edit = props.accountId && props.query.account
-  const { intl } = props
+export class AccountFormComponent extends React.PureComponent<ComposedProps> {
+  getApi = (formApi: FormAPI<FormValues>) => {
+    this.props.setSave(formApi.submitForm)
+  }
 
-  return (
-    <Form
-      defaultValues={{
-        ...(edit ? pick(edit, Object.keys(Account.defaultValues())) as any : Account.defaultValues())
-      }}
-      validate={values => ({
-        name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
-          : undefined
-      })}
-      onSubmit={input => {
-        const variables = {
-          bankId: props.bankId,
-          accountId: edit ? edit.id : null,
-          input
+  render () {
+    const props = this.props
+    const edit = this.props.accountId && props.query.account
+    const { intl } = this.props
+
+    return (
+      <Form
+        getApi={this.getApi}
+        defaultValues={{
+          ...(edit ? pick(edit, Object.keys(Account.defaultValues())) as any : Account.defaultValues())
+        }}
+        validate={values => ({
+          name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
+            : undefined
+        })}
+        onSubmit={input => {
+          const variables = {
+            bankId: props.bankId,
+            accountId: edit ? edit.id : null,
+            input
+          }
+          props.saveAccount(variables, result => props.navAccount(props.bankId, result.saveAccount.id))
+        }}
+      >
+        {formApi =>
+          <Container>
+            <TextField
+              field='name'
+              label={messages.name}
+              placeholder={messages.namePlaceholder}
+              autoFocus
+            />
+            <TextField
+              field='number'
+              label={messages.number}
+              placeholder={messages.numberPlaceholder}
+            />
+            <SelectField
+              field='type'
+              items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
+                value: acct.toString(),
+                label: intl.formatMessage(Account.messages[acct])
+              }))}
+              label={messages.type}
+              onValueChange={(type: Account.Type) => {
+                formApi.setValue('color', Account.generateColor(type))
+              }}
+            />
+            <TextField
+              field='color'
+              label={messages.color}
+              placeholder={messages.colorPlaceholder}
+              color={formApi.values.color}
+            />
+            {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
+              <TextField
+                field='routing'
+                label={messages.routing}
+                placeholder={messages.routingPlaceholder}
+              />
+            }
+            {(formApi.values.type === Account.Type.CREDITCARD) &&
+              <TextField
+                field='key'
+                label={messages.key}
+                placeholder={messages.keyPlaceholder}
+              />
+            }
+          </Container>
         }
-        props.saveAccount(variables, result => props.navAccount(props.bankId, result.saveAccount.id))
-      }}
-    >
-      {formApi =>
-        <Container>
-          <TextField
-            field='name'
-            label={messages.name}
-            placeholder={messages.namePlaceholder}
-            autoFocus
-          />
-          <TextField
-            field='number'
-            label={messages.number}
-            placeholder={messages.numberPlaceholder}
-          />
-          <SelectField
-            field='type'
-            items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
-              value: acct.toString(),
-              label: intl.formatMessage(Account.messages[acct])
-            }))}
-            label={messages.type}
-            onValueChange={(type: Account.Type) => {
-              formApi.setValue('color', Account.generateColor(type))
-            }}
-          />
-          <TextField
-            field='color'
-            label={messages.color}
-            placeholder={messages.colorPlaceholder}
-            color={formApi.values.color}
-          />
-          {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
-            <TextField
-              field='routing'
-              label={messages.routing}
-              placeholder={messages.routingPlaceholder}
-            />
-          }
-          {(formApi.values.type === Account.Type.CREDITCARD) &&
-            <TextField
-              field='key'
-              label={messages.key}
-              placeholder={messages.keyPlaceholder}
-            />
-          }
-        </Container>
-      }
-    </Form>
-  )
+      </Form>
+    )
+  }
 }
-
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, { navAccount: actions.navAccount }),

@@ -25,19 +25,18 @@ class AccountScreenComponent extends React.PureComponent<Props> {
     return (
       <>
         <Text>Account: {account.name}</Text>
-        <Text>bank: {account.name}</Text>
         <Button title='edit' onPress={() => this.props.navAccountEdit(account.id)} />
       </>
     )
   }
 }
 
-export const AccountPage = compose(
+export const AccountScreen = compose(
   makeScreen({ title: () => messages.title }),
-  withQuery({ query: Queries.account }, (props: RouteComponentProps<Params>) => ({ accountId: props.match.params.accountId })),
+  withQuery({ query: Queries.account }, (props: Props) => ({ accountId: props.accountId })),
   connect(null, { navAccountEdit: actions.navAccountEdit })
 )(AccountScreenComponent)
-AccountPage.displayName = 'AccountPage'
+AccountScreen.displayName = 'AccountScreen'
 
 const messages = defineMessages({
   title: {

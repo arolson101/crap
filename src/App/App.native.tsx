@@ -82,6 +82,7 @@ const accountsStack = makeTab(
   {
     Accounts: screens.AccountsScreen,
     [paths.bank]: screens.BankScreen,
+    [paths.account]: screens.AccountScreen,
   }
 )
 
