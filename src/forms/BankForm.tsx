@@ -158,7 +158,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
   }
 
   onSubmit = ({ fi, ...input }: FormValues) => {
-    const { saveBank, navBank, bankId } = this.props
+    const { saveBank, bankId } = this.props
     const variables = {
       bankId,
       input

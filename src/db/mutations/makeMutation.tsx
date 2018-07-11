@@ -5,6 +5,7 @@ import * as React from 'react'
 import { Mutation, MutationFn, OperationVariables } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
 import { Defined } from '../queries/makeQuery'
+import { PureQueryOptions } from 'apollo-client'
 
 type CompletionFcn<TRet> = (result: TRet) => any
 
@@ -12,7 +13,7 @@ export type MutationFcn<TRet, TVars> = (vars: TVars, onCompleted?: CompletionFcn
 
 export type MutationDesc<TRes, TVars> = {
   mutation: DocumentNode
-  refetchQueries: DocumentNode[]
+  refetchQueries: (results: { data: TRes }) => PureQueryOptions[]
   __variables?: TVars
   __results?: TRes
 }
@@ -27,7 +28,6 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
 
   const name = Object.keys(mutationDesc)[0]
   const desc = mutationDesc[name]
-  const refetchQueries = desc.refetchQueries.map(query => ({ query }))
 
   return <P extends WrappedProps>(Component: React.ComponentType<P>) => {
     type HocProps = Subtract<P, WrappedProps>
@@ -59,7 +59,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
         return (
           <Mutation
             mutation={desc.mutation}
-            refetchQueries={refetchQueries}
+            refetchQueries={desc.refetchQueries}
             onCompleted={this.state.onCompleted}
             onError={this.onError}
           >

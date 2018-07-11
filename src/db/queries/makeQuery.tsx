@@ -15,7 +15,13 @@ export type QueryDesc<V, Q> = {
   query: DocumentNode
   __variables?: V
   __results?: Q
+  refetchQuery: (variables: V) => { query: DocumentNode; variables: V }
 }
+
+export const makeQueryDesc = <V extends {}, Q>(query: DocumentNode): QueryDesc<V, Q> => ({
+  query,
+  refetchQuery: (variables) => ({ query, variables })
+})
 
 export type Defined<T> = T extends undefined ? never : T
 
