@@ -5,9 +5,9 @@ import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { typedFields } from '../components/fields/index'
-import { Button } from '../components/layout'
 import { Bank, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
+import { SaveBank } from '../db/mutations/mutations-types'
 import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
@@ -24,7 +24,7 @@ type Props = BankForm.Props
 interface ComposedProps extends Props {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
-  navAccounts: () => any
+  navBank: (bankId: string) => any
 }
 
 type BankInput = {
@@ -46,34 +46,29 @@ const {
 } = typedFields<FormValues>()
 
 export class BankFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
-  getApi = (formApi: FormAPI<FormValues>) => {
-    this.props.setSave(formApi.submitForm)
+  formApi: FormAPI<FormValues>
+
+  componentDidMount () {
+    const { setSave } = this.props
+    setSave(this.onSave)
   }
 
   render () {
-    const { props } = this
-    const { intl } = props
+    const { bankId, query } = this.props
 
-    const edit = props.bankId && props.query.bank
+    const edit = bankId && query.bank
     const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
+    const defaultValues = {
+      fi: defaultFi,
+      ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) : Bank.defaultValues)
+    }
+
     return (
       <Form
         getApi={this.getApi}
-        defaultValues={{
-          fi: defaultFi,
-          ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) : Bank.defaultValues)
-        }}
-        validate={values => ({
-          name: !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
-            : undefined
-        })}
-        onSubmit={({ fi, ...input }) => {
-          const variables = {
-            bankId: props.bankId,
-            input
-          }
-          props.saveBank(variables, props.navAccounts)
-        }}
+        defaultValues={defaultValues}
+        validate={this.validate}
+        onSubmit={this.onSubmit}
       >
         {formApi =>
           <>
@@ -82,18 +77,9 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
               field='fi'
               items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
               label={messages.fi}
-              onValueChange={(value: number) => {
-                const fi = filist[value]
-                formApi.setValue('name', fi.name || '')
-                formApi.setValue('web', fi.profile.siteURL || '')
-                formApi.setValue('favicon', '')
-                formApi.setValue('address', formatAddress(fi) || '')
-                formApi.setValue('fid', fi.fid || '')
-                formApi.setValue('org', fi.org || '')
-                formApi.setValue('ofx', fi.ofx || '')
-              }}
+              onValueChange={this.fiOnValueChange}
             />
-            <Divider/>
+            <Divider />
             <TextField
               field='name'
               label={messages.name}
@@ -114,7 +100,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
               label={messages.notes}
               rows={4}
             />
-            <Divider/>
+            <Divider />
             <CheckboxField
               field='online'
               label={messages.online}
@@ -147,21 +133,62 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
                 placeholder={messages.ofxPlaceholder}
               />
             </CollapseField>
-            <Button
-              // disabled={props.saveBank.loading}
-              onPress={formApi.submitForm}
-              title={edit ? messages.save : messages.create}
-            />
           </>
         }
       </Form>
     )
   }
+
+  getApi = (formApi: FormAPI<FormValues>) => {
+    this.formApi = formApi
+  }
+
+  onSave = () => {
+    if (this.formApi) {
+      this.formApi.submitForm()
+    }
+  }
+
+  validate = (values: FormValues) => {
+    const { intl: { formatMessage } } = this.props
+    return {
+      name: !values.name.trim() ? formatMessage(messages.valueEmpty)
+        : undefined
+    }
+  }
+
+  onSubmit = ({ fi, ...input }: FormValues) => {
+    const { saveBank, navBank, bankId } = this.props
+    const variables = {
+      bankId,
+      input
+    }
+    saveBank(variables, this.onSaved)
+  }
+
+  onSaved = ({ saveBank: { id: bankId } }: SaveBank.Mutation) => {
+    const { navBank } = this.props
+    navBank(bankId)
+  }
+
+  fiOnValueChange = (value: number) => {
+    const formApi = this.formApi
+    if (formApi) {
+      const fi = filist[value]
+      formApi.setValue('name', fi.name || '')
+      formApi.setValue('web', fi.profile.siteURL || '')
+      formApi.setValue('favicon', '')
+      formApi.setValue('address', formatAddress(fi) || '')
+      formApi.setValue('fid', fi.fid || '')
+      formApi.setValue('org', fi.org || '')
+      formApi.setValue('ofx', fi.ofx || '')
+    }
+  }
 }
 
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, { navAccounts: actions.navAccounts }),
+  connect(null, { navBank: actions.navBank }),
   withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   withMutation({ saveBank: Mutations.saveBank }),
 )(BankFormComponent)
