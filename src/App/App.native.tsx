@@ -145,18 +145,18 @@ interface TopNavigatorComponentProps extends InjectedIntlProps {
   setTopNavigator: (topNavigator: NavigationContainerComponent) => any
 }
 
-const TopNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator, intl }) => {
+const AppNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator, intl }) => {
   const screenProps: ScreenProps = ({ intl })
   return (
     <AuthStack screenProps={screenProps} ref={setTopNavigator} />
   )
 }
 
-const TopNavigator = compose(
+const AppNavigator = compose(
   injectIntl,
   connect(null, { setTopNavigator: nativeActions.setTopNavigator })
-)(TopNavigatorComponent)
-TopNavigator.displayName = 'TopNavigator'
+)(AppNavigatorComponent)
+AppNavigator.displayName = 'AppNavigator'
 
 const App: React.SFC = () => {
   return (
@@ -165,7 +165,7 @@ const App: React.SFC = () => {
         <IntlProvider locale='en' textComponent={Text}>
           <AppDbProvider>
             <Root>
-              <TopNavigator />
+              <AppNavigator />
             </Root>
           </AppDbProvider>
         </IntlProvider>
