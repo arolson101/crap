@@ -1,14 +1,15 @@
+import { Body, Icon, Right, View, Left, Switch } from 'native-base'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
-import { Button, List, ListItem, Row, Text } from '../components/layout.native'
+import { List, ListItem, Text } from '../components/layout.native'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
+import { Banks } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
 import { AddButtonProps, makeScreen } from './Screen'
-import { Right, Icon, Left } from 'native-base'
 
 interface Props {
 }
@@ -25,54 +26,85 @@ interface ConnectedProps {
 
 class AccountsScreenComponent extends React.Component<Props & ConnectedProps & AddButtonProps> {
   componentDidMount () {
-    this.props.setAdd(this.props.navBankCreate)
-  }
-
-  componentDidUpdate () {
-    this.props.setAdd(this.props.navBankCreate)
+    const { setAdd } = this.props
+    setAdd(this.onAddButton)
   }
 
   render () {
+    const { banks } = this.props.query
     return (
-      <>
-        {this.props.query.banks.length === 0 &&
+      <View style={{ flex: 1 }}>
+        {banks.length === 0 &&
           <Text>No accounts</Text>
         }
-        <List>
-          {this.props.query.banks.map(bank =>
-            <React.Fragment key={bank.id}>
-              <ListItem onPress={() => this.props.navBank(bank.id)}>
-                <Left>
-                  <Text>
-                    {bank.name}
-                  </Text>
-                </Left>
-                <Right>
-                  <Icon name='arrow-forward' />
-                </Right>
-              </ListItem>
-              {/* <Row>
-                <Button
-                  title='edit'
-                  onPress={() => this.props.navBank(bank.id)}
-                />
-                <Button
-                  title='add account'
-                  onPress={() => this.props.navAccountCreate(bank.id)}
-                />
-              </Row> */}
-              {bank.accounts.map(account =>
-                <ListItem key={account.id} onPress={() => this.props.navAccount(account.id, account.name)}>
-                  <Text>
-                    {account.name}
-                  </Text>
-                </ListItem>
-              )}
-            </React.Fragment>
-          )}
-        </List>
-      </>
+        {banks.map(bank =>
+          <React.Fragment key={bank.id}>
+            <View style={{ height: 20 }} />
+            <BankItem {...this.props} bank={bank} />
+          </React.Fragment>
+        )}
+      </View>
     )
+  }
+
+  onAddButton = () => {
+    const { navBankCreate } = this.props
+    navBankCreate()
+  }
+}
+
+class BankItem extends React.Component<ConnectedProps & { bank: Banks.Banks }> {
+  render () {
+    const { bank } = this.props
+    return (
+      <List>
+        <ListItem onPress={this.onPress}>
+          <Body>
+            <Text>
+              {bank.name}
+            </Text>
+          </Body>
+          <Right>
+            <Icon name='arrow-forward' />
+          </Right>
+        </ListItem>
+        {bank.accounts.map(account =>
+          <AccountItem key={account.id} {...this.props} account={account} />
+        )}
+      </List>
+    )
+  }
+
+  onPress = () => {
+    const { navBank, bank } = this.props
+    navBank(bank.id)
+  }
+}
+
+class AccountItem extends React.Component<ConnectedProps & { account: Banks.Accounts }> {
+  render () {
+    const { account } = this.props
+    return (
+      <ListItem /*avatar*/ key={account.id} onPress={this.onPress}>
+        {/* <Left>
+          <Icon name='warning' style={{color: 'orange'}}/>
+        </Left> */}
+        <Body>
+          <Text>
+            {account.name}
+          </Text>
+          <Text note>balance: $1234</Text>
+        </Body>
+        <Right>
+          <Icon name='arrow-forward' />
+        </Right>
+      </ListItem>
+    )
+  }
+
+  onPress = () => {
+    const { account, navAccount } = this.props
+    navAccount(account.id, account.name)
   }
 }
 

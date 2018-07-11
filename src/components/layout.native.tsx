@@ -9,9 +9,10 @@ interface ButtonProps {
   block?: boolean
   onPress: () => void
   title: string | FormattedMessage.MessageDescriptor
+  transparent?: boolean
 }
-export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
-  <NB.Button block={block} onPress={onPress}>
+export const Button: React.SFC<ButtonProps> = ({ block, onPress, title, transparent }) => (
+  <NB.Button block={block} onPress={onPress} transparent={transparent}>
     {typeof title === 'string'
       ? <Text>{title}</Text>
       : <FormattedMessage {...title} />
@@ -19,9 +20,9 @@ export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
   </NB.Button>
 )
 
-export const Text: React.SFC = (props) => (
-  <NB.Text {...props} />
-)
+export const Text = NB.Text //: React.SFC = (props) => (
+//   <NB.Text {...props} />
+// )
 
 export const List: React.SFC = (props) => (
   <NB.List {...props} style={{ backgroundColor: platform.cardDefaultBg }} />
