@@ -2,7 +2,7 @@ import { Container, Content } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormattedMessage, InjectedIntlProps } from 'react-intl'
-import { Platform, StyleSheet } from 'react-native'
+import { Platform, ScrollView, StyleSheet } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react-navigation'
@@ -68,11 +68,13 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
       <SafeAreaView style={{ flex: 1 }}>
         <Container>
           <Content contentContainerStyle={{ flex: 1 }}>
-            <Component
-              {...props}
-              {...moreProps}
-              {...props.navigation.state.params}
-            />
+            <ScrollView>
+              <Component
+                {...props}
+                {...moreProps}
+                {...props.navigation.state.params}
+              />
+            </ScrollView>
           </Content>
         </Container>
       </SafeAreaView>
