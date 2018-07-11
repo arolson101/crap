@@ -18,16 +18,18 @@ interface Props extends Params {
   navAccountEdit: (accountId: string) => any
 }
 
-export const AccountScreenComponent: React.SFC<Props> = (props) => {
-  const { account } = props.query
+class AccountScreenComponent extends React.PureComponent<Props> {
+  render () {
+    const { account } = this.props.query
 
-  return (
-    <>
-      <Text>Account2: {account.name}</Text>
-      <Text>bank: {account.name}</Text>
-      <Button title='edit' onPress={() => props.navAccountEdit(props.accountId)} />
-    </>
-  )
+    return (
+      <>
+        <Text>Account: {account.name}</Text>
+        <Text>bank: {account.name}</Text>
+        <Button title='edit' onPress={() => this.props.navAccountEdit(account.id)} />
+      </>
+    )
+  }
 }
 
 export const AccountPage = compose(

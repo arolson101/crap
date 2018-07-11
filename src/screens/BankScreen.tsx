@@ -6,30 +6,44 @@ import { Button, Text } from '../components/layout'
 import { Queries } from '../db/index'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
-import { makeScreen } from './Screen'
+import { makeScreen, EditButtonProps } from './Screen'
 
 interface Params {
   bankId: string
 }
 
-interface Props extends Params {
+interface Props extends Params, EditButtonProps {
   query: Queries.Bank
   navBankEdit: (bankId: string) => any
 }
 
-export const BankScreenComponent: React.SFC<Props> = (props) => {
-  const { bank } = props.query
+export class BankScreenComponent extends React.PureComponent<Props> {
+  componentDidMount () {
+    this.props.setEdit(this.bankEdit)
+  }
 
-  return (
-    <>
-      <Text>bank: {bank.name}</Text>
-      <Button title='edit' onPress={() => props.navBankEdit(bank.id)} />
-    </>
-  )
+  componentDidUpdate () {
+    this.props.setEdit(this.bankEdit)
+  }
+
+  bankEdit = () => {
+    this.props.navBankEdit(this.props.bankId)
+  }
+
+  render () {
+    const { bank } = this.props.query
+
+    return (
+      <>
+        <Text>bank: {bank.name}</Text>
+        <Button title='edit' onPress={this.bankEdit} />
+      </>
+    )
+  }
 }
 
 export const BankScreen = compose(
-  makeScreen({ title: () => messages.title }),
+  makeScreen({ title: () => messages.title, editButton: true }),
   withQuery({ query: Queries.bank }, ({ bankId }: Params) => ({ bankId })),
   connect(null, { navBankEdit: actions.navBankEdit })
 )(BankScreenComponent)
