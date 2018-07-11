@@ -21,7 +21,7 @@ export class Form extends React.Component<Props> {
               NB.Toast.show({
                 text: errors[field] as string,
                 buttonText: 'Okay',
-                duration: 0,
+                duration: 5000,
                 type: 'danger',
                 onClose: () => {
                   this.formApi.setError(field, null)
