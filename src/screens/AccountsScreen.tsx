@@ -19,7 +19,7 @@ interface ConnectedProps {
   deleteAccount: Mutations.DeleteAccount
   navBankCreate: () => any
   navAccountCreate: (bankId: string) => any
-  navBankEdit: (bankId: string) => any
+  navBank: (bankId: string) => any
   navAccount: (accountId: string) => any
 }
 
@@ -41,7 +41,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
         <List>
           {this.props.query.banks.map(bank =>
             <React.Fragment key={bank.id}>
-              <ListItem onPress={() => this.props.navBankEdit(bank.id)}>
+              <ListItem onPress={() => this.props.navBank(bank.id)}>
                 <Left>
                   <Text>
                     {bank.name}
@@ -54,7 +54,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
               {/* <Row>
                 <Button
                   title='edit'
-                  onPress={() => this.props.navBankEdit(bank.id)}
+                  onPress={() => this.props.navBank(bank.id)}
                 />
                 <Button
                   title='add account'
@@ -84,7 +84,7 @@ export const AccountsScreen = compose(
   connect(null, {
     navBankCreate: actions.navBankCreate,
     navAccountCreate: actions.navAccountCreate,
-    navBankEdit: actions.navBankEdit,
+    navBank: actions.navBank,
     navAccount: actions.navAccount,
   })
 )(AccountsScreenComponent)

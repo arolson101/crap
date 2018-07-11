@@ -80,7 +80,8 @@ const accountsStack = makeTab(
     android: `account-balance`,
   }),
   {
-    Accounts: screens.AccountsScreen
+    Accounts: screens.AccountsScreen,
+    [paths.bank]: screens.BankScreen,
   }
 )
 
