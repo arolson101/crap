@@ -11,6 +11,7 @@ import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen';
 import { FormAPI } from 'react-form';
+import { SaveAccount } from '../db/mutations/mutations-types';
 
 export namespace AccountForm {
   export interface Props {
@@ -32,8 +33,11 @@ type FormValues = Account.Props
 const { Form, SelectField, TextField } = typedFields<FormValues>()
 
 export class AccountFormComponent extends React.PureComponent<ComposedProps> {
-  getApi = (formApi: FormAPI<FormValues>) => {
-    this.props.setSave(formApi.submitForm)
+  formApi: FormAPI<FormValues>
+
+  componentDidMount () {
+    const { setSave } = this.props
+    setSave(this.onSave)
   }
 
   render () {
@@ -41,24 +45,16 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     const edit = this.props.accountId && props.query.account
     const { intl } = this.props
 
+    const defaultValues = {
+      ...(edit ? pick(edit, Object.keys(Account.defaultValues())) as any : Account.defaultValues())
+    }
+
     return (
       <Form
         getApi={this.getApi}
-        defaultValues={{
-          ...(edit ? pick(edit, Object.keys(Account.defaultValues())) as any : Account.defaultValues())
-        }}
-        validate={values => ({
-          name: !values.name || !values.name.trim() ? intl.formatMessage(messages.valueEmpty)
-            : undefined
-        })}
-        onSubmit={input => {
-          const variables = {
-            bankId: props.bankId,
-            accountId: edit ? edit.id : null,
-            input
-          }
-          props.saveAccount(variables, result => props.navAccount(result.saveAccount.id, result.saveAccount.name))
-        }}
+        defaultValues={defaultValues}
+        validate={this.validate}
+        onSubmit={this.onSubmit}
       >
         {formApi =>
           <Container>
@@ -80,9 +76,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
                 label: intl.formatMessage(Account.messages[acct])
               }))}
               label={messages.type}
-              onValueChange={(type: Account.Type) => {
-                formApi.setValue('color', Account.generateColor(type))
-              }}
+              onValueChange={this.typeOnValueChange}
             />
             <TextField
               field='color'
@@ -109,7 +103,51 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
       </Form>
     )
   }
+
+  getApi = (formApi: FormAPI<FormValues>) => {
+    this.formApi = formApi
+  }
+
+  onSave = () => {
+    if (this.formApi) {
+      this.formApi.submitForm()
+    }
+  }
+
+  validate = (values: FormValues) => {
+    const { intl: { formatMessage } } = this.props
+    return {
+      name: !values.name || !values.name.trim() ? formatMessage(messages.valueEmpty)
+        : undefined
+    }
+  }
+
+  onSubmit = (input: Account.Props) => {
+    const { bankId, accountId, query, saveAccount } = this.props
+    const edit = accountId && query.account
+
+    const variables = {
+      bankId,
+      accountId: edit ? edit.id : null,
+      input
+    }
+
+    saveAccount(variables, this.onSaveAccount)
+  }
+
+  onSaveAccount = (result: SaveAccount.Mutation) => {
+    const { navAccount } = this.props
+    const { saveAccount } = result
+    navAccount(saveAccount.id, saveAccount.name)
+  }
+
+  typeOnValueChange = (type: Account.Type) => {
+    if (this.formApi) {
+      this.formApi.setValue('color', Account.generateColor(type))
+    }
+  }
 }
+
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, { navAccount: actions.navAccount }),

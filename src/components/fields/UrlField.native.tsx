@@ -37,25 +37,16 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
               inlineLabel
               error={error}
               {...inputProps}
-              // error={error}
-              // autoFocus={autoFocus}
-              // multiline={(rows ? rows > 0 : undefined)}
-              // numberOfLines={rows}
-              // onChangeText={fieldApi.setValue}
-              // value={fieldApi.value}
               placeholder={placeholder && intl.formatMessage(placeholder)}
-              // onSubmitEditing={onSubmitEditing}
-              // innerRef={(current) => this.textInput = { current }}
-              // textColor={textColor}
             >
               <Label {...labelProps}>{intl.formatMessage(label)}</Label>
               <Input
+                autoFocus={autoFocus}
                 onChangeText={fieldApi.setValue}
                 value={fieldApi.value}
                 onSubmitEditing={onSubmitEditing}
                 returnKeyType={returnKeyType}
                 ref={(ref: any) => this.textInput = ref && ref._root}
-                // style={{color: textColor}}
               />
             </Item>
           )
