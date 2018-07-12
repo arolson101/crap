@@ -7,14 +7,14 @@ import { Record, RecordClass, deleteRecord, updateRecord } from '../Record'
 export {
   Arg, Args, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation,
   ObjectType, Query, Resolver, Root, registerEnumType
-} from 'type-graphql/src/decorators'
+} from 'type-graphql/decorators'
 
 export {
   ResolverInterface
-} from 'type-graphql/src/interfaces'
+} from 'type-graphql/interfaces'
 
-import { SchemaGenerator } from 'type-graphql/src/schema/schema-generator'
-import { BuildSchemaOptions } from 'type-graphql/src/utils/buildSchema'
+import { SchemaGenerator } from 'type-graphql/schema/schema-generator'
+import { BuildSchemaOptions } from 'type-graphql/utils/buildSchema'
 
 // build this function manually (copied from type-graphql) to fix runtime error:
 //   ./node_modules/type-graphql/helpers/loadResolversFromGlob.js

@@ -102,6 +102,7 @@
       "name": "genSchema",
       "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
       "args": [
+        "-transpileOnly",
         "--project",
         "tsconfig.test.json",
         "-r",
