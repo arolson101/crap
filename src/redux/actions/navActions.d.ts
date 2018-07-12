@@ -3,6 +3,8 @@ import * as native from './navActions.native'
 
 export interface NavApi {
   navBack: () => any
+  login: () => any
+  logout: () => any
   navHome: () => any
   navAccounts: () => any
   navBudgets: () => any

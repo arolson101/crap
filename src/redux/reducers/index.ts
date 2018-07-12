@@ -21,3 +21,7 @@ export const selectors = {
   getIndexDb: (state: AppState) => dbSelectors.getIndexDb(state.db),
   getAppDb: (state: AppState) => dbSelectors.getAppDb(state.db),
 }
+
+export namespace selectors {
+  export type returnOf = { [K in keyof typeof selectors]: ReturnType<(typeof selectors)[K]> }
+}

@@ -6,6 +6,14 @@ import { NavApi } from './navActions'
 export const navActions: NavApi = {
   navBack: () => nativeActions.navigate(NavigationActions.back()),
 
+  login: () => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.app,
+  })),
+
+  logout: () => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.login,
+  })),
+
   navHome: () => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.root.home,
   })),

@@ -21,15 +21,6 @@ export const navReducer = (state: NavState = initialState, action: NativeAction 
       }
       return state
 
-    case getType(dbActions.setAppDb):
-      if (state.navigator) {
-        const isOpen = !!action.payload
-        const routeName = isOpen ? paths.app : paths.login
-        const dispatch = state.navigator.dispatch
-        setTimeout(() => dispatch(NavigationActions.navigate({ routeName })), 1)
-      }
-      return state
-
     default:
       return state
   }

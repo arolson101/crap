@@ -5,25 +5,28 @@ import { runQuery } from 'apollo-server-core'
 import * as React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { Text } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import Observable from 'zen-observable-ts'
+import { paths } from '../nav'
 import { actions } from '../redux/actions/index'
 import { AppState, selectors } from '../redux/reducers/index'
 import { openDb } from './openDb'
 import schema from './schema'
-import { Connection } from './typeorm'
 
 export interface ResolverContext {
-  indexDb: Connection
-  appDb: Connection | null
-  setAppDb: (appDb: Connection | null) => any
+  indexDb: NonNullable<selectors.returnOf['getIndexDb']>
+  appDb: selectors.returnOf['getAppDb']
+  setAppDb: actions['setAppDb']
 }
 
 interface Props {
-  setIndexDb: (indexDb: Connection) => any
-  indexDb: Connection | null
-  appDb: Connection | null
-  setAppDb: (appDb: Connection | null) => any
+  indexDb: selectors.returnOf['getIndexDb']
+  appDb: selectors.returnOf['getAppDb']
+  setAppDb: actions['setAppDb']
+  setIndexDb: actions['setIndexDb']
+  login: actions['login']
+  logout: actions['logout']
 }
 
 class AppDbProviderComponent extends React.Component<Props> {
@@ -61,6 +64,19 @@ class AppDbProviderComponent extends React.Component<Props> {
     this.props.setIndexDb(indexDb)
   }
 
+  componentDidUpdate (prevProps: Props) {
+    console.log('componentDidUpdate')
+    const { login, logout, appDb } = this.props
+    if (prevProps.appDb !== appDb) {
+      const isOpen = !!appDb
+      if (isOpen) {
+        login()
+      } else {
+        logout()
+      }
+    }
+  }
+
   render () {
     if (!this.props.indexDb) {
       return <Text>loading</Text>
@@ -81,5 +97,7 @@ export const AppDbProvider = connect(
   {
     setIndexDb: actions.setIndexDb,
     setAppDb: actions.setAppDb,
+    login: actions.login,
+    logout: actions.logout,
   }
 )(AppDbProviderComponent) as any

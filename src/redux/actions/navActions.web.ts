@@ -7,6 +7,9 @@ import { NavApi } from './navActions'
 export const navActions: NavApi = {
   navBack: () => push(''),
 
+  login: () => push(paths.app),
+  logout: () => push(paths.login),
+
   navHome: () => push(paths.root.home),
   navAccounts: () => push(paths.root.accounts),
   navBudgets: () => push(paths.root.budgets),
