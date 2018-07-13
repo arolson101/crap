@@ -8,6 +8,7 @@
     "electron-is-dev": "^0.3.0",
     "electron-window-state": "^4.1.1",
     "node-pre-gyp": "^0.10.3",
+    "react-native-navigation": "^2.0.2411",
     "sqlite3": "^4.0.1",
     "typeorm": "^0.2.7"
   },

@@ -12,8 +12,22 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 import org.pgsqlite.SQLitePluginPackage;
+import com.reactnativenavigation.NavigationApplication;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends NavigationApplication implements ReactApplication {
+  @Override
+  public boolean isDebug() {
+      return BuildConfig.DEBUG;
+  }
+
+  @Override
+  public List<ReactPackage> createAdditionalReactPackages() {
+      return Arrays.<ReactPackage>asList(
+        new SQLitePluginPackage(),
+        new RandomBytesPackage()
+        // eg. new VectorIconsPackage()
+      );
+  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
