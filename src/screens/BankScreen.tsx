@@ -1,4 +1,4 @@
-import { Body, Card, CardItem } from 'native-base'
+import { Body, Card, CardItem, View } from 'native-base'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { Linking } from 'react-native'
@@ -65,37 +65,37 @@ export class BankScreenComponent extends React.PureComponent<Props> {
 
     return (
       <>
+        <Card>
+          <CardItem header>
+            <Text>{bank.name}</Text>
+          </CardItem>
+          {bank.web &&
+            <CardItem>
+              <Link title={bank.web} url={bank.web} />
+            </CardItem>
+          }
+          <CardItem>
+            <Body>
+              {bank.address.split(/\n/g).map((line, i) => (
+                <Text key={i} note>{line}</Text>
+              ))}
+            </Body>
+          </CardItem>
+          <CardItem>
+            <Body>
+              {bank.notes.split(/\n/g).map((line, i) => (
+                <Text key={i} note>{line}</Text>
+              ))}
+            </Body>
+          </CardItem>
+        </Card>
+        <Divider><Text>accounts</Text></Divider>
         <List>
-          <Card>
-            <CardItem header>
-              <Text>{bank.name}</Text>
-            </CardItem>
-            {bank.web &&
-              <CardItem>
-                <Link title={bank.web} url={bank.web} />
-              </CardItem>
-            }
-            <CardItem>
-              <Body>
-                {bank.address.split(/\n/g).map((line, i) => (
-                  <Text key={i} note>{line}</Text>
-                ))}
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                {bank.notes.split(/\n/g).map((line, i) => (
-                  <Text key={i} note>{line}</Text>
-                ))}
-              </Body>
-            </CardItem>
-          </Card>
-          <Divider />
           {bank.accounts.map(account => (
             <AccountItem key={account.id} {...this.props} account={account} />
           ))}
+          <Button block title='add account' onPress={this.accountCreate} />
         </List>
-        <Button block title='add account' onPress={this.accountCreate} />
       </>
     )
   }

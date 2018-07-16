@@ -75,7 +75,7 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
           >
             <Icon name='share' />
           </Fab> */}
-          <Content>
+          <Content style={{ backgroundColor: platform.brandLight }}>
             <Component
               {...props}
               {...moreProps}
