@@ -1,17 +1,18 @@
-import { Body, Card, CardItem, View } from 'native-base'
+import { Body, Card, CardItem, Text } from 'native-base'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { Linking } from 'react-native'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Divider } from '../components/fields/Divider'
-import { Button, List, ListItem, Text } from '../components/layout.native'
+import { Button, List, ListItem } from '../components/layout.native'
 import { Queries } from '../db/index'
 import { withQuery } from '../db/queries/makeQuery'
 import { Bank } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
 import { EditButtonProps, makeScreen } from './Screen'
 import * as URL from 'url'
+import platform from 'native-base/dist/src/theme/variables/platform';
 
 interface Params {
   bankId: string
@@ -22,29 +23,6 @@ interface Props extends Params, EditButtonProps {
   navBankEdit: (bankId: string) => any
   navAccount: (accountId: string, accountName: string) => any
   navAccountCreate: (bankId: string) => any
-}
-
-class Link extends React.Component<{ url: string, title: any }> {
-  render () {
-    const { url, ...props } = this.props
-    return <Button transparent {...props} onPress={this.onPress} />
-  }
-
-  onPress = () => {
-    const urlf = URL.parse(this.props.url)
-    if(!urlf.protocol) {
-      urlf.protocol = 'https'
-    }
-    const url = URL.format(urlf)
-    Linking.canOpenURL(url).then(supported => {
-      if (!supported) {
-        console.warn('Can\'t handle url: ' + url)
-        return
-      } else {
-        return Linking.openURL(url)
-      }
-    }).catch(err => console.warn('An error occurred', err))
-  }
 }
 
 export class BankScreenComponent extends React.PureComponent<Props> {
@@ -60,6 +38,23 @@ export class BankScreenComponent extends React.PureComponent<Props> {
     this.props.navAccountCreate(this.props.bankId)
   }
 
+  webOnPress = () => {
+    const { bank } = this.props.query
+    const urlf = URL.parse(bank.web)
+    if (!urlf.protocol) {
+      urlf.protocol = 'https'
+    }
+    const url = URL.format(urlf)
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        console.warn('Can\'t handle url: ' + url)
+        return
+      } else {
+        return Linking.openURL(url)
+      }
+    }).catch(err => console.warn('An error occurred', err))
+  }
+
   render () {
     const { bank } = this.props.query
 
@@ -70,8 +65,10 @@ export class BankScreenComponent extends React.PureComponent<Props> {
             <Text>{bank.name}</Text>
           </CardItem>
           {bank.web &&
-            <CardItem>
-              <Link title={bank.web} url={bank.web} />
+            <CardItem button onPress={this.webOnPress}>
+              <Body>
+                <Text style={{color: platform.brandPrimary}} note>{bank.web}</Text>
+              </Body>
             </CardItem>
           }
           <CardItem>

@@ -13211,9 +13211,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typeorm@^0.2.7:
+"typeorm@https://github.com/arolson101/typeorm.git#with_build":
   version "0.2.7"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.7.tgz#4bbbace80dc91b1303be13f42d44ebf01d1b2558"
+  resolved "https://github.com/arolson101/typeorm.git#5472d6db1484ee5e94d11d2f7171d4e01565bcaf"
   dependencies:
     app-root-path "^2.0.1"
     buffer "^5.1.0"

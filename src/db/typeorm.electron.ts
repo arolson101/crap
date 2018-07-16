@@ -1,1 +1,1 @@
-export * from 'typeorm'
+export * from 'typeorm/build/package'

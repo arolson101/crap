@@ -9,7 +9,7 @@
     "electron-window-state": "^4.1.1",
     "node-pre-gyp": "^0.10.3",
     "sqlite3": "^4.0.2",
-    "typeorm": "^0.2.7"
+    "typeorm": "https://github.com/arolson101/typeorm.git#with_build"
   },
   "build": {
     "appId": "com.github.arolson101.crap",
