@@ -1,33 +1,44 @@
-import { NavigationActions } from 'react-navigation'
 import { paths } from '../../nav'
 import { nativeActions } from './nativeActions'
 import { NavApi } from './navActions'
+import { ActionType, createAction } from 'typesafe-actions'
+
+export const navPop = createAction('nav/pop')
+export const navPush = createAction('nav/push', resolve =>
+  (routeName: string, params: object = {} as any) => resolve({
+    routeName,
+    params
+  })
+)
+export const navSwitchToTab = createAction('nav/switchToTab', resolve =>
+  (path: string) => resolve({
+    path
+  })
+)
 
 export const navActions: NavApi = {
-  navBack: () => nativeActions.navigate(NavigationActions.back()),
+  navBack: () => navPop(),
 
-  login: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.app,
-  })),
+  login: () => navPush(paths.app),
+  logout: () => navPush(paths.login),
 
-  logout: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.login,
-  })),
+  navHome: () => navSwitchToTab(paths.root.home),
+  navAccounts: () => navSwitchToTab(paths.root.accounts),
+  navBudgets: () => navSwitchToTab(paths.root.budgets),
 
-  navHome: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.root.home,
-  })),
-  navAccounts: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.root.accounts,
-  })),
-  navBudgets: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.root.budgets,
-  })),
+  navBank: createAction('nav/push', resolve =>
+    (bankId: string) => resolve({
+      routeName: paths.bank,
+      params: { bankId }
+    })
+  ),
 
-  navBank: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.bank,
-    params: { bankId }
-  })),
+  navBankCreate: createAction('nav/push', resolve =>
+    () => resolve({
+      routeName: paths.bankCreate,
+      params: {}
+    })
+  ),
 
   navBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.modal,

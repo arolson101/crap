@@ -1,17 +1,20 @@
 import * as React from 'react'
 import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'redux'
+import { connect } from 'react-redux'
 import { AppBannerText, Button, FormContent, WelcomeText } from '../components/index'
 import { typedFields } from '../components/fields/index'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
+import { actions } from '../redux/actions/index';
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
   deleteDb: Mutations.DeleteDb
+  login: actions['login']
 }
 
 interface FormValues {
@@ -43,6 +46,7 @@ export const LoginForm = compose(
   withMutation({ openDb: Mutations.openDb }),
   withMutation({ createDb: Mutations.createDb }),
   withMutation({ deleteDb: Mutations.deleteDb }),
+  connect(null, { login: actions.login }),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 
@@ -63,7 +67,7 @@ const FormCreate: React.SFC<Props> = (props) => {
       })}
       onSubmit={({ password }) => {
         const variables = { name: 'appdb', password }
-        props.createDb(variables)
+        props.createDb(variables, props.login)
       }}
     >
       {formApi =>
@@ -108,7 +112,7 @@ const FormOpen: React.SFC<Props> = (props) => {
       })}
       onSubmit={({ password }) => {
         const dbId = props.query.allDbs[0].dbId
-        props.openDb({ password, dbId })
+        props.openDb({ password, dbId }, props.login)
       }}
     >
       {formApi =>

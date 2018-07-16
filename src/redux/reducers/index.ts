@@ -2,6 +2,7 @@ import { combineReducers, Store } from 'redux'
 import { dbReducer, dbSelectors, DbState } from './dbReducer'
 import { navReducer, NavState } from './navReducer'
 import { AppAction } from '../actions/index'
+import { ResolverContext } from '../../db/index';
 
 export interface AppState {
   db: DbState,
@@ -20,6 +21,7 @@ export const selectors = {
   isAppDbLoaded: (state: AppState) => dbSelectors.isAppDbLoaded(state.db),
   getIndexDb: (state: AppState) => dbSelectors.getIndexDb(state.db),
   getAppDb: (state: AppState) => dbSelectors.getAppDb(state.db),
+  getAppGraphQLClient: (state: AppState) => dbSelectors.getAppGraphQLClient(state.db),
 }
 
 export namespace selectors {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { CenteredContent } from '../components/index'
 import { LoginForm } from '../forms/LoginForm'
-import { makeScreen } from './Screen'
+import { makeScreen2, registerScreen } from './Screen2'
 import { defineMessages } from 'react-intl'
 
 export const LoginScreenComponent: React.SFC = (props) => {
@@ -12,11 +12,13 @@ export const LoginScreenComponent: React.SFC = (props) => {
   )
 }
 
+export const LoginScreen = makeScreen2({
+  getTitle: () => messages.title
+})(LoginScreenComponent)
+
 const messages = defineMessages({
   title: {
     id: 'LoginScreen.title',
     defaultMessage: 'Login'
   }
 })
-
-export const LoginScreen = makeScreen({ title: () => messages.title })(LoginScreenComponent)

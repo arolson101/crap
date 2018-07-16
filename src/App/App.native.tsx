@@ -1,8 +1,8 @@
 import { Root, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { InjectedIntlProps, injectIntl, IntlProvider } from 'react-intl'
-import { Platform } from 'react-native'
+import { InjectedIntlProps, injectIntl, IntlProvider, defineMessages } from 'react-intl'
+import { Platform, SafeAreaView } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
@@ -15,7 +15,7 @@ import { paths } from '../nav'
 import { nativeActions } from '../redux/actions/nativeActions'
 import { ReduxProvider } from '../redux/index'
 import * as screens from '../screens/index'
-import { ScreenComponent, ScreenProps } from '../screens/Screen'
+import { ScreenComponent, ScreenProps, makeScreen } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
 
 const getCurrentParams = (state: any): any => {
@@ -158,20 +158,63 @@ const AppNavigator = compose(
 )(AppNavigatorComponent)
 AppNavigator.displayName = 'AppNavigator'
 
+const Services: React.SFC = ({ children }) => {
+  return (
+    <ReduxProvider>
+      <IntlProvider locale='en' textComponent={Text}>
+        <AppDbProvider>
+          <Root>
+            <SafeAreaView>
+            {children}
+            </SafeAreaView>
+          </Root>
+        </AppDbProvider>
+      </IntlProvider>
+    </ReduxProvider>
+  )
+}
+
 const App: React.SFC = () => {
   return (
-    <LoadFonts>
-      <ReduxProvider>
-        <IntlProvider locale='en' textComponent={Text}>
-          <AppDbProvider>
-            <Root>
-              <AppNavigator />
-            </Root>
-          </AppDbProvider>
-        </IntlProvider>
-      </ReduxProvider>
-    </LoadFonts>
+    <Services>
+      <AppNavigator />
+    </Services>
   )
 }
 
 export default App
+
+import { Navigation } from 'react-native-navigation'
+import { LoginScreen, LoginScreenComponent } from '../screens/index'
+import { registerScreen, makeScreen2 } from '../screens/Screen2'
+
+const LoginAppComponent: React.SFC = () => {
+  return (
+    <Services>
+      <LoginScreenComponent />
+    </Services>
+  )
+}
+
+const messages = defineMessages({
+  LoginApp: {
+    id: 'App.native.LoginApp',
+    defaultMessage: 'hello'
+  }
+})
+
+const LoginApp = makeScreen2({ getTitle: () => messages.LoginApp })(LoginAppComponent)
+registerScreen(LoginApp)
+
+const initLogin = () => {
+  Navigation.setRoot({
+    root: {
+      component: {
+        name: LoginApp.screenID
+      }
+    }
+  })
+}
+
+// registerScreen(LoginScreen)
+Navigation.events().registerAppLaunchedListener(initLogin)
