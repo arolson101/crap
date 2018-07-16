@@ -1,18 +1,18 @@
-import { Body, Card, CardItem, Text } from 'native-base'
-import * as React from 'react'
-import { defineMessages } from 'react-intl'
-import { Linking } from 'react-native'
-import { connect } from 'react-redux'
-import { compose } from 'recompose'
-import { Divider } from '../components/fields/Divider'
-import { Button, List, ListItem } from '../components/layout.native'
+import { Body, Card, CardItem, Icon, Right, Text } from 'native-base';
+import platform from 'native-base/dist/src/theme/variables/platform';
+import * as React from 'react';
+import { defineMessages, FormattedMessage } from 'react-intl';
+import { Linking } from 'react-native';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+import * as URL from 'url';
+import { Divider } from '../components/fields/Divider';
+import { List, ListItem } from '../components/layout.native'
 import { Queries } from '../db/index'
 import { withQuery } from '../db/queries/makeQuery'
 import { Bank } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
 import { EditButtonProps, makeScreen } from './Screen'
-import * as URL from 'url'
-import platform from 'native-base/dist/src/theme/variables/platform';
 
 interface Params {
   bankId: string
@@ -28,6 +28,61 @@ interface Props extends Params, EditButtonProps {
 export class BankScreenComponent extends React.PureComponent<Props> {
   componentDidMount () {
     this.props.setEdit(this.bankEdit)
+  }
+
+  render () {
+    const { bank } = this.props.query
+
+    return (
+      <>
+        <Card>
+          <CardItem header>
+            <Text>{bank.name}</Text>
+          </CardItem>
+          {bank.web &&
+            <CardItem button onPress={this.webOnPress}>
+              <Body>
+                <Text style={{ color: platform.brandPrimary }} note>{bank.web}</Text>
+              </Body>
+            </CardItem>
+          }
+          <CardItem>
+            <Body>
+              {bank.address.split(/\n/g).map((line, i) => (
+                <Text key={i} note>{line}</Text>
+              ))}
+            </Body>
+          </CardItem>
+          <CardItem>
+            <Body>
+              {bank.notes.split(/\n/g).map((line, i) => (
+                <Text key={i} note>{line}</Text>
+              ))}
+            </Body>
+          </CardItem>
+        </Card>
+        <Divider>
+          {bank.accounts.length
+            ? <FormattedMessage {...messages.accountList}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
+            : <FormattedMessage {...messages.accountListEmpty}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
+          }
+        </Divider>
+        <List>
+          {bank.accounts.map(account => (
+            <AccountItem key={account.id} {...this.props} account={account} />
+          ))}
+          <Divider />
+          {bank.online &&
+            <ListItem onPress={this.getAccountList}>
+              <FormattedMessage {...messages.getAccountList} />
+            </ListItem>
+          }
+          <ListItem onPress={this.accountCreate}>
+            <FormattedMessage {...messages.addAccount} />
+          </ListItem>
+        </List>
+      </>
+    )
   }
 
   bankEdit = () => {
@@ -55,46 +110,8 @@ export class BankScreenComponent extends React.PureComponent<Props> {
     }).catch(err => console.warn('An error occurred', err))
   }
 
-  render () {
-    const { bank } = this.props.query
-
-    return (
-      <>
-        <Card>
-          <CardItem header>
-            <Text>{bank.name}</Text>
-          </CardItem>
-          {bank.web &&
-            <CardItem button onPress={this.webOnPress}>
-              <Body>
-                <Text style={{color: platform.brandPrimary}} note>{bank.web}</Text>
-              </Body>
-            </CardItem>
-          }
-          <CardItem>
-            <Body>
-              {bank.address.split(/\n/g).map((line, i) => (
-                <Text key={i} note>{line}</Text>
-              ))}
-            </Body>
-          </CardItem>
-          <CardItem>
-            <Body>
-              {bank.notes.split(/\n/g).map((line, i) => (
-                <Text key={i} note>{line}</Text>
-              ))}
-            </Body>
-          </CardItem>
-        </Card>
-        <Divider><Text>accounts</Text></Divider>
-        <List>
-          {bank.accounts.map(account => (
-            <AccountItem key={account.id} {...this.props} account={account} />
-          ))}
-          <Button block title='add account' onPress={this.accountCreate} />
-        </List>
-      </>
-    )
+  getAccountList = () => {
+    console.warn('getAccountList')
   }
 }
 
@@ -102,8 +119,13 @@ class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
   render () {
     const { account } = this.props
     return (
-      <ListItem key={account.id} onPress={this.onPress}>
-        <Text>{account.name}</Text>
+      <ListItem onPress={this.onPress}>
+        <Body>
+          <Text>{account.name}</Text>
+        </Body>
+        <Right>
+          <Icon name='arrow-forward' />
+        </Right>
       </ListItem>
     )
   }
@@ -130,4 +152,20 @@ const messages = defineMessages({
     id: 'BankScreen.title',
     defaultMessage: 'Bank'
   },
+  accountList: {
+    id: 'BankScreen.accountList',
+    defaultMessage: 'Accounts'
+  },
+  accountListEmpty: {
+    id: 'BankScreen.accountListEmpty',
+    defaultMessage: 'No Accounts'
+  },
+  getAccountList: {
+    id: 'BankScreen.getAccountList',
+    defaultMessage: 'Get account list from server...'
+  },
+  addAccount: {
+    id: 'BankScreen.addAccount',
+    defaultMessage: 'Add account...'
+  }
 })
