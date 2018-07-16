@@ -20,9 +20,9 @@ export const Button: React.SFC<ButtonProps> = ({ block, onPress, title, transpar
   </NB.Button>
 )
 
-export const Text = NB.Text //: React.SFC = (props) => (
-//   <NB.Text {...props} />
-// )
+export const Text: React.SFC<{note?: boolean}> = (props) => (
+  <NB.Text {...props} />
+)
 
 export const List: React.SFC = (props) => (
   <NB.List {...props} style={{ backgroundColor: platform.cardDefaultBg }} />

@@ -18,7 +18,7 @@ export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
   </BPButton>
 )
 
-export const Text: React.SFC = ({ children }) => (
+export const Text: React.SFC<{note?: boolean}> = ({ children }) => (
   <span>{children}</span>
 )
 

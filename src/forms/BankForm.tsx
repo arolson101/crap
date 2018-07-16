@@ -12,6 +12,7 @@ import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
+import { Text } from '../components/index';
 
 export namespace BankForm {
   export interface Props {
@@ -72,7 +73,13 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
       >
         {formApi =>
           <>
-            <Divider><FormattedMessage {...messages.fiHelp} /></Divider>
+            <Divider>
+              <FormattedMessage {...messages.fiHelp}>
+                {txt =>
+                  <Text note>{txt}</Text>
+                }
+              </FormattedMessage>
+              </Divider>
             <SelectField
               field='fi'
               items={filist.map(fi => ({ label: fi.name, value: fi.id }))}

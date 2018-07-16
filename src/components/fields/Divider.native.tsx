@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { ListItem, Separator } from 'native-base'
-import platform from 'native-base/dist/src/theme/variables/platform';
+import { ListItem } from 'native-base'
 
 export const Divider: React.SFC = ({ children }) => (
-  <Separator bordered style={{ backgroundColor: platform.brandLight }}>
+  <ListItem itemDivider>
     {children}
-  </Separator>
+  </ListItem>
 )
