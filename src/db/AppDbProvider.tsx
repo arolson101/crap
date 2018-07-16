@@ -4,11 +4,11 @@ import { ApolloLink } from 'apollo-link'
 import { runQuery } from 'apollo-server-core'
 import * as React from 'react'
 import { ApolloProvider } from 'react-apollo'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { Text } from 'react-native'
-import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
+import { compose } from 'redux'
 import Observable from 'zen-observable-ts'
-import { paths } from '../nav'
 import { actions } from '../redux/actions/index'
 import { AppState, selectors } from '../redux/reducers/index'
 import { openDb } from './openDb'
@@ -18,6 +18,7 @@ export interface ResolverContext {
   indexDb: NonNullable<selectors.returnOf['getIndexDb']>
   appDb: selectors.returnOf['getAppDb']
   setAppDb: actions['setAppDb']
+  formatMessage: (id: FormattedMessage.MessageDescriptor) => string
 }
 
 interface Props {
@@ -29,7 +30,7 @@ interface Props {
   logout: actions['logout']
 }
 
-class AppDbProviderComponent extends React.Component<Props> {
+class AppDbProviderComponent extends React.Component<Props & InjectedIntlProps> {
   client = new GraphQLClient({
     cache: new InMemoryCache(),
     link: new ApolloLink((operation, forward) => {
@@ -38,6 +39,7 @@ class AppDbProviderComponent extends React.Component<Props> {
           indexDb: this.props.indexDb!,
           appDb: this.props.appDb,
           setAppDb: this.props.setAppDb,
+          formatMessage: this.props.intl.formatMessage,
         }
 
         const opts = {
@@ -89,15 +91,18 @@ class AppDbProviderComponent extends React.Component<Props> {
   }
 }
 
-export const AppDbProvider = connect(
-  (state: AppState): Partial<Props> => ({
-    indexDb: selectors.getIndexDb(state)!,
-    appDb: selectors.getAppDb(state),
-  }),
-  {
-    setIndexDb: actions.setIndexDb,
-    setAppDb: actions.setAppDb,
-    login: actions.login,
-    logout: actions.logout,
-  }
+export const AppDbProvider = compose(
+  injectIntl,
+  connect(
+    (state: AppState): Partial<Props> => ({
+      indexDb: selectors.getIndexDb(state)!,
+      appDb: selectors.getAppDb(state),
+    }),
+    {
+      setIndexDb: actions.setIndexDb,
+      setAppDb: actions.setAppDb,
+      login: actions.login,
+      logout: actions.logout,
+    }
+  )
 )(AppDbProviderComponent) as any

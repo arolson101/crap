@@ -1,14 +1,16 @@
-import { Body, Card, CardItem, Icon, Right, Text } from 'native-base';
-import platform from 'native-base/dist/src/theme/variables/platform';
-import * as React from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
-import { Linking } from 'react-native';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
-import * as URL from 'url';
-import { Divider } from '../components/fields/Divider';
+import cuid from 'cuid'
+import { Body, Card, CardItem, Icon, Right, Text } from 'native-base'
+import platform from 'native-base/dist/src/theme/variables/platform'
+import * as React from 'react'
+import { defineMessages, FormattedMessage } from 'react-intl'
+import { Linking } from 'react-native'
+import { connect } from 'react-redux'
+import { compose } from 'recompose'
+import * as URL from 'url'
+import { Divider } from '../components/fields/Divider'
 import { List, ListItem } from '../components/layout.native'
-import { Queries } from '../db/index'
+import { Mutations, Queries } from '../db/index'
+import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { Bank } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
@@ -23,6 +25,7 @@ interface Props extends Params, EditButtonProps {
   navBankEdit: (bankId: string) => any
   navAccount: (accountId: string, accountName: string) => any
   navAccountCreate: (bankId: string) => any
+  getAccountList: Mutations.GetAccountList
 }
 
 export class BankScreenComponent extends React.PureComponent<Props> {
@@ -111,7 +114,9 @@ export class BankScreenComponent extends React.PureComponent<Props> {
   }
 
   getAccountList = () => {
-    console.warn('getAccountList')
+    const { bankId, getAccountList } = this.props
+    const cancelToken = cuid()
+    getAccountList({ bankId, cancelToken })
   }
 }
 
@@ -139,6 +144,7 @@ class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
 export const BankScreen = compose(
   makeScreen({ title: () => messages.title, editButton: true }),
   withQuery({ query: Queries.bank }, (params: Params) => params),
+  withMutation({ getAccountList: Mutations.getAccountList }),
   connect(null, {
     navBankEdit: actions.navBankEdit,
     navAccount: actions.navAccount,

@@ -5,6 +5,9 @@ import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { iupdate } from '../../iupdate'
 import { RecordClass } from '../Record'
 import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
+import { Bank } from './BankResolver';
+import Axios, { CancelTokenSource } from 'axios';
+import { createService, checkLogin, toAccountType } from '../../online'
 
 // see ofx4js.domain.data.banking.AccountType
 enum AccountType {
@@ -55,6 +58,7 @@ export class Account extends RecordClass<Account.Props> {
 
 @Resolver(objectType => Account)
 export class AccountResolver {
+  private tokens = new Map<string, CancelTokenSource>()
 
   @Query(returns => Account)
   async account (
@@ -115,6 +119,87 @@ export class AccountResolver {
     await dbWrite(appDb, changes)
     return true
   }
+
+  @Mutation(returns => Bank)
+  async getAccountList (
+    @Ctx() { appDb, formatMessage }: ResolverContext,
+    @Arg('bankId') bankId: string,
+    @Arg('cancelToken') cancelToken: string,
+  ): Promise<Bank> {
+    if (!appDb) { throw new Error('appDb not open') }
+
+    const bank = await appDb.manager.findOneOrFail(Bank, bankId)
+    if (!bank.online) {
+      throw new Error(`getAccountList: bank is not set online`)
+    }
+
+    const existingAccounts = await appDb.createQueryBuilder(Account, 'account')
+      .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
+      .getMany()
+
+    console.log('cancelToken', cancelToken)
+    const source = Axios.CancelToken.source()
+    this.tokens.set(cancelToken, source)
+
+    try {
+      const service = createService(bank, source.token, formatMessage)
+      const { username, password } = checkLogin(bank, formatMessage)
+      const accountProfiles = await service.readAccountProfiles(username, password)
+
+      if (accountProfiles.length === 0) {
+        console.log('server reports no accounts')
+      } else {
+        const t = Date.now()
+        const changes = accountProfiles
+          .map(accountProfile => toAccountInput(bank, accountProfiles, accountProfile))
+          .filter((input): input is Account => input !== undefined)
+          .filter(input => !existingAccounts.find(acct => !!acct.number && !!input.number && (acct.number.toLowerCase() === input.number.toLowerCase())))
+          .map(input => new Account(bankId, input, cuid))
+          .map(account => Account.change.add(t, account))
+        await dbWrite(appDb, changes)
+      }
+    } finally {
+      this.tokens.delete(cancelToken)
+    }
+
+    return bank
+  }
+}
+
+const toAccountInput = (
+  bank: Bank,
+  accountProfiles: ofx4js.domain.data.signup.AccountProfile[],
+  accountProfile: ofx4js.domain.data.signup.AccountProfile
+): AccountInput | undefined => {
+  const name = accountProfile.getDescription()
+    || (accountProfiles.length === 1 ? bank.name : `${bank.name} ${accountProfiles.indexOf(accountProfile)}`)
+
+  if (accountProfile.getBankSpecifics()) {
+    const bankSpecifics = accountProfile.getBankSpecifics()
+    const bankAccount = bankSpecifics.getBankAccount()
+    // bankAccount.getBranchId()
+    return {
+      name,
+      routing: bankAccount.getBankId(),
+      type: toAccountType(bankAccount.getAccountType()),
+      number: bankAccount.getAccountNumber(),
+    }
+  } else if (accountProfile.getCreditCardSpecifics()) {
+    const creditCardSpecifics = accountProfile.getCreditCardSpecifics()
+    const creditCardAccount = creditCardSpecifics.getCreditCardAccount()
+    return {
+      name,
+      type: AccountType.CREDITCARD,
+      number: creditCardAccount.getAccountNumber(),
+      key: creditCardAccount.getAccountKey(),
+    }
+  } else if (accountProfile.getInvestmentSpecifics()) {
+    // TODO: support investment accounts
+    console.log('unsupported account: investment')
+  } else {
+    console.log('unsupported account: ???')
+  }
+  return undefined
 }
 
 export namespace Account {

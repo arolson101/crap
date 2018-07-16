@@ -8,6 +8,9 @@ type Resolver<Result, Args = any> = (
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
+/** Cancellation token */
+export type CancelToken = any;
+
 export interface Query {
   account: Account;
   bank: Bank;
@@ -53,6 +56,7 @@ export interface Mutation {
   deleteAccount: boolean;
   saveBank: Bank;
   deleteBank: boolean;
+  getAccountList: Bank;
   createDb: boolean;
   openDb: boolean;
   closeDb: boolean;
@@ -138,6 +142,10 @@ export interface SaveBankMutationArgs {
   input: BankInput;
 }
 export interface DeleteBankMutationArgs {
+  bankId: string;
+}
+export interface GetAccountListMutationArgs {
+  cancelToken: CancelToken;
   bankId: string;
 }
 export interface CreateDbMutationArgs {
@@ -250,6 +258,7 @@ export namespace MutationResolvers {
     deleteAccount?: DeleteAccountResolver;
     saveBank?: SaveBankResolver;
     deleteBank?: DeleteBankResolver;
+    getAccountList?: GetAccountListResolver;
     createDb?: CreateDbResolver;
     openDb?: OpenDbResolver;
     closeDb?: CloseDbResolver;
@@ -276,6 +285,12 @@ export namespace MutationResolvers {
 
   export type DeleteBankResolver = Resolver<boolean, DeleteBankArgs>;
   export interface DeleteBankArgs {
+    bankId: string;
+  }
+
+  export type GetAccountListResolver = Resolver<Bank, GetAccountListArgs>;
+  export interface GetAccountListArgs {
+    cancelToken: CancelToken;
     bankId: string;
   }
 
@@ -435,6 +450,7 @@ export namespace SaveAccount {
     __typename?: "Account";
     id: string;
     name: string;
+    bankId: string;
   };
 }
 export namespace SaveBank {
@@ -452,5 +468,27 @@ export namespace SaveBank {
     __typename?: "Bank";
     id: string;
     name: string;
+  };
+}
+export namespace GetAccountList {
+  export type Variables = {
+    bankId: string;
+    cancelToken: CancelToken;
+  };
+
+  export type Mutation = {
+    __typename?: "Mutation";
+    getAccountList: GetAccountList;
+  };
+
+  export type GetAccountList = {
+    __typename?: "Bank";
+    id: string;
+    accounts: Accounts[];
+  };
+
+  export type Accounts = {
+    __typename?: "Account";
+    id: string;
   };
 }

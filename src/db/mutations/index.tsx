@@ -8,7 +8,8 @@ import {
   CreateDb,
   DeleteDb,
   SaveAccount,
-  SaveBank
+  SaveBank,
+  GetAccountList,
 } from './mutations-types'
 import * as GQL from './mutations.graphql'
 
@@ -57,7 +58,7 @@ export namespace Mutations {
   export const saveAccount: MutationDesc<SaveAccount.Mutation, SaveAccount.Variables> = {
     mutation: GQL.SaveAccount,
     refetchQueries: (results) => [
-      Queries.banks.refetchQuery({}),
+      Queries.bank.refetchQuery({ bankId: results.data.saveAccount.bankId }),
       Queries.account.refetchQuery({ accountId: results.data.saveAccount.id })
     ]
   }
@@ -66,8 +67,18 @@ export namespace Mutations {
   export const saveBank: MutationDesc<SaveBank.Mutation, SaveBank.Variables> = {
     mutation: GQL.SaveBank,
     refetchQueries: (results) => [
-      Queries.banks.refetchQuery({}),
       Queries.bank.refetchQuery({ bankId: results.data.saveBank.id })
+    ]
+  }
+
+  export type GetAccountList = MutationFcn<GetAccountList.Mutation, GetAccountList.Variables>
+  export const getAccountList: MutationDesc<GetAccountList.Mutation, GetAccountList.Variables> = {
+    mutation: GQL.GetAccountList,
+    refetchQueries: (results) => [
+      Queries.bank.refetchQuery({ bankId: results.data.getAccountList.id }),
+      ...results.data.getAccountList.accounts.map(({ id: accountId }) =>
+        Queries.account.refetchQuery({ accountId })
+      )
     ]
   }
 }
