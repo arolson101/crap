@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, CancelToken } from 'axios'
 import * as ofx4js from 'ofx4js'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import { Bank, Account } from '../db'
+import { Bank, Account } from '../db/resolvers'
 
 import FinancialInstitutionImpl = ofx4js.client.impl.FinancialInstitutionImpl
 import BaseFinancialInstitutionData = ofx4js.client.impl.BaseFinancialInstitutionData
@@ -47,8 +47,18 @@ const messages = defineMessages({
 
 const ajaxHandler = (cancelToken: CancelToken) => (
   async (url: string, verb: string, headers: ofx4js.client.net.HeadersObject, data: string, async: boolean): Promise<string> => {
+    try {
+      console.log('ajaxHandler: gonna wait forever')
+      const cancel = await cancelToken.promise
+      console.log('forever came')
+    } catch (ex) {
+      console.log('ajaxHandler: caught', ex)
+      throw ex
+    }
+
     console.assert(async)
     const res = await axios.get(url, {
+      method: verb,
       headers,
       data,
       cancelToken,

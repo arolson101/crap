@@ -39,6 +39,7 @@ Container.displayName = 'Container'
 
 export const CenteredContent = glamorous.view<ThemeProp>({},
   ({ theme }) => ({
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
   })

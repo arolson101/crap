@@ -26,9 +26,11 @@ interface Props extends Params, EditButtonProps {
   navAccount: (accountId: string, accountName: string) => any
   navAccountCreate: (bankId: string) => any
   getAccountList: Mutations.GetAccountList
+  cancel: Mutations.Cancel
 }
 
 export class BankScreenComponent extends React.PureComponent<Props> {
+
   componentDidMount () {
     this.props.setEdit(this.bankEdit)
   }
@@ -114,9 +116,13 @@ export class BankScreenComponent extends React.PureComponent<Props> {
   }
 
   getAccountList = () => {
-    const { bankId, getAccountList } = this.props
+    const { bankId, getAccountList, cancel } = this.props
     const cancelToken = cuid()
-    getAccountList({ bankId, cancelToken })
+    getAccountList(
+      { bankId, cancelToken },
+      { cancel: () => {
+        cancel({ cancelToken })
+      }})
   }
 }
 
@@ -145,6 +151,7 @@ export const BankScreen = compose(
   makeScreen({ title: () => messages.title, editButton: true }),
   withQuery({ query: Queries.bank }, (params: Params) => params),
   withMutation({ getAccountList: Mutations.getAccountList }),
+  withMutation({ cancel: Mutations.cancel }),
   connect(null, {
     navBankEdit: actions.navBankEdit,
     navAccount: actions.navAccount,

@@ -158,11 +158,28 @@ export class AccountResolver {
           .map(account => Account.change.add(t, account))
         await dbWrite(appDb, changes)
       }
+    } catch (ex) {
+      if (!source.token.reason) {
+        throw ex
+      }
     } finally {
       this.tokens.delete(cancelToken)
     }
 
     return bank
+  }
+
+  @Mutation(returns => Boolean)
+  async cancel (
+    @Arg('cancelToken') cancelToken: string,
+  ): Promise<boolean> {
+    const source = this.tokens.get(cancelToken)
+    if (!source) {
+      return false
+    }
+
+    source.cancel('cancelled')
+    return true
   }
 }
 

@@ -41,3 +41,7 @@ mutation GetAccountList($bankId: String!, $cancelToken: String!) {
     }
   }
 }
+
+mutation Cancel($cancelToken: String!) {
+  cancel(cancelToken: $cancelToken)
+}

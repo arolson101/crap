@@ -10,6 +10,7 @@ import {
   SaveAccount,
   SaveBank,
   GetAccountList,
+  Cancel,
 } from './mutations-types'
 import * as GQL from './mutations.graphql'
 
@@ -80,5 +81,11 @@ export namespace Mutations {
         Queries.account.refetchQuery({ accountId })
       )
     ]
+  }
+
+  export type Cancel = MutationFcn<Cancel.Mutation, Cancel.Variables>
+  export const cancel: MutationDesc<Cancel.Mutation, Cancel.Variables> = {
+    mutation: GQL.Cancel,
+    refetchQueries: (results) => []
   }
 }

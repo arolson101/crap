@@ -6,10 +6,16 @@ import { Mutation, MutationFn, OperationVariables } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
 import { Defined } from '../queries/makeQuery'
 import { PureQueryOptions } from 'apollo-client'
+import { Spinner } from '../../components/index';
 
 type CompletionFcn<TRet> = (result: TRet) => any
 
-export type MutationFcn<TRet, TVars> = (vars: TVars, onCompleted?: CompletionFcn<TRet>) => void
+interface MutationFcnOptions<TRet> {
+  cancel?: () => any
+  complete?: CompletionFcn<TRet>
+  finally?: () => any
+}
+export type MutationFcn<TRet, TVars> = (vars: TVars, options?: MutationFcnOptions<TRet>) => void
 
 export type MutationDesc<TRes, TVars> = {
   mutation: DocumentNode
@@ -31,7 +37,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
 
   return <P extends WrappedProps>(Component: React.ComponentType<P>) => {
     type HocProps = Subtract<P, WrappedProps>
-    type State = { onCompleted?: CompletionFcn<TRes> }
+    type State = MutationFcnOptions<TRes>
 
     class WrappedMutation extends React.Component<HocProps, State> {
       static displayName: string = `WrappedMutation(${Component.displayName || Component.name || ''})`
@@ -39,20 +45,45 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       state: State = {}
       execute: MutationFn<any, OperationVariables> | undefined
 
-      wrapExecute = (variables: TVariables, onCompleted?: CompletionFcn<TRes>) => {
+      wrapExecute: MutationFcn<TRes, TVariables> = (variables: TVariables, options?: MutationFcnOptions<TRes>) => {
         if (this.execute) {
-          this.setState({ onCompleted })
+          if (options) {
+            this.setState(options)
+          }
           this.execute({ variables })
         }
       }
 
+      onCompleted = (results: TRes) => {
+        const { complete, finally: Finally } = this.state
+        if (complete) {
+          complete(results)
+        }
+        if (Finally) {
+          Finally()
+        }
+      }
+
       onError = (error: Error) => {
+        const { finally: Finally } = this.state
+        if (Finally) {
+          Finally()
+        }
         Toast.show({
           text: error.message,
           buttonText: 'Okay',
-          duration: 0,
+          duration: 5000,
           type: 'danger'
         })
+      }
+
+      onCancel = (args: any) => {
+        const { cancel } = this.state
+        if (cancel) {
+          cancel()
+        } else {
+          console.log(`can't cancel`)
+        }
       }
 
       render () {
@@ -60,16 +91,25 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
           <Mutation
             mutation={desc.mutation}
             refetchQueries={desc.refetchQueries}
-            onCompleted={this.state.onCompleted}
+            onCompleted={this.onCompleted}
             onError={this.onError}
           >
             {(execute, result) => {
               this.execute = execute
-              if (result.loading) {
-                return null
-              }
+              // if (result.loading) {
+              //   return null
+              // }
               const componentProps = { [name]: this.wrapExecute }
-              return <Component {...this.props} {...componentProps} />
+              return (
+                <>
+                  <Spinner
+                    cancelable={!!this.state.cancel}
+                    onCancel={this.onCancel}
+                    visible={result.loading}
+                  />
+                  <Component {...this.props} {...componentProps} />
+                </>
+              )
             }}
           </Mutation>
         )

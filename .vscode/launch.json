@@ -102,12 +102,11 @@
       "name": "genSchema",
       "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
       "args": [
-        "-transpileOnly",
+        "--transpileOnly",
         "--project",
         "tsconfig.test.json",
-        "-r",
-        "@babel/register",
-        "--skip-ignore",
+        "--ignore",
+        "/sql.js/",
         "${workspaceFolder}/genSchema.ts"
       ],
       "sourceMaps": false,

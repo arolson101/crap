@@ -8,3 +8,4 @@ export const DeleteDb: DocumentNode
 export const SaveAccount: DocumentNode
 export const SaveBank: DocumentNode
 export const GetAccountList: DocumentNode
+export const Cancel: DocumentNode
