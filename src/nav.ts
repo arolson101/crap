@@ -18,4 +18,6 @@ export const paths = {
   accountEdit: '/account/edit',
 
   dbAdvanced: '/db/:dbName',
+
+  picker: '/picker'
 }

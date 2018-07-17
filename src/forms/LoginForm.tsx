@@ -21,7 +21,8 @@ interface FormValues {
 
 const {
   Form,
-  TextField
+  TextField,
+  SelectField,
 } = typedFields<FormValues>()
 
 export const LoginFormComponent: React.SFC<Props> = (props) => {
@@ -69,6 +70,11 @@ const FormCreate: React.SFC<Props> = (props) => {
       {formApi =>
         <FormContent>
           <WelcomeText>Welcome!  Create a password to secure your data.</WelcomeText>
+          <SelectField
+            field='password'
+            label={messages.passwordLabel}
+            items={[{value: 0, label: 'item 0'}, {value: 1, label: 'item 1'}]}
+          />
           <TextField
             autoFocus
             secure
@@ -114,6 +120,11 @@ const FormOpen: React.SFC<Props> = (props) => {
       {formApi =>
         <FormContent>
           <WelcomeText>Welcome!  Enter your password to access your data.</WelcomeText>
+          <SelectField
+            field='password'
+            label={messages.passwordLabel}
+            items={[{value: 0, label: 'item 0'}, {value: 1, label: 'item 1'}]}
+          />
           <TextField
             secure
             autoFocus

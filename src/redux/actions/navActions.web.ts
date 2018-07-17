@@ -2,7 +2,7 @@ import { ActionType, action } from 'typesafe-actions'
 import qs from 'qs'
 import { push } from 'connected-react-router'
 import { paths } from '../../nav'
-import { NavApi } from './navActions'
+import { NavApi, NavPickerParams } from './navActions'
 
 export const navActions: NavApi = {
   navBack: () => push(''),
@@ -42,4 +42,8 @@ export const navActions: NavApi = {
     pathname: paths.accountCreate,
     search: qs.stringify({ bankId })
   }),
+
+  navPicker: (params: NavPickerParams) => {
+    throw new Error('invalid route on this platform')
+  }
 }

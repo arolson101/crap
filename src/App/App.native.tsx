@@ -114,6 +114,7 @@ const modalStack = createStackNavigator({
   [paths.bankEdit]: modals.BankModal,
   [paths.accountCreate]: modals.AccountModal,
   [paths.accountEdit]: modals.AccountModal,
+  [paths.picker]: modals.PickerModal,
 })
 modalStack.displayName = 'modalStack'
 

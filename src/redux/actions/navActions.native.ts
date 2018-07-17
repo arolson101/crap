@@ -1,7 +1,7 @@
 import { NavigationActions } from 'react-navigation'
 import { paths } from '../../nav'
 import { nativeActions } from './nativeActions'
-import { NavApi } from './navActions'
+import { NavApi, NavPickerParams } from './navActions'
 
 export const navActions: NavApi = {
   navBack: () => nativeActions.navigate(NavigationActions.back()),
@@ -66,6 +66,14 @@ export const navActions: NavApi = {
     action: NavigationActions.navigate({
       routeName: paths.accountCreate,
       params: { bankId }
+    })
+  })),
+
+  navPicker: (params: NavPickerParams) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.modal,
+    action: NavigationActions.navigate({
+      routeName: paths.picker,
+      params
     })
   })),
 }

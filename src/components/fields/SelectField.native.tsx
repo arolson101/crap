@@ -1,89 +1,75 @@
-import { Icon, Item, Label, Picker, View } from 'native-base'
+import { Icon, ListItem, Label, Picker, View, Text, Right, Item, Input, Button } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { Field } from 'react-form'
+import { Field, FieldAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { actions } from '../../redux/actions/index';
+import { SelectFieldItem } from '../../redux/actions/navActions';
 
 export namespace SelectField {
-  export interface Item {
-    label: string
-    value: string | number
-  }
+  export type Item = SelectFieldItem
 
   export interface Props<T = {}> {
     field: string
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
+    navPicker: actions['navPicker']
   }
 }
 
-export const SelectFieldComponent: React.SFC<SelectField.Props & InjectedIntlProps> =
-  ({ field, label, items, onValueChange, intl }) => (
-    <Field field={field}>
-      {fieldApi => {
-        const error = !!(fieldApi.touched && fieldApi.error)
-        return (
-          <Item
-            error={error}
-          >
-            <Label
-              // {...labelProps}
-              style={(error ? ({ color: platform.brandDanger }) : ({} as any))}
-            >
-              {intl.formatMessage(label)}
-            </Label>
-            <View style={{ flex: 1 }}>
-              <Picker
-                // mode="dropdown"
-                iosHeader={intl.formatMessage(label)}
-                // iosIcon={<Icon name='arrow-dropdown-circle' style={{ color: '#007aff', fontSize: 25 }} />}
-                style={{
-                  width: '100%',
-                  borderWidth: error ? 1 : undefined,
-                  borderColor: error ? platform.brandDanger : undefined
-                }}
-                onValueChange={(value) => {
-                  fieldApi.setValue(value)
-                  if (onValueChange) {
-                    onValueChange(value)
-                  }
-                }}
-                headerBackButtonText={intl.formatMessage(messages.cancel)}
-                selectedValue={fieldApi.value}
-                // renderHeader={(backAction) => {
-                //   return (
-                //     <Header searchBar rounded>
-                //       <Left/>
-                //       <Body><Title>hi</Title></Body>
-                //       <Right/>
-                //     </Header>
-                //   )
-                // }}
-              >
-                {items.map(item =>
-                  <Picker.Item
-                    key={item.value}
-                    label={item.label}
-                    value={item.value}
-                  />
-                )}
-              </Picker>
-            </View>
-            {error &&
-              <Icon name='close-circle' />
-            }
-          </Item>
-        )
-      }}
-    </Field>
-  )
+export class SelectFieldComponent extends React.Component<SelectField.Props & InjectedIntlProps> {
+  fieldApi: FieldAPI<any>
 
-export const SelectField = injectIntl<SelectField.Props>(SelectFieldComponent)
+  render () {
+    const { field, label, items, onValueChange, intl } = this.props
+    return (
+      <Field field={field}>
+        {fieldApi => {
+          this.fieldApi = fieldApi
+          const error = !!(fieldApi.touched && fieldApi.error)
+          return (
+            <Item error={error}>
+              <Label
+                // {...labelProps}
+                style={(error ? ({ color: platform.brandDanger }) : ({} as any))}
+              >
+                {intl.formatMessage(label)}
+              </Label>
+              <Button transparent style={{ flex: 1 }} onPress={this.onPress}>
+                <Text style={{color: platform.textColor}}>{items[fieldApi.value || 0].label}</Text>
+              </Button>
+              {error &&
+                <Icon name='close-circle' />
+              }
+          </Item>
+          )
+        }}
+      </Field>
+    )
+  }
+
+  onPress = () => {
+    const { navPicker, items } = this.props
+    navPicker({
+      title: messages.title,
+      items,
+      onValueChange: this.fieldApi.setValue,
+      selectedItem: this.fieldApi.value,
+    })
+  }
+}
+
+export const SelectField = compose(
+  injectIntl,
+  connect(null, { navPicker: actions.navPicker })
+)(SelectFieldComponent)
 
 const messages = defineMessages({
-  cancel: {
-    id: 'SelectField.cancel',
-    defaultMessage: 'Cancel'
+  title: {
+    id: 'SelectField.native.title',
+    defaultMessage: 'title'
   }
 })
