@@ -1,5 +1,6 @@
 import { pick } from 'lodash'
 import * as React from 'react'
+import { FormAPI } from 'react-form'
 import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
@@ -7,11 +8,10 @@ import { SelectFieldItem, typedFields } from '../components/fields/index'
 import { Container } from '../components/layout'
 import { Account, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
+import { SaveAccount } from '../db/mutations/mutations-types'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
-import { SaveButtonProps } from '../screens/Screen';
-import { FormAPI } from 'react-form';
-import { SaveAccount } from '../db/mutations/mutations-types';
+import { SaveButtonProps } from '../screens/Screen'
 
 export namespace AccountForm {
   export interface Props {
@@ -132,7 +132,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
       input
     }
 
-    saveAccount(variables, this.onSaveAccount)
+    saveAccount(variables, { complete: this.onSaveAccount })
   }
 
   onSaveAccount = (result: SaveAccount.Mutation) => {

@@ -122,7 +122,8 @@ export class BankScreenComponent extends React.PureComponent<Props> {
       { bankId, cancelToken },
       { cancel: () => {
         cancel({ cancelToken })
-      }})
+      }}
+    )
   }
 }
 

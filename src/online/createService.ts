@@ -47,16 +47,6 @@ const messages = defineMessages({
 
 const ajaxHandler = (cancelToken: CancelToken) => (
   async (url: string, verb: string, headers: ofx4js.client.net.HeadersObject, data: string, async: boolean): Promise<string> => {
-    try {
-      console.log('ajaxHandler: gonna wait forever')
-      const cancel = await cancelToken.promise
-      console.log('forever came')
-    } catch (ex) {
-      console.log('ajaxHandler: caught', ex)
-      throw ex
-    }
-
-    console.assert(async)
     const res = await axios.get(url, {
       method: verb,
       headers,

@@ -1,12 +1,12 @@
+import { PureQueryOptions } from 'apollo-client'
 import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
 import { Toast } from 'native-base'
 import * as React from 'react'
 import { Mutation, MutationFn, OperationVariables } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
+import { Spinner } from '../../components/index'
 import { Defined } from '../queries/makeQuery'
-import { PureQueryOptions } from 'apollo-client'
-import { Spinner } from '../../components/index';
 
 type CompletionFcn<TRet> = (result: TRet) => any
 
@@ -72,12 +72,12 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
         Toast.show({
           text: error.message,
           buttonText: 'Okay',
-          duration: 5000,
+          // duration: 5000,
           type: 'danger'
         })
       }
 
-      onCancel = (args: any) => {
+      onCancel = () => {
         const { cancel } = this.state
         if (cancel) {
           cancel()

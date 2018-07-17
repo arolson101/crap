@@ -2,9 +2,7 @@ import * as crypto from 'crypto'
 import sanitize from 'sanitize-filename'
 import { Entity, Column, Index, PrimaryColumn } from '../typeorm'
 import { Arg, Ctx, Field, ObjectType, Mutation, Query, Resolver, ResolverContext } from './helpers'
-import { selectors } from '../../redux/reducers/index';
-import { actions } from '../../redux/actions/index';
-import { openDb, deleteDb } from '../openDb';
+import { openDb, deleteDb } from '../openDb'
 
 const iterations = 10000
 const keylen = 32

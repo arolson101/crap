@@ -68,6 +68,7 @@ export namespace Mutations {
   export const saveBank: MutationDesc<SaveBank.Mutation, SaveBank.Variables> = {
     mutation: GQL.SaveBank,
     refetchQueries: (results) => [
+      Queries.banks.refetchQuery({}),
       Queries.bank.refetchQuery({ bankId: results.data.saveBank.id })
     ]
   }

@@ -16,7 +16,7 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,

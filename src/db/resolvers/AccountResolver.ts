@@ -5,8 +5,8 @@ import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { iupdate } from '../../iupdate'
 import { RecordClass } from '../Record'
 import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
-import { Bank } from './BankResolver';
-import Axios, { CancelTokenSource } from 'axios';
+import { Bank } from './BankResolver'
+import Axios, { CancelTokenSource } from 'axios'
 import { createService, checkLogin, toAccountType } from '../../online'
 
 // see ofx4js.domain.data.banking.AccountType

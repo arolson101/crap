@@ -5,6 +5,7 @@ import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { typedFields } from '../components/fields/index'
+import { Text } from '../components/index'
 import { Bank, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { SaveBank } from '../db/mutations/mutations-types'
@@ -12,7 +13,6 @@ import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
-import { Text } from '../components/index';
 
 export namespace BankForm {
   export interface Props {
@@ -25,7 +25,7 @@ type Props = BankForm.Props
 interface ComposedProps extends Props {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
-  navBank: (bankId: string) => any
+  navBack: (bankId: string) => any
 }
 
 type BankInput = {
@@ -170,12 +170,12 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
       bankId,
       input
     }
-    saveBank(variables, this.onSaved)
+    saveBank(variables, { complete: this.onSaved })
   }
 
   onSaved = ({ saveBank: { id: bankId } }: SaveBank.Mutation) => {
-    const { navBank } = this.props
-    navBank(bankId)
+    const { navBack } = this.props
+    navBack(bankId)
   }
 
   fiOnValueChange = (value: number) => {
@@ -195,7 +195,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, { navBank: actions.navBank }),
+  connect(null, { navBack: actions.navBack }),
   withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   withMutation({ saveBank: Mutations.saveBank }),
 )(BankFormComponent)
