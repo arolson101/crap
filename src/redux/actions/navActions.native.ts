@@ -30,19 +30,13 @@ export const navActions: NavApi = {
   })),
 
   navBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
-    // routeName: paths.modal,
-    // action: NavigationActions.navigate({
-      routeName: paths.bankCreate,
-      params: {}
-    // })
+    routeName: paths.bankCreate,
+    params: {}
   })),
 
   navBankEdit: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
-    // routeName: paths.modal,
-    // action: NavigationActions.navigate({
-      routeName: paths.bankEdit,
-      params: { bankId }
-    // })
+    routeName: paths.bankEdit,
+    params: { bankId }
   })),
 
   navAccount: (accountId: string, accountName: string) => nativeActions.navigate(NavigationActions.navigate({
@@ -54,26 +48,17 @@ export const navActions: NavApi = {
   })),
 
   navAccountEdit: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
-    // routeName: paths.modal,
-    // action: NavigationActions.navigate({
-      routeName: paths.accountEdit,
-      params: { accountId }
-    // })
+    routeName: paths.accountEdit,
+    params: { accountId }
   })),
 
   navAccountCreate: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
-    // routeName: paths.modal,
-    // action: NavigationActions.navigate({
-      routeName: paths.accountCreate,
-      params: { bankId }
-    // })
+    routeName: paths.accountCreate,
+    params: { bankId }
   })),
 
   navPicker: (params: NavPickerParams) => nativeActions.navigate(NavigationActions.navigate({
-    // routeName: paths.modal,
-    // action: NavigationActions.navigate({
-      routeName: paths.picker,
-      params
-    // })
+    routeName: paths.picker,
+    params
   })),
 }

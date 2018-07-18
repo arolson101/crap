@@ -54,6 +54,7 @@ declare module 'react-form' {
 
   export interface FormAPI<V = FormValues> extends BaseFormAPI<V> {
     setValue: <K extends keyof V>(field: K, value: V[K], noTouch?: boolean) => void
+    setAllValues: (values: { [K in keyof V]?: V[K] }) => void
     getValue: <T extends FieldValue>(field: FieldSpec) => T | undefined
     setNestedError: (field: FieldSpec, value: FieldValue) => void
     getError: (field: FieldSpec) => string | undefined

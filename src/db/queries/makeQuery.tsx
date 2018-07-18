@@ -39,10 +39,6 @@ export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extend
     type HocProps = Subtract<P, WrappedProps>
     class WrappedQuery extends React.Component<HocProps> {
       static displayName: string = `WrappedQuery(${Component.displayName || Component.name || ''})`
-      constructor(props: HocProps) {
-        super(props)
-        console.log(`query`, Component.displayName)
-      }
       render () {
         const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
         if (getVariables && !variables) {

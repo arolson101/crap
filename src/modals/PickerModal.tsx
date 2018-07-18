@@ -3,18 +3,22 @@ import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { NavigationInjectedProps } from 'react-navigation'
+import { connect } from 'react-redux'
 import { compose } from 'redux'
+import { actions } from '../redux/actions/index'
 import { NavPickerParams, SelectFieldItem } from '../redux/actions/navActions'
 import { makeScreen } from '../screens/Screen'
 
-type Props = NavPickerParams
+interface Props extends NavPickerParams, NavigationInjectedProps {
+  navBack: actions['navBack']
+}
 
 interface State {
   searchTerm: string
   filteredItems?: SelectFieldItem[]
 }
 
-class PickerForm extends React.Component<Props & NavigationInjectedProps, State> {
+class PickerForm extends React.Component<Props, State> {
   state: State = {
     searchTerm: '',
   }
@@ -34,7 +38,7 @@ class PickerForm extends React.Component<Props & NavigationInjectedProps, State>
             />
             {searchTerm
               ? <Icon name='ios-close-circle' onPress={this.onClear} />
-              : <Text/>
+              : <Text />
             }
           </Item>
         </Header>
@@ -48,14 +52,14 @@ class PickerForm extends React.Component<Props & NavigationInjectedProps, State>
   }
 
   renderRow = (item: SelectFieldItem) => {
-    const { items, onValueChange, navigation, selectedItem } = this.props
+    const { items, onValueChange, navBack, selectedItem } = this.props
 
     return (
       <ListItem
         button
         onPress={() => {
           onValueChange(item.value)
-          navigation.pop()
+          navBack()
         }}
         selected={item.value === selectedItem}
         first={item.value === items[0].value}
@@ -92,6 +96,7 @@ export const PickerModal = compose(
     title: (props) => props.title,
     cancelButton: true,
   }),
+  connect(null, { navBack: actions.navBack }),
 )(PickerForm)
 PickerModal.displayName = 'PickerModal'
 

@@ -1,12 +1,12 @@
-import { Icon, ListItem, Label, Picker, View, Text, Right, Item, Input, Button } from 'native-base'
+import { Button, Icon, Item, Label, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { actions } from '../../redux/actions/index';
-import { SelectFieldItem } from '../../redux/actions/navActions';
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { actions } from '../../redux/actions/index'
+import { SelectFieldItem } from '../../redux/actions/navActions'
 
 export namespace SelectField {
   export type Item = SelectFieldItem
@@ -16,15 +16,18 @@ export namespace SelectField {
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
-    navPicker: actions['navPicker']
   }
 }
 
-export class SelectFieldComponent extends React.Component<SelectField.Props & InjectedIntlProps> {
+interface ComposedProps extends SelectField.Props, InjectedIntlProps {
+  navPicker: actions['navPicker']
+}
+
+export class SelectFieldComponent extends React.Component<ComposedProps> {
   fieldApi: FieldAPI<any>
 
   render () {
-    const { field, label, items, onValueChange, intl } = this.props
+    const { field, label, items, intl } = this.props
     const itemProps = { onPress: this.onPress }
 
     return (
@@ -43,12 +46,14 @@ export class SelectFieldComponent extends React.Component<SelectField.Props & In
                 {intl.formatMessage(label)}
               </Label>
               <Button transparent style={{ flex: 1 }} onPress={this.onPress}>
-                <Text style={{color: platform.textColor}}>{items[fieldApi.value || 0].label}</Text>
+                <Text style={{ color: platform.textColor }}>
+                  {items[fieldApi.value || 0].label}
+                </Text>
               </Button>
               {error &&
                 <Icon name='close-circle' />
               }
-          </Item>
+            </Item>
           )
         }}
       </Field>
@@ -57,7 +62,6 @@ export class SelectFieldComponent extends React.Component<SelectField.Props & In
 
   onPress = () => {
     const { navPicker, items } = this.props
-    console.log('onPress', this.props)
     navPicker({
       title: messages.title,
       items,
