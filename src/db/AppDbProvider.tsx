@@ -67,7 +67,6 @@ class AppDbProviderComponent extends React.Component<Props & InjectedIntlProps> 
   }
 
   componentDidUpdate (prevProps: Props) {
-    console.log('componentDidUpdate')
     const { login, logout, appDb } = this.props
     if (prevProps.appDb !== appDb) {
       const isOpen = !!appDb

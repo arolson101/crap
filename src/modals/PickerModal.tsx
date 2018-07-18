@@ -24,24 +24,27 @@ class PickerForm extends React.Component<Props, State> {
   }
 
   render () {
+    const { searchable } = this.props
     const { searchTerm } = this.state
     const items = this.state.filteredItems || this.props.items
     return (
       <>
-        <Header searchBar rounded style={styles.searchBarHeader}>
-          <Item>
-            <Icon name='search' />
-            <Input
-              placeholder='Search'
-              onChangeText={this.onChangeText}
-              value={searchTerm}
-            />
-            {searchTerm
-              ? <Icon name='ios-close-circle' onPress={this.onClear} />
-              : <Text />
-            }
-          </Item>
-        </Header>
+        {searchable &&
+          <Header searchBar rounded style={styles.searchBarHeader}>
+            <Item>
+              <Icon name='search' />
+              <Input
+                placeholder='Search'
+                onChangeText={this.onChangeText}
+                value={searchTerm}
+              />
+              {searchTerm
+                ? <Icon name='ios-close-circle' onPress={this.onClear} />
+                : <Text />
+              }
+            </Item>
+          </Header>
+        }
         <List
           style={{ backgroundColor: platform.cardDefaultBg }}
           dataArray={items}
@@ -73,7 +76,6 @@ class PickerForm extends React.Component<Props, State> {
   }
 
   onChangeText = (searchTerm: string) => {
-    console.log('onChangeText')
     const { items } = this.props
     const terms = searchTerm.split('\\s+')
     const filteredItems = items.filter(item =>

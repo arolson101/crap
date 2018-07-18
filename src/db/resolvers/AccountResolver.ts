@@ -4,7 +4,7 @@ import { defineMessages } from 'react-intl'
 import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { iupdate } from '../../iupdate'
 import { RecordClass } from '../Record'
-import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite } from './helpers'
+import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite, DbRecordEdit } from './helpers'
 import { Bank } from './BankResolver'
 import Axios, { CancelTokenSource } from 'axios'
 import { createService, checkLogin, toAccountType } from '../../online'
@@ -145,18 +145,49 @@ export class AccountResolver {
       const service = createService(bank, source.token, formatMessage)
       const { username, password } = checkLogin(bank, formatMessage)
       const accountProfiles = await service.readAccountProfiles(username, password)
-
       if (accountProfiles.length === 0) {
         console.log('server reports no accounts')
       } else {
+        console.log('accountProfiles', accountProfiles)
         const t = Date.now()
-        const changes = accountProfiles
+        const accounts = accountProfiles
           .map(accountProfile => toAccountInput(bank, accountProfiles, accountProfile))
           .filter((input): input is Account => input !== undefined)
-          .filter(input => !existingAccounts.find(acct => !!acct.number && !!input.number && (acct.number.toLowerCase() === input.number.toLowerCase())))
+
+        const newAccounts = accounts
+          .filter(account =>
+            !existingAccounts.find(acct =>
+              accountsEqual(account, acct)
+            )
+          )
           .map(input => new Account(bankId, input, cuid))
-          .map(account => Account.change.add(t, account))
-        await dbWrite(appDb, changes)
+
+        const changedAccounts = accounts
+          .map(account => {
+            const existingAccount = existingAccounts.find(acct =>
+              accountsEqual(account, acct)
+            )
+            if (existingAccount) {
+              return { id: existingAccount.id, q: Account.diff(existingAccount, account) }
+            } else {
+              return undefined
+            }
+          })
+          .filter((change): change is DbRecordEdit => !!change)
+          .filter(change => Object.keys(change.q).length > 0)
+
+        if (newAccounts.length || changedAccounts.length) {
+          const change: DbChange = {
+            table: Account,
+            t,
+            adds: newAccounts,
+            edits: changedAccounts
+          }
+          console.log('account changes', change)
+          await dbWrite(appDb, [change])
+        } else {
+          console.log('no account changes')
+        }
       }
     } catch (ex) {
       if (!source.token.reason) {
@@ -181,6 +212,10 @@ export class AccountResolver {
     source.cancel('cancelled')
     return true
   }
+}
+
+const accountsEqual = (a: AccountInput, b: AccountInput): boolean => {
+  return (a.type === b.type && a.number === b.number)
 }
 
 const toAccountInput = (
@@ -208,7 +243,7 @@ const toAccountInput = (
       name,
       type: AccountType.CREDITCARD,
       number: creditCardAccount.getAccountNumber(),
-      key: creditCardAccount.getAccountKey(),
+      key: creditCardAccount.getAccountKey() || '',
     }
   } else if (accountProfile.getInvestmentSpecifics()) {
     // TODO: support investment accounts
@@ -269,10 +304,10 @@ export namespace Account {
   export type Query = iupdate.Query<AccountInput>
 
   export namespace change {
-    export const add = (t: number, account: Interface): DbChange => ({
+    export const add = (t: number, ...accounts: Interface[]): DbChange => ({
       table: Account,
       t,
-      adds: [account]
+      adds: accounts
     })
 
     export const edit = (t: number, id: string, q: Query): DbChange => ({

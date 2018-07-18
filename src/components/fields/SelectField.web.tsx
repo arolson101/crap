@@ -26,6 +26,7 @@ export namespace SelectField {
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
+    searchable?: boolean
   }
 }
 

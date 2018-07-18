@@ -16,6 +16,7 @@ export namespace SelectField {
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
+    searchable?: boolean
   }
 }
 
@@ -35,6 +36,10 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
         {fieldApi => {
           this.fieldApi = fieldApi
           const error = !!(fieldApi.touched && fieldApi.error)
+          const selectedItem = items.find(item => item.value === fieldApi.value)
+          if (!selectedItem) {
+            throw new Error(`selected item ${fieldApi} not found in item list`)
+          }
           return (
             <Item
               error={error}
@@ -47,7 +52,7 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
               </Label>
               <Button transparent style={{ flex: 1 }} onPress={this.onPress}>
                 <Text style={{ color: platform.textColor }}>
-                  {items[fieldApi.value || 0].label}
+                  {selectedItem.label}
                 </Text>
               </Button>
               {error &&
@@ -61,10 +66,11 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
   }
 
   onPress = () => {
-    const { navPicker, items } = this.props
+    const { navPicker, items, searchable } = this.props
     navPicker({
       title: messages.title,
       items,
+      searchable,
       onValueChange: this.onValueChange,
       selectedItem: this.fieldApi.value,
     })

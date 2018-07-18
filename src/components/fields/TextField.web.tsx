@@ -14,6 +14,7 @@ export namespace TextField {
     autoFocus?: boolean
     onSubmitEditing?: () => any
     returnKeyType?: any
+    collapsed?: boolean
   }
 }
 

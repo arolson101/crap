@@ -12,6 +12,7 @@ export interface NavPickerParams {
   items: SelectFieldItem[]
   selectedItem: string | number
   onValueChange: (selectedItem: string | number) => any
+  searchable?: boolean
 }
 
 export interface NavApi {

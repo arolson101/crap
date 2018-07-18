@@ -47,8 +47,8 @@ const messages = defineMessages({
 
 const ajaxHandler = (cancelToken: CancelToken) => (
   async (url: string, verb: string, headers: ofx4js.client.net.HeadersObject, data: string, async: boolean): Promise<string> => {
-    const res = await axios.get(url, {
-      method: verb,
+    const res = await axios(url, {
+      method: verb.toLowerCase(),
       headers,
       data,
       cancelToken,

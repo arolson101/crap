@@ -39,7 +39,6 @@ interface FormValues extends BankInput {
 const {
   Form,
   CheckboxField,
-  CollapseField,
   Divider,
   SelectField,
   TextField,
@@ -85,6 +84,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
               items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
               label={messages.fi}
               onValueChange={this.fiOnValueChange}
+              searchable
             />
             <Divider />
             <TextField
@@ -112,34 +112,37 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
               field='online'
               label={messages.online}
             />
-            <CollapseField field='online'>
-              <TextField
-                field='username'
-                label={messages.username}
-                placeholder={messages.usernamePlaceholder}
-              />
-              <TextField
-                secure
-                field='password'
-                label={messages.password}
-                placeholder={messages.passwordPlaceholder}
-              />
-              <TextField
-                field='fid'
-                label={messages.fid}
-                placeholder={messages.fidPlaceholder}
-              />
-              <TextField
-                field='org'
-                label={messages.org}
-                placeholder={messages.orgPlaceholder}
-              />
-              <TextField
-                field='ofx'
-                label={messages.ofx}
-                placeholder={messages.ofxPlaceholder}
-              />
-            </CollapseField>
+            <TextField
+              field='username'
+              label={messages.username}
+              placeholder={messages.usernamePlaceholder}
+              collapsed={!formApi.values.online}
+            />
+            <TextField
+              secure
+              field='password'
+              label={messages.password}
+              placeholder={messages.passwordPlaceholder}
+              collapsed={!formApi.values.online}
+            />
+            <TextField
+              field='fid'
+              label={messages.fid}
+              placeholder={messages.fidPlaceholder}
+              collapsed={!formApi.values.online}
+            />
+            <TextField
+              field='org'
+              label={messages.org}
+              placeholder={messages.orgPlaceholder}
+              collapsed={!formApi.values.online}
+            />
+            <TextField
+              field='ofx'
+              label={messages.ofx}
+              placeholder={messages.ofxPlaceholder}
+              collapsed={!formApi.values.online}
+            />
           </>
         }
       </Form>

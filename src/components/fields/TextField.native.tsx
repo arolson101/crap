@@ -16,6 +16,7 @@ export namespace TextField {
     autoFocus?: boolean
     onSubmitEditing?: () => any
     returnKeyType?: ReturnKeyType
+    collapsed?: boolean
   }
 }
 
@@ -29,7 +30,10 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
   }
 
   render () {
-    const { field, autoFocus, label, color, placeholder, secure, rows, onSubmitEditing, returnKeyType, intl } = this.props
+    const { field, autoFocus, label, color, placeholder, secure, rows, onSubmitEditing, returnKeyType, intl, collapsed } = this.props
+    if (collapsed) {
+      return null
+    }
     return (
       <Field field={field}>
         {fieldApi => {

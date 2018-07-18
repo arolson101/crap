@@ -176,7 +176,7 @@ const messages = defineMessages({
   },
   getAccountList: {
     id: 'BankScreen.getAccountList',
-    defaultMessage: 'Get account list from server...'
+    defaultMessage: 'Import accounts from server...'
   },
   addAccount: {
     id: 'BankScreen.addAccount',
