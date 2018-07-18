@@ -1,7 +1,7 @@
-import { Body, Header, Icon, Input, Item, List, ListItem, Text } from 'native-base'
+import { Body, Header, Icon, Input, Item, ListItem, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { ListRenderItem, SectionBase, SectionList, StyleSheet } from 'react-native'
 import { NavigationInjectedProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -18,15 +18,38 @@ interface State {
   filteredItems?: SelectFieldItem[]
 }
 
+interface Section extends SectionBase<SelectFieldItem> {
+  letter: string
+}
+
 class PickerForm extends React.Component<Props, State> {
   state: State = {
     searchTerm: '',
+  }
+
+  getFirstLetter (str: string) {
+    const letter = str[0] as string | undefined
+    if (letter && letter.match(/[a-z]/i)) {
+      return letter.toUpperCase()
+    } else {
+      return '#'
+    }
   }
 
   render () {
     const { searchable } = this.props
     const { searchTerm } = this.state
     const items = this.state.filteredItems || this.props.items
+    const groups = items.reduce((sections, item) => {
+      let letter = this.getFirstLetter(item.label)
+      sections[letter] = [...(sections[letter] || []), item]
+      return sections
+    }, {} as { [key: string]: SelectFieldItem[] })
+    const sections = Object.keys(groups)
+      .sort()
+      .map((letter): Section => {
+        return { letter, data: groups[letter].sort() }
+      })
     return (
       <>
         {searchable &&
@@ -37,6 +60,8 @@ class PickerForm extends React.Component<Props, State> {
                 placeholder='Search'
                 onChangeText={this.onChangeText}
                 value={searchTerm}
+                autoCorrect={false}
+                autoCapitalize='none'
               />
               {searchTerm
                 ? <Icon name='ios-close-circle' onPress={this.onClear} />
@@ -45,16 +70,20 @@ class PickerForm extends React.Component<Props, State> {
             </Item>
           </Header>
         }
-        <List
+        <SectionList
           style={{ backgroundColor: platform.cardDefaultBg }}
-          dataArray={items}
-          renderRow={this.renderRow}
+          sections={sections}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+          renderSectionHeader={this.renderSectionHeader}
         />
       </>
     )
   }
 
-  renderRow = (item: SelectFieldItem) => {
+  keyExtractor = (item: SelectFieldItem) => item.value.toString()
+
+  renderItem: ListRenderItem<SelectFieldItem> = ({ item, index }) => {
     const { items, onValueChange, navBack, selectedItem } = this.props
 
     return (
@@ -65,12 +94,20 @@ class PickerForm extends React.Component<Props, State> {
           navBack()
         }}
         selected={item.value === selectedItem}
-        first={item.value === items[0].value}
-        last={item.value === items[items.length - 1].value}
+        first={index === 0}
+        last={index === items.length - 1}
       >
         <Body>
           <Text>{item.label}</Text>
         </Body>
+      </ListItem>
+    )
+  }
+
+  renderSectionHeader = (info: { section: Section }) => {
+    return (
+      <ListItem itemDivider>
+        <Text>{info.section.letter}</Text>
       </ListItem>
     )
   }

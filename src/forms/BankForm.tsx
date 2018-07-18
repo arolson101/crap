@@ -185,7 +185,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     const formApi = this.formApi
     if (formApi) {
       const fi = filist[value]
-      formApi.setValue('name', fi.name || '')
+      formApi.setValue('name', value ? (fi.name || '') : '')
       formApi.setValue('web', fi.profile.siteURL || '')
       formApi.setValue('favicon', '')
       formApi.setValue('address', formatAddress(fi) || '')
