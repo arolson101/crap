@@ -121,7 +121,12 @@ modalStack.displayName = 'modalStack'
 const appStack = createStackNavigator(
   {
     main: mainStack,
-    [paths.modal]: modalStack,
+    // [paths.modal]: modalStack,
+    [paths.bankCreate]: createStackNavigator({ 'modal': modals.BankModal }),
+    [paths.bankEdit]: createStackNavigator({ 'modal': modals.BankModal }),
+    [paths.accountCreate]: createStackNavigator({ 'modal': modals.AccountModal }),
+    [paths.accountEdit]: createStackNavigator({ 'modal': modals.AccountModal }),
+    [paths.picker]: createStackNavigator({ 'modal': modals.PickerModal }),
   },
   {
     mode: 'modal',

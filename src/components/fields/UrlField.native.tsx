@@ -30,8 +30,7 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
       <Field field={field}>
         {fieldApi => {
           const error = !!(fieldApi.touched && fieldApi.error)
-          const labelProps = { onPress: this.focusTextInput }
-          const inputProps = { autoFocus }
+          const inputProps = { autoFocus, onPress: this.focusTextInput }
           return (
             <Item
               inlineLabel
@@ -39,7 +38,7 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
               {...inputProps}
               placeholder={placeholder && intl.formatMessage(placeholder)}
             >
-              <Label {...labelProps}>{intl.formatMessage(label)}</Label>
+              <Label>{intl.formatMessage(label)}</Label>
               <Input
                 autoFocus={autoFocus}
                 onChangeText={fieldApi.setValue}

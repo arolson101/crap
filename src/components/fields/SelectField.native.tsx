@@ -25,15 +25,19 @@ export class SelectFieldComponent extends React.Component<SelectField.Props & In
 
   render () {
     const { field, label, items, onValueChange, intl } = this.props
+    const itemProps = { onPress: this.onPress }
+
     return (
       <Field field={field}>
         {fieldApi => {
           this.fieldApi = fieldApi
           const error = !!(fieldApi.touched && fieldApi.error)
           return (
-            <Item error={error}>
+            <Item
+              error={error}
+              {...itemProps}
+            >
               <Label
-                // {...labelProps}
                 style={(error ? ({ color: platform.brandDanger }) : ({} as any))}
               >
                 {intl.formatMessage(label)}
@@ -53,12 +57,21 @@ export class SelectFieldComponent extends React.Component<SelectField.Props & In
 
   onPress = () => {
     const { navPicker, items } = this.props
+    console.log('onPress', this.props)
     navPicker({
       title: messages.title,
       items,
-      onValueChange: this.fieldApi.setValue,
+      onValueChange: this.onValueChange,
       selectedItem: this.fieldApi.value,
     })
+  }
+
+  onValueChange = (value: string | number) => {
+    const { onValueChange } = this.props
+    this.fieldApi.setValue(value)
+    if (onValueChange) {
+      onValueChange(value)
+    }
   }
 }
 

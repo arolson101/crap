@@ -34,18 +34,18 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
       <Field field={field}>
         {fieldApi => {
           const error = !!(fieldApi.touched && fieldApi.error)
-          const labelProps = { onPress: this.focusTextInput }
+          const itemProps = { onPress: this.focusTextInput }
           const inputProps = { autoFocus }
           const inputStyle = color ? { color } : {}
           return (
             <Item
+              {...itemProps}
               // style={rows ? { minHeight: 20 * rows } : {}}
               error={error}
               secureTextEntry={secure}
               placeholder={placeholder && intl.formatMessage(placeholder)}
             >
               <Label
-                {...labelProps}
                 style={(error
                   ? ({ color: platform.brandDanger })
                   : ({}) as any
