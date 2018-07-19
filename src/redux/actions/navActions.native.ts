@@ -1,10 +1,12 @@
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, StackActions } from 'react-navigation'
 import { paths } from '../../nav'
 import { nativeActions } from './nativeActions'
 import { NavApi, NavPickerParams } from './navActions'
 
 export const navActions: NavApi = {
   navBack: () => nativeActions.navigate(NavigationActions.back()),
+
+  navPopToTop: () => nativeActions.navigate(StackActions.popToTop({})),
 
   login: () => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.app,

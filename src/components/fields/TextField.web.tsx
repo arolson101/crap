@@ -15,6 +15,7 @@ export namespace TextField {
     onSubmitEditing?: () => any
     returnKeyType?: any
     collapsed?: boolean
+    noCorrect?: boolean
   }
 }
 

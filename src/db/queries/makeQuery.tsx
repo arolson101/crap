@@ -54,7 +54,7 @@ export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extend
               // fetchPolicy="network-only"
             >
               {(result: QueryResult<QueryType<any>>) => {
-                if (!result.data) {
+                if (!result.data || Object.keys(result.data).length === 0) {
                   return <ErrorMessage error={new Error('no data')} />
                 } else if (result.error) {
                   return <ErrorMessage error={result.error} />

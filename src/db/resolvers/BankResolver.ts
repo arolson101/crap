@@ -89,6 +89,7 @@ export class BankResolver {
     if (!appDb) { throw new Error('appDb not open') }
     const res = await appDb.createQueryBuilder(Account, 'account')
       .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
+      .orderBy({ name: 'ASC' })
       .getMany()
     return res
   }

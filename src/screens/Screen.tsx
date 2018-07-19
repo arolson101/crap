@@ -65,8 +65,8 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<T, P> = ((props) => (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Container>
+      <SafeAreaView style={{ flex: 1, backgroundColor: platform.brandLight }}>
+        {/* <Container style={{flex: 2}}> */}
           {/* <Fab
             direction='up'
             containerStyle={{}}
@@ -75,14 +75,14 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
           >
             <Icon name='share' />
           </Fab> */}
-          <Content style={{ backgroundColor: platform.brandLight }}>
+          <Content>
             <Component
               {...props}
               {...moreProps}
               {...props.navigation.state.params}
             />
           </Content>
-        </Container>
+        {/* </Container> */}
       </SafeAreaView>
     )) as NavigationScreenComponent<T, {}, P> as any
 

@@ -137,7 +137,6 @@ export class AccountResolver {
       .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
       .getMany()
 
-    console.log('cancelToken', cancelToken)
     const source = Axios.CancelToken.source()
     this.tokens.set(cancelToken, source)
 

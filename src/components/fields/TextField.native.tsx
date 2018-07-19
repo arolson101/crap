@@ -17,6 +17,7 @@ export namespace TextField {
     onSubmitEditing?: () => any
     returnKeyType?: ReturnKeyType
     collapsed?: boolean
+    noCorrect?: boolean
   }
 }
 
@@ -30,7 +31,8 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
   }
 
   render () {
-    const { field, autoFocus, label, color, placeholder, secure, rows, onSubmitEditing, returnKeyType, intl, collapsed } = this.props
+    const { field, autoFocus, label, color, placeholder, secure,
+      rows, onSubmitEditing, returnKeyType, intl, collapsed, noCorrect } = this.props
     if (collapsed) {
       return null
     }
@@ -72,6 +74,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
                   onSubmitEditing={onSubmitEditing}
                   secureTextEntry={secure}
                   numberOfLines={rows}
+                  autoCapitalize={noCorrect ? 'none' : undefined}
                   multiline={(rows ? rows > 0 : undefined)}
                   returnKeyType={returnKeyType}
                   ref={(ref: any) => this.textInput = ref && ref._root}

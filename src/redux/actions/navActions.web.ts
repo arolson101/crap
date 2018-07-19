@@ -7,6 +7,8 @@ import { NavApi, NavPickerParams } from './navActions'
 export const navActions: NavApi = {
   navBack: () => push(''),
 
+  navPopToTop: () => push(''),
+
   login: () => push(paths.app),
   logout: () => push(paths.login),
 

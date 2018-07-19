@@ -96,9 +96,6 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
           >
             {(execute, result) => {
               this.execute = execute
-              // if (result.loading) {
-              //   return null
-              // }
               const componentProps = { [name]: this.wrapExecute }
               return (
                 <>

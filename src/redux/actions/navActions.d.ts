@@ -17,6 +17,7 @@ export interface NavPickerParams {
 
 export interface NavApi {
   navBack: () => any
+  navPopToTop: () => any
   login: () => any
   logout: () => any
   navHome: () => any

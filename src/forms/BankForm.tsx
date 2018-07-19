@@ -13,6 +13,7 @@ import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
+import { View, Button } from 'native-base';
 
 export namespace BankForm {
   export interface Props {
@@ -25,7 +26,9 @@ type Props = BankForm.Props
 interface ComposedProps extends Props {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
-  navBack: (bankId: string) => any
+  deleteBank: Mutations.DeleteBank
+  navBack: actions['navBack']
+  navPopToTop: actions['navPopToTop']
 }
 
 type BankInput = {
@@ -64,88 +67,101 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     }
 
     return (
-      <Form
-        getApi={this.getApi}
-        defaultValues={defaultValues}
-        validate={this.validate}
-        onSubmit={this.onSubmit}
-      >
-        {formApi =>
-          <>
-            <Divider>
-              <FormattedMessage {...messages.fiHelp}>
-                {txt =>
-                  <Text note>{txt}</Text>
-                }
-              </FormattedMessage>
+      <>
+        <Form
+          getApi={this.getApi}
+          defaultValues={defaultValues}
+          validate={this.validate}
+          onSubmit={this.onSubmit}
+        >
+          {formApi =>
+            <>
+              <Divider>
+                <FormattedMessage {...messages.fiHelp}>
+                  {txt =>
+                    <Text note>{txt}</Text>
+                  }
+                </FormattedMessage>
               </Divider>
-            <SelectField
-              field='fi'
-              items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
-              label={messages.fi}
-              onValueChange={this.fiOnValueChange}
-              searchable
-            />
-            <Divider />
-            <TextField
-              field='name'
-              label={messages.name}
-              placeholder={messages.namePlaceholder}
-            />
-            <TextField
-              field='address'
-              label={messages.address}
-              rows={4}
-            />
-            <UrlField
-              field='web'
-              // favicoName='favicon'
-              label={messages.web}
-            />
-            <TextField
-              field='notes'
-              label={messages.notes}
-              rows={4}
-            />
-            <Divider />
-            <CheckboxField
-              field='online'
-              label={messages.online}
-            />
-            <TextField
-              field='username'
-              label={messages.username}
-              placeholder={messages.usernamePlaceholder}
-              collapsed={!formApi.values.online}
-            />
-            <TextField
-              secure
-              field='password'
-              label={messages.password}
-              placeholder={messages.passwordPlaceholder}
-              collapsed={!formApi.values.online}
-            />
-            <TextField
-              field='fid'
-              label={messages.fid}
-              placeholder={messages.fidPlaceholder}
-              collapsed={!formApi.values.online}
-            />
-            <TextField
-              field='org'
-              label={messages.org}
-              placeholder={messages.orgPlaceholder}
-              collapsed={!formApi.values.online}
-            />
-            <TextField
-              field='ofx'
-              label={messages.ofx}
-              placeholder={messages.ofxPlaceholder}
-              collapsed={!formApi.values.online}
-            />
-          </>
+              <SelectField
+                field='fi'
+                items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
+                label={messages.fi}
+                onValueChange={this.fiOnValueChange}
+                searchable
+              />
+              <Divider />
+              <TextField
+                field='name'
+                label={messages.name}
+                placeholder={messages.namePlaceholder}
+              />
+              <TextField
+                field='address'
+                label={messages.address}
+                rows={4}
+              />
+              <UrlField
+                field='web'
+                // favicoName='favicon'
+                label={messages.web}
+              />
+              <TextField
+                field='notes'
+                label={messages.notes}
+                rows={4}
+              />
+              <Divider />
+              <CheckboxField
+                field='online'
+                label={messages.online}
+              />
+              <TextField
+                field='username'
+                noCorrect
+                label={messages.username}
+                placeholder={messages.usernamePlaceholder}
+                collapsed={!formApi.values.online}
+              />
+              <TextField
+                secure
+                field='password'
+                label={messages.password}
+                placeholder={messages.passwordPlaceholder}
+                collapsed={!formApi.values.online}
+              />
+              <TextField
+                noCorrect
+                field='fid'
+                label={messages.fid}
+                placeholder={messages.fidPlaceholder}
+                collapsed={!formApi.values.online}
+              />
+              <TextField
+                noCorrect
+                field='org'
+                label={messages.org}
+                placeholder={messages.orgPlaceholder}
+                collapsed={!formApi.values.online}
+              />
+              <TextField
+                noCorrect
+                field='ofx'
+                label={messages.ofx}
+                placeholder={messages.ofxPlaceholder}
+                collapsed={!formApi.values.online}
+              />
+            </>
+          }
+        </Form>
+        {edit &&
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Button transparent danger onPress={this.deleteBank}>
+              <FormattedMessage {...messages.deleteBank} />
+            </Button>
+          </View>
         }
-      </Form>
+      </>
     )
   }
 
@@ -176,9 +192,9 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     saveBank(variables, { complete: this.onSaved })
   }
 
-  onSaved = ({ saveBank: { id: bankId } }: SaveBank.Mutation) => {
+  onSaved = () => {
     const { navBack } = this.props
-    navBack(bankId)
+    navBack()
   }
 
   fiOnValueChange = (value: number) => {
@@ -194,13 +210,28 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
       formApi.setValue('ofx', fi.ofx || '')
     }
   }
+
+  deleteBank = () => {
+    const { deleteBank, bankId } = this.props
+    if (bankId) {
+      deleteBank({ bankId }, { complete: this.onBankDeleted })
+    }
+  }
+
+  onBankDeleted = () => {
+    const { navBack, navPopToTop } = this.props
+    navBack()
+    navPopToTop()
+  }
 }
 
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, { navBack: actions.navBack }),
+  connect(null, { navPopToTop: actions.navPopToTop }),
   withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   withMutation({ saveBank: Mutations.saveBank }),
+  withMutation({ deleteBank: Mutations.deleteBank })
 )(BankFormComponent)
 BankForm.displayName = 'BankForm'
 
@@ -292,5 +323,9 @@ const messages = defineMessages({
   passwordPlaceholder: {
     id: 'BankForm.passwordPlaceholder',
     defaultMessage: 'Required'
+  },
+  deleteBank: {
+    id: 'BankForm.deleteBank',
+    defaultMessage: 'Delete Bank'
   }
 })

@@ -16,7 +16,7 @@ export const Spinner: React.SFC<Props> = props => {
   return (
     <Modal
       transparent={true}
-      animationType={'none'}
+      animationType={'fade'}
       visible={visible}
       onRequestClose={onCancel}
     >
