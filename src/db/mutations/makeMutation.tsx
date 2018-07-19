@@ -15,6 +15,7 @@ interface MutationFcnOptions<TRet> {
   complete?: CompletionFcn<TRet>
   finally?: () => any
 }
+
 export type MutationFcn<TRet, TVars> = (vars: TVars, options?: MutationFcnOptions<TRet>) => void
 
 export type MutationDesc<TRes, TVars> = {
@@ -45,19 +46,20 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       state: State = {}
       execute: MutationFn<any, OperationVariables> | undefined
 
-      componentWillUnmount () {
+      componentWillUnmount() {
         this.closeToast()
       }
 
       wrapExecute: MutationFcn<TRes, TVariables> = (variables: TVariables, options?: MutationFcnOptions<TRes>) => {
         // console.log('wrapExecute', { variables, options })
         this.closeToast()
-        if (this.execute) {
-          if (options) {
-            this.setState(options)
-          }
-          this.execute({ variables })
+        if (!this.execute) {
+          throw new Error('execute was not set')
         }
+        if (options) {
+          this.setState(options)
+        }
+        return this.execute({ variables })
       }
 
       onCompleted = (results: TRes) => {
@@ -94,7 +96,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
         }
       }
 
-      render () {
+      render() {
         return (
           <Mutation
             mutation={desc.mutation}

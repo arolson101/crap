@@ -1,6 +1,7 @@
+/* tslint:disable:no-duplicate-variable */
 import * as web from './navActions.web'
 import * as native from './navActions.native'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 export interface SelectFieldItem {
   label: string

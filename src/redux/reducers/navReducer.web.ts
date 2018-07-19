@@ -1,6 +1,4 @@
-import { getType } from 'typesafe-actions'
-import { NavigationActions, NavigationContainerComponent, NavigationNavigateAction } from 'react-navigation'
-import { navActions } from '../actions/navActions.native'
+import { NavigationContainerComponent } from 'react-navigation'
 
 export interface NavState {
   navigator?: NavigationContainerComponent

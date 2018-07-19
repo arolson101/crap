@@ -35,8 +35,8 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
     }
   }
 
-  render () {
-    const { field, intl, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
+  render() {
+    const { field, intl, autoFocus, label, placeholder } = this.props
     return (
       <Field field={field}>
         {fieldApi => {

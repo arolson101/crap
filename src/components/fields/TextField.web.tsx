@@ -21,8 +21,8 @@ export namespace TextField {
 }
 
 export class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
-  render () {
-    const { field, intl, autoFocus, label, color, placeholder, secure, rows, onSubmitEditing, returnKeyType } = this.props
+  render() {
+    const { field, intl, label, placeholder, secure, rows } = this.props
     const id = `${field}-input`
     return (
       <Field field={field}>

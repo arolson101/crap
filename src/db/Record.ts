@@ -1,11 +1,11 @@
-import { Entity, Column, Index, PrimaryColumn } from './typeorm'
-import { iupdate } from '../iupdate'
 import { flow } from 'lodash'
 import * as zlib from 'zlib'
+import { iupdate } from '../iupdate'
+import { Column, Entity, Index, PrimaryColumn } from './typeorm'
 
 export type CompressedJson<T> = '<compressed json>' & { _tag: T }
 
-const CJSONToBuffer = (str: CompressedJson<any>) => new Buffer(str, 'base64')
+const CJSONToBuffer = (str: CompressedJson<any>) => Buffer.from(str, 'base64')
 const bufferToCJSON = (buffer: Buffer) => buffer.toString('base64') as CompressedJson<any>
 const bufferToString = (buffer: Buffer) => buffer.toString('utf8')
 const stringToBuffer = (str: string) => Buffer.from(str, 'utf8')
@@ -49,7 +49,7 @@ export abstract class RecordClass<T> implements Record<T> {
   @Column('text', { nullable: true }) _history?: HistoryType<T>
   @PrimaryColumn() id: string
 
-  createRecord<R extends T & Record<T> & T, T> (genId: () => string, props: T) {
+  createRecord<R extends T & Record<T> & T, T>(genId: () => string, props: T) {
     this.id = genId()
     this._base = undefined
     this._history = undefined
@@ -57,7 +57,7 @@ export abstract class RecordClass<T> implements Record<T> {
     Object.assign(this, props)
   }
 
-  update (q: iupdate.Query<T>) {
+  update(q: iupdate.Query<T>) {
     const next = iupdate(this, q)
     Object.assign(this, next)
   }
@@ -84,7 +84,7 @@ const rebuildObject = <T>(props: T, _base: CompressedJson<T> | undefined, change
 export const updateRecord = <R extends T & Record<T>, T>(record: R, change: Update<T>): R => {
   const { id, _base, _deleted, _history, ...props } = record as Record<T>
   const prevHistory = _history ? hydrate(_history) : []
-  const changes = [ ...prevHistory, change ].sort((a, b) => a.t - b.t)
+  const changes = [...prevHistory, change].sort((a, b) => a.t - b.t)
   const isLatest = changes[changes.length - 1] === change
   const next = isLatest ? iupdate(props, change.q) : rebuildObject(props, _base, changes)
   return {

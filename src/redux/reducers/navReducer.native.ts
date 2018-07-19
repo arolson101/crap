@@ -1,7 +1,6 @@
-import { NavigationActions, NavigationContainerComponent } from 'react-navigation'
+import { NavigationContainerComponent } from 'react-navigation'
 import { getType } from 'typesafe-actions'
-import { paths } from '../../nav'
-import { DbAction, dbActions } from '../actions/dbActions'
+import { DbAction } from '../actions/dbActions'
 import { NativeAction, nativeActions } from '../actions/nativeActions'
 
 export interface NavState {

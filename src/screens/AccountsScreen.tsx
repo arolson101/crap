@@ -1,4 +1,4 @@
-import { Body, Icon, Right, View } from 'native-base'
+import { Body, Icon, Right } from 'native-base'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { connect } from 'react-redux'

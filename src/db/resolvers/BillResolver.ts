@@ -1,7 +1,7 @@
-import { Column, Entity, Index, PrimaryColumn } from '../typeorm'
+import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { iupdate } from '../../iupdate'
-import { Record, RecordClass } from '../Record'
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
+import { RecordClass } from '../Record'
+import { Field, InputType, ObjectType, Resolver } from './helpers'
 
 @InputType()
 class BillInput {

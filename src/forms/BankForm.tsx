@@ -14,7 +14,7 @@ import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
-import { SaveBank } from '../db/mutations/mutations-types';
+import { SaveBank } from '../db/mutations/mutations-types'
 
 export namespace BankForm {
   export interface Props {

@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, CancelToken } from 'axios'
+import axios, { CancelToken } from 'axios'
 import * as ofx4js from 'ofx4js'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import { Bank, Account } from '../db/resolvers'
@@ -57,7 +57,7 @@ const ajaxHandler = (cancelToken: CancelToken) => (
       throw new Error(res.statusText)
     }
     console.assert(typeof res.data === 'string')
-    console.log({url, verb, data, result: res.data})
+    console.log({ url, verb, data, result: res.data })
     return res.data
   }
 )

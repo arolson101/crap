@@ -2,7 +2,7 @@ import { Button, Icon, Item, Label, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { actions } from '../../redux/actions/index'
@@ -27,7 +27,7 @@ interface ComposedProps extends SelectField.Props, InjectedIntlProps {
 export class SelectFieldComponent extends React.Component<ComposedProps> {
   fieldApi: FieldAPI<any>
 
-  render () {
+  render() {
     const { field, label, items, intl } = this.props
     const itemProps = { onPress: this.onPress }
 
@@ -89,10 +89,3 @@ export const SelectField = compose(
   injectIntl,
   connect(null, { navPicker: actions.navPicker })
 )(SelectFieldComponent)
-
-const messages = defineMessages({
-  title: {
-    id: 'SelectField.native.title',
-    defaultMessage: 'title'
-  }
-})

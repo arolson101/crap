@@ -1,8 +1,6 @@
 // import { MaterialIcons } from '@expo/vector-icons'
 // import { AppLoading, Asset, Font, RequireSource } from 'expo'
 import * as React from 'react'
-import { Image } from 'react-native'
-
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 // // https://docs.expo.io/versions/latest/guides/preloading-and-caching-assets.html
@@ -30,11 +28,11 @@ export class LoadFonts extends React.Component<{}, State> {
     isReady: false
   }
 
-  componentDidMount () {
-    this._loadAssetsAsync()
+  async componentDidMount() {
+    await this._loadAssetsAsync()
   }
 
-  async _loadAssetsAsync () {
+  async _loadAssetsAsync() {
     await Ionicons.loadFont()
     // const imageAssets = cacheImages([])
     // const fontAssets = cacheFonts([(MaterialIcons as any).font])
@@ -43,7 +41,7 @@ export class LoadFonts extends React.Component<{}, State> {
     this.setState({ isReady: true })
   }
 
-  render () {
+  render() {
     if (!this.state.isReady) {
       return null
     }

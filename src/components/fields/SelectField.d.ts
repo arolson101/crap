@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import * as web from './SelectField.web'
 import * as native from './SelectField.native'
 

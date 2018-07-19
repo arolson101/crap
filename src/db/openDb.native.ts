@@ -1,6 +1,6 @@
-import { createConnection } from './typeorm'
-import { appEntities, indexEntities } from './entities'
 import SqlitePlugin from 'react-native-sqlcipher-storage'
+import { appEntities, indexEntities } from './entities'
+import { createConnection } from './typeorm'
 
 const iosDatabaseLocation: SqlitePlugin.Location = 'Documents'
 
@@ -28,7 +28,7 @@ export const openDb = async (app: boolean, name: string, key: string) => {
 
 export const deleteDb = async (name: string) => {
   if (SqlitePlugin) {
-    SqlitePlugin.deleteDatabase({
+    await SqlitePlugin.deleteDatabase({
       name: dbName(name),
       location: iosDatabaseLocation,
     })

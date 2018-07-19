@@ -1,6 +1,5 @@
-import { ActionType, action } from 'typesafe-actions'
-import qs from 'qs'
 import { push } from 'connected-react-router'
+import qs from 'qs'
 import { paths } from '../../nav'
 import { NavApi, NavPickerParams } from './navActions'
 

@@ -51,7 +51,7 @@ class AppDbProviderComponent extends React.Component<Props & InjectedIntlProps> 
 
         const exe = runQuery(opts as any)
         exe.then(res => {
-          observer.next(res as any)
+          observer.next(res)
           observer.complete()
         }).catch(err => {
           observer.error(err)

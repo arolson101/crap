@@ -384,12 +384,6 @@ const transactionsEqual = (a: TransactionInput, b: TransactionInput): boolean =>
   return (a.serverid === b.serverid)
 }
 
-const findMatchingTransaction = (existingTransactions: Transaction[], newTransaction: TransactionInput) => {
-  return existingTransactions.find(existingTransaction =>
-    existingTransaction.serverid === newTransaction.serverid
-  )
-}
-
 export namespace Account {
   export interface Props extends Pick<AccountInput, keyof AccountInput> { }
   export interface Interface extends Pick<Account, Exclude<keyof Account, 'saveAccount'>> { }

@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import { FormattedMessage } from 'react-intl'
 import * as native from './Confirmation.native'
 import * as web from './Confirmation.web'

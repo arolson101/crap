@@ -1,25 +1,16 @@
-import { uniq } from 'lodash'
-import { Connection } from '../typeorm'
-import { iupdate } from '../../iupdate'
-export { ResolverContext } from '../AppDbProvider'
-import { Record, RecordClass, deleteRecord, updateRecord } from '../Record'
-
-export {
-  Arg, Args, ArgsType, Ctx, InputType, Field, FieldResolver, Mutation,
-  ObjectType, Query, Resolver, Root, registerEnumType
-} from 'type-graphql/decorators'
-
-export {
-  ResolverInterface
-} from 'type-graphql/interfaces'
-
 import { SchemaGenerator } from 'type-graphql/schema/schema-generator'
 import { BuildSchemaOptions } from 'type-graphql/utils/buildSchema'
+import { iupdate } from '../../iupdate'
+import { Record, RecordClass } from '../Record'
+import { Connection } from '../typeorm'
+export { Arg, Args, ArgsType, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, registerEnumType, Resolver, Root } from 'type-graphql/decorators'
+export { ResolverInterface } from 'type-graphql/interfaces'
+export { ResolverContext } from '../AppDbProvider'
 
 // build this function manually (copied from type-graphql) to fix runtime error:
 //   ./node_modules/type-graphql/helpers/loadResolversFromGlob.js
 //   10:46-63 Critical dependency: the request of a dependency is an expression
-export function buildSchemaSync (options: BuildSchemaOptions) {
+export function buildSchemaSync(options: BuildSchemaOptions) {
   return SchemaGenerator.generateFromMetadataSync(options)
 }
 
@@ -45,8 +36,6 @@ export interface DbChange {
 
 export const dbWrite = async (db: Connection, changes: DbChange[]) => {
   try {
-    const tables = uniq(changes.map(change => change.table))
-
     await db.transaction(async (manager) => {
       for (let change of changes) {
         if (change.adds) {
@@ -54,7 +43,6 @@ export const dbWrite = async (db: Connection, changes: DbChange[]) => {
         }
 
         if (change.deletes) {
-          const items = []
           await manager.createQueryBuilder()
             .update(change.table)
             .set({ _deleted: change.t })
@@ -68,7 +56,7 @@ export const dbWrite = async (db: Connection, changes: DbChange[]) => {
           items.forEach((record, i) => {
             record.update(edits[i].q)
           })
-          const res = await manager.save(change.table, items)
+          await manager.save(change.table, items)
         }
       }
 

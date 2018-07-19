@@ -1,8 +1,8 @@
 import * as crypto from 'crypto'
 import sanitize from 'sanitize-filename'
-import { Entity, Column, Index, PrimaryColumn } from '../typeorm'
-import { Arg, Ctx, Field, ObjectType, Mutation, Query, Resolver, ResolverContext } from './helpers'
-import { openDb, deleteDb } from '../openDb'
+import { deleteDb, openDb } from '../openDb'
+import { Column, Entity, PrimaryColumn } from '../typeorm'
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver, ResolverContext } from './helpers'
 
 const iterations = 10000
 const keylen = 32
@@ -26,11 +26,11 @@ export class DbInfo {
   @Column() cipherKey: string
   @Column() tag: string
 
-  static generateKey () {
+  static generateKey() {
     return `x'${crypto.randomBytes(32).toString('hex')}'`
   }
 
-  setPassword (key: string, password: string) {
+  setPassword(key: string, password: string) {
     this.salt = crypto.randomBytes(16).toString('utf8')
     this.iterations = iterations
     this.keylen = keylen
@@ -46,7 +46,7 @@ export class DbInfo {
     this.tag = cipher.getAuthTag().toString('base64')
   }
 
-  getKey (password: string): string {
+  getKey(password: string): string {
     const pwbuf = crypto.pbkdf2Sync(password, this.salt, this.iterations, this.keylen, this.digest)
     const decipher = crypto.createDecipheriv(this.algorithm, pwbuf, this.nonce)
     decipher.setAuthTag(Buffer.from(this.tag, 'base64'))
@@ -60,14 +60,14 @@ export class DbInfo {
 export class DbResolver {
 
   @Query(returns => [DbInfo])
-  async allDbs (@Ctx() { indexDb }: ResolverContext): Promise<DbInfo[]> {
+  async allDbs(@Ctx() { indexDb }: ResolverContext): Promise<DbInfo[]> {
     const dbs = await indexDb.getRepository(DbInfo)
       .find()
     return dbs
   }
 
   @Mutation(returns => Boolean)
-  async createDb (
+  async createDb(
     @Arg('name') name: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
     @Ctx() { indexDb, setAppDb }: ResolverContext
@@ -80,13 +80,13 @@ export class DbResolver {
     dbInfo.setPassword(key, password)
 
     const db = await openDb(true, dbInfo.path, key)
-    indexDb.manager.save(DbInfo, dbInfo)
+    await indexDb.manager.save(DbInfo, dbInfo)
     setAppDb(db)
     return true
   }
 
   @Mutation(returns => Boolean)
-  async openDb (
+  async openDb(
     @Arg('dbId') dbId: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
     @Ctx() { indexDb, setAppDb }: ResolverContext
@@ -99,7 +99,7 @@ export class DbResolver {
   }
 
   @Mutation(returns => Boolean)
-  async closeDb (
+  async closeDb(
     @Ctx() { setAppDb }: ResolverContext
   ): Promise<Boolean> {
     setAppDb(null)
@@ -107,7 +107,7 @@ export class DbResolver {
   }
 
   @Mutation(returns => Boolean)
-  async deleteDb (
+  async deleteDb(
     @Arg('dbId') dbId: string,
     @Ctx() { indexDb }: ResolverContext
   ): Promise<Boolean> {

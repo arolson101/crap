@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { Queries } from '../queries/index'
 import { MutationFcn, MutationDesc } from './makeMutation'
 import {

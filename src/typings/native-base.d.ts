@@ -19,7 +19,6 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     btnDisabledBg: Color,
     buttonPadding: number,
 
-
     btnPrimaryBg: Color,
     btnPrimaryColor: Color,
     btnInfoBg: Color,
@@ -37,10 +36,8 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     iconSizeLarge: number,
     iconSizeSmall: number,
 
-
     cardDefaultBg: Color,
     cardBorderColor: Color,
-
 
     CheckboxRadius: number,
     CheckboxBorderWidth: number,
@@ -53,7 +50,6 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     checkboxSize: number,
     checkboxTickColor: Color,
 
-
     brandPrimary: Color,
     brandInfo: Color,
     brandSuccess: Color,
@@ -62,10 +58,8 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     brandDark: Color,
     brandLight: Color,
 
-
     datePickerTextColor: Color,
     datePickerBg: Color,
-
 
     DefaultFontSize: number,
     fontFamily: string,
@@ -74,11 +68,9 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     fontSizeH2: number,
     fontSizeH3: number,
 
-
     footerHeight: number,
     footerDefaultBg: Color,
     footerPaddingBottom: number,
-
 
     tabBarTextColor: Color,
     tabBarTextSize: number,
@@ -86,7 +78,6 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     sTabBarActiveTextColor: Color,
     tabBarActiveTextColor: Color,
     tabActiveBgColor: Color,
-
 
     toolbarBtnColor: Color,
     toolbarDefaultBg: Color,
@@ -97,15 +88,13 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     searchBarInputHeight: number,
     toolbarBtnTextColor: Color,
     toolbarDefaultBorder: Color,
-    iosStatusbar: "dark-content" | "light-content",
+    iosStatusbar: 'dark-content' | 'light-content',
     statusBarColor: Color,
     darkenHeader: Color,
-
 
     iconFamily: string,
     iconFontSize: number,
     iconHeaderSize: number,
-
 
     inputFontSize: number,
     inputBorderColor: Color,
@@ -115,14 +104,12 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     inputColor: Color,
     inputColorPlaceholder: Color,
 
-
     btnLineHeight: number,
     lineHeightH1: number,
     lineHeightH2: number,
     lineHeightH3: number,
     lineHeight: number,
     listItemSelected: Color,
-
 
     listBg: Color,
     listBorderColor: Color,
@@ -132,16 +119,13 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     listNoteColor: Color,
     listNoteSize: number,
 
-
     defaultProgressColor: Color,
     inverseProgressColor: Color,
-
 
     radioBtnSize: number,
     radioSelectedColorAndroid: Color,
     radioBtnLineHeight: number,
     radioColor: Color
-
 
     segmentBackgroundColor: Color,
     segmentActiveBackgroundColor: Color,
@@ -150,10 +134,8 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     segmentBorderColor: Color,
     segmentBorderColorMain: Color,
 
-
     defaultSpinnerColor: Color,
     inverseSpinnerColor: Color,
-
 
     tabDefaultBg: Color,
     topTabBarTextColor: Color,
@@ -161,23 +143,19 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     topTabBarBorderColor: Color,
     topTabBarActiveBorderColor: Color,
 
-
     tabBgColor: Color,
     tabFontSize: number,
-
 
     textColor: Color,
     inverseTextColor: Color,
     noteFontSize: number,
     defaultTextColor: Color
 
-
     titleFontfamily: string,
     titleFontSize: number,
     subTitleFontSize: number,
     subtitleColor: Color,
     titleFontColor: Color,
-
 
     borderRadiusBase: number,
     borderWidth: number,
@@ -189,6 +167,6 @@ declare module 'native-base/dist/src/theme/variables/platform' {
     isIphoneX: boolean,
     inputGroupRoundedBorderRadius: number,
   }
-  var platform: Platform
+  const platform: Platform
   export default platform
 }
