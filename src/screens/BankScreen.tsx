@@ -25,7 +25,7 @@ interface Props extends Params, EditButtonProps {
   navBankEdit: (bankId: string) => any
   navAccount: (accountId: string, accountName: string) => any
   navAccountCreate: (bankId: string) => any
-  getAccountList: Mutations.GetAccountList
+  downloadAccountList: Mutations.DownloadAccountList
   cancel: Mutations.Cancel
 }
 
@@ -80,8 +80,8 @@ export class BankScreenComponent extends React.PureComponent<Props> {
             <Divider />
           }
           {bank.online &&
-            <ListItem button onPress={this.getAccountList}>
-              <FormattedMessage {...messages.getAccountList} />
+            <ListItem button onPress={this.downloadAccountList}>
+              <FormattedMessage {...messages.downloadAccountList} />
             </ListItem>
           }
           <ListItem button onPress={this.accountCreate}>
@@ -117,10 +117,10 @@ export class BankScreenComponent extends React.PureComponent<Props> {
     }).catch(err => console.warn('An error occurred', err))
   }
 
-  getAccountList = () => {
-    const { bankId, getAccountList, cancel } = this.props
+  downloadAccountList = () => {
+    const { bankId, downloadAccountList, cancel } = this.props
     const cancelToken = cuid()
-    getAccountList(
+    downloadAccountList(
       { bankId, cancelToken },
       { cancel: () => {
         cancel({ cancelToken })
@@ -153,7 +153,7 @@ class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
 export const BankScreen = compose(
   makeScreen({ title: () => messages.title, editButton: true }),
   withQuery({ query: Queries.bank }, (params: Params) => params),
-  withMutation({ getAccountList: Mutations.getAccountList }),
+  withMutation({ downloadAccountList: Mutations.downloadAccountList }),
   withMutation({ cancel: Mutations.cancel }),
   connect(null, {
     navBankEdit: actions.navBankEdit,
@@ -176,8 +176,8 @@ const messages = defineMessages({
     id: 'BankScreen.accountListEmpty',
     defaultMessage: 'No Accounts'
   },
-  getAccountList: {
-    id: 'BankScreen.getAccountList',
+  downloadAccountList: {
+    id: 'BankScreen.downloadAccountList',
     defaultMessage: 'Import accounts from server...'
   },
   addAccount: {

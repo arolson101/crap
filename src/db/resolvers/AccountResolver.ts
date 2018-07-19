@@ -1,13 +1,14 @@
-import cuid from 'cuid'
-const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
-import { defineMessages } from 'react-intl'
-import { Column, Entity, PrimaryColumn } from '../typeorm'
-import { iupdate } from '../../iupdate'
-import { RecordClass } from '../Record'
-import { Arg, Ctx, DbChange, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType, dbWrite, DbRecordEdit } from './helpers'
-import { Bank } from './BankResolver'
 import Axios, { CancelTokenSource } from 'axios'
-import { createService, checkLogin, toAccountType } from '../../online'
+import cuid from 'cuid'
+import { defineMessages } from 'react-intl'
+import { iupdate } from '../../iupdate'
+import { checkLogin, createService, toAccountType } from '../../online'
+import { RecordClass } from '../Record'
+import { Column, Entity, PrimaryColumn } from '../typeorm'
+import { Transaction } from './TransactionResolver'
+import { Bank } from './BankResolver'
+import { Arg, Ctx, DbChange, DbRecordEdit, dbWrite, Field, FieldResolver, InputType, Mutation, ObjectType, Query, registerEnumType, Resolver, ResolverContext, Root } from './helpers'
+const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 
 // see ofx4js.domain.data.banking.AccountType
 enum AccountType {
@@ -56,7 +57,7 @@ export class Account extends RecordClass<Account.Props> {
   }
 }
 
-@Resolver(objectType => Account)
+@Resolver(Account)
 export class AccountResolver {
   private tokens = new Map<string, CancelTokenSource>()
 
@@ -67,7 +68,7 @@ export class AccountResolver {
   ): Promise<Account> {
     if (!appDb) { throw new Error('appDb not open') }
     const res = await appDb.manager.createQueryBuilder(Account, 'account')
-      .where('account._deleted = 0 AND account.id=:accountId', { accountId })
+      .where({ _deleted: 0, id: accountId })
       .getOne()
     if (!res) {
       throw new Error('account not found')
@@ -121,7 +122,7 @@ export class AccountResolver {
   }
 
   @Mutation(returns => Bank)
-  async getAccountList (
+  async downloadAccountList (
     @Ctx() { appDb, formatMessage }: ResolverContext,
     @Arg('bankId') bankId: string,
     @Arg('cancelToken') cancelToken: string,
@@ -130,11 +131,11 @@ export class AccountResolver {
 
     const bank = await appDb.manager.findOneOrFail(Bank, bankId)
     if (!bank.online) {
-      throw new Error(`getAccountList: bank is not set online`)
+      throw new Error(`downloadAccountList: bank is not set online`)
     }
 
     const existingAccounts = await appDb.createQueryBuilder(Account, 'account')
-      .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
+      .where({ _deleted: 0, bankId: bank.id })
       .getMany()
 
     const source = Axios.CancelToken.source()
@@ -199,8 +200,29 @@ export class AccountResolver {
     return bank
   }
 
+  @FieldResolver(type => [Transaction])
+  async transactions (
+    @Ctx() { appDb }: ResolverContext,
+    @Root() account: Account,
+    @Arg('start', { nullable: true }) start?: Date,
+    @Arg('end', { nullable: true }) end?: Date,
+  ): Promise<Transaction[]> {
+    if (!appDb) { throw new Error('appDb not open') }
+    const startTime = start ? start.getTime() : Number.MIN_SAFE_INTEGER
+    const endTime = end ? end.getTime() : Number.MAX_SAFE_INTEGER
+    const res = await appDb.createQueryBuilder(Transaction, 'tx')
+      .where({
+        _deleted: 0,
+        accountId: account.id,
+        time: `BETWEEN '${startTime}' AND '${endTime}'`
+      })
+      .orderBy({ time: 'ASC' })
+      .getMany()
+    return res
+  }
+
   @Mutation(returns => Bank)
-  async getTransactions (
+  async downloadTransactions (
     @Ctx() { appDb, formatMessage }: ResolverContext,
     @Arg('bankId') bankId: string,
     @Arg('accountId') accountId: string,
@@ -212,7 +234,7 @@ export class AccountResolver {
 
     const bank = await appDb.manager.findOneOrFail(Bank, bankId)
     if (!bank.online) {
-      throw new Error(`getAccountList: bank is not set online`)
+      throw new Error(`downloadTransactions: bank is not set online`)
     }
 
     const account = await appDb.manager.findOneOrFail(Account, accountId)

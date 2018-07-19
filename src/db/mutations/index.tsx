@@ -9,8 +9,8 @@ import {
   DeleteDb,
   SaveAccount,
   SaveBank,
-  GetAccountList,
-  GetTransactions,
+  DownloadAccountList,
+  DownloadTransactions,
   Cancel,
 } from './mutations-types'
 import * as GQL from './mutations.graphql'
@@ -74,22 +74,22 @@ export namespace Mutations {
     ]
   }
 
-  export type GetAccountList = MutationFcn<GetAccountList.Mutation, GetAccountList.Variables>
-  export const getAccountList: MutationDesc<GetAccountList.Mutation, GetAccountList.Variables> = {
-    mutation: GQL.GetAccountList,
+  export type DownloadAccountList = MutationFcn<DownloadAccountList.Mutation, DownloadAccountList.Variables>
+  export const downloadAccountList: MutationDesc<DownloadAccountList.Mutation, DownloadAccountList.Variables> = {
+    mutation: GQL.DownloadAccountList,
     refetchQueries: (results) => [
-      Queries.bank.refetchQuery({ bankId: results.data.getAccountList.id }),
-      ...results.data.getAccountList.accounts.map(({ id: accountId }) =>
+      Queries.bank.refetchQuery({ bankId: results.data.downloadAccountList.id }),
+      ...results.data.downloadAccountList.accounts.map(({ id: accountId }) =>
         Queries.account.refetchQuery({ accountId })
       )
     ]
   }
 
-  export type GetTransactions = MutationFcn<GetTransactions.Mutation, GetTransactions.Variables>
-  export const getTransactions: MutationDesc<GetTransactions.Mutation, GetTransactions.Variables> = {
-    mutation: GQL.GetTransactions,
+  export type DownloadTransactions = MutationFcn<DownloadTransactions.Mutation, DownloadTransactions.Variables>
+  export const gownloadTransactions: MutationDesc<DownloadTransactions.Mutation, DownloadTransactions.Variables> = {
+    mutation: GQL.DownloadTransactions,
     refetchQueries: (results) => [
-      Queries.account.refetchQuery({ accountId: results.data.getTransactions.id }),
+      Queries.account.refetchQuery({ accountId: results.data.downloadTransactions.id }),
     ]
   }
 

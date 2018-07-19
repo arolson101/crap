@@ -33,8 +33,8 @@ mutation SaveBank($input: BankInput!, $bankId: String) {
   }
 }
 
-mutation GetAccountList($bankId: String!, $cancelToken: String!) {
-  getAccountList(bankId: $bankId, cancelToken: $cancelToken) {
+mutation DownloadAccountList($bankId: String!, $cancelToken: String!) {
+  downloadAccountList(bankId: $bankId, cancelToken: $cancelToken) {
     id
     accounts {
       id
@@ -42,8 +42,8 @@ mutation GetAccountList($bankId: String!, $cancelToken: String!) {
   }
 }
 
-mutation GetTransactions($bankId: String!, $accountId: String!, $start: DateTime!, $end: DateTime!, $cancelToken: String!) {
-  getTransactions(bankId: $bankId, accountId: $accountId, start: $start, end: $end, cancelToken: $cancelToken) {
+mutation DownloadTransactions($bankId: String!, $accountId: String!, $start: DateTime!, $end: DateTime!, $cancelToken: String!) {
+  downloadTransactions(bankId: $bankId, accountId: $accountId, start: $start, end: $end, cancelToken: $cancelToken) {
     id
   }
 }

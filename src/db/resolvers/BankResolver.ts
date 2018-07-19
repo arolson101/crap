@@ -64,7 +64,7 @@ export class BankResolver {
   ): Promise<Bank> {
     if (!appDb) { throw new Error('appDb not open') }
     const res = await appDb.manager.createQueryBuilder(Bank, 'bank')
-      .where('bank._deleted = 0 AND bank.id = :bankId', { bankId })
+      .where({ _deleted: 0, id: bankId })
       .getOne()
     if (!res) {
       throw new Error('account not found')
@@ -76,7 +76,7 @@ export class BankResolver {
   async banks (@Ctx() { appDb }: ResolverContext): Promise<Bank[]> {
     if (!appDb) { throw new Error('appDb not open') }
     const res = await appDb.createQueryBuilder(Bank, 'bank')
-      .where('bank._deleted = 0')
+      .where({ _deleted: 0 })
       .getMany()
     return res
   }
@@ -88,7 +88,7 @@ export class BankResolver {
   ): Promise<Account[]> {
     if (!appDb) { throw new Error('appDb not open') }
     const res = await appDb.createQueryBuilder(Account, 'account')
-      .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
+      .where({ _deleted: 0, bankId: bank.id }) // 'tx._deleted = 0 AND tx.bankId=:bankId', { bankId: bank.id })
       .orderBy({ name: 'ASC' })
       .getMany()
     return res
