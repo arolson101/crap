@@ -45,7 +45,13 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       state: State = {}
       execute: MutationFn<any, OperationVariables> | undefined
 
+      componentWillUnmount () {
+        this.closeToast()
+      }
+
       wrapExecute: MutationFcn<TRes, TVariables> = (variables: TVariables, options?: MutationFcnOptions<TRes>) => {
+        // console.log('wrapExecute', { variables, options })
+        this.closeToast()
         if (this.execute) {
           if (options) {
             this.setState(options)
@@ -55,6 +61,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       }
 
       onCompleted = (results: TRes) => {
+        // console.log('onCompleted', { results })
         const { complete, finally: Finally } = this.state
         if (complete) {
           complete(results)
@@ -65,16 +72,17 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       }
 
       onError = (error: Error) => {
+        // console.log('onError', error.message, { error })
+        Toast.show({
+          text: error.message,
+          buttonText: 'Okay',
+          duration: 0,
+          type: 'danger'
+        })
         const { finally: Finally } = this.state
         if (Finally) {
           Finally()
         }
-        Toast.show({
-          text: error.message,
-          buttonText: 'Okay',
-          // duration: 5000,
-          type: 'danger'
-        })
       }
 
       onCancel = () => {
@@ -82,7 +90,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
         if (cancel) {
           cancel()
         } else {
-          console.log(`can't cancel`)
+          // console.log(`can't cancel`)
         }
       }
 
@@ -110,6 +118,10 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
             }}
           </Mutation>
         )
+      }
+
+      closeToast = () => {
+        (Toast as any).toastInstance._root.closeToast()
       }
     }
 

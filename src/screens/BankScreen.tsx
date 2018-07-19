@@ -80,11 +80,11 @@ export class BankScreenComponent extends React.PureComponent<Props> {
             <Divider />
           }
           {bank.online &&
-            <ListItem onPress={this.getAccountList}>
+            <ListItem button onPress={this.getAccountList}>
               <FormattedMessage {...messages.getAccountList} />
             </ListItem>
           }
-          <ListItem onPress={this.accountCreate}>
+          <ListItem button onPress={this.accountCreate}>
             <FormattedMessage {...messages.addAccount} />
           </ListItem>
         </List>

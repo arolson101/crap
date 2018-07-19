@@ -105,6 +105,9 @@ class PickerForm extends React.Component<Props, State> {
   }
 
   renderSectionHeader = (info: { section: Section }) => {
+    if (!this.props.searchable) {
+      return null
+    }
     return (
       <ListItem itemDivider>
         <Text>{info.section.letter}</Text>
