@@ -16,6 +16,7 @@ export namespace TextField {
     returnKeyType?: any
     collapsed?: boolean
     noCorrect?: boolean
+    inputRef?: any
   }
 }
 

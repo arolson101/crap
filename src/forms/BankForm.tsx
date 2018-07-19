@@ -14,6 +14,7 @@ import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
+import { SaveBank } from '../db/mutations/mutations-types';
 
 export namespace BankForm {
   export interface Props {
@@ -28,6 +29,7 @@ interface ComposedProps extends Props {
   saveBank: Mutations.SaveBank
   deleteBank: Mutations.DeleteBank
   navBack: actions['navBack']
+  navBank: actions['navBank']
   navPopToTop: actions['navPopToTop']
 }
 
@@ -195,9 +197,13 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     saveBank(variables, { complete: this.onSaved })
   }
 
-  onSaved = () => {
-    const { navBack } = this.props
-    navBack()
+  onSaved = (result: SaveBank.Mutation) => {
+    const { navBack, navBank, bankId } = this.props
+    if (bankId) {
+      navBack()
+    } else {
+      navBank(result.saveBank.id)
+    }
   }
 
   fiOnValueChange = (value: number) => {
@@ -239,7 +245,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, pickT(actions, 'navBack', 'navPopToTop')),
+  connect(null, pickT(actions, 'navBack', 'navBank', 'navPopToTop')),
   withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   withMutation({ saveBank: Mutations.saveBank }),
   withMutation({ deleteBank: Mutations.deleteBank })

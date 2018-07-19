@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
+import { defineMessages, InjectedIntlProps, injectIntl, FormattedMessage } from 'react-intl'
 import { compose } from 'redux'
-import { AppBannerText, Button, FormContent, WelcomeText } from '../components/index'
+import { AppBannerText, FormContent, WelcomeText, confirm } from '../components/index'
+import { Button, View } from 'native-base'
 import { typedFields } from '../components/fields/index'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
@@ -24,17 +25,129 @@ const {
   TextField,
 } = typedFields<FormValues>()
 
-export const LoginFormComponent: React.SFC<Props> = (props) => {
-  const exists = props.query.allDbs.length > 0
-  return (
-    <>
-      <AppBannerText>App</AppBannerText>
-      {exists
-        ? <FormOpen {...props} />
-        : <FormCreate {...props} />
-      }
-    </>
-  )
+export class LoginFormComponent extends React.Component<Props> {
+  confirmInput: any
+
+  render () {
+    const create = this.props.query.allDbs.length === 0
+
+    const defaultValues = {
+      password: '',
+      passwordConfirm: ''
+    }
+
+    return (
+      <>
+        <AppBannerText>App</AppBannerText>
+
+        <Form
+          defaultValues={defaultValues}
+          validate={this.validate}
+          onSubmit={this.onSubmit}
+        >
+          {formApi =>
+            <FormContent>
+              <WelcomeText>
+                <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)}/>
+              </WelcomeText>
+              <TextField
+                autoFocus
+                secure
+                field='password'
+                label={messages.passwordLabel}
+                placeholder={messages.passwordPlaceholder}
+                returnKeyType={create ? 'next' : 'go'}
+                onSubmitEditing={create ? this.focusConfirmInput : formApi.submitForm}
+              />
+              {create &&
+                <TextField
+                  secure
+                  field='passwordConfirm'
+                  label={messages.passwordConfirmLabel}
+                  placeholder={messages.passwordConfirmPlaceholder}
+                  returnKeyType={'go'}
+                  onSubmitEditing={formApi.submitForm}
+                  inputRef={this.inputRef}
+                />
+              }
+              <Button
+                block
+                onPress={formApi.submitForm}
+              >
+                <FormattedMessage {...(create ? messages.create : messages.open)}/>
+              </Button>
+            </FormContent>
+          }
+        </Form>
+
+        {!create &&
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Button transparent danger onPress={this.confirmDelete}>
+              <FormattedMessage {...messages.delete} />
+            </Button>
+          </View>
+        }
+      </>
+    )
+  }
+
+  validate = (values: FormValues) => {
+    const { intl: { formatMessage } } = this.props
+    const create = this.props.query.allDbs.length === 0
+
+    if (create) {
+      return ({
+        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
+          : undefined,
+        passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
+          : undefined
+      })
+    } else {
+      return ({
+        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
+          : undefined
+      })
+    }
+  }
+
+  onSubmit = ({ password }: FormValues) => {
+    const create = this.props.query.allDbs.length === 0
+    if (create) {
+      const { createDb } = this.props
+      createDb({ name: 'appdb', password })
+    } else {
+      const { openDb } = this.props
+      const dbId = this.props.query.allDbs[0].dbId
+      openDb({ password, dbId })
+    }
+  }
+
+  confirmDelete = () => {
+    const { intl: { formatMessage } } = this.props
+    confirm({
+      title: messages.deleteTitle,
+      action: messages.delete,
+      onConfirm: this.deleteDb,
+      formatMessage
+    })
+  }
+
+  deleteDb = () => {
+    const { deleteDb } = this.props
+    const dbId = this.props.query.allDbs[0].dbId
+    const variables = { dbId }
+    deleteDb(variables)
+  }
+
+  inputRef = (ref: any) => {
+    this.confirmInput = ref
+  }
+
+  focusConfirmInput = () => {
+    if (this.confirmInput && this.confirmInput.focus) {
+      this.confirmInput.focus()
+    }
+  }
 }
 
 export const LoginForm = compose(
@@ -46,105 +159,15 @@ export const LoginForm = compose(
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 
-const FormCreate: React.SFC<Props> = (props) => {
-  const { intl: { formatMessage } } = props
-
-  return (
-    <Form
-      defaultValues={{
-        password: '',
-        passwordConfirm: ''
-      }}
-      validate={values => ({
-        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined,
-        passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
-          : undefined
-      })}
-      onSubmit={({ password }) => {
-        const variables = { name: 'appdb', password }
-        props.createDb(variables)
-      }}
-    >
-      {formApi =>
-        <FormContent>
-          <WelcomeText>Welcome!  Create a password to secure your data.</WelcomeText>
-          <TextField
-            autoFocus
-            secure
-            field='password'
-            label={messages.passwordLabel}
-            placeholder={messages.passwordPlaceholder}
-          />
-          <TextField
-            secure
-            field='passwordConfirm'
-            label={messages.passwordConfirmLabel}
-            placeholder={messages.passwordConfirmPlaceholder}
-          />
-          <Button
-            block
-            // disabled={props.createDb.loading}
-            onPress={formApi.submitForm}
-            title={messages.create}
-          />
-        </FormContent>
-      }
-    </Form>
-  )
-}
-
-const FormOpen: React.SFC<Props> = (props) => {
-  const { intl: { formatMessage } } = props
-
-  return (
-    <Form
-      defaultValues={{
-        password: ''
-      }}
-      validate={values => ({
-        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined
-      })}
-      onSubmit={({ password }) => {
-        const dbId = props.query.allDbs[0].dbId
-        props.openDb({ password, dbId })
-      }}
-    >
-      {formApi =>
-        <FormContent>
-          <WelcomeText>Welcome!  Enter your password to access your data.</WelcomeText>
-          <TextField
-            secure
-            autoFocus
-            field='password'
-            label={messages.passwordLabel}
-            placeholder={messages.passwordPlaceholder}
-            // returnKeyType="default"
-            onSubmitEditing={formApi.submitForm}
-          />
-          <Button
-            block
-            // disabled={props.openDb.loading}
-            onPress={formApi.submitForm}
-            title={messages.open}
-          />
-          <Button
-            block
-            onPress={() => {
-              const dbId = props.query.allDbs[0].dbId
-              const variables = { dbId }
-              props.deleteDb(variables)
-            }}
-            title={messages.delete}
-          />
-        </FormContent>
-      }
-    </Form>
-  )
-}
-
 const messages = defineMessages({
+  welcomeMessageCreate: {
+    id: 'LoginForm.welcomeMessageCreate',
+    defaultMessage: 'Welcome!  Create a password to secure your data.'
+  },
+  welcomeMessageOpen: {
+    id: 'LoginForm.welcomeMessageOpen',
+    defaultMessage: 'Welcome!  Enter your password to access your data.'
+  },
   create: {
     id: 'LoginForm.create',
     defaultMessage: 'Create'
@@ -156,6 +179,10 @@ const messages = defineMessages({
   delete: {
     id: 'LoginForm.delete',
     defaultMessage: 'Delete'
+  },
+  deleteTitle: {
+    id: 'LoginForm.deleteTitle',
+    defaultMessage: 'Are you sure?'
   },
   valueEmpty: {
     id: 'LoginForm.valueEmpty',

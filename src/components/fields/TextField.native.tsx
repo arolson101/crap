@@ -18,6 +18,7 @@ export namespace TextField {
     returnKeyType?: ReturnKeyType
     collapsed?: boolean
     noCorrect?: boolean
+    inputRef?: any
   }
 }
 
@@ -65,7 +66,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
                   rowSpan={rows}
                   onChangeText={fieldApi.setValue}
                   value={fieldApi.value}
-                  ref={(ref: any) => this.textInput = ref && ref._root}
+                  ref={this.ref}
                 />
                 : <Input
                   style={{ flex: 1, ...inputStyle }}
@@ -77,7 +78,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
                   autoCapitalize={noCorrect ? 'none' : undefined}
                   multiline={(rows ? rows > 0 : undefined)}
                   returnKeyType={returnKeyType}
-                  ref={(ref: any) => this.textInput = ref && ref._root}
+                  ref={this.ref}
                   {...inputProps}
                 />
               }
@@ -89,6 +90,13 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
         }}
       </Field>
     )
+  }
+
+  ref = (ref: any) => {
+    this.textInput = ref && ref._root
+    if (this.props.inputRef) {
+      this.props.inputRef(this.textInput)
+    }
   }
 }
 
