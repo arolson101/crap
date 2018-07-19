@@ -2,12 +2,12 @@ import Axios, { CancelTokenSource } from 'axios'
 import cuid from 'cuid'
 import { defineMessages } from 'react-intl'
 import { iupdate } from '../../iupdate'
-import { checkLogin, createService, toAccountType } from '../../online'
+import { checkLogin, createService, getFinancialAccount, toAccountType } from '../../online'
 import { RecordClass } from '../Record'
 import { Column, Entity, PrimaryColumn } from '../typeorm'
-import { Transaction } from './TransactionResolver'
 import { Bank } from './BankResolver'
-import { Arg, Ctx, DbChange, DbRecordEdit, dbWrite, Field, FieldResolver, InputType, Mutation, ObjectType, Query, registerEnumType, Resolver, ResolverContext, Root } from './helpers'
+import { Arg, Ctx, DbChange, dbWrite, Field, FieldResolver, InputType, Mutation, ObjectType, Query, registerEnumType, Resolver, ResolverContext, Root } from './helpers'
+import { Transaction, TransactionInput } from './TransactionResolver'
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 
 // see ofx4js.domain.data.banking.AccountType
@@ -45,7 +45,7 @@ export class Account extends RecordClass<Account.Props> {
   @Column() @Field() routing: string
   @Column() @Field() key: string
 
-  constructor (bankId?: string, props?: AccountInput, genId?: () => string) {
+  constructor(bankId?: string, props?: AccountInput, genId?: () => string) {
     super()
     if (bankId && props && genId) {
       this.createRecord(genId, {
@@ -62,7 +62,7 @@ export class AccountResolver {
   private tokens = new Map<string, CancelTokenSource>()
 
   @Query(returns => Account)
-  async account (
+  async account(
     @Ctx() { appDb }: ResolverContext,
     @Arg('accountId') accountId: string,
   ): Promise<Account> {
@@ -77,7 +77,7 @@ export class AccountResolver {
   }
 
   @Mutation(returns => Account)
-  async saveAccount (
+  async saveAccount(
     @Ctx() { appDb }: ResolverContext,
     @Arg('input') input: AccountInput,
     @Arg('accountId', { nullable: true }) accountId?: string,
@@ -108,7 +108,7 @@ export class AccountResolver {
   }
 
   @Mutation(returns => Boolean)
-  async deleteAccount (
+  async deleteAccount(
     @Ctx() { appDb }: ResolverContext,
     @Arg('accountId') accountId: string,
   ): Promise<Boolean> {
@@ -122,7 +122,7 @@ export class AccountResolver {
   }
 
   @Mutation(returns => Bank)
-  async downloadAccountList (
+  async downloadAccountList(
     @Ctx() { appDb, formatMessage }: ResolverContext,
     @Arg('bankId') bankId: string,
     @Arg('cancelToken') cancelToken: string,
@@ -154,7 +154,7 @@ export class AccountResolver {
           .map(accountProfile => toAccountInput(bank, accountProfiles, accountProfile))
           .filter((input): input is Account => input !== undefined)
 
-        const newAccounts = accounts
+        const adds = accounts
           .filter(account =>
             !existingAccounts.find(acct =>
               accountsEqual(account, acct)
@@ -162,7 +162,7 @@ export class AccountResolver {
           )
           .map(input => new Account(bankId, input, cuid))
 
-        const changedAccounts = accounts
+        const edits = accounts
           .map(account => {
             const existingAccount = existingAccounts.find(acct =>
               accountsEqual(account, acct)
@@ -173,15 +173,15 @@ export class AccountResolver {
               return undefined
             }
           })
-          .filter((change): change is DbRecordEdit => !!change)
+          .filter(defined)
           .filter(change => Object.keys(change.q).length > 0)
 
-        if (newAccounts.length || changedAccounts.length) {
+        if (adds.length || edits.length) {
           const change: DbChange = {
             table: Account,
             t,
-            adds: newAccounts,
-            edits: changedAccounts
+            adds,
+            edits,
           }
           console.log('account changes', change)
           await dbWrite(appDb, [change])
@@ -201,7 +201,7 @@ export class AccountResolver {
   }
 
   @FieldResolver(type => [Transaction])
-  async transactions (
+  async transactions(
     @Ctx() { appDb }: ResolverContext,
     @Root() account: Account,
     @Arg('start', { nullable: true }) start?: Date,
@@ -222,7 +222,7 @@ export class AccountResolver {
   }
 
   @Mutation(returns => Bank)
-  async downloadTransactions (
+  async downloadTransactions(
     @Ctx() { appDb, formatMessage }: ResolverContext,
     @Arg('bankId') bankId: string,
     @Arg('accountId') accountId: string,
@@ -239,74 +239,81 @@ export class AccountResolver {
 
     const account = await appDb.manager.findOneOrFail(Account, accountId)
 
-    // const existingAccounts = await appDb.createQueryBuilder(Account, 'account')
-    //   .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
-    //   .getMany()
+    const source = Axios.CancelToken.source()
+    this.tokens.set(cancelToken, source)
 
-    // const source = Axios.CancelToken.source()
-    // this.tokens.set(cancelToken, source)
+    try {
+      const service = createService(bank, source.token, formatMessage)
+      const bankAccount = getFinancialAccount(service, bank, account, formatMessage)
+      const bankStatement = await bankAccount.readStatement(start, end)
+      const transactions = bankStatement.getTransactionList()
 
-    // try {
-    //   const service = createService(bank, source.token, formatMessage)
-    //   const { username, password } = checkLogin(bank, formatMessage)
-    //   const accountProfiles = await service.readAccountProfiles(username, password)
-    //   if (accountProfiles.length === 0) {
-    //     console.log('server reports no accounts')
-    //   } else {
-    //     console.log('accountProfiles', accountProfiles)
-    //     const t = Date.now()
-    //     const accounts = accountProfiles
-    //       .map(accountProfile => toAccountInput(bank, accountProfiles, accountProfile))
-    //       .filter((input): input is Account => input !== undefined)
+      if (!transactions) {
+        console.log('empty transaction list')
+      } else {
+        console.log('transactionList', transactions)
 
-    //     const newAccounts = accounts
-    //       .filter(account =>
-    //         !existingAccounts.find(acct =>
-    //           accountsEqual(account, acct)
-    //         )
-    //       )
-    //       .map(input => new Account(bankId, input, cuid))
+        const existingTransactions = await appDb.createQueryBuilder(Transaction, 'tx')
+          .where({
+            _deleted: 0,
+            accountId: account.id,
+            time: `BETWEEN '${start.getTime()}' AND '${end.getTime()}'`
+          })
+          .getMany()
 
-    //     const changedAccounts = accounts
-    //       .map(account => {
-    //         const existingAccount = existingAccounts.find(acct =>
-    //           accountsEqual(account, acct)
-    //         )
-    //         if (existingAccount) {
-    //           return { id: existingAccount.id, q: Account.diff(existingAccount, account) }
-    //         } else {
-    //           return undefined
-    //         }
-    //       })
-    //       .filter((change): change is DbRecordEdit => !!change)
-    //       .filter(change => Object.keys(change.q).length > 0)
+        const inDateRange = (tx: TransactionInput): boolean => {
+          return (tx.time !== undefined && tx.time >= start.getTime() && tx.time <= end.getTime())
+        }
 
-    //     if (newAccounts.length || changedAccounts.length) {
-    //       const change: DbChange = {
-    //         table: Account,
-    //         t,
-    //         adds: newAccounts,
-    //         edits: changedAccounts
-    //       }
-    //       console.log('account changes', change)
-    //       await dbWrite(appDb, [change])
-    //     } else {
-    //       console.log('no account changes')
-    //     }
-    //   }
-    // } catch (ex) {
-    //   if (!source.token.reason) {
-    //     throw ex
-    //   }
-    // } finally {
-    //   this.tokens.delete(cancelToken)
-    // }
+        const t = Date.now()
+
+        const txInputs = transactions
+          .getTransactions()
+          .map(toTransactionInput)
+          .filter(inDateRange)
+
+        const adds = txInputs
+          .filter(tx => !existingTransactions.find(etx => transactionsEqual(etx, tx)))
+          .map(tx => new Transaction(accountId, tx, cuid))
+
+        const edits = txInputs
+          .map(tx => {
+            const existingTx = existingTransactions.find(etx => transactionsEqual(etx, tx))
+            if (existingTx) {
+              return { id: existingTx.id, q: Transaction.diff(existingTx, tx) }
+            } else {
+              return
+            }
+          })
+          .filter(defined)
+          .filter(change => Object.keys(change.q).length > 0)
+
+        if (adds.length || edits.length) {
+          const change: DbChange = {
+            table: Transaction,
+            t,
+            adds,
+            edits,
+          }
+          console.log('transaction changes', change)
+          await dbWrite(appDb, [change])
+        } else {
+          console.log('no transaction changes')
+        }
+      }
+    } catch (ex) {
+      if (!source.token.reason) {
+        throw ex
+      }
+    } finally {
+      this.tokens.delete(cancelToken)
+    }
 
     return account
   }
 
   @Mutation(returns => Boolean)
-  async cancel (
+  async cancel(
     @Arg('cancelToken') cancelToken: string,
   ): Promise<boolean> {
     const source = this.tokens.get(cancelToken)
@@ -319,9 +326,7 @@ export class AccountResolver {
   }
 }
 
-const accountsEqual = (a: AccountInput, b: AccountInput): boolean => {
-  return (a.type === b.type && a.number === b.number)
-}
+const defined = <T>(object: T | undefined): object is T => !!object
 
 const toAccountInput = (
   bank: Bank,
@@ -357,6 +362,32 @@ const toAccountInput = (
     console.log('unsupported account: ???')
   }
   return undefined
+}
+
+const accountsEqual = (a: AccountInput, b: AccountInput): boolean => {
+  return (a.type === b.type && a.number === b.number)
+}
+
+const timeForTransaction = (tx: ofx4js.domain.data.common.Transaction): Date => tx.getDateInitiated()
+
+const toTransactionInput = (tx: ofx4js.domain.data.common.Transaction): TransactionInput => ({
+  serverid: tx.getId(),
+  time: timeForTransaction(tx).valueOf(),
+  type: ofx4js.domain.data.common.TransactionType[tx.getTransactionType()],
+  name: tx.getName(),
+  memo: tx.getMemo(),
+  amount: tx.getAmount(),
+  // split: {}
+})
+
+const transactionsEqual = (a: TransactionInput, b: TransactionInput): boolean => {
+  return (a.serverid === b.serverid)
+}
+
+const findMatchingTransaction = (existingTransactions: Transaction[], newTransaction: TransactionInput) => {
+  return existingTransactions.find(existingTransaction =>
+    existingTransaction.serverid === newTransaction.serverid
+  )
 }
 
 export namespace Account {

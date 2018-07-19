@@ -1,15 +1,14 @@
-import { Column, Entity, Index, PrimaryColumn } from '../typeorm'
 import { iupdate } from '../../iupdate'
-import { Record, RecordClass } from '../Record'
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query,
-  Resolver, ResolverContext, registerEnumType, FieldResolver } from './helpers'
+import { RecordClass } from '../Record'
+import { Column, Entity, PrimaryColumn } from '../typeorm'
+import { Arg, Ctx, Field, InputType, ObjectType, Query, Resolver, ResolverContext } from './helpers'
 
 export interface Split {
   [categoryId: string]: number
 }
 
 @InputType()
-class TransactionInput {
+export class TransactionInput {
   @Field({ nullable: true }) account?: string
   @Field({ nullable: true }) serverid?: string
   @Field({ nullable: true }) time?: number
@@ -34,6 +33,17 @@ export class Transaction extends RecordClass<Transaction> implements Transaction
   @Column() @Field() memo: string
   @Column() @Field() amount: number
   // split: Split
+
+  constructor (accountId?: string, props?: TransactionInput, genId?: () => string) {
+    super()
+    if (accountId && props && genId) {
+      this.createRecord(genId, {
+        ...Transaction.defaultValues,
+        ...props,
+        accountId
+      })
+    }
+  }
 }
 
 @Resolver(Transaction)
@@ -58,4 +68,33 @@ export class TransactionResolver {
 export namespace Transaction {
   export interface Props extends Pick<TransactionInput, keyof TransactionInput> { }
   export type Query = iupdate.Query<Props>
+
+  export const defaultValues = {
+    account: '',
+    serverid: '',
+    time: 0,
+    type: '',
+    name: '',
+    memo: '',
+    amount: 0,
+  }
+
+  type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null }
+
+  export const diff = (tx: Transaction, values: Nullable<Props>): Query => {
+    return Object.keys(values).reduce(
+      (q, prop): Query => {
+        const val = values[prop]
+        if (val !== tx[prop]) {
+          return ({
+            ...q,
+            [prop]: { $set: val }
+          })
+        } else {
+          return q
+        }
+      },
+      {} as Query
+    )
+  }
 }
