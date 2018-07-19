@@ -66,9 +66,9 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
   }
 
   onPress = () => {
-    const { navPicker, items, searchable } = this.props
+    const { navPicker, items, searchable, label } = this.props
     navPicker({
-      title: messages.title,
+      title: label,
       items,
       searchable,
       onValueChange: this.onValueChange,
