@@ -1,11 +1,12 @@
-import { pick } from 'lodash'
 import { Button, View } from 'native-base'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { SelectFieldItem, typedFields } from '../components/fields/index'
+import { confirm } from '../components/index'
 import { Container } from '../components/layout'
 import { Account, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
@@ -13,8 +14,7 @@ import { SaveAccount } from '../db/mutations/mutations-types'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
-import { paths } from '../nav';
-import { withNavigation } from 'react-navigation';
+import { pickT } from '../util/pick';
 
 export namespace AccountForm {
   export interface Props {
@@ -31,6 +31,7 @@ interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps {
   deleteAccount: Mutations.DeleteAccount
   navAccount: actions['navAccount']
   navBack: actions['navBack']
+  navPopToTop: actions['navPopToTop']
 }
 
 type FormValues = Account.Props
@@ -51,7 +52,10 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     const { intl } = this.props
 
     const defaultValues = {
-      ...(edit ? pick(edit, Object.keys(Account.defaultValues())) as any : Account.defaultValues())
+      ...(edit
+        ? pickT(edit, Object.keys(Account.defaultValues()) as Array<keyof Account.Props>)
+        : Account.defaultValues()
+      )
     }
 
     return (
@@ -109,7 +113,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
         </Form>
         {edit &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Button transparent danger onPress={this.deleteAccount}>
+            <Button transparent danger onPress={this.confirmDeleteAccount}>
               <FormattedMessage {...messages.deleteAccount} />
             </Button>
           </View>
@@ -161,6 +165,15 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     }
   }
 
+  confirmDeleteAccount = () => {
+    confirm({
+      title: messages.deleteAccountTitle,
+      action: messages.deleteAccount,
+      formatMessage: this.props.intl.formatMessage,
+      onConfirm: this.deleteAccount,
+    })
+  }
+
   deleteAccount = () => {
     this.onDeleted()
     const { deleteAccount, accountId } = this.props
@@ -170,17 +183,16 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
   }
 
   onDeleted = () => {
-    const { navigation } = this.props as any
-    navigation.goBack(null)
-    navigation.popToTop()
-    // navBack(2)
+    const { navBack, navPopToTop } = this.props
+    navBack()
+    navPopToTop()
   }
 }
 
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
   withNavigation,
-  connect(null, { navAccount: actions.navAccount, navBack: actions.navBack }),
+  connect(null, pickT(actions, 'navAccount', 'navBack', 'navPopToTop')),
   withQuery({ query: Queries.account }, ({ accountId }: Props) => accountId && ({ accountId })),
   withMutation({ saveAccount: Mutations.saveAccount }),
   withMutation({ deleteAccount: Mutations.deleteAccount }),
@@ -276,5 +288,9 @@ const messages = defineMessages({
   deleteAccount: {
     id: 'AccountDialog.deleteAccount',
     defaultMessage: 'Delete Account'
-  }
+  },
+  deleteAccountTitle: {
+    id: 'AccountForm.deleteAccountTitle',
+    defaultMessage: 'Are you sure?'
+  },
 })

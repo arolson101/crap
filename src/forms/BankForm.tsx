@@ -1,19 +1,19 @@
-import { pick } from 'lodash'
+import { Button, View } from 'native-base'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
+import { confirm } from '../components/Confirmation'
 import { typedFields } from '../components/fields/index'
 import { Text } from '../components/index'
 import { Bank, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
-import { SaveBank } from '../db/mutations/mutations-types'
 import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
-import { View, Button } from 'native-base';
+import { pickT } from '../util/pick'
 
 export namespace BankForm {
   export interface Props {
@@ -63,7 +63,10 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
     const defaultValues = {
       fi: defaultFi,
-      ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) : Bank.defaultValues)
+      ...(edit
+        ? pickT(edit, Object.keys(Bank.defaultValues) as Array<keyof Bank.Props>)
+        : Bank.defaultValues
+      )
     }
 
     return (
@@ -156,7 +159,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
         </Form>
         {edit &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Button transparent danger onPress={this.deleteBank}>
+            <Button transparent danger onPress={this.confirmDeleteBank}>
               <FormattedMessage {...messages.deleteBank} />
             </Button>
           </View>
@@ -211,6 +214,15 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     }
   }
 
+  confirmDeleteBank = () => {
+    confirm({
+      title: messages.deleteBankTitle,
+      action: messages.deleteBank,
+      formatMessage: this.props.intl.formatMessage,
+      onConfirm: this.deleteBank,
+    })
+  }
+
   deleteBank = () => {
     const { deleteBank, bankId } = this.props
     if (bankId) {
@@ -227,8 +239,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, { navBack: actions.navBack }),
-  connect(null, { navPopToTop: actions.navPopToTop }),
+  connect(null, pickT(actions, 'navBack', 'navPopToTop')),
   withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   withMutation({ saveBank: Mutations.saveBank }),
   withMutation({ deleteBank: Mutations.deleteBank })
@@ -327,5 +338,9 @@ const messages = defineMessages({
   deleteBank: {
     id: 'BankForm.deleteBank',
     defaultMessage: 'Delete Bank'
-  }
+  },
+  deleteBankTitle: {
+    id: 'BankForm.deleteBankTitle',
+    defaultMessage: 'Are you sure?'
+  },
 })
