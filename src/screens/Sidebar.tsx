@@ -40,7 +40,7 @@ export const SidebarComponent: React.SFC<Props> = (props) => {
 }
 
 export const Sidebar = compose(
-  withQuery({ query: Queries.accounts }),
+  withQuery({ query: Queries.Accounts }),
   connect(null, {
     navHome: actions.navHome,
     navAccounts: actions.navAccounts,

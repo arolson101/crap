@@ -12,10 +12,23 @@ type Resolver<Result, Args = any> = (
 export type DateTime = any;
 
 export interface Query {
+  transaction: Transaction;
   bank: Bank;
   banks: Bank[];
   account: Account;
   allDbs: DbInfo[];
+}
+
+export interface Transaction {
+  id: string;
+  accountId: string;
+  time: number;
+  account: string;
+  serverid: string;
+  type: string;
+  name: string;
+  memo: string;
+  amount: number;
 }
 
 export interface Bank {
@@ -45,18 +58,6 @@ export interface Account {
   routing: string;
   key: string;
   transactions: Transaction[];
-}
-
-export interface Transaction {
-  id: string;
-  accountId: string;
-  time: number;
-  account: string;
-  serverid: string;
-  type: string;
-  name: string;
-  memo: string;
-  amount: number;
 }
 
 export interface DbInfo {
@@ -127,6 +128,9 @@ export interface AccountInput {
   routing?: string | null;
   key?: string | null;
 }
+export interface TransactionQueryArgs {
+  transactionId: string;
+}
 export interface BankQueryArgs {
   bankId: string;
 }
@@ -188,10 +192,16 @@ export enum AccountType {
 
 export namespace QueryResolvers {
   export interface Resolvers {
+    transaction?: TransactionResolver;
     bank?: BankResolver;
     banks?: BanksResolver;
     account?: AccountResolver;
     allDbs?: AllDbsResolver;
+  }
+
+  export type TransactionResolver = Resolver<Transaction, TransactionArgs>;
+  export interface TransactionArgs {
+    transactionId: string;
   }
 
   export type BankResolver = Resolver<Bank, BankArgs>;
@@ -206,6 +216,29 @@ export namespace QueryResolvers {
   }
 
   export type AllDbsResolver = Resolver<DbInfo[]>;
+}
+export namespace TransactionResolvers {
+  export interface Resolvers {
+    id?: IdResolver;
+    accountId?: AccountIdResolver;
+    time?: TimeResolver;
+    account?: AccountResolver;
+    serverid?: ServeridResolver;
+    type?: TypeResolver;
+    name?: NameResolver;
+    memo?: MemoResolver;
+    amount?: AmountResolver;
+  }
+
+  export type IdResolver = Resolver<string>;
+  export type AccountIdResolver = Resolver<string>;
+  export type TimeResolver = Resolver<number>;
+  export type AccountResolver = Resolver<string>;
+  export type ServeridResolver = Resolver<string>;
+  export type TypeResolver = Resolver<string>;
+  export type NameResolver = Resolver<string>;
+  export type MemoResolver = Resolver<string>;
+  export type AmountResolver = Resolver<number>;
 }
 export namespace BankResolvers {
   export interface Resolvers {
@@ -266,29 +299,6 @@ export namespace AccountResolvers {
     end?: DateTime | null;
     start?: DateTime | null;
   }
-}
-export namespace TransactionResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    accountId?: AccountIdResolver;
-    time?: TimeResolver;
-    account?: AccountResolver;
-    serverid?: ServeridResolver;
-    type?: TypeResolver;
-    name?: NameResolver;
-    memo?: MemoResolver;
-    amount?: AmountResolver;
-  }
-
-  export type IdResolver = Resolver<string>;
-  export type AccountIdResolver = Resolver<string>;
-  export type TimeResolver = Resolver<number>;
-  export type AccountResolver = Resolver<string>;
-  export type ServeridResolver = Resolver<string>;
-  export type TypeResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type MemoResolver = Resolver<string>;
-  export type AmountResolver = Resolver<number>;
 }
 export namespace DbInfoResolvers {
   export interface Resolvers {

@@ -22,7 +22,7 @@ class TransactionInput {
 
 @ObjectType()
 @Entity({ name: 'transactions' })
-export class Transaction extends RecordClass<Transaction.Props> {
+export class Transaction extends RecordClass<Transaction> implements Transaction.Props {
   @PrimaryColumn() @Field() id: string
   @Column() @Field() accountId: string
 
@@ -36,8 +36,23 @@ export class Transaction extends RecordClass<Transaction.Props> {
   // split: Split
 }
 
-@Resolver(objectType => Transaction)
+@Resolver(Transaction)
 export class TransactionResolver {
+
+  @Query(returns => Transaction)
+  async transaction (
+    @Ctx() { appDb }: ResolverContext,
+    @Arg('transactionId') transactionId: string,
+  ): Promise<Transaction> {
+    if (!appDb) { throw new Error('appDb not open') }
+    const res = await appDb.manager.createQueryBuilder(Transaction, 'tx')
+      .where({ _deleted: 0, id: transactionId })
+      .getOne()
+    if (!res) {
+      throw new Error('transaction not found')
+    }
+    return res
+  }
 }
 
 export namespace Transaction {

@@ -118,9 +118,9 @@ class AccountItem extends React.Component<ConnectedProps & { account: Banks.Acco
 
 export const AccountsScreen = compose(
   makeScreen({ title: () => messages.title, /*addButton: true*/ }),
-  withQuery({ query: Queries.banks }),
-  withMutation({ deleteBank: Mutations.deleteBank }),
-  withMutation({ deleteAccount: Mutations.deleteAccount }),
+  withQuery({ query: Queries.Banks }),
+  withMutation({ deleteBank: Mutations.DeleteBank }),
+  withMutation({ deleteAccount: Mutations.DeleteAccount }),
   connect(null, {
     navBankCreate: actions.navBankCreate,
     navAccountCreate: actions.navAccountCreate,

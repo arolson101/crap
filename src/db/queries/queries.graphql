@@ -1,25 +1,11 @@
 
-query Account($accountId: String!) {
-  account(accountId: $accountId) {
-    id
-    name
-    type
-    color
-    number
-    visible
-    routing
-    key
-  }
-}
-
-query Accounts {
+query Banks {
   banks {
     id
     name
     accounts {
       id
       name
-      # balance
     }
   }
 }
@@ -46,14 +32,47 @@ query Bank($bankId: String!) {
   }
 }
 
-query Banks {
+query Accounts {
   banks {
     id
     name
     accounts {
       id
       name
+      # balance
     }
+  }
+}
+
+query Account($accountId: String!) {
+  account(accountId: $accountId) {
+    id
+    name
+    type
+    color
+    number
+    visible
+    routing
+    key
+    transactions {
+      id
+      time
+      name
+      memo
+      amount
+    }
+  }
+}
+
+query Transaction($transactionId: String!) {
+  transaction(transactionId: $transactionId) {
+    account
+    serverid
+    time
+    type
+    name
+    memo
+    amount
   }
 }
 

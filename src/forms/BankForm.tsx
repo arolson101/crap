@@ -246,9 +246,9 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
   connect(null, pickT(actions, 'navBack', 'navBank', 'navPopToTop')),
-  withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
-  withMutation({ saveBank: Mutations.saveBank }),
-  withMutation({ deleteBank: Mutations.deleteBank })
+  withQuery({ query: Queries.Bank }, ({ bankId }: Props) => bankId && ({ bankId })),
+  withMutation({ saveBank: Mutations.SaveBank }),
+  withMutation({ deleteBank: Mutations.DeleteBank })
 )(BankFormComponent)
 BankForm.displayName = 'BankForm'
 

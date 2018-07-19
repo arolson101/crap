@@ -152,9 +152,9 @@ class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
 
 export const BankScreen = compose(
   makeScreen({ title: () => messages.title, editButton: true }),
-  withQuery({ query: Queries.bank }, (params: Params) => params),
-  withMutation({ downloadAccountList: Mutations.downloadAccountList }),
-  withMutation({ cancel: Mutations.cancel }),
+  withQuery({ query: Queries.Bank }, (params: Params) => params),
+  withMutation({ downloadAccountList: Mutations.DownloadAccountList }),
+  withMutation({ cancel: Mutations.Cancel }),
   connect(null, {
     navBankEdit: actions.navBankEdit,
     navAccount: actions.navAccount,

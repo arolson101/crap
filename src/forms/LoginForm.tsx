@@ -152,10 +152,10 @@ export class LoginFormComponent extends React.Component<Props> {
 
 export const LoginForm = compose(
   injectIntl,
-  withQuery({ query: Queries.dbs }),
-  withMutation({ openDb: Mutations.openDb }),
-  withMutation({ createDb: Mutations.createDb }),
-  withMutation({ deleteDb: Mutations.deleteDb }),
+  withQuery({ query: Queries.Dbs }),
+  withMutation({ openDb: Mutations.OpenDb }),
+  withMutation({ createDb: Mutations.CreateDb }),
+  withMutation({ deleteDb: Mutations.DeleteDb }),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

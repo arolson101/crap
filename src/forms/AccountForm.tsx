@@ -190,9 +190,9 @@ export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
   withNavigation,
   connect(null, pickT(actions, 'navBack', 'navPopToTop')),
-  withQuery({ query: Queries.account }, ({ accountId }: Props) => accountId && ({ accountId })),
-  withMutation({ saveAccount: Mutations.saveAccount }),
-  withMutation({ deleteAccount: Mutations.deleteAccount }),
+  withQuery({ query: Queries.Account }, ({ accountId }: Props) => accountId && ({ accountId })),
+  withMutation({ saveAccount: Mutations.SaveAccount }),
+  withMutation({ deleteAccount: Mutations.DeleteAccount }),
 )(AccountFormComponent)
 AccountForm.displayName = 'AccountForm'
 
