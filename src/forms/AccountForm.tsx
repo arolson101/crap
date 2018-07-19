@@ -10,11 +10,10 @@ import { confirm } from '../components/index'
 import { Container } from '../components/layout'
 import { Account, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
-import { SaveAccount } from '../db/mutations/mutations-types'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
-import { pickT } from '../util/pick';
+import { pickT } from '../util/pick'
 
 export namespace AccountForm {
   export interface Props {
@@ -29,7 +28,6 @@ interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
   deleteAccount: Mutations.DeleteAccount
-  navAccount: actions['navAccount']
   navBack: actions['navBack']
   navPopToTop: actions['navPopToTop']
 }
@@ -153,10 +151,9 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     saveAccount(variables, { complete: this.onSaveAccount })
   }
 
-  onSaveAccount = (result: SaveAccount.Mutation) => {
-    const { navAccount } = this.props
-    const { saveAccount } = result
-    navAccount(saveAccount.id, saveAccount.name)
+  onSaveAccount = () => {
+    const { navBack } = this.props
+    navBack()
   }
 
   typeOnValueChange = (type: Account.Type) => {
@@ -192,7 +189,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
   withNavigation,
-  connect(null, pickT(actions, 'navAccount', 'navBack', 'navPopToTop')),
+  connect(null, pickT(actions, 'navBack', 'navPopToTop')),
   withQuery({ query: Queries.account }, ({ accountId }: Props) => accountId && ({ accountId })),
   withMutation({ saveAccount: Mutations.saveAccount }),
   withMutation({ deleteAccount: Mutations.deleteAccount }),

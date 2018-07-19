@@ -1,8 +1,9 @@
-import { Body, Icon, Right, View, Left, Switch } from 'native-base'
+import { Body, Icon, Right, View } from 'native-base'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
+import { Divider } from '../components/fields/Divider'
 import { List, ListItem, Text } from '../components/layout.native'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
@@ -25,25 +26,32 @@ interface ConnectedProps {
 }
 
 class AccountsScreenComponent extends React.Component<Props & ConnectedProps & AddButtonProps> {
-  componentDidMount () {
-    const { setAdd } = this.props
-    setAdd(this.onAddButton)
-  }
+  // componentDidMount () {
+  //   const { setAdd } = this.props
+  //   setAdd(this.onAddButton)
+  // }
 
   render () {
     const { banks } = this.props.query
     return (
-      <View style={{ flex: 1 }}>
-        {banks.length === 0 &&
-          <Text>No accounts</Text>
-        }
+      <List>
         {banks.map(bank =>
           <React.Fragment key={bank.id}>
-            <View style={{ height: 20 }} />
+            <Divider/>
             <BankItem {...this.props} bank={bank} />
           </React.Fragment>
         )}
-      </View>
+        <Divider>
+          {banks.length === 0 &&
+            <Text>No Accounts</Text>
+          }
+        </Divider>
+        <ListItem button onPress={this.onAddButton}>
+          <Body>
+            <Text>Add bank...</Text>
+          </Body>
+        </ListItem>
+      </List>
     )
   }
 
@@ -57,8 +65,8 @@ class BankItem extends React.Component<ConnectedProps & { bank: Banks.Banks }> {
   render () {
     const { bank } = this.props
     return (
-      <List>
-        <ListItem onPress={this.onPress}>
+      <>
+        <ListItem button onPress={this.onPress}>
           <Body>
             <Text>
               {bank.name}
@@ -71,7 +79,7 @@ class BankItem extends React.Component<ConnectedProps & { bank: Banks.Banks }> {
         {bank.accounts.map(account =>
           <AccountItem key={account.id} {...this.props} account={account} />
         )}
-      </List>
+      </>
     )
   }
 
@@ -109,7 +117,7 @@ class AccountItem extends React.Component<ConnectedProps & { account: Banks.Acco
 }
 
 export const AccountsScreen = compose(
-  makeScreen({ title: () => messages.title, addButton: true }),
+  makeScreen({ title: () => messages.title, /*addButton: true*/ }),
   withQuery({ query: Queries.banks }),
   withMutation({ deleteBank: Mutations.deleteBank }),
   withMutation({ deleteAccount: Mutations.deleteAccount }),

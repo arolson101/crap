@@ -66,17 +66,19 @@ export class BankScreenComponent extends React.PureComponent<Props> {
             </Body>
           </CardItem>
         </Card>
-        <Divider>
-          {bank.accounts.length
-            ? <FormattedMessage {...messages.accountList}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
-            : <FormattedMessage {...messages.accountListEmpty}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
-          }
-        </Divider>
         <List>
+          <Divider>
+            {bank.accounts.length
+              ? <FormattedMessage {...messages.accountList}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
+              : <FormattedMessage {...messages.accountListEmpty}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
+            }
+          </Divider>
           {bank.accounts.map(account => (
             <AccountItem key={account.id} {...this.props} account={account} />
           ))}
-          <Divider />
+          {bank.accounts.length > 0 &&
+            <Divider />
+          }
           {bank.online &&
             <ListItem onPress={this.getAccountList}>
               <FormattedMessage {...messages.getAccountList} />
