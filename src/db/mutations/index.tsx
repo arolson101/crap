@@ -10,6 +10,7 @@ import {
   SaveAccount,
   SaveBank,
   GetAccountList,
+  GetTransactions,
   Cancel,
 } from './mutations-types'
 import * as GQL from './mutations.graphql'
@@ -81,6 +82,14 @@ export namespace Mutations {
       ...results.data.getAccountList.accounts.map(({ id: accountId }) =>
         Queries.account.refetchQuery({ accountId })
       )
+    ]
+  }
+
+  export type GetTransactions = MutationFcn<GetTransactions.Mutation, GetTransactions.Variables>
+  export const getTransactions: MutationDesc<GetTransactions.Mutation, GetTransactions.Variables> = {
+    mutation: GQL.GetTransactions,
+    refetchQueries: (results) => [
+      Queries.account.refetchQuery({ accountId: results.data.getTransactions.id }),
     ]
   }
 

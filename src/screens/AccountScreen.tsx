@@ -16,7 +16,7 @@ interface Params {
 
 interface Props extends Params {
   query: Queries.Account
-  navAccountEdit: (accountId: string) => any
+  navAccountEdit: actions['navAccountEdit']
 }
 
 class AccountScreenComponent extends React.PureComponent<Props> {
@@ -27,6 +27,7 @@ class AccountScreenComponent extends React.PureComponent<Props> {
       <>
         <Text>Account: {account.name}</Text>
         <Button title='edit' onPress={() => this.props.navAccountEdit(account.id)} />
+        <Button title='download' onPress={() => this.props.navAccountEdit(account.id)} />
       </>
     )
   }

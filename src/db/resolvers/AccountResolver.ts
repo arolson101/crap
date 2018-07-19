@@ -199,6 +199,90 @@ export class AccountResolver {
     return bank
   }
 
+  @Mutation(returns => Bank)
+  async getTransactions (
+    @Ctx() { appDb, formatMessage }: ResolverContext,
+    @Arg('bankId') bankId: string,
+    @Arg('accountId') accountId: string,
+    @Arg('start') start: Date,
+    @Arg('end') end: Date,
+    @Arg('cancelToken') cancelToken: string,
+  ): Promise<Account> {
+    if (!appDb) { throw new Error('appDb not open') }
+
+    const bank = await appDb.manager.findOneOrFail(Bank, bankId)
+    if (!bank.online) {
+      throw new Error(`getAccountList: bank is not set online`)
+    }
+
+    const account = await appDb.manager.findOneOrFail(Account, accountId)
+
+    // const existingAccounts = await appDb.createQueryBuilder(Account, 'account')
+    //   .where('account._deleted = 0 AND account.bankId=:bankId', { bankId: bank.id })
+    //   .getMany()
+
+    // const source = Axios.CancelToken.source()
+    // this.tokens.set(cancelToken, source)
+
+    // try {
+    //   const service = createService(bank, source.token, formatMessage)
+    //   const { username, password } = checkLogin(bank, formatMessage)
+    //   const accountProfiles = await service.readAccountProfiles(username, password)
+    //   if (accountProfiles.length === 0) {
+    //     console.log('server reports no accounts')
+    //   } else {
+    //     console.log('accountProfiles', accountProfiles)
+    //     const t = Date.now()
+    //     const accounts = accountProfiles
+    //       .map(accountProfile => toAccountInput(bank, accountProfiles, accountProfile))
+    //       .filter((input): input is Account => input !== undefined)
+
+    //     const newAccounts = accounts
+    //       .filter(account =>
+    //         !existingAccounts.find(acct =>
+    //           accountsEqual(account, acct)
+    //         )
+    //       )
+    //       .map(input => new Account(bankId, input, cuid))
+
+    //     const changedAccounts = accounts
+    //       .map(account => {
+    //         const existingAccount = existingAccounts.find(acct =>
+    //           accountsEqual(account, acct)
+    //         )
+    //         if (existingAccount) {
+    //           return { id: existingAccount.id, q: Account.diff(existingAccount, account) }
+    //         } else {
+    //           return undefined
+    //         }
+    //       })
+    //       .filter((change): change is DbRecordEdit => !!change)
+    //       .filter(change => Object.keys(change.q).length > 0)
+
+    //     if (newAccounts.length || changedAccounts.length) {
+    //       const change: DbChange = {
+    //         table: Account,
+    //         t,
+    //         adds: newAccounts,
+    //         edits: changedAccounts
+    //       }
+    //       console.log('account changes', change)
+    //       await dbWrite(appDb, [change])
+    //     } else {
+    //       console.log('no account changes')
+    //     }
+    //   }
+    // } catch (ex) {
+    //   if (!source.token.reason) {
+    //     throw ex
+    //   }
+    // } finally {
+    //   this.tokens.delete(cancelToken)
+    // }
+
+    return account
+  }
+
   @Mutation(returns => Boolean)
   async cancel (
     @Arg('cancelToken') cancelToken: string,

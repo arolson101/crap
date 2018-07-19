@@ -42,6 +42,12 @@ mutation GetAccountList($bankId: String!, $cancelToken: String!) {
   }
 }
 
+mutation GetTransactions($bankId: String!, $accountId: String!, $start: DateTime!, $end: DateTime!, $cancelToken: String!) {
+  getTransactions(bankId: $bankId, accountId: $accountId, start: $start, end: $end, cancelToken: $cancelToken) {
+    id
+  }
+}
+
 mutation Cancel($cancelToken: String!) {
   cancel(cancelToken: $cancelToken)
 }

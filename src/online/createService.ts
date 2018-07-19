@@ -57,6 +57,7 @@ const ajaxHandler = (cancelToken: CancelToken) => (
       throw new Error(res.statusText)
     }
     console.assert(typeof res.data === 'string')
+    console.log({url, verb, data, result: res.data})
     return res.data
   }
 )

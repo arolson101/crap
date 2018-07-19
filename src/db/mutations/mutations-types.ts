@@ -8,6 +8,9 @@ type Resolver<Result, Args = any> = (
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
+/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+export type DateTime = any;
+
 export interface Query {
   bank: Bank;
   banks: Bank[];
@@ -54,6 +57,7 @@ export interface Mutation {
   saveAccount: Account;
   deleteAccount: boolean;
   getAccountList: Bank;
+  getTransactions: Bank;
   cancel: boolean;
   createDb: boolean;
   openDb: boolean;
@@ -144,6 +148,13 @@ export interface DeleteAccountMutationArgs {
 }
 export interface GetAccountListMutationArgs {
   cancelToken: string;
+  bankId: string;
+}
+export interface GetTransactionsMutationArgs {
+  cancelToken: string;
+  end: DateTime;
+  start: DateTime;
+  accountId: string;
   bankId: string;
 }
 export interface CancelMutationArgs {
@@ -260,6 +271,7 @@ export namespace MutationResolvers {
     saveAccount?: SaveAccountResolver;
     deleteAccount?: DeleteAccountResolver;
     getAccountList?: GetAccountListResolver;
+    getTransactions?: GetTransactionsResolver;
     cancel?: CancelResolver;
     createDb?: CreateDbResolver;
     openDb?: OpenDbResolver;
@@ -293,6 +305,15 @@ export namespace MutationResolvers {
   export type GetAccountListResolver = Resolver<Bank, GetAccountListArgs>;
   export interface GetAccountListArgs {
     cancelToken: string;
+    bankId: string;
+  }
+
+  export type GetTransactionsResolver = Resolver<Bank, GetTransactionsArgs>;
+  export interface GetTransactionsArgs {
+    cancelToken: string;
+    end: DateTime;
+    start: DateTime;
+    accountId: string;
     bankId: string;
   }
 
@@ -496,6 +517,25 @@ export namespace GetAccountList {
 
   export type Accounts = {
     __typename?: "Account";
+    id: string;
+  };
+}
+export namespace GetTransactions {
+  export type Variables = {
+    bankId: string;
+    accountId: string;
+    start: DateTime;
+    end: DateTime;
+    cancelToken: string;
+  };
+
+  export type Mutation = {
+    __typename?: "Mutation";
+    getTransactions: GetTransactions;
+  };
+
+  export type GetTransactions = {
+    __typename?: "Bank";
     id: string;
   };
 }
