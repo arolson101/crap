@@ -1,5 +1,6 @@
 import Axios, { CancelTokenSource } from 'axios'
 import cuid from 'cuid'
+import * as ofx4js from 'ofx4js'
 import { defineMessages } from 'react-intl'
 import { iupdate } from '../../iupdate'
 import { checkLogin, createService, getFinancialAccount, toAccountType } from '../../online'
@@ -211,17 +212,15 @@ export class AccountResolver {
     const startTime = start ? start.getTime() : Number.MIN_SAFE_INTEGER
     const endTime = end ? end.getTime() : Number.MAX_SAFE_INTEGER
     const res = await appDb.createQueryBuilder(Transaction, 'tx')
-      .where({
-        _deleted: 0,
-        accountId: account.id,
-        time: `BETWEEN '${startTime}' AND '${endTime}'`
-      })
+      .where({ _deleted: 0, accountId: account.id })
+      .andWhere('tx.time BETWEEN :startTime AND :endTime', { startTime, endTime })
       .orderBy({ time: 'ASC' })
       .getMany()
+    console.log(`transactions for account ${account.id} (bank ${account.bankId})`, `time: BETWEEN '${startTime}' AND '${endTime}'`, res)
     return res
   }
 
-  @Mutation(returns => Bank)
+  @Mutation(returns => Account)
   async downloadTransactions(
     @Ctx() { appDb, formatMessage }: ResolverContext,
     @Arg('bankId') bankId: string,
@@ -253,12 +252,10 @@ export class AccountResolver {
       } else {
         console.log('transactionList', transactions)
 
-        const existingTransactions = await appDb.createQueryBuilder(Transaction, 'tx')
-          .where({
-            _deleted: 0,
-            accountId: account.id,
-            time: `BETWEEN '${start.getTime()}' AND '${end.getTime()}'`
-          })
+        const existingTransactions = await appDb
+          .createQueryBuilder(Transaction, 'tx')
+          .where({ _deleted: 0, accountId: account.id })
+          .andWhere('tx.time BETWEEN :startTime AND :endTime', { startTime: start.getTime(), endTime: end.getTime() })
           .getMany()
 
         const inDateRange = (tx: TransactionInput): boolean => {
@@ -368,14 +365,14 @@ const accountsEqual = (a: AccountInput, b: AccountInput): boolean => {
   return (a.type === b.type && a.number === b.number)
 }
 
-const timeForTransaction = (tx: ofx4js.domain.data.common.Transaction): Date => tx.getDateInitiated()
+const timeForTransaction = (tx: ofx4js.domain.data.common.Transaction): Date => tx.getDatePosted()
 
 const toTransactionInput = (tx: ofx4js.domain.data.common.Transaction): TransactionInput => ({
   serverid: tx.getId(),
   time: timeForTransaction(tx).valueOf(),
   type: ofx4js.domain.data.common.TransactionType[tx.getTransactionType()],
   name: tx.getName(),
-  memo: tx.getMemo(),
+  memo: tx.getMemo() || '',
   amount: tx.getAmount(),
   // split: {}
 })

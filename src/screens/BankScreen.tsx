@@ -31,11 +31,11 @@ interface Props extends Params, EditButtonProps {
 
 export class BankScreenComponent extends React.PureComponent<Props> {
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.setEdit(this.bankEdit)
   }
 
-  render () {
+  render() {
     const { bank } = this.props.query
 
     return (
@@ -122,15 +122,17 @@ export class BankScreenComponent extends React.PureComponent<Props> {
     const cancelToken = cuid()
     downloadAccountList(
       { bankId, cancelToken },
-      { cancel: () => {
-        cancel({ cancelToken })
-      }}
+      {
+        cancel: () => {
+          cancel({ cancelToken })
+        }
+      }
     )
   }
 }
 
 class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
-  render () {
+  render() {
     const { account } = this.props
     return (
       <ListItem onPress={this.onPress}>

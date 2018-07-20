@@ -47,6 +47,7 @@ query Accounts {
 query Account($accountId: String!) {
   account(accountId: $accountId) {
     id
+    bankId
     name
     type
     color
@@ -60,6 +61,7 @@ query Account($accountId: String!) {
       name
       memo
       amount
+      serverid
     }
   }
 }
