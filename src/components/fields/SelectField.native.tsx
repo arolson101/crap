@@ -1,4 +1,4 @@
-import { Button, Icon, Item, Label, Text } from 'native-base'
+import { Body, Icon, Label, ListItem, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
@@ -41,8 +41,8 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
             throw new Error(`selected item ${fieldApi} not found in item list`)
           }
           return (
-            <Item
-              error={error}
+            <ListItem
+              button
               {...itemProps}
             >
               <Label
@@ -50,15 +50,15 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
               >
                 {intl.formatMessage(label)}
               </Label>
-              <Button transparent style={{ flex: 1 }} onPress={this.onPress}>
+              <Body>
                 <Text style={{ color: platform.textColor }}>
                   {selectedItem.label}
                 </Text>
-              </Button>
+              </Body>
               {error &&
                 <Icon name='close-circle' />
               }
-            </Item>
+            </ListItem>
           )
         }}
       </Field>
