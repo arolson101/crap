@@ -27,7 +27,7 @@ class PickerForm extends React.Component<Props, State> {
     searchTerm: '',
   }
 
-  getFirstLetter (str: string) {
+  getFirstLetter(str: string) {
     const letter = str[0] as string | undefined
     if (letter && letter.match(/[a-z]/i)) {
       return letter.toUpperCase()
@@ -36,12 +36,12 @@ class PickerForm extends React.Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     const { searchable } = this.props
     const { searchTerm } = this.state
     const items = this.state.filteredItems || this.props.items
     const groups = items.reduce((sections, item) => {
-      let letter = this.getFirstLetter(item.label)
+      const letter = this.getFirstLetter(item.label)
       sections[letter] = [...(sections[letter] || []), item]
       return sections
     }, {} as { [key: string]: SelectFieldItem[] })
@@ -71,7 +71,7 @@ class PickerForm extends React.Component<Props, State> {
           </Header>
         }
         <SectionList
-          style={{ backgroundColor: platform.cardDefaultBg }}
+          style={styles.list}
           sections={sections}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
@@ -143,6 +143,9 @@ export const PickerModal = compose(
 PickerModal.displayName = 'PickerModal'
 
 const styles = StyleSheet.create({
+  list: {
+    backgroundColor: platform.cardDefaultBg
+  },
   searchBarHeader: {
     paddingTop: 0,
     height: platform.searchBarHeight + platform.listItemPadding

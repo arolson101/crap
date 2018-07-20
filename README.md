@@ -24,11 +24,9 @@
 ## todo
 * get storybook working on mobile
 * id types
-* typeorm
-* just read the object graph into memory? localforage
 * picker, other form field types
-* fix glamorous/native
 * fix storybook with typedefs
 * remove react-router from native
 * handle errors in Query
-* have mutation pass function
+* pull to refresh
+* allow overlapping accounts from same bank

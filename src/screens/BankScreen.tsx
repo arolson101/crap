@@ -14,17 +14,18 @@ import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { Bank } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
-import { EditButtonProps, makeScreen } from './Screen'
+import { pickT } from '../util/pick'
+import { AddButtonProps, makeScreen } from './Screen'
 
 interface Params {
   bankId: string
 }
 
-interface Props extends Params, EditButtonProps {
+interface Props extends Params, AddButtonProps {
   query: Queries.Bank
-  navBankEdit: (bankId: string) => any
-  navAccount: (accountId: string, accountName: string) => any
-  navAccountCreate: (bankId: string) => any
+  navBankEdit: actions['navBankEdit']
+  navAccountEdit: actions['navAccountEdit']
+  navAccountCreate: actions['navAccountCreate']
   downloadAccountList: Mutations.DownloadAccountList
   cancel: Mutations.Cancel
 }
@@ -32,7 +33,7 @@ interface Props extends Params, EditButtonProps {
 export class BankScreenComponent extends React.PureComponent<Props> {
 
   componentDidMount() {
-    this.props.setEdit(this.bankEdit)
+    this.props.setAdd(this.accountCreate)
   }
 
   render() {
@@ -41,8 +42,13 @@ export class BankScreenComponent extends React.PureComponent<Props> {
     return (
       <Scrollable>
         <Card>
-          <CardItem header>
-            <Text>{bank.name}</Text>
+          <CardItem header button onPress={this.bankEdit}>
+            <Body>
+              <Text>{bank.name}</Text>
+            </Body>
+            <Right>
+              <Icon name='ios-information-circle-outline' android='md-information-circle' style={{ color: platform.brandInfo }} />
+            </Right>
           </CardItem>
           {!!bank.web &&
             <CardItem button onPress={this.webOnPress}>
@@ -84,9 +90,9 @@ export class BankScreenComponent extends React.PureComponent<Props> {
               <FormattedMessage {...messages.downloadAccountList} />
             </ListItem>
           }
-          <ListItem button onPress={this.accountCreate}>
+          {/* <ListItem button onPress={this.accountCreate}>
             <FormattedMessage {...messages.addAccount} />
-          </ListItem>
+          </ListItem> */}
         </List>
       </Scrollable>
     )
@@ -140,28 +146,24 @@ class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
           <Text>{account.name}</Text>
         </Body>
         <Right>
-          <Icon name='arrow-forward' />
+          <Icon name='ios-information-circle-outline' android='md-information-circle' style={{ color: platform.brandInfo }} />
         </Right>
       </ListItem>
     )
   }
 
   onPress = () => {
-    const { account, navAccount } = this.props
-    navAccount(account.id, account.name)
+    const { account, navAccountEdit } = this.props
+    navAccountEdit(account.id)
   }
 }
 
 export const BankScreen = compose(
-  makeScreen({ title: () => messages.title, editButton: true }),
+  makeScreen({ title: () => messages.title, addButton: true }),
   withQuery({ query: Queries.Bank }, (params: Params) => params),
   withMutation({ downloadAccountList: Mutations.DownloadAccountList }),
   withMutation({ cancel: Mutations.Cancel }),
-  connect(null, {
-    navBankEdit: actions.navBankEdit,
-    navAccount: actions.navAccount,
-    navAccountCreate: actions.navAccountCreate,
-  })
+  connect(null, pickT(actions, 'navBankEdit', 'navAccountEdit', 'navAccountCreate'))
 )(BankScreenComponent)
 BankScreen.displayName = 'BankScreen'
 
