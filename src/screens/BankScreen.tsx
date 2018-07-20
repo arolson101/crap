@@ -44,7 +44,7 @@ export class BankScreenComponent extends React.PureComponent<Props> {
           <CardItem header>
             <Text>{bank.name}</Text>
           </CardItem>
-          {bank.web &&
+          {!!bank.web &&
             <CardItem button onPress={this.webOnPress}>
               <Body>
                 <Text style={{ color: platform.brandPrimary }} note>{bank.web}</Text>
