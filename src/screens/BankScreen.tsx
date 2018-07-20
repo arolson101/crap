@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import * as URL from 'url'
 import { Divider } from '../components/fields/Divider'
-import { List, ListItem } from '../components/layout.native'
+import { List, ListItem, Scrollable } from '../components/layout.native'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
@@ -39,7 +39,7 @@ export class BankScreenComponent extends React.PureComponent<Props> {
     const { bank } = this.props.query
 
     return (
-      <>
+      <Scrollable>
         <Card>
           <CardItem header>
             <Text>{bank.name}</Text>
@@ -88,7 +88,7 @@ export class BankScreenComponent extends React.PureComponent<Props> {
             <FormattedMessage {...messages.addAccount} />
           </ListItem>
         </List>
-      </>
+      </Scrollable>
     )
   }
 

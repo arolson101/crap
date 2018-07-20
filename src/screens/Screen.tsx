@@ -1,4 +1,3 @@
-import { Content } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormattedMessage, InjectedIntlProps } from 'react-intl'
@@ -67,21 +66,21 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
     const nav: ScreenComponent<T, P> = ((props) => (
       <SafeAreaView style={{ flex: 1, backgroundColor: platform.brandLight }}>
         {/* <Container style={{flex: 2}}> */}
-          {/* <Fab
-            direction='up'
-            containerStyle={{}}
-            style={{ backgroundColor: '#5067FF' }}
-            position='bottomRight'
-          >
-            <Icon name='share' />
-          </Fab> */}
-          <Content>
-            <Component
-              {...props}
-              {...moreProps}
-              {...props.navigation.state.params}
-            />
-          </Content>
+        {/* <Fab
+          direction='up'
+          containerStyle={{}}
+          style={{ backgroundColor: '#5067FF' }}
+          position='bottomRight'
+        >
+          <Icon name='share' />
+        </Fab> */}
+        {/* <Content> */}
+        <Component
+          {...props}
+          {...moreProps}
+          {...props.navigation.state.params}
+        />
+        {/* </Content> */}
         {/* </Container> */}
       </SafeAreaView>
     )) as NavigationScreenComponent<T, {}, P> as any

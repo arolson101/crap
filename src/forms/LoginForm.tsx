@@ -28,7 +28,7 @@ const {
 export class LoginFormComponent extends React.Component<Props> {
   confirmInput: any
 
-  render () {
+  render() {
     const create = this.props.query.allDbs.length === 0
 
     const defaultValues = {
@@ -48,7 +48,7 @@ export class LoginFormComponent extends React.Component<Props> {
           {formApi =>
             <FormContent>
               <WelcomeText>
-                <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)}/>
+                <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)} />
               </WelcomeText>
               <TextField
                 autoFocus
@@ -74,7 +74,7 @@ export class LoginFormComponent extends React.Component<Props> {
                 block
                 onPress={formApi.submitForm}
               >
-                <FormattedMessage {...(create ? messages.create : messages.open)}/>
+                <FormattedMessage {...(create ? messages.create : messages.open)} />
               </Button>
             </FormContent>
           }

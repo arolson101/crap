@@ -53,12 +53,12 @@ const {
 export class BankFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
   formApi: FormAPI<FormValues>
 
-  componentDidMount () {
+  componentDidMount() {
     const { setSave } = this.props
     setSave(this.onSave)
   }
 
-  render () {
+  render() {
     const { bankId, query } = this.props
 
     const edit = bankId && query.bank

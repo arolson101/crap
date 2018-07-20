@@ -39,12 +39,12 @@ const { Form, SelectField, TextField } = typedFields<FormValues>()
 export class AccountFormComponent extends React.PureComponent<ComposedProps> {
   formApi: FormAPI<FormValues>
 
-  componentDidMount () {
+  componentDidMount() {
     const { setSave } = this.props
     setSave(this.onSave)
   }
 
-  render () {
+  render() {
     const props = this.props
     const edit = this.props.accountId && props.query.account
     const { intl } = this.props

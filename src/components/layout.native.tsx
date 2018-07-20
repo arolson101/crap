@@ -3,6 +3,7 @@ import * as NB from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
+import { ScrollView } from 'react-native'
 import { ThemeProp } from '../App/index'
 
 interface ButtonProps {
@@ -37,9 +38,10 @@ export { Picker } from 'react-native'
 export const Container = glamorous.view()
 Container.displayName = 'Container'
 
+export const Scrollable: React.SFC<any> = (props) => <ScrollView {...props} />
+
 export const CenteredContent = glamorous.view<ThemeProp>({},
   ({ theme }) => ({
-    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
   })
