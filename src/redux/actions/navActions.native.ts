@@ -59,6 +59,16 @@ export const navActions: NavApi = {
     params: { bankId }
   })),
 
+  navTransactionEdit: (transactionId: string) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.transactionEdit,
+    params: { transactionId }
+  })),
+
+  navTransactionCreate: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.transactionCreate,
+    params: { accountId }
+  })),
+
   navPicker: (params: NavPickerParams) => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.picker,
     params

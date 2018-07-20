@@ -57,6 +57,7 @@ export abstract class RecordClass<T> implements Record<T> {
     Object.assign(this, props)
   }
 
+  // TODO: remove update functions
   update(q: iupdate.Query<T>) {
     const next = iupdate(this, q)
     Object.assign(this, next)

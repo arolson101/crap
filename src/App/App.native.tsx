@@ -109,15 +109,6 @@ const mainStack = createBottomTabNavigatorFcn(
 )
 mainStack.displayName = 'mainStack'
 
-const modalStack = createStackNavigator({
-  [paths.bankCreate]: modals.BankModal,
-  [paths.bankEdit]: modals.BankModal,
-  [paths.accountCreate]: modals.AccountModal,
-  [paths.accountEdit]: modals.AccountModal,
-  [paths.picker]: modals.PickerModal,
-})
-modalStack.displayName = 'modalStack'
-
 const appStack = createStackNavigator(
   {
     main: mainStack,
@@ -126,6 +117,8 @@ const appStack = createStackNavigator(
     [paths.bankEdit]: createStackNavigator({ 'modal': modals.BankModal }),
     [paths.accountCreate]: createStackNavigator({ 'modal': modals.AccountModal }),
     [paths.accountEdit]: createStackNavigator({ 'modal': modals.AccountModal }),
+    [paths.transactionCreate]: createStackNavigator({ 'modal': modals.TransactionModal }),
+    [paths.transactionEdit]: createStackNavigator({ 'modal': modals.TransactionModal }),
     [paths.picker]: createStackNavigator({ 'modal': modals.PickerModal }),
   },
   {

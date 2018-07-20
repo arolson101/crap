@@ -44,6 +44,9 @@ export const navActions: NavApi = {
     search: qs.stringify({ bankId })
   }),
 
+  navTransactionEdit: (transactionId: string) => push(''),
+  navTransactionCreate: (accountId: string) => push(''),
+
   navPicker: (params: NavPickerParams) => {
     throw new Error('invalid route on this platform')
   }

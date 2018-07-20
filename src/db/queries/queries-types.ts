@@ -68,6 +68,8 @@ export interface DbInfo {
 export interface Mutation {
   saveBank: Bank;
   deleteBank: boolean;
+  saveTransaction: Transaction;
+  deleteTransaction: Transaction;
   saveAccount: Account;
   deleteAccount: boolean;
   downloadAccountList: Bank;
@@ -119,6 +121,16 @@ export interface BankInput {
   password?: string | null;
 }
 
+export interface TransactionInput {
+  account?: string | null;
+  serverid?: string | null;
+  time?: number | null;
+  type?: string | null;
+  name?: string | null;
+  memo?: string | null;
+  amount?: number | null;
+}
+
 export interface AccountInput {
   name?: string | null;
   color?: string | null;
@@ -147,6 +159,14 @@ export interface SaveBankMutationArgs {
 }
 export interface DeleteBankMutationArgs {
   bankId: string;
+}
+export interface SaveTransactionMutationArgs {
+  accountId?: string | null;
+  transactionId?: string | null;
+  input: TransactionInput;
+}
+export interface DeleteTransactionMutationArgs {
+  transactionId: string;
 }
 export interface SaveAccountMutationArgs {
   bankId?: string | null;
@@ -313,6 +333,8 @@ export namespace MutationResolvers {
   export interface Resolvers {
     saveBank?: SaveBankResolver;
     deleteBank?: DeleteBankResolver;
+    saveTransaction?: SaveTransactionResolver;
+    deleteTransaction?: DeleteTransactionResolver;
     saveAccount?: SaveAccountResolver;
     deleteAccount?: DeleteAccountResolver;
     downloadAccountList?: DownloadAccountListResolver;
@@ -333,6 +355,24 @@ export namespace MutationResolvers {
   export type DeleteBankResolver = Resolver<boolean, DeleteBankArgs>;
   export interface DeleteBankArgs {
     bankId: string;
+  }
+
+  export type SaveTransactionResolver = Resolver<
+    Transaction,
+    SaveTransactionArgs
+  >;
+  export interface SaveTransactionArgs {
+    accountId?: string | null;
+    transactionId?: string | null;
+    input: TransactionInput;
+  }
+
+  export type DeleteTransactionResolver = Resolver<
+    Transaction,
+    DeleteTransactionArgs
+  >;
+  export interface DeleteTransactionArgs {
+    transactionId: string;
   }
 
   export type SaveAccountResolver = Resolver<Account, SaveAccountArgs>;

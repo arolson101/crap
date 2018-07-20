@@ -17,6 +17,10 @@ export const paths = {
   accountCreate: '/account/create',
   accountEdit: '/account/edit',
 
+  transaction: '/transaction/view',
+  transactionCreate: '/transaction/create',
+  transactionEdit: '/transaction/edit',
+
   dbAdvanced: '/db/:dbName',
 
   picker: '/picker'

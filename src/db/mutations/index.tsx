@@ -1,13 +1,15 @@
 import { Queries } from '../queries/index'
 import { MutationFcn, MutationDesc } from './makeMutation'
 import {
-  DeleteAccount,
-  DeleteBank,
   OpenDb,
   CreateDb,
   DeleteDb,
-  SaveAccount,
   SaveBank,
+  DeleteBank,
+  SaveAccount,
+  DeleteAccount,
+  SaveTransaction,
+  DeleteTransaction,
   DownloadAccountList,
   DownloadTransactions,
   Cancel,
@@ -15,22 +17,6 @@ import {
 import * as GQL from './mutations.graphql'
 
 export namespace Mutations {
-  export type DeleteBank = MutationFcn<DeleteBank.Mutation, DeleteBank.Variables>
-  export const DeleteBank: MutationDesc<DeleteBank.Mutation, DeleteBank.Variables> = {
-    mutation: GQL.DeleteBank,
-    refetchQueries: (result) => [
-      Queries.Banks.refetchQuery({}),
-    ]
-  }
-
-  export type DeleteAccount = MutationFcn<DeleteAccount.Mutation, DeleteAccount.Variables>
-  export const DeleteAccount: MutationDesc<DeleteAccount.Mutation, DeleteAccount.Variables> = {
-    mutation: GQL.DeleteAccount,
-    refetchQueries: (result) => [
-      Queries.Banks.refetchQuery({})
-    ]
-  }
-
   export type CreateDb = MutationFcn<CreateDb.Mutation, CreateDb.Variables>
   export const CreateDb: MutationDesc<CreateDb.Mutation, CreateDb.Variables> = {
     mutation: GQL.CreateDb,
@@ -55,6 +41,23 @@ export namespace Mutations {
     ]
   }
 
+  export type SaveBank = MutationFcn<SaveBank.Mutation, SaveBank.Variables>
+  export const SaveBank: MutationDesc<SaveBank.Mutation, SaveBank.Variables> = {
+    mutation: GQL.SaveBank,
+    refetchQueries: (results) => [
+      Queries.Banks.refetchQuery({}),
+      Queries.Bank.refetchQuery({ bankId: results.data.saveBank.id })
+    ]
+  }
+
+  export type DeleteBank = MutationFcn<DeleteBank.Mutation, DeleteBank.Variables>
+  export const DeleteBank: MutationDesc<DeleteBank.Mutation, DeleteBank.Variables> = {
+    mutation: GQL.DeleteBank,
+    refetchQueries: (result) => [
+      Queries.Banks.refetchQuery({}),
+    ]
+  }
+
   export type SaveAccount = MutationFcn<SaveAccount.Mutation, SaveAccount.Variables>
   export const SaveAccount: MutationDesc<SaveAccount.Mutation, SaveAccount.Variables> = {
     mutation: GQL.SaveAccount,
@@ -64,12 +67,28 @@ export namespace Mutations {
     ]
   }
 
-  export type SaveBank = MutationFcn<SaveBank.Mutation, SaveBank.Variables>
-  export const SaveBank: MutationDesc<SaveBank.Mutation, SaveBank.Variables> = {
-    mutation: GQL.SaveBank,
-    refetchQueries: (results) => [
-      Queries.Banks.refetchQuery({}),
-      Queries.Bank.refetchQuery({ bankId: results.data.saveBank.id })
+  export type DeleteAccount = MutationFcn<DeleteAccount.Mutation, DeleteAccount.Variables>
+  export const DeleteAccount: MutationDesc<DeleteAccount.Mutation, DeleteAccount.Variables> = {
+    mutation: GQL.DeleteAccount,
+    refetchQueries: (result) => [
+      Queries.Banks.refetchQuery({})
+    ]
+  }
+
+  export type SaveTransaction = MutationFcn<SaveTransaction.Mutation, SaveTransaction.Variables>
+  export const SaveTransaction: MutationDesc<SaveTransaction.Mutation, SaveTransaction.Variables> = {
+    mutation: GQL.SaveTransaction,
+    refetchQueries: (result) => [
+      Queries.Account.refetchQuery({ accountId: result.data.saveTransaction.accountId }),
+      Queries.Transaction.refetchQuery({ transactionId: result.data.saveTransaction.id }),
+    ]
+  }
+
+  export type DeleteTransaction = MutationFcn<DeleteTransaction.Mutation, DeleteTransaction.Variables>
+  export const DeleteTransaction: MutationDesc<DeleteTransaction.Mutation, DeleteTransaction.Variables> = {
+    mutation: GQL.DeleteTransaction,
+    refetchQueries: (result) => [
+      Queries.Account.refetchQuery({ accountId: result.data.deleteTransaction.accountId })
     ]
   }
 
