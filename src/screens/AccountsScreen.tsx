@@ -79,7 +79,7 @@ class BankItem extends React.Component<ConnectedProps & { bank: Banks.Banks }> {
               </Text>
             </Body>
             <Right>
-              <Icon name='ios-information-circle-outline' android='md-information-circle' style={{ color: platform.brandInfo }} />
+              <Icon name='information-circle' style={{ color: platform.brandInfo }} />
             </Right>
           </ListItem>
           {bank.accounts.map(account =>

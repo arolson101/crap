@@ -37,10 +37,6 @@ interface State {
   refreshing: boolean
 }
 
-const RefreshControl2: React.SFC<RefreshControlProps> = (props) => {
-  return <RefreshControl title='refresh' {...props} />
-}
-
 class AccountScreenComponent extends React.PureComponent<Props, State> {
   state: State = {
     refreshing: false
