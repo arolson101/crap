@@ -2,7 +2,7 @@ import { Button, Spinner as NBSpinner, View } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import { Modal, StyleSheet } from 'react-native'
+import { Dimensions, Modal, StyleSheet } from 'react-native'
 
 interface Props {
   visible: boolean
@@ -12,6 +12,7 @@ interface Props {
 
 export const Spinner: React.SFC<Props> = props => {
   const { visible, cancelable, onCancel } = props
+  const { height, width } = Dimensions.get('window')
 
   return (
     <Modal
@@ -20,7 +21,7 @@ export const Spinner: React.SFC<Props> = props => {
       visible={visible}
       onRequestClose={onCancel}
     >
-      <View style={styles.modalBackground}>
+      <View style={[styles.modalBackground, { height, width }]}>
         <View style={styles.activityIndicatorWrapper}>
           <NBSpinner color={platform.brandInfo} />
           {cancelable &&
