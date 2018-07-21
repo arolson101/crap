@@ -11,6 +11,7 @@ import { Defined } from '../queries/makeQuery'
 type CompletionFcn<TRet> = (result: TRet) => any
 
 interface MutationFcnOptions<TRet> {
+  noSpinner?: boolean
   cancel?: () => any
   complete?: CompletionFcn<TRet>
   finally?: () => any
@@ -112,7 +113,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
                   <Spinner
                     cancelable={!!this.state.cancel}
                     onCancel={this.onCancel}
-                    visible={result.loading}
+                    visible={result.loading && !this.state.noSpinner}
                   />
                   <Component {...this.props} {...componentProps} />
                 </>

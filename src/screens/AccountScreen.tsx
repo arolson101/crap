@@ -93,6 +93,7 @@ class AccountScreenComponent extends React.PureComponent<Props, State> {
     downloadTransactions(
       { accountId, bankId, start, end, cancelToken },
       {
+        noSpinner: true,
         finally: () => this.setState({ refreshing: false }),
         cancel: () => cancel({ cancelToken }),
       })
