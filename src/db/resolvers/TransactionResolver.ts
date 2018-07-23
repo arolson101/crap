@@ -3,6 +3,7 @@ import { iupdate } from '../../iupdate'
 import { RecordClass } from '../Record'
 import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { Arg, Ctx, Field, InputType, ObjectType, Mutation, Query, Resolver, ResolverContext, dbWrite, DbChange } from './helpers'
+import { standardizeDate } from '../../util/date'
 
 export interface Split {
   [categoryId: string]: number
@@ -120,15 +121,15 @@ export namespace Transaction {
   export interface Props extends Pick<TransactionInput, keyof TransactionInput> { }
   export type Query = iupdate.Query<Props>
 
-  export const defaultValues = {
+  export const defaultValues = () => ({
     account: '',
     serverid: '',
-    time: 0,
+    time: standardizeDate(new Date()),
     type: '',
     name: '',
     memo: '',
     amount: 0,
-  }
+  })
 
   // TODO: move this to untility
   type Nullable<T> = { [K in keyof T]?: T[K] | undefined | null }

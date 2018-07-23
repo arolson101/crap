@@ -51,7 +51,7 @@ export interface Account {
 export interface Transaction {
   id: string;
   accountId: string;
-  time: number;
+  time: DateTime;
   account: string;
   serverid: string;
   type: string;
@@ -125,7 +125,7 @@ export interface BankInput {
 export interface TransactionInput {
   account?: string | null;
   serverid?: string | null;
-  time?: number | null;
+  time?: DateTime | null;
   type?: string | null;
   name?: string | null;
   memo?: string | null;
@@ -314,7 +314,7 @@ export namespace TransactionResolvers {
 
   export type IdResolver = Resolver<string>;
   export type AccountIdResolver = Resolver<string>;
-  export type TimeResolver = Resolver<number>;
+  export type TimeResolver = Resolver<DateTime>;
   export type AccountResolver = Resolver<string>;
   export type ServeridResolver = Resolver<string>;
   export type TypeResolver = Resolver<string>;
@@ -585,7 +585,7 @@ export namespace Account {
   export type Transactions = {
     __typename?: "Transaction";
     id: string;
-    time: number;
+    time: DateTime;
     name: string;
     memo: string;
     amount: number;
@@ -607,7 +607,7 @@ export namespace Transaction {
     __typename?: "Transaction";
     account: string;
     serverid: string;
-    time: number;
+    time: DateTime;
     type: string;
     name: string;
     memo: string;

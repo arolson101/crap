@@ -1,7 +1,7 @@
 import axios, { CancelToken } from 'axios'
 import * as ofx4js from 'ofx4js'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import { Bank, Account } from '../db/resolvers'
+import { Bank, Account } from '../db/resolvers/index'
 
 import FinancialInstitutionImpl = ofx4js.client.impl.FinancialInstitutionImpl
 import BaseFinancialInstitutionData = ofx4js.client.impl.BaseFinancialInstitutionData
@@ -12,35 +12,35 @@ type FormatMessage = (messageDescriptor: FormattedMessage.MessageDescriptor, val
 
 const messages = defineMessages({
   noFid: {
-    id: 'getAccounts.nofid',
+    id: 'createService.nofid',
     defaultMessage: "'fid' is not set"
   },
   noOrg: {
-    id: 'getAccounts.noorg',
+    id: 'createService.noorg',
     defaultMessage: "'org' is not set"
   },
   noOfx: {
-    id: 'getAccounts.noofx',
+    id: 'createService.noofx',
     defaultMessage: "'ofx' is not set"
   },
   noName: {
-    id: 'getAccounts.noname',
+    id: 'createService.noname',
     defaultMessage: "'name' is not set"
   },
   noUsername: {
-    id: 'getAccounts.nousername',
+    id: 'createService.nousername',
     defaultMessage: "'username' is not set"
   },
   noPassword: {
-    id: 'getAccounts.nopassword',
+    id: 'createService.nopassword',
     defaultMessage: "'password' is not set"
   },
   noAccountNumber: {
-    id: 'getAccounts.noAccountNumber',
+    id: 'createService.noAccountNumber',
     defaultMessage: "'accountNumber' is not set"
   },
   noRoutingNumber: {
-    id: 'getAccounts.noRoutingNumber',
+    id: 'createService.noRoutingNumber',
     defaultMessage: "'routingNumber' is not set"
   }
 })

@@ -3,7 +3,7 @@ import cuid from 'cuid'
 import * as ofx4js from 'ofx4js'
 import { defineMessages } from 'react-intl'
 import { iupdate } from '../../iupdate'
-import { checkLogin, createService, getFinancialAccount, toAccountType } from '../../online'
+import { checkLogin, createService, getFinancialAccount, toAccountType } from '../../online/index'
 import { RecordClass } from '../Record'
 import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { Bank } from './BankResolver'
@@ -209,14 +209,18 @@ export class AccountResolver {
     @Arg('end', { nullable: true }) end?: Date,
   ): Promise<Transaction[]> {
     if (!appDb) { throw new Error('appDb not open') }
-    const startTime = start ? start.getTime() : Number.MIN_SAFE_INTEGER
-    const endTime = end ? end.getTime() : Number.MAX_SAFE_INTEGER
-    const res = await appDb.createQueryBuilder(Transaction, 'tx')
+    let q = appDb.createQueryBuilder(Transaction, 'tx')
       .where({ _deleted: 0, accountId: account.id })
-      .andWhere('tx.time BETWEEN :startTime AND :endTime', { startTime, endTime })
+
+    if (start && end) {
+      q = q.andWhere('tx.time BETWEEN :start AND :end', { start, end })
+    }
+
+    const res = await q
       .orderBy({ time: 'ASC' })
       .getMany()
-    console.log(`transactions for account ${account.id} (bank ${account.bankId})`, `time: BETWEEN '${startTime}' AND '${endTime}'`, res)
+
+    console.log(`transactions for account ${account.id} (bank ${account.bankId})`, `time: BETWEEN '${start}' AND '${end}'`, res)
     return res
   }
 

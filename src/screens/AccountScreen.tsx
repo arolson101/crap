@@ -1,9 +1,9 @@
 import cuid from 'cuid'
-import subDays from 'date-fns/sub_days'
+import { DateTime } from 'luxon'
 import { Body, ListItem } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { ListRenderItem, SectionBase, SectionList, RefreshControl, RefreshControlProps, ScrollView } from 'react-native'
+import { ListRenderItem, SectionBase, SectionList } from 'react-native'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Text } from '../components/layout'
@@ -88,7 +88,7 @@ class AccountScreenComponent extends React.PureComponent<Props, State> {
     const bankId = this.props.query.account.bankId
     const cancelToken = cuid()
     const end = new Date()
-    const start = subDays(end, 30)
+    const start = DateTime.fromJSDate(end).minus({ months: 1 })
     this.setState({ refreshing: true })
     downloadTransactions(
       { accountId, bankId, start, end, cancelToken },

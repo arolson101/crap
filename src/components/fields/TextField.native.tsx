@@ -16,7 +16,6 @@ export namespace TextField {
     autoFocus?: boolean
     onSubmitEditing?: () => any
     returnKeyType?: ReturnKeyType
-    collapsed?: boolean
     noCorrect?: boolean
     inputRef?: any
   }
@@ -33,10 +32,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
 
   render() {
     const { field, autoFocus, label, color, placeholder, secure,
-      rows, onSubmitEditing, returnKeyType, intl, collapsed, noCorrect } = this.props
-    if (collapsed) {
-      return null
-    }
+      rows, onSubmitEditing, returnKeyType, intl, noCorrect } = this.props
     return (
       <Field field={field}>
         {fieldApi => {
@@ -47,7 +43,6 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
           return (
             <Item
               {...itemProps}
-              // style={rows ? { minHeight: 20 * rows } : {}}
               error={error}
               secureTextEntry={secure}
               placeholder={placeholder && intl.formatMessage(placeholder)}

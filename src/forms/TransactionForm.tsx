@@ -43,6 +43,7 @@ const {
   Form,
   CheckboxField,
   Divider,
+  DateField,
   TextField,
   UrlField
 } = typedFields<FormValues>()
@@ -60,8 +61,8 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
 
     const edit = transactionId && query.transaction
     const defaultValues = edit
-      ? pickT(edit, Object.keys(Transaction.defaultValues) as Array<keyof Transaction.Props>)
-      : Transaction.defaultValues
+      ? pickT(edit, Object.keys(Transaction.defaultValues()) as Array<keyof Transaction.Props>)
+      : Transaction.defaultValues()
 
     return (
       <>
@@ -85,8 +86,8 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
                 field='name'
                 label={messages.name}
               />
-              <TextField
-                field='date'
+              <DateField
+                field='time'
                 label={messages.date}
               />
               <TextField
