@@ -12,6 +12,7 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 import org.pgsqlite.SQLitePluginPackage;
+import com.beefe.picker.PickerViewPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -26,7 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new SQLitePluginPackage(),
           new MainReactPackage(),
-          new RandomBytesPackage()
+          new RandomBytesPackage(),
+          new PickerViewPackage()
       );
     }
 
