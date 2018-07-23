@@ -15,7 +15,7 @@ import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
 import { SaveBank } from '../db/mutations/mutations-types'
-import Collapsible from 'react-native-collapsible';
+import Collapsible from 'react-native-collapsible'
 
 export namespace BankForm {
   export interface Props {
@@ -123,42 +123,37 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
                 label={messages.online}
               />
               <Collapsible collapsed={!formApi.values.online}>
-              <TextField
-                field='username'
-                noCorrect
-                label={messages.username}
-                placeholder={messages.usernamePlaceholder}
-                collapsed={!formApi.values.online}
+                <TextField
+                  field='username'
+                  noCorrect
+                  label={messages.username}
+                  placeholder={messages.usernamePlaceholder}
                 />
-              <TextField
-                secure
-                field='password'
-                label={messages.password}
-                placeholder={messages.passwordPlaceholder}
-                collapsed={!formApi.values.online}
+                <TextField
+                  secure
+                  field='password'
+                  label={messages.password}
+                  placeholder={messages.passwordPlaceholder}
                 />
-              <TextField
-                noCorrect
-                field='fid'
-                label={messages.fid}
-                placeholder={messages.fidPlaceholder}
-                collapsed={!formApi.values.online}
+                <TextField
+                  noCorrect
+                  field='fid'
+                  label={messages.fid}
+                  placeholder={messages.fidPlaceholder}
                 />
-              <TextField
-                noCorrect
-                field='org'
-                label={messages.org}
-                placeholder={messages.orgPlaceholder}
-                collapsed={!formApi.values.online}
+                <TextField
+                  noCorrect
+                  field='org'
+                  label={messages.org}
+                  placeholder={messages.orgPlaceholder}
                 />
-              <TextField
-                noCorrect
-                field='ofx'
-                label={messages.ofx}
-                placeholder={messages.ofxPlaceholder}
-                collapsed={!formApi.values.online}
+                <TextField
+                  noCorrect
+                  field='ofx'
+                  label={messages.ofx}
+                  placeholder={messages.ofxPlaceholder}
                 />
-                </Collapsible>
+              </Collapsible>
             </>
           }
         </Form>

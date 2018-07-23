@@ -25,7 +25,6 @@ class DateFieldComponent extends React.Component<DateField.Props & InjectedIntlP
           this.fieldApi = fieldApi
           const error = !!(fieldApi.touched && fieldApi.error)
           const itemProps = { onPress: this.onPress }
-          console.log('datefield', { value: fieldApi.value })
           return (
             <ListItem
               button
