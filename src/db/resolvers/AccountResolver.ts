@@ -245,12 +245,13 @@ export class AccountResolver {
       const service = createService(bank, source.token, formatMessage)
       const bankAccount = getFinancialAccount(service, bank, account, formatMessage)
       const bankStatement = await bankAccount.readStatement(start, end)
-      const transactions = bankStatement.getTransactionList()
+      const transactionList = bankStatement.getTransactionList()
+      const transactions = transactionList.getTransactions()
 
       if (!transactions) {
         console.log('empty transaction list')
       } else {
-        console.log('transactionList', transactions)
+        console.log('transactions', transactions)
 
         const existingTransactions = await appDb
           .createQueryBuilder(Transaction, 'tx')
@@ -259,13 +260,12 @@ export class AccountResolver {
           .getMany()
 
         const inDateRange = (tx: TransactionInput): boolean => {
-          return (tx.time !== undefined && tx.time >= start.getTime() && tx.time <= end.getTime())
+          return (tx.time !== undefined && tx.time >= start && tx.time <= end)
         }
 
         const t = Date.now()
 
         const txInputs = transactions
-          .getTransactions()
           .map(toTransactionInput)
           .filter(inDateRange)
 
@@ -369,7 +369,7 @@ const timeForTransaction = (tx: ofx4js.domain.data.common.Transaction): Date => 
 
 const toTransactionInput = (tx: ofx4js.domain.data.common.Transaction): TransactionInput => ({
   serverid: tx.getId(),
-  time: timeForTransaction(tx).valueOf(),
+  time: timeForTransaction(tx),
   type: ofx4js.domain.data.common.TransactionType[tx.getTransactionType()],
   name: tx.getName(),
   memo: tx.getMemo() || '',

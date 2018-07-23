@@ -58,6 +58,7 @@ export interface Transaction {
   name: string;
   memo: string;
   amount: number;
+  balance: number;
 }
 
 export interface DbInfo {
@@ -308,6 +309,7 @@ export namespace TransactionResolvers {
     name?: NameResolver;
     memo?: MemoResolver;
     amount?: AmountResolver;
+    balance?: BalanceResolver;
   }
 
   export type IdResolver = Resolver<string>;
@@ -319,6 +321,7 @@ export namespace TransactionResolvers {
   export type NameResolver = Resolver<string>;
   export type MemoResolver = Resolver<string>;
   export type AmountResolver = Resolver<number>;
+  export type BalanceResolver = Resolver<number>;
 }
 export namespace DbInfoResolvers {
   export interface Resolvers {
@@ -586,6 +589,7 @@ export namespace Account {
     name: string;
     memo: string;
     amount: number;
+    balance: number;
     serverid: string;
   };
 }

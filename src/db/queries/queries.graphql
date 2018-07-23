@@ -61,6 +61,7 @@ query Account($accountId: String!) {
       name
       memo
       amount
+      balance
       serverid
     }
   }

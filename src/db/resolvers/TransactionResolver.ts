@@ -12,7 +12,7 @@ export interface Split {
 export class TransactionInput {
   @Field({ nullable: true }) account?: string
   @Field({ nullable: true }) serverid?: string
-  @Field({ nullable: true }) time?: number
+  @Field({ nullable: true }) time?: Date
   @Field({ nullable: true }) type?: string
   @Field({ nullable: true }) name?: string
   @Field({ nullable: true }) memo?: string
@@ -26,13 +26,14 @@ export class Transaction extends RecordClass<Transaction> implements Transaction
   @PrimaryColumn() @Field() id: string
   @Column() @Field() accountId: string
 
-  @Column() @Field() time: number
+  @Column() @Field() time: Date
   @Column() @Field() account: string
   @Column() @Field() serverid: string
   @Column() @Field() type: string
   @Column() @Field() name: string
   @Column() @Field() memo: string
   @Column() @Field() amount: number
+  @Column({ default: 0 }) @Field() balance: number
   // split: Split
 
   constructor(accountId?: string, props?: TransactionInput, genId?: () => string) {
@@ -41,6 +42,7 @@ export class Transaction extends RecordClass<Transaction> implements Transaction
       this.createRecord(genId, {
         ...Transaction.defaultValues,
         ...props,
+        // balance: props.amount,
         accountId
       })
     }

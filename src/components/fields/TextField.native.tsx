@@ -31,7 +31,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
     }
   }
 
-  render () {
+  render() {
     const { field, autoFocus, label, color, placeholder, secure,
       rows, onSubmitEditing, returnKeyType, intl, collapsed, noCorrect } = this.props
     if (collapsed) {
@@ -71,7 +71,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
                 : <Input
                   style={{ flex: 1, ...inputStyle }}
                   onChangeText={fieldApi.setValue}
-                  value={fieldApi.value}
+                  value={fieldApi.value.toString()}
                   onSubmitEditing={onSubmitEditing}
                   secureTextEntry={secure}
                   numberOfLines={rows}

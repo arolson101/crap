@@ -82,6 +82,14 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
               </Divider>
               <Divider />
               <TextField
+                field='name'
+                label={messages.name}
+              />
+              <TextField
+                field='date'
+                label={messages.date}
+              />
+              <TextField
                 field='account'
                 label={messages.account}
               />
@@ -94,12 +102,12 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
                 label={messages.type}
               />
               <TextField
-                field='name'
-                label={messages.name}
-              />
-              <TextField
                 field='memo'
                 label={messages.memo}
+              />
+              <TextField
+                field='amount'
+                label={messages.amount}
               />
             </>
           }
@@ -225,6 +233,10 @@ const messages = defineMessages({
     id: 'TransactionForm.name',
     defaultMessage: 'name'
   },
+  date: {
+    id: 'TransactionForm.date',
+    defaultMessage: 'date'
+  },
   memo: {
     id: 'TransactionForm.memo',
     defaultMessage: 'memo'
@@ -276,5 +288,9 @@ const messages = defineMessages({
   deleteTransactionTitle: {
     id: 'TransactionForm.deleteTransactionTitle',
     defaultMessage: 'Are you sure?'
+  },
+  amount: {
+    id: 'TransactionForm.amount',
+    defaultMessage: 'amount'
   },
 })

@@ -115,7 +115,7 @@ class AccountScreenComponent extends React.PureComponent<Props, State> {
           <Text>{item.name}</Text>
           <Text note>{item.memo}</Text>
           <Text note>{item.amount}</Text>
-          <Text note>{item.serverid}</Text>
+          <Text note>{item.balance}</Text>
           <Text note>{item.time}</Text>
         </Body>
       </ListItem>
