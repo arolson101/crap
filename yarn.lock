@@ -11026,6 +11026,10 @@ react-modal@^3.3.2:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
+react-native-calculator@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-calculator/-/react-native-calculator-0.2.0.tgz#78a158639e9ca03bba1f8fea6a408ad1ee7886fb"
+
 react-native-collapsible@^0.13.0:
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-0.13.0.tgz#bd88aa1649b15cb748d59aac44f8f6b94bb77efd"
