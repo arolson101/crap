@@ -7,6 +7,10 @@ import { typedFields } from '../components/fields/index'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
+import { GetImages, ImageProps } from '../util/getFavico'
+import { Image } from 'react-native'
+
+// const images = test()
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -25,8 +29,18 @@ const {
   TextField,
 } = typedFields<FormValues>()
 
-export class LoginFormComponent extends React.Component<Props> {
+interface State {
+  images: ImageProps[] | undefined
+}
+
+export class LoginFormComponent extends React.Component<Props, State> {
   confirmInput: any
+  state: State = { images: undefined }
+
+  async componentDidMount() {
+    const images = await GetImages()
+    this.setState({ images })
+  }
 
   render() {
     const create = this.props.query.allDbs.length === 0
@@ -50,6 +64,9 @@ export class LoginFormComponent extends React.Component<Props> {
               <WelcomeText>
                 <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)} />
               </WelcomeText>
+              {this.state.images && this.state.images.map((imageProps, i) =>
+                <Image key={i} {...imageProps} />
+              )}
               <TextField
                 autoFocus
                 secure
