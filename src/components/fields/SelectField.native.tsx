@@ -88,6 +88,7 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
         pickerData: data,
         selectedValue: [selectedValue],
 
+        ...({ pickerFontFamily: platform.fontFamily } as any), // see react-native-picker/android/src/main/java/com/beefe/picker/PickerViewModule.java
         pickerFontColor: rgba(platform.defaultTextColor),
         pickerFontSize: platform.fontSizeBase,
         pickerBg: rgba(platform.datePickerBg),
