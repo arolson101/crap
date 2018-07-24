@@ -175,6 +175,7 @@
     "react-native-picker": "^4.3.7",
     "react-native-randombytes": "https://github.com/mvayngrib/react-native-randombytes",
     "react-native-sqlcipher-storage": "https://github.com/axsy-dev/react-native-sqlcipher-storage",
+    "react-native-stream": "^0.1.9",
     "react-native-typescript-transformer": "^1.2.10",
     "react-navigation": "^2.6.2",
     "react-navigation-header-buttons": "^1.2.1",
