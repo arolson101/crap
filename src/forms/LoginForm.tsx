@@ -1,16 +1,12 @@
-import * as React from 'react'
-import { defineMessages, InjectedIntlProps, injectIntl, FormattedMessage } from 'react-intl'
-import { compose } from 'redux'
-import { AppBannerText, FormContent, WelcomeText, confirm } from '../components/index'
 import { Button, View } from 'native-base'
+import * as React from 'react'
+import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { compose } from 'redux'
 import { typedFields } from '../components/fields/index'
+import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
-import { GetImages, ImageProps } from '../util/getFavico'
-import { Image } from 'react-native'
-
-// const images = test()
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -29,18 +25,8 @@ const {
   TextField,
 } = typedFields<FormValues>()
 
-interface State {
-  images: ImageProps[] | undefined
-}
-
-export class LoginFormComponent extends React.Component<Props, State> {
+export class LoginFormComponent extends React.Component<Props> {
   confirmInput: any
-  state: State = { images: undefined }
-
-  async componentDidMount() {
-    const images = await GetImages()
-    this.setState({ images })
-  }
 
   render() {
     const create = this.props.query.allDbs.length === 0
@@ -64,9 +50,6 @@ export class LoginFormComponent extends React.Component<Props, State> {
               <WelcomeText>
                 <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)} />
               </WelcomeText>
-              {this.state.images && this.state.images.map((imageProps, i) =>
-                <Image key={i} {...imageProps} />
-              )}
               <TextField
                 autoFocus
                 secure
