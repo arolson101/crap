@@ -1,4 +1,4 @@
-import { Body, Icon, Label, ListItem, Text } from 'native-base'
+import { Body, Icon, Label, ListItem, Picker, Text, Item } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
@@ -7,8 +7,6 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { actions } from '../../redux/actions/index'
 import { SelectFieldItem } from '../../redux/actions/navActions'
-import Picker from 'react-native-picker'
-import rgba from 'color-rgba'
 
 export namespace SelectField {
   export type Item = SelectFieldItem
@@ -30,7 +28,7 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
   fieldApi: FieldAPI<any>
 
   render() {
-    const { field, label, items, intl } = this.props
+    const { field, label, items, intl, searchable } = this.props
 
     return (
       <Field field={field}>
@@ -45,6 +43,7 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
             <ListItem
               button
               onPress={this.onPress}
+              style={{ paddingTop: 0, paddingBottom: 0 }}
             >
               <Label
                 style={(error ? ({ color: platform.brandDanger }) : ({} as any))}
@@ -52,9 +51,24 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
                 {intl.formatMessage(label)}
               </Label>
               <Body>
-                <Text style={{ color: platform.textColor }}>
-                  {selectedItem.label}
-                </Text>
+                {searchable
+                  ? <Text style={{ color: platform.textColor }}>
+                    {selectedItem.label}
+                  </Text>
+                  : <Picker
+                    mode='dialog'
+                    textStyle={{ flex: 1 }}
+                    placeholder='placeholder'
+                    placeholderStyle={{ flex: 1 }}
+                    selectedValue={fieldApi.value}
+                    onValueChange={fieldApi.setValue}
+                  >
+                    {items.map(item =>
+                      <Picker.Item key={item.value} label={item.label} value={item.value} />
+                    )}
+                  </Picker>
+                }
+
               </Body>
               {error &&
                 <Icon name='close-circle' />
@@ -76,45 +90,6 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
         onValueChange: this.onValueChange,
         selectedItem: this.fieldApi.value,
       })
-    } else {
-      const data = items.map(item => item.label)
-      const selectedItem = items.find(item => item.value === this.fieldApi.value)
-      if (!selectedItem) {
-        throw new Error(`selected item ${this.fieldApi.value} not found in item list`)
-      }
-      const selectedValue = selectedItem.label
-
-      Picker.init({
-        pickerData: data,
-        selectedValue: [selectedValue],
-
-        ...({ pickerFontFamily: platform.fontFamily } as any), // see react-native-picker/android/src/main/java/com/beefe/picker/PickerViewModule.java
-        pickerFontColor: rgba(platform.defaultTextColor),
-        pickerFontSize: platform.fontSizeBase,
-        pickerBg: rgba(platform.datePickerBg),
-        pickerToolBarBg: rgba(platform.toolbarDefaultBg),
-        pickerTitleColor: rgba(platform.titleFontColor),
-        pickerCancelBtnColor: rgba(platform.toolbarBtnTextColor),
-        pickerConfirmBtnColor: rgba(platform.toolbarBtnTextColor),
-        pickerCancelBtnText: 'cancel',
-        pickerConfirmBtnText: 'ok',
-        pickerTitleText: intl.formatMessage(label),
-
-        onPickerConfirm: data => {
-          const selectedItem = items.find(item => item.label === data[0])
-          if (!selectedItem) {
-            throw new Error(`selected item ${this.fieldApi.value} not found in item list`)
-          }
-          this.fieldApi.setValue(selectedItem.value)
-        },
-        onPickerCancel: data => {
-          console.log(data)
-        },
-        onPickerSelect: data => {
-          console.log(data)
-        }
-      })
-      Picker.show()
     }
   }
 

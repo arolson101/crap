@@ -176,7 +176,6 @@
     "react-native-calculator": "^0.2.0",
     "react-native-collapsible": "^0.13.0",
     "react-native-graphql-transformer": "^0.1.3",
-    "react-native-picker": "^4.3.7",
     "react-native-randombytes": "https://github.com/mvayngrib/react-native-randombytes",
     "react-native-sqlcipher-storage": "https://github.com/axsy-dev/react-native-sqlcipher-storage",
     "react-native-stream": "^0.1.9",
