@@ -36,12 +36,12 @@ export const GetImages = async () => {
         .map(link => link.getAttribute('href'))
         .filter((href): href is string => !!href)
     )
-    .concat(
-      // <img href='...'>
-      Array.from(doc.getElementsByTagName('img'))
-        .map(img => img.getAttribute('href'))
-        .filter((href): href is string => !!href)
-    )
+    // .concat(
+    //   // <img src='...'>
+    //   Array.from(doc.getElementsByTagName('img'))
+    //     .map(img => img.getAttribute('src'))
+    //     .filter((href): href is string => !!href)
+    // )
     .concat(
       // http://ogp.me/
       // <meta property='og:image' content='...'>
@@ -55,7 +55,7 @@ export const GetImages = async () => {
       // return only unique items
       return array.indexOf(value) === index
     })
-  console.log({ links })
+  // console.log({ links })
 
   const images: ImageProps[] = []
 
@@ -98,7 +98,7 @@ export const GetImages = async () => {
     const i = array.findIndex(x => x.style.width === value.style.width && x.style.height === value.style.height)
     return (i === index)
   })
-  console.log({ images, unique })
+  // console.log({ images, unique })
 
   return unique
 }
