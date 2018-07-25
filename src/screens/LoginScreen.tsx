@@ -1,14 +1,17 @@
 import * as React from 'react'
+import { defineMessages } from 'react-intl'
 import { CenteredContent } from '../components/index'
+import { Scrollable } from '../components/layout.native'
 import { LoginForm } from '../forms/LoginForm'
 import { makeScreen } from './Screen'
-import { defineMessages } from 'react-intl'
 
 export const LoginScreenComponent: React.SFC = (props) => {
   return (
-    <CenteredContent>
-      <LoginForm />
-    </CenteredContent>
+    <Scrollable>
+      <CenteredContent>
+        <LoginForm />
+      </CenteredContent>
+    </Scrollable>
   )
 }
 
