@@ -10,7 +10,7 @@ const thumbnailSizes = {
 }
 
 export const GetImages = async () => {
-  const result = await fetch('http://netflix.com', { method: 'get' })
+  const result = await fetch('http://uwcu.org', { method: 'get' })
   // console.log({ result })
   if (!result.ok) {
     throw new Error(result.statusText)
@@ -19,33 +19,52 @@ export const GetImages = async () => {
   const body = await result.text()
   const doc = minidom(body)
 
-  const links = Array.from(doc.getElementsByTagName('link'))
-    .filter(link => {
-      switch (link.getAttribute('rel')) {
-        case 'shortcut icon':
-        case 'icon':
-        case 'apple-touch-icon':
-          return true
-        default:
-          return false
-      }
-    })
-    .filter(link => !!link.getAttribute('href'))
-    .map(link => {
-      return url.resolve(result.url, link.getAttribute('href') as string)
-    })
+  const links = ([] as string[])
+    .concat(
+      // <link rel='shortcut icon|icon|apple-touch-icon' href='...'>
+      Array.from(doc.getElementsByTagName('link'))
+        .filter(link => {
+          switch (link.getAttribute('rel')) {
+            case 'shortcut icon':
+            case 'icon':
+            case 'apple-touch-icon':
+              return true
+            default:
+              return false
+          }
+        })
+        .map(link => link.getAttribute('href'))
+        .filter((href): href is string => !!href)
+    )
+    .concat(
+      // <img href='...'>
+      Array.from(doc.getElementsByTagName('img'))
+        .map(img => img.getAttribute('href'))
+        .filter((href): href is string => !!href)
+    )
+    .concat(
+      // http://ogp.me/
+      // <meta property='og:image' content='...'>
+      Array.from(doc.getElementsByTagName('meta'))
+        .filter(meta => meta.getAttribute('property') === 'og:image')
+        .map(meta => meta.getAttribute('content'))
+        .filter((href): href is string => !!href)
+    )
+    .map(href => url.resolve(result.url, href))
     .filter((value, index, array): boolean => {
       // return only unique items
       return array.indexOf(value) === index
     })
-  // console.log({ links })
+  console.log({ links })
 
   const images: ImageProps[] = []
 
   await Promise.all(
     links.map(async link => {
       const response = await fetch(link, { method: 'get' })
-      fetch(link, { method: 'get' })
+      if (!response.ok) {
+        return
+      }
       const blob = await response.blob()
       const buf = await toBuffer(blob)
       if (ICO.isICO(buf.buffer as ArrayBuffer)) {
@@ -79,7 +98,7 @@ export const GetImages = async () => {
     const i = array.findIndex(x => x.style.width === value.style.width && x.style.height === value.style.height)
     return (i === index)
   })
-  // console.log({ unique })
+  console.log({ images, unique })
 
   return unique
 }
