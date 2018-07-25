@@ -93,6 +93,7 @@ declare module 'react-form' {
 
   export interface FieldProps extends FormPropsBase<any> {
     field: string
+    pure?: boolean
     children?: (fieldApi: FieldAPI<any>) => React.ReactNode
   }
 
@@ -120,10 +121,10 @@ declare module 'react-form' {
   export interface FieldComponentProps {
     fieldApi: BoundFormAPI
   }
-  export function FormField (component: React.ComponentType): React.ComponentClass
+  export function FormField(component: React.ComponentType): React.ComponentClass
 
-  export interface TextProps extends ComponentBaseProps {}
-  export class Text extends React.Component<TextProps> {}
+  export interface TextProps extends ComponentBaseProps { }
+  export class Text extends React.Component<TextProps> { }
 
   export type FormContext = {}
 }

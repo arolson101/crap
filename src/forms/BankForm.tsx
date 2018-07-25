@@ -109,7 +109,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
               />
               <UrlField
                 field='web'
-                // favicoName='favicon'
+                favicoField='favicon'
                 label={messages.web}
               />
               <TextField

@@ -2,6 +2,14 @@ import * as ICO from 'icojs'
 import minidom from 'minidom'
 import * as path from 'path'
 import * as url from 'url'
+import isUrl from 'is-url'
+
+export interface FavicoProps {
+  from: string
+  width: number
+  height: number
+  uri: string
+}
 
 const thumbnailSizes = {
   small: 36,
@@ -9,8 +17,17 @@ const thumbnailSizes = {
   large: 80,
 }
 
-export const GetImages = async () => {
-  const result = await fetch('http://uwcu.org', { method: 'get' })
+const preferredIconSize = 32
+
+export const getFavico = async (from: string): Promise<FavicoProps> => {
+  if (!isUrl(from)) {
+    throw new Error(`${from} is not an URL`)
+  }
+
+  const urlobj = url.parse(from)
+  urlobj.protocol = urlobj.protocol || 'http'
+
+  const result = await fetch(url.format(urlobj), { method: 'get' })
   // console.log({ result })
   if (!result.ok) {
     throw new Error(result.statusText)
@@ -39,7 +56,7 @@ export const GetImages = async () => {
     // .concat(
     //   // <img src='...'>
     //   Array.from(doc.getElementsByTagName('img'))
-    //     .map(img => img.getAttribute('src'))
+    //     .map(img => img.getAttribute('src') /*|| img.getAttribute('data-src')*/)
     //     .filter((href): href is string => !!href)
     // )
     .concat(
@@ -53,11 +70,11 @@ export const GetImages = async () => {
     .map(href => url.resolve(result.url, href))
     .filter((value, index, array): boolean => {
       // return only unique items
-      return array.indexOf(value) === index
+      return index === array.indexOf(value)
     })
   // console.log({ links })
 
-  const images: ImageProps[] = []
+  const images: FavicoProps[] = []
 
   await Promise.all(
     links.map(async link => {
@@ -73,10 +90,7 @@ export const GetImages = async () => {
         for (const parsedImage of parsedImages) {
           const { width, height } = parsedImage
           const uri = toDataUri(Buffer.from(parsedImage.buffer), mime)
-          const props: ImageProps = {
-            style: { width, height },
-            source: { uri }
-          }
+          const props: FavicoProps = { from, width, height, uri }
           images.push(props)
         }
       } else {
@@ -84,34 +98,29 @@ export const GetImages = async () => {
         const { width, height } = imageSize(buf, link)
         const mime = response.headers.get('content-type') || `image/${ext}`
         const uri = toDataUri(buf, mime)
-        const props: ImageProps = {
-          style: { width, height },
-          source: { uri }
-        }
+        const props: FavicoProps = { from, width, height, uri }
         images.push(props)
       }
     })
   )
+  // console.log({ images })
 
-  // remove images with same size
-  const unique = images.filter((value, index, array) => {
-    const i = array.findIndex(x => x.style.width === value.style.width && x.style.height === value.style.height)
-    return (i === index)
-  })
-  // console.log({ images, unique })
+  if (images.length === 0) {
+    throw new Error('no images found')
+  }
 
-  return unique
+  const best = images
+    .sort((a, b) => a.height - b.height)
+    .find(image => image.height >= preferredIconSize) || images[0]
+  console.log({ best, sorted: images.sort((a, b) => a.height - b.height) })
+
+  return best
 }
 
 const toDataUri = (buf: Buffer, mime: string) => {
   const base64 = Buffer.from(buf).toString('base64')
   const uri = `data:${mime};base64,${base64}`
   return uri
-}
-
-export interface ImageProps {
-  style: { width: number, height: number }
-  source: { uri: string }
 }
 
 const toBuffer = (blob: Blob) => {

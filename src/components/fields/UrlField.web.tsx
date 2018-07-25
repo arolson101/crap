@@ -4,6 +4,7 @@ import { Field } from 'react-form'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { ThemeProp } from '../../App/index'
 import { WrappedField } from './WrappedField'
+import { UrlFieldProps } from './UrlField'
 
 const StyledTextInput = glamorous.input<ThemeProp & { error: any }>({},
   ({ theme, error }) => ({
@@ -16,14 +17,7 @@ const StyledTextInput = glamorous.input<ThemeProp & { error: any }>({},
 StyledTextInput.displayName = 'StyledTextInput'
 
 export namespace UrlField {
-  export interface Props<T = {}> {
-    field: string
-    label: FormattedMessage.MessageDescriptor
-    placeholder?: FormattedMessage.MessageDescriptor
-    autoFocus?: boolean
-    onSubmitEditing?: () => any
-    returnKeyType?: any
-  }
+  export type Props<T = {}> = UrlFieldProps<T>
 }
 
 class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlProps> {
