@@ -1,7 +1,7 @@
-const minidom = require('minidom')
-import * as url from 'url'
-import * as path from 'path'
 import * as ICO from 'icojs'
+import minidom from 'minidom'
+import * as path from 'path'
+import * as url from 'url'
 
 const thumbnailSizes = {
   small: 36,
@@ -17,7 +17,7 @@ export const GetImages = async () => {
   }
 
   const body = await result.text()
-  const doc = minidom(body) as HTMLDocument
+  const doc = minidom(body)
 
   const links = Array.from(doc.getElementsByTagName('link'))
     .filter(link => {
