@@ -1,12 +1,13 @@
-import { Body, Icon, Label, ListItem, Text } from 'native-base'
+import { Body, Icon, ListItem, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
 import { InjectedIntlProps, injectIntl } from 'react-intl'
 import { DatePickerIOS } from 'react-native'
+import Collapsible from 'react-native-collapsible'
 import { formatDate, standardizeDate } from '../../util/date'
 import { DateFieldProps } from './DateField'
-import Collapsible from 'react-native-collapsible'
+import { Label } from './Label.native'
 
 export namespace DateField {
   export type Props<T = {}> = DateFieldProps<T>
@@ -44,9 +45,7 @@ class DateFieldComponent extends React.Component<DateField.Props & InjectedIntlP
                 button
                 {...itemProps}
               >
-                <Label style={colorStyle}>
-                  {intl.formatMessage(label)}
-                </Label>
+                <Label label={label} error={error} />
                 <Body>
                   <Text style={{ color: platform.textColor, ...colorStyle }}>
                     {formatDate(new Date(fieldApi.value))}

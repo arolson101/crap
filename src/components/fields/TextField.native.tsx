@@ -1,9 +1,9 @@
-import { Icon, Input, Item, Label, Textarea } from 'native-base'
-import platform from 'native-base/dist/src/theme/variables/platform'
+import { Icon, Input, Item, Textarea } from 'native-base'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { ReturnKeyType, TextInput } from 'react-native'
+import { Label } from './Label.native'
 
 export namespace TextField {
   export interface Props<T = {}> {
@@ -47,14 +47,7 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
               secureTextEntry={secure}
               placeholder={placeholder && intl.formatMessage(placeholder)}
             >
-              <Label
-                style={(error
-                  ? ({ color: platform.brandDanger })
-                  : ({}) as any
-                )}
-              >
-                {intl.formatMessage(label)}
-              </Label>
+              <Label label={label} error={error} />
               {rows && rows > 0
                 ? <Textarea
                   style={{ flex: 1 }}

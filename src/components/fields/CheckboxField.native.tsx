@@ -1,9 +1,10 @@
-import { Item, Label, Right, Switch } from 'native-base'
+import { Item, Right, Switch } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
 import { StyleSheet } from 'react-native'
+import { Label } from './Label.native'
 
 export namespace CheckboxField {
   export interface Props<T = {}> {
@@ -23,11 +24,7 @@ export const CheckboxField: React.SFC<CheckboxField.Props> =
             error={error}
             style={styles.item}
           >
-            <FormattedMessage {...label}>
-              {txt =>
-                <Label>{txt}</Label>
-              }
-            </FormattedMessage>
+            <Label label={label} error={error} />
             <Right>
               <Switch
                 onValueChange={(value: boolean) => fieldApi.setValue(value)}

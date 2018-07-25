@@ -1,4 +1,4 @@
-import { Body, Icon, Label, ListItem, Picker, Text, Item } from 'native-base'
+import { Body, Icon, ListItem, Picker, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { actions } from '../../redux/actions/index'
 import { SelectFieldItem } from '../../redux/actions/navActions'
+import { Label } from './Label.native'
 
 export namespace SelectField {
   export type Item = SelectFieldItem
@@ -43,13 +44,9 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
             <ListItem
               button
               onPress={this.onPress}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
+              style={searchable ? {} : { paddingTop: 0, paddingBottom: 0 }}
             >
-              <Label
-                style={(error ? ({ color: platform.brandDanger }) : ({} as any))}
-              >
-                {intl.formatMessage(label)}
-              </Label>
+              <Label label={label} error={error} />
               <Body>
                 {searchable
                   ? <Text style={{ color: platform.textColor }}>
@@ -57,6 +54,7 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
                   </Text>
                   : <Picker
                     mode='dialog'
+                    iosHeader={intl.formatMessage(label)}
                     textStyle={{ flex: 1 }}
                     placeholder='placeholder'
                     placeholderStyle={{ flex: 1 }}
