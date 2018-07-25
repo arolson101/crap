@@ -1,7 +1,7 @@
 const minidom = require('minidom')
 import * as url from 'url'
 import * as path from 'path'
-import blobToBuffer from 'blob-to-buffer'
+import * as ICO from 'icojs'
 
 const thumbnailSizes = {
   small: 36,
@@ -11,52 +11,83 @@ const thumbnailSizes = {
 
 export const GetImages = async () => {
   const result = await fetch('http://netflix.com', { method: 'get' })
-  console.log({ result })
-  if (result.ok) {
-    const body = await result.text()
-    const doc = minidom(body) as HTMLDocument
+  // console.log({ result })
+  if (!result.ok) {
+    throw new Error(result.statusText)
+  }
 
-    const icons = Array.from(doc.getElementsByTagName('link'))
-      .filter(link => {
-        switch (link.getAttribute('rel')) {
-          case 'shortcut icon':
-          case 'icon':
-          case 'apple-touch-icon':
-            return true
-          default:
-            return false
+  const body = await result.text()
+  const doc = minidom(body) as HTMLDocument
+
+  const links = Array.from(doc.getElementsByTagName('link'))
+    .filter(link => {
+      switch (link.getAttribute('rel')) {
+        case 'shortcut icon':
+        case 'icon':
+        case 'apple-touch-icon':
+          return true
+        default:
+          return false
+      }
+    })
+    .filter(link => !!link.getAttribute('href'))
+    .map(link => {
+      return url.resolve(result.url, link.getAttribute('href') as string)
+    })
+    .filter((value, index, array): boolean => {
+      // return only unique items
+      return array.indexOf(value) === index
+    })
+  // console.log({ links })
+
+  const images: ImageProps[] = []
+
+  await Promise.all(
+    links.map(async link => {
+      const response = await fetch(link, { method: 'get' })
+      fetch(link, { method: 'get' })
+      const blob = await response.blob()
+      const buf = await toBuffer(blob)
+      if (ICO.isICO(buf.buffer as ArrayBuffer)) {
+        const mime = 'image/png'
+        const parsedImages = await ICO.parse(buf.buffer as ArrayBuffer, mime)
+        for (const parsedImage of parsedImages) {
+          const { width, height } = parsedImage
+          const uri = toDataUri(Buffer.from(parsedImage.buffer), mime)
+          const props: ImageProps = {
+            style: { width, height },
+            source: { uri }
+          }
+          images.push(props)
         }
-      })
-      .filter(link => !!link.getAttribute('href'))
-      .map(link => {
-        return url.resolve(result.url, link.getAttribute('href') as string)
-      })
-      .filter((value, index, array): boolean => {
-        // return only unique items
-        return array.indexOf(value) === index
-      })
-    console.log({ icons })
-
-    const images = await Promise.all(
-      icons.map(async icon => {
-        const response = await fetch(icon, { method: 'get' })
-        fetch(icon, { method: 'get' })
-        const blob = await response.blob()
-        const buf = await toBuffer(blob)
-        const { width, height } = imageSize(buf, icon)
-        const base64 = Buffer.from(buf).toString('base64')
-        const mime = response.headers.get('content-type') || `image/${path.extname(icon).substr(1)}`
-        const uri = `data:${mime};base64,${base64}`
+      } else {
+        const ext = path.extname(link).substr(1)
+        const { width, height } = imageSize(buf, link)
+        const mime = response.headers.get('content-type') || `image/${ext}`
+        const uri = toDataUri(buf, mime)
         const props: ImageProps = {
           style: { width, height },
           source: { uri }
         }
-        return props
-      })
-    )
-    console.log({ images })
-    return images
-  }
+        images.push(props)
+      }
+    })
+  )
+
+  // remove images with same size
+  const unique = images.filter((value, index, array) => {
+    const i = array.findIndex(x => x.style.width === value.style.width && x.style.height === value.style.height)
+    return (i === index)
+  })
+  // console.log({ unique })
+
+  return unique
+}
+
+const toDataUri = (buf: Buffer, mime: string) => {
+  const base64 = Buffer.from(buf).toString('base64')
+  const uri = `data:${mime};base64,${base64}`
+  return uri
 }
 
 export interface ImageProps {
@@ -107,7 +138,7 @@ interface TypeHandlerMap {
 
 let typeHandlers: TypeHandlerMap = {
   png: require('image-size/lib/types/png'),
-  ico: require('image-size/lib/types/ico'),
+  // ico: require('image-size/lib/types/ico'),
   jpg: require('image-size/lib/types/jpg'),
   gif: require('image-size/lib/types/gif'),
   icns: require('image-size/lib/types/icns'),
