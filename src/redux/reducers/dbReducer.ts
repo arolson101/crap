@@ -6,31 +6,38 @@ import { getType } from 'typesafe-actions'
 import Observable from 'zen-observable-ts'
 import schema from '../../db/schema'
 import { Connection } from '../../db/typeorm'
-import { DbAction, dbActions } from '../actions/dbActions'
+import { DbAction, dbActions, FormatMessageFcn } from '../actions/dbActions'
 
 export interface ResolverContext {
   indexDb: Connection
   appDb: Connection
   setAppDb: (db: Connection | null) => any
+  formatMessage: FormatMessageFcn
 }
 
 export class AppGraphQLClient extends GraphQLClient<NormalizedCacheObject> {
   private appDb: Connection | null
 
-  constructor(private indexDb: Connection) {
+  constructor(
+    private indexDb: Connection,
+    private formatMessage: FormatMessageFcn
+  ) {
     super({
       cache: new InMemoryCache(),
       link: new ApolloLink((operation, forward) => {
         return new Observable(observer => {
+          const context: ResolverContext = {
+            indexDb: this.indexDb,
+            appDb: this.appDb!,
+            setAppDb: this.setAppDb,
+            formatMessage: this.formatMessage
+          }
+
           const opts = {
             schema,
             query: operation.query,
             variables: operation.variables,
-            context: {
-              indexDb: this.indexDb,
-              appDb: this.appDb,
-              setAppDb: this.setAppDb,
-            },
+            context
           }
 
           const exe = runQuery(opts as any)
@@ -66,7 +73,7 @@ export const dbSelectors = {
 export const dbReducer = (state: DbState = defaultState, action: DbAction): DbState => {
   switch (action.type) {
     case getType(dbActions.initDb):
-      return { ...state, appGraphQLClient: new AppGraphQLClient(action.payload.indexDb) }
+      return { ...state, appGraphQLClient: new AppGraphQLClient(action.payload.indexDb, action.payload.formatMessage) }
 
     default:
       return state

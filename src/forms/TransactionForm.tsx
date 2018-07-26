@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { confirm } from '../components/Confirmation'
 import { typedFields } from '../components/fields/index'
-import { Text } from '../components/index'
 import { Mutations, Queries, Transaction } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
@@ -86,11 +85,6 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
               <TextField
                 field='amount'
                 label={messages.amount}
-              />
-              {/* TODO: account picker */}
-              <TextField
-                field='account'
-                label={messages.account}
               />
               {/* <TextField
                 field='serverid'

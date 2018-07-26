@@ -1,5 +1,5 @@
 import SqlitePlugin from 'react-native-sqlcipher-storage'
-import { appEntities, indexEntities } from './entities'
+import { appEntities, indexEntities } from './dbEntities'
 import { createConnection } from './typeorm'
 
 // tslint:disable-next-line:variable-name
@@ -37,7 +37,7 @@ const dbName = (name: string) => {
 }
 
 export const openDb = async (app: boolean, name: string, key: string) => {
-  const entities = app ? appEntities() : indexEntities()
+  const entities = app ? appEntities : indexEntities
   const extra: SqlitePlugin.DatabaseOptionalParams = {
     key
   }
