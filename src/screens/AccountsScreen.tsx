@@ -1,4 +1,4 @@
-import { Body, Icon, Right, Left, Thumbnail } from 'native-base'
+import { Body, Icon, Right, Left, Thumbnail, Button, NativeBase } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
@@ -20,10 +20,10 @@ interface ConnectedProps {
   query: Queries.Banks
   deleteBank: Mutations.DeleteBank
   deleteAccount: Mutations.DeleteAccount
-  navBankCreate: () => any
-  navAccountCreate: (bankId: string) => any
-  navBank: (bankId: string) => any
-  navAccount: (accountId: string, accountName: string) => any
+  navBankCreate: actions['navBankCreate']
+  navAccountCreate: actions['navAccountCreate']
+  navBank: actions['navBank']
+  navAccount: actions['navAccount']
 }
 
 class AccountsScreenComponent extends React.Component<Props & ConnectedProps & AddButtonProps> {
@@ -72,23 +72,20 @@ class BankItem extends React.Component<ConnectedProps & { bank: Banks.Banks }> {
     return (
       <>
         <List>
-          <ListItem button onPress={this.onPress}>
-            {bank.favicon &&
+          <ListItem button onPress={this.onPress} style={{ paddingTop: platform.buttonPadding, paddingBottom: platform.buttonPadding, minHeight: 38 }}>
+            {!!bank.favicon &&
               <Left style={{ flex: 0 }}>
                 <Thumbnail small square {...JSON.parse(bank.favicon)} />
               </Left>
             }
             <Body>
-              <Text>
+              <Text note>
                 {bank.name}
               </Text>
             </Body>
-            <Right>
-              <Icon name='information-circle' style={{ color: platform.brandInfo }} />
-            </Right>
           </ListItem>
-          {bank.accounts.map(account =>
-            <AccountItem key={account.id} {...this.props} account={account} />
+          {bank.accounts.map((account, i) =>
+            <AccountItem key={account.id} {...this.props} account={account} first={i === 0} last={i === bank.accounts.length} />
           )}
         </List>
       </>
@@ -101,11 +98,11 @@ class BankItem extends React.Component<ConnectedProps & { bank: Banks.Banks }> {
   }
 }
 
-class AccountItem extends React.Component<ConnectedProps & { account: Banks.Accounts }> {
+class AccountItem extends React.Component<ConnectedProps & { account: Banks.Accounts } & NativeBase.ListItem> {
   render() {
-    const { account } = this.props
+    const { account, ...props } = this.props
     return (
-      <ListItem /*avatar*/ key={account.id} onPress={this.onPress}>
+      <ListItem /*avatar*/ key={account.id} onPress={this.onPress} {...props}>
         {/* <Left>
           <Icon name='warning' style={{color: 'orange'}}/>
         </Left> */}

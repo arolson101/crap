@@ -74,41 +74,35 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
         >
           {formApi =>
             <>
-              <Divider>
-                <FormattedMessage {...messages.fiHelp}>
-                  {txt =>
-                    <Text note>{txt}</Text>
-                  }
-                </FormattedMessage>
-              </Divider>
-              <Divider />
-              <TextField
-                field='name'
-                label={messages.name}
-              />
               <DateField
                 field='time'
                 label={messages.date}
               />
               <TextField
-                field='account'
-                label={messages.account}
-              />
-              <TextField
-                field='serverid'
-                label={messages.serverid}
-              />
-              <TextField
-                field='type'
-                label={messages.type}
-              />
-              <TextField
-                field='memo'
-                label={messages.memo}
+                field='name'
+                autoFocus
+                label={messages.name}
               />
               <TextField
                 field='amount'
                 label={messages.amount}
+              />
+              {/* TODO: account picker */}
+              <TextField
+                field='account'
+                label={messages.account}
+              />
+              {/* <TextField
+                field='serverid'
+                label={messages.serverid}
+              /> */}
+              {/* <TextField
+                field='type'
+                label={messages.type}
+              /> */}
+              <TextField
+                field='memo'
+                label={messages.memo}
               />
             </>
           }

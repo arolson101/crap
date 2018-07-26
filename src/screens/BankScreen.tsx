@@ -32,9 +32,9 @@ interface Props extends Params, AddButtonProps {
 
 export class BankScreenComponent extends React.PureComponent<Props> {
 
-  componentDidMount() {
-    this.props.setAdd(this.accountCreate)
-  }
+  // componentDidMount() {
+  //   this.props.setAdd(this.accountCreate)
+  // }
 
   render() {
     const { bank } = this.props.query
@@ -44,7 +44,9 @@ export class BankScreenComponent extends React.PureComponent<Props> {
         <Card>
           <CardItem header>
             <Left>
-              <Thumbnail square {...JSON.parse(bank.favicon)} />
+              {!!bank.favicon &&
+                <Thumbnail square {...JSON.parse(bank.favicon)} />
+              }
               <Body>
                 <Text>{bank.name}</Text>
                 {!!bank.web &&
@@ -98,9 +100,9 @@ export class BankScreenComponent extends React.PureComponent<Props> {
               <FormattedMessage {...messages.downloadAccountList} />
             </ListItem>
           }
-          {/* <ListItem button onPress={this.accountCreate}>
+          <ListItem button onPress={this.accountCreate}>
             <FormattedMessage {...messages.addAccount} />
-          </ListItem> */}
+          </ListItem>
         </List>
       </Scrollable>
     )
@@ -167,7 +169,7 @@ class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
 }
 
 export const BankScreen = compose(
-  makeScreen({ title: () => messages.title, addButton: true }),
+  makeScreen({ title: () => messages.title, /*addButton: true*/ }),
   withQuery({ query: Queries.Bank }, (params: Params) => params),
   withMutation({ downloadAccountList: Mutations.DownloadAccountList }),
   withMutation({ cancel: Mutations.Cancel }),

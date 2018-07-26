@@ -156,7 +156,6 @@ class FavicoButton extends React.Component<FavicoButtonProps> {
   render() {
     const { value, loading, ...props } = this.props
     const favico = value ? JSON.parse(value) as FavicoProps : undefined
-    console.log(`favicobutton`, { value, loading })
     return (
       <Button {...props}>
         {loading
