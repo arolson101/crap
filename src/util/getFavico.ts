@@ -4,6 +4,7 @@ import * as path from 'path'
 import * as url from 'url'
 import isUrl from 'is-url'
 import { ImageSourcePropType, ImageURISource } from 'react-native'
+// import ImageResizer from 'react-native-image-resizer'
 
 export interface FavicoProps {
   from: string
@@ -16,7 +17,7 @@ const thumbnailSizes = {
   large: 80,
 }
 
-const preferredIconSize = 32
+const sizes = [32, 64]
 
 export const getFavico = async (from: string): Promise<FavicoProps> => {
   if (!isUrl(from)) {
@@ -103,6 +104,22 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
     })
   )
   console.log({ images })
+
+  // // add resized images
+  // await Promise.all(sizes
+  //   .filter(size => !images.find(image => image.width === size))
+  //   .map(async size => {
+  //     // only resize down; find next larger image
+  //     console.log(`gonna resize to ${size}`)
+  //     const src = images.find(image => image.width! >= size)
+  //     if (src) {
+  //       console.log(`found ${src}`)
+  //       const result = await ImageResizer.createResizedImage(src.uri!, size, size, 'PNG', 100)
+  //       console.log({ result })
+  //       return result
+  //     }
+  //   })
+  // )
 
   const source = images
     .filter((value, index, array) =>

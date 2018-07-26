@@ -3,6 +3,7 @@ package com.crap;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -24,9 +25,10 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new SQLitePluginPackage(),
           new MainReactPackage(),
-          new RandomBytesPackage()
+          new SQLitePluginPackage(),
+          new RandomBytesPackage(),
+          new ImageResizerPackage()
       );
     }
 
