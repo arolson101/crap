@@ -1,24 +1,13 @@
 import { Icon, Input, Item, Textarea } from 'native-base'
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { ReturnKeyType, TextInput } from 'react-native'
+import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { TextInput } from 'react-native'
 import { Label } from './Label.native'
+import { TextFieldProps } from './TextField'
 
 export namespace TextField {
-  export interface Props<T = {}> {
-    field: string
-    label: FormattedMessage.MessageDescriptor
-    placeholder?: FormattedMessage.MessageDescriptor
-    secure?: boolean
-    rows?: number
-    color?: string
-    autoFocus?: boolean
-    onSubmitEditing?: () => any
-    returnKeyType?: ReturnKeyType
-    noCorrect?: boolean
-    inputRef?: any
-  }
+  export type Props<T = {}> = TextFieldProps
 }
 
 class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {

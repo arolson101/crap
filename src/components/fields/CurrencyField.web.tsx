@@ -2,13 +2,13 @@ import { FormGroup, Intent, TextArea } from '@blueprintjs/core'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { InjectedIntlProps, injectIntl } from 'react-intl'
-import { TextFieldProps } from './TextField'
+import { CurrencyFieldProps } from './CurrencyField'
 
-export namespace TextField {
-  export type Props<T = {}> = TextFieldProps
+export namespace CurrencyField {
+  export type Props<T = {}> = CurrencyFieldProps
 }
 
-export class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
+export class CurrencyFieldComponent extends React.Component<CurrencyField.Props & InjectedIntlProps> {
   render() {
     const { field, intl, label, placeholder, secure, rows } = this.props
     const id = `${field}-input`
@@ -49,4 +49,4 @@ export class TextFieldComponent extends React.Component<TextField.Props & Inject
   }
 }
 
-export const TextField = injectIntl<TextField.Props>(TextFieldComponent)
+export const CurrencyField = injectIntl<CurrencyField.Props>(CurrencyFieldComponent)

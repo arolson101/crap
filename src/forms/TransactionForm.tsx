@@ -1,3 +1,4 @@
+import accounting from 'accounting'
 import { Button, View } from 'native-base'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
@@ -40,7 +41,7 @@ interface FormValues extends TransactionInput {
 
 const {
   Form,
-  CheckboxField,
+  CurrencyField,
   Divider,
   DateField,
   TextField,
@@ -82,7 +83,7 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
                 autoFocus
                 label={messages.name}
               />
-              <TextField
+              <CurrencyField
                 field='amount'
                 label={messages.amount}
               />
@@ -132,10 +133,14 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
 
   onSubmit = (input: FormValues) => {
     const { saveTransaction, transactionId: id, accountId } = this.props
+    const { amount } = input
     const variables = {
       accountId,
       id,
-      input
+      input: {
+        ...input,
+        amount: accounting.unformat(amount.toString())
+      }
     }
     saveTransaction(variables, { complete: this.onSaved })
   }
