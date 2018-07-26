@@ -8,7 +8,7 @@ const userData = electron.remote.app.getPath('userData')
 
 export const openDb = async (app: boolean, name: string, key: string) => {
   const type = 'sqlite'
-  const entities = app ? appEntities : indexEntities
+  const entities = app ? appEntities() : indexEntities()
   const db = await createConnection({
     type,
     name,

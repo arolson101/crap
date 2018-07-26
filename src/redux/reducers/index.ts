@@ -1,7 +1,7 @@
 import { combineReducers, Store } from 'redux'
+import { AppAction } from '../actions/index'
 import { dbReducer, dbSelectors, DbState } from './dbReducer'
 import { navReducer, NavState } from './navReducer'
-import { AppAction } from '../actions/index'
 
 export interface AppState {
   db: DbState,
@@ -16,10 +16,7 @@ export default combineReducers({
 })
 
 export const selectors = {
-  isIndexDbLoaded: (state: AppState) => dbSelectors.isIndexDbLoaded(state.db),
-  isAppDbLoaded: (state: AppState) => dbSelectors.isAppDbLoaded(state.db),
-  getIndexDb: (state: AppState) => dbSelectors.getIndexDb(state.db),
-  getAppDb: (state: AppState) => dbSelectors.getAppDb(state.db),
+  getAppGraphQLClient: (state: AppState) => dbSelectors.getAppGraphQLClient(state.db),
 }
 
 export namespace selectors {

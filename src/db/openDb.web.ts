@@ -5,7 +5,7 @@ import { appEntities, indexEntities } from './entities'
 
 export const openDb = async (app: boolean, name: string, key: string) => {
   const type = 'sqljs'
-  const entities = app ? appEntities : indexEntities
+  const entities = app ? appEntities() : indexEntities()
   const db = await createConnection({
     type,
     name: name + '.db',

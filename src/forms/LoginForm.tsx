@@ -1,18 +1,21 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { typedFields } from '../components/fields/index'
 import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
 import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
+import { actions } from '../redux/actions/index'
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
   deleteDb: Mutations.DeleteDb
+  login: actions['login']
 }
 
 interface FormValues {
@@ -113,12 +116,12 @@ export class LoginFormComponent extends React.Component<Props> {
   onSubmit = ({ password }: FormValues) => {
     const create = this.props.query.allDbs.length === 0
     if (create) {
-      const { createDb } = this.props
-      createDb({ name: 'appdb', password })
+      const { createDb, login } = this.props
+      createDb({ name: 'appdb', password }, { complete: login })
     } else {
-      const { openDb } = this.props
+      const { openDb, login } = this.props
       const dbId = this.props.query.allDbs[0].dbId
-      openDb({ password, dbId })
+      openDb({ password, dbId }, { complete: login })
     }
   }
 
@@ -156,6 +159,7 @@ export const LoginForm = compose(
   withMutation({ openDb: Mutations.OpenDb }),
   withMutation({ createDb: Mutations.CreateDb }),
   withMutation({ deleteDb: Mutations.DeleteDb }),
+  connect(null, { login: actions.login }),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

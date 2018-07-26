@@ -1,6 +1,6 @@
 import * as Resolvers from './resolvers/index'
 
-export const appEntities = [
+export const appEntities = () => [
   Resolvers.Account,
   Resolvers.Bank,
   Resolvers.Bill,
@@ -8,6 +8,6 @@ export const appEntities = [
   Resolvers.Transaction,
 ]
 
-export const indexEntities = [
+export const indexEntities = () => [
   Resolvers.DbInfo
 ]
