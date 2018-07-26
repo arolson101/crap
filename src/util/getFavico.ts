@@ -3,12 +3,11 @@ import minidom from 'minidom'
 import * as path from 'path'
 import * as url from 'url'
 import isUrl from 'is-url'
+import { ImageSourcePropType, ImageURISource } from 'react-native'
 
 export interface FavicoProps {
   from: string
-  width: number
-  height: number
-  uri: string
+  source: ImageSourcePropType
 }
 
 const thumbnailSizes = {
@@ -74,7 +73,7 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
     })
   // console.log({ links })
 
-  const images: FavicoProps[] = []
+  const images: ImageURISource[] = []
 
   await Promise.all(
     links.map(async link => {
@@ -90,7 +89,7 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
         for (const parsedImage of parsedImages) {
           const { width, height } = parsedImage
           const uri = toDataUri(Buffer.from(parsedImage.buffer), mime)
-          const props: FavicoProps = { from, width, height, uri }
+          const props: ImageURISource = { width, height, uri }
           images.push(props)
         }
       } else {
@@ -98,23 +97,26 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
         const { width, height } = imageSize(buf, link)
         const mime = response.headers.get('content-type') || `image/${ext}`
         const uri = toDataUri(buf, mime)
-        const props: FavicoProps = { from, width, height, uri }
+        const props: ImageURISource = { width, height, uri }
         images.push(props)
       }
     })
   )
-  // console.log({ images })
+  console.log({ images })
 
-  if (images.length === 0) {
+  const source = images
+    .filter((value, index, array) =>
+      index === array.findIndex(a =>
+        a.width === value.width
+        && a.height === value.height
+      )
+    )
+
+  if (source.length === 0) {
     throw new Error('no images found')
   }
 
-  const best = images
-    .sort((a, b) => a.height - b.height)
-    .find(image => image.height >= preferredIconSize) || images[0]
-  console.log({ best, sorted: images.sort((a, b) => a.height - b.height) })
-
-  return best
+  return { source, from }
 }
 
 const toDataUri = (buf: Buffer, mime: string) => {

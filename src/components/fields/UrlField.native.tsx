@@ -1,13 +1,13 @@
-import { Button, Input, Item, Right, Text } from 'native-base'
+import isUrl from 'is-url'
+import { Button, Input, Item, Text, Thumbnail } from 'native-base'
+import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
 import { InjectedIntlProps, injectIntl } from 'react-intl'
-import { Image, TextInput } from 'react-native'
+import { TextInput } from 'react-native'
+import { FavicoProps, getFavico } from '../../util/getFavico'
 import { Label } from './Label.native'
 import { UrlFieldProps } from './UrlField'
-import { Favico } from '../Favico'
-import isUrl from 'is-url'
-import { getFavico, FavicoProps } from '../../util/getFavico'
 
 export namespace UrlField {
   export type Props<T = {}> = UrlFieldProps<T>
@@ -44,6 +44,26 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
               placeholder={placeholder && intl.formatMessage(placeholder)}
             >
               <Label label={label} error={error} />
+
+              <Field field={favicoField}>
+                {iconFieldApi => {
+                  this.iconFieldApi = iconFieldApi
+                  const props = iconFieldApi.value
+                  console.log({ props })
+                  return (
+                    <Button
+                      onPress={this.onIconButtonPressed}
+                      style={{ alignSelf: 'center', padding: platform.buttonPadding, backgroundColor: '#FF9501' }}
+                    >
+                      {props
+                        ? <Thumbnail square small {...(JSON.parse(props))} />
+                        : <Text>foo</Text>
+                      }
+                    </Button>
+                  )
+                }}
+              </Field>
+
               <Input
                 style={{ flex: 1 }}
                 keyboardType='url'
@@ -54,24 +74,6 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
                 returnKeyType={returnKeyType}
                 ref={(ref: any) => this.textInput = ref && ref._root}
               />
-              <Field field={favicoField}>
-                {iconFieldApi => {
-                  this.iconFieldApi = iconFieldApi
-                  const props = iconFieldApi.value
-                  // console.log({ props })
-                  return (
-                    <Button
-                      onPress={this.onIconButtonPressed}
-                      style={{ flex: 0, width: 48, height: 48, backgroundColor: '#FF9501' }}
-                    >
-                      {props
-                        ? <Favico {...(JSON.parse(props))} />
-                        : <Text>foo</Text>
-                      }
-                    </Button>
-                  )
-                }}
-              </Field>
             </Item>
           )
         }}
