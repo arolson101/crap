@@ -1,4 +1,4 @@
-import { Body, Icon, Right } from 'native-base'
+import { Body, Icon, Right, Left, Thumbnail } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { defineMessages } from 'react-intl'
@@ -73,6 +73,11 @@ class BankItem extends React.Component<ConnectedProps & { bank: Banks.Banks }> {
       <>
         <List>
           <ListItem button onPress={this.onPress}>
+            {bank.favicon &&
+              <Left style={{ flex: 0 }}>
+                <Thumbnail small square {...JSON.parse(bank.favicon)} />
+              </Left>
+            }
             <Body>
               <Text>
                 {bank.name}

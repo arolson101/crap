@@ -495,6 +495,7 @@ export namespace Banks {
     __typename?: "Bank";
     id: string;
     name: string;
+    favicon: string;
     accounts: Accounts[];
   };
 

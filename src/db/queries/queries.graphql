@@ -3,6 +3,7 @@ query Banks {
   banks {
     id
     name
+    favicon
     accounts {
       id
       name
