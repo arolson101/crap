@@ -1,8 +1,8 @@
+import { InjectedIntl } from 'react-intl'
 import { ActionType, createAction } from 'typesafe-actions'
 import { Connection } from '../../db/typeorm'
-import { FormattedMessage } from 'react-intl'
 
-export type FormatMessageFcn = (message: FormattedMessage.MessageDescriptor) => string
+export type FormatMessageFcn = InjectedIntl['formatMessage']
 
 export const dbActions = {
   initDb: createAction('db/initDb', resolve =>

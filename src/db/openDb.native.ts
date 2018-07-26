@@ -41,7 +41,6 @@ export const openDb = async (app: boolean, name: string, key: string) => {
   const extra: SqlitePlugin.DatabaseOptionalParams = {
     key
   }
-  console.log('openDb', { app, name, key, entities, extra })
   const db = await createConnection({
     type: 'react-native',
     name,
