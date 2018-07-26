@@ -1,5 +1,5 @@
 import cuid from 'cuid'
-import { Body, Card, CardItem, Icon, Right, Text } from 'native-base'
+import { Body, Card, CardItem, Icon, Right, Text, Thumbnail, Left, Button } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
@@ -42,21 +42,29 @@ export class BankScreenComponent extends React.PureComponent<Props> {
     return (
       <Scrollable>
         <Card>
-          <CardItem header button onPress={this.bankEdit}>
-            <Body>
-              <Text>{bank.name}</Text>
-            </Body>
-            <Right>
-              <Icon name='information-circle' style={{ color: platform.brandInfo }} />
+          <CardItem header>
+            <Left>
+              <Thumbnail square {...JSON.parse(bank.favicon)} />
+              <Body>
+                <Text>{bank.name}</Text>
+                {!!bank.web &&
+                  <Text
+                    numberOfLines={1}
+                    onPress={this.webOnPress}
+                    note
+                    style={{ color: platform.brandPrimary }}
+                  >
+                    {bank.web}
+                  </Text>
+                }
+              </Body>
+            </Left>
+            <Right style={{ flex: 0 }}>
+              <Button transparent onPress={this.bankEdit}>
+                <Icon name='create' style={{ color: platform.brandInfo }} />
+              </Button>
             </Right>
           </CardItem>
-          {!!bank.web &&
-            <CardItem button onPress={this.webOnPress}>
-              <Body>
-                <Text style={{ color: platform.brandPrimary }} note>{bank.web}</Text>
-              </Body>
-            </CardItem>
-          }
           <CardItem>
             <Body>
               {bank.address.split(/\n/g).map((line, i) => (

@@ -1,5 +1,5 @@
 import isUrl from 'is-url'
-import { Button, Input, Item, Text, Thumbnail } from 'native-base'
+import { Button, Input, Item, Text, Thumbnail, NativeBase, Spinner } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
@@ -8,9 +8,14 @@ import { TextInput } from 'react-native'
 import { FavicoProps, getFavico } from '../../util/getFavico'
 import { Label } from './Label.native'
 import { UrlFieldProps } from './UrlField'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 export namespace UrlField {
   export type Props<T = {}> = UrlFieldProps<T>
+}
+
+interface State {
+  gettingIcon: boolean
 }
 
 class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlProps> {
@@ -18,6 +23,10 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
   private fieldApi: FieldAPI<any>
   private iconFieldApi: FieldAPI<any>
   private originalValue: string | undefined = undefined
+
+  state: State = {
+    gettingIcon: false
+  }
 
   focusTextInput = () => {
     if (this.textInput) {
@@ -45,34 +54,31 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
             >
               <Label label={label} error={error} />
 
-              <Field field={favicoField}>
+              <Field field={favicoField} pure={false}>
                 {iconFieldApi => {
                   this.iconFieldApi = iconFieldApi
-                  const props = iconFieldApi.value
-                  console.log({ props })
                   return (
-                    <Button
+                    <FavicoButton
+                      loading={this.state.gettingIcon}
+                      value={iconFieldApi.value}
+                      bordered
                       onPress={this.onIconButtonPressed}
-                      style={{ alignSelf: 'center', padding: platform.buttonPadding, backgroundColor: '#FF9501' }}
-                    >
-                      {props
-                        ? <Thumbnail square small {...(JSON.parse(props))} />
-                        : <Text>foo</Text>
-                      }
-                    </Button>
+                      style={{ alignSelf: 'center', padding: platform.buttonPadding }}
+                    />
                   )
                 }}
               </Field>
 
-              <Input
+              <NotifyingInput
                 style={{ flex: 1 }}
                 keyboardType='url'
                 autoFocus={autoFocus}
-                onChangeText={this.onChangeText}
+                onChangeText={fieldApi.setValue}
                 value={fieldApi.value}
                 onSubmitEditing={onSubmitEditing}
                 returnKeyType={returnKeyType}
                 ref={(ref: any) => this.textInput = ref && ref._root}
+                onValueChanged={this.onValueChanged}
               />
             </Item>
           )
@@ -81,12 +87,7 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
     )
   }
 
-  preValidate = (value: string) => {
-    console.log('preValidate', value)
-  }
-
-  onChangeText = (value: string) => {
-    this.fieldApi.setValue(value)
+  onValueChanged = (value: string) => {
     this.maybeGetIcon(value)
   }
 
@@ -113,15 +114,59 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
     }
 
     try {
-      console.log(`getting icon for ${value}'`)
+      this.setState({ gettingIcon: true })
       const icon = await getFavico(value)
       this.iconFieldApi.setValue(JSON.stringify(icon))
       this.originalValue = icon.from
-    } catch { }
+    } catch (ex) {
+      console.warn(ex.message)
+    } finally {
+      this.setState({ gettingIcon: false })
+    }
   }
 
   onIconButtonPressed = () => {
     console.warn('press')
+  }
+}
+
+interface NotifyingInputProps extends NativeBase.Input {
+  onValueChanged: (newValue: string, oldValue: string) => any
+}
+
+class NotifyingInput extends React.Component<NotifyingInputProps> {
+  componentDidUpdate(prevProps: NotifyingInputProps) {
+    const { value, onValueChanged } = this.props
+    if (prevProps.value !== value) {
+      onValueChanged(value || '', prevProps.value || '')
+    }
+  }
+
+  render() {
+    return <Input {...this.props} />
+  }
+}
+
+interface FavicoButtonProps extends NativeBase.Button {
+  value: string
+  loading: boolean
+}
+
+class FavicoButton extends React.Component<FavicoButtonProps> {
+  render() {
+    const { value, loading, ...props } = this.props
+    const favico = value ? JSON.parse(value) as FavicoProps : undefined
+    console.log(`favicobutton`, { value, loading })
+    return (
+      <Button {...props}>
+        {loading
+          ? <Spinner />
+          : favico
+            ? <Thumbnail style={{ backgroundColor: 'transparent' }} square small {...favico} />
+            : <FontAwesome name='bank' />
+        }
+      </Button>
+    )
   }
 }
 

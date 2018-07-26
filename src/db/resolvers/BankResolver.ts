@@ -32,7 +32,7 @@ export class Bank extends RecordClass<Bank> implements Bank.Props {
   @Column() @Field() web: string
   @Column() @Field() address: string
   @Column() @Field() notes: string
-  @Column() @Field() favicon: string
+  @Column() @Field() favicon: string // JSON stringified FavicoProps
 
   @Column() @Field() online: boolean
 
@@ -43,7 +43,7 @@ export class Bank extends RecordClass<Bank> implements Bank.Props {
   @Column() @Field() username: string
   @Column() @Field() password: string
 
-  constructor (props?: BankInput, genId?: () => string) {
+  constructor(props?: BankInput, genId?: () => string) {
     super()
     if (props && genId) {
       this.createRecord(genId, {
@@ -58,7 +58,7 @@ export class Bank extends RecordClass<Bank> implements Bank.Props {
 export class BankResolver {
 
   @Query(returns => Bank)
-  async bank (
+  async bank(
     @Ctx() { appDb }: ResolverContext,
     @Arg('bankId') bankId: string,
   ): Promise<Bank> {
@@ -73,7 +73,7 @@ export class BankResolver {
   }
 
   @Query(returns => [Bank])
-  async banks (@Ctx() { appDb }: ResolverContext): Promise<Bank[]> {
+  async banks(@Ctx() { appDb }: ResolverContext): Promise<Bank[]> {
     if (!appDb) { throw new Error('appDb not open') }
     const res = await appDb.createQueryBuilder(Bank, 'bank')
       .where({ _deleted: 0 })
@@ -82,7 +82,7 @@ export class BankResolver {
   }
 
   @FieldResolver(type => [Account])
-  async accounts (
+  async accounts(
     @Ctx() { appDb }: ResolverContext,
     @Root() bank: Bank,
   ): Promise<Account[]> {
@@ -95,7 +95,7 @@ export class BankResolver {
   }
 
   @Mutation(returns => Bank)
-  async saveBank (
+  async saveBank(
     @Ctx() { appDb }: ResolverContext,
     @Arg('input') input: BankInput,
     @Arg('bankId', { nullable: true }) bankId?: string,
@@ -122,7 +122,7 @@ export class BankResolver {
   }
 
   @Mutation(returns => Boolean)
-  async deleteBank (
+  async deleteBank(
     @Ctx() { appDb }: ResolverContext,
     @Arg('bankId') bankId: string,
   ): Promise<Boolean> {
