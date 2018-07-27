@@ -1,10 +1,11 @@
 import * as ICO from 'icojs'
+import isUrl from 'is-url'
 import minidom from 'minidom'
 import * as path from 'path'
-import * as url from 'url'
-import isUrl from 'is-url'
 import { ImageSourcePropType, ImageURISource } from 'react-native'
+import * as RNFS from 'react-native-fs'
 import ImageResizer from 'react-native-image-resizer'
+import * as url from 'url'
 
 export interface FavicoProps {
   from: string
@@ -107,18 +108,25 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
     .filter(size => !images.find(image => image.width === size))
     .map(async size => {
       // only resize down; find next larger image
-      console.log(`gonna resize to ${size}`)
+      // console.log(`gonna resize to ${size}`)
       const src = images.find(image => image.width! >= size)
       if (src) {
-        console.log(`found ${src}`)
+        // console.log(`found ${src}`)
         const scale = Math.min(size / src.width!, size / src.height!)
         const width = Math.trunc(src.width! * scale)
         const height = Math.trunc(src.height! * scale)
         console.assert(width <= size)
         console.assert(height <= size)
         console.assert(width === size || height === size)
-        const { uri } = await ImageResizer.createResizedImage(src.uri!, width, height, 'PNG', 100)
-        images.push({ width, height, uri })
+        const result = await ImageResizer.createResizedImage(src.uri!, width, height, 'PNG', 100)
+        try {
+          const base64 = await RNFS.readFile(result.uri, 'base64')
+          const mime = 'image/png'
+          const uri = `data:${mime};base64,${base64}`
+          images.push({ width, height, uri })
+        } finally {
+          await RNFS.unlink(result.uri)
+        }
       }
     })
   )
@@ -131,6 +139,8 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
         && a.height === value.height
       )
     )
+    .sort((a, b) => a.width! - b.width!)
+  console.log({ source })
 
   if (source.length === 0) {
     throw new Error('no images found')

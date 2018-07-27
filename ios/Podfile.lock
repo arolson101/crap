@@ -22,6 +22,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNFS (2.10.14):
+    - React
   - RNVectorIcons (4.6.0):
     - React
   - SQLCipher (3.4.2):
@@ -39,6 +41,7 @@ DEPENDENCIES:
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - SQLCipher
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -52,6 +55,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-image-resizer:
     :path: "../node_modules/react-native-image-resizer"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -60,10 +65,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   React: aa2040dbb6f317b95314968021bd2888816e03d5
   react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
+  RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 252b4b32f6cb111ea684878324891582a43f8beb
+PODFILE CHECKSUM: 166756a3d62284e06d1c779d9a7fe034dd74eb83
 
 COCOAPODS: 1.5.2

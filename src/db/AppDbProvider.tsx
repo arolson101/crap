@@ -28,7 +28,6 @@ class AppDbProviderComponent extends React.Component<Props & InjectedIntlProps> 
     if (!appGraphQLClient) {
       return <Text>loading</Text>
     }
-    console.log('render')
     return (
       <ApolloProvider client={appGraphQLClient}>
         {children}
