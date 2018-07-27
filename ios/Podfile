@@ -10,6 +10,7 @@ target 'crap' do
   [
     'Core',
     'RCTText',
+    'RCTImage',
     'RCTNetwork',
     'RCTWebSocket',
     'DevSupport'

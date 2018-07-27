@@ -1,6 +1,8 @@
 PODS:
   - React (0.55.4):
     - React/Core (= 0.55.4)
+  - react-native-image-resizer (1.0.0):
+    - React
   - React/Core (0.55.4):
     - yoga (= 0.55.4.React)
   - React/DevSupport (0.55.4):
@@ -9,6 +11,9 @@ PODS:
   - React/fishhook (0.55.4)
   - React/RCTBlob (0.55.4):
     - React/Core
+  - React/RCTImage (0.55.4):
+    - React/Core
+    - React/RCTNetwork
   - React/RCTNetwork (0.55.4):
     - React/Core
   - React/RCTText (0.55.4):
@@ -17,7 +22,7 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - RNVectorIcons (4.5.0):
+  - RNVectorIcons (4.6.0):
     - React
   - SQLCipher (3.4.2):
     - SQLCipher/standard (= 3.4.2)
@@ -27,8 +32,10 @@ PODS:
   - yoga (0.55.4.React)
 
 DEPENDENCIES:
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - React/Core (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
@@ -43,6 +50,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -50,10 +59,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   React: aa2040dbb6f317b95314968021bd2888816e03d5
+  react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: c1c1bf395cf4116cfd2ba645a18133ee0bba8145
+PODFILE CHECKSUM: 252b4b32f6cb111ea684878324891582a43f8beb
 
 COCOAPODS: 1.5.2

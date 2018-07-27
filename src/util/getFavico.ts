@@ -4,7 +4,7 @@ import * as path from 'path'
 import * as url from 'url'
 import isUrl from 'is-url'
 import { ImageSourcePropType, ImageURISource } from 'react-native'
-// import ImageResizer from 'react-native-image-resizer'
+import ImageResizer from 'react-native-image-resizer'
 
 export interface FavicoProps {
   from: string
@@ -90,36 +90,39 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
         for (const parsedImage of parsedImages) {
           const { width, height } = parsedImage
           const uri = toDataUri(Buffer.from(parsedImage.buffer), mime)
-          const props: ImageURISource = { width, height, uri }
-          images.push(props)
+          images.push({ width, height, uri })
         }
       } else {
         const ext = path.extname(link).substr(1)
         const { width, height } = imageSize(buf, link)
         const mime = response.headers.get('content-type') || `image/${ext}`
         const uri = toDataUri(buf, mime)
-        const props: ImageURISource = { width, height, uri }
-        images.push(props)
+        images.push({ width, height, uri })
+      }
+    })
+  )
+
+  // add resized images (iOS would rather upscale the 16x16 favico than use the better, larger one)
+  await Promise.all(sizes
+    .filter(size => !images.find(image => image.width === size))
+    .map(async size => {
+      // only resize down; find next larger image
+      console.log(`gonna resize to ${size}`)
+      const src = images.find(image => image.width! >= size)
+      if (src) {
+        console.log(`found ${src}`)
+        const scale = Math.min(size / src.width!, size / src.height!)
+        const width = Math.trunc(src.width! * scale)
+        const height = Math.trunc(src.height! * scale)
+        console.assert(width <= size)
+        console.assert(height <= size)
+        console.assert(width === size || height === size)
+        const { uri } = await ImageResizer.createResizedImage(src.uri!, width, height, 'PNG', 100)
+        images.push({ width, height, uri })
       }
     })
   )
   console.log({ images })
-
-  // // add resized images
-  // await Promise.all(sizes
-  //   .filter(size => !images.find(image => image.width === size))
-  //   .map(async size => {
-  //     // only resize down; find next larger image
-  //     console.log(`gonna resize to ${size}`)
-  //     const src = images.find(image => image.width! >= size)
-  //     if (src) {
-  //       console.log(`found ${src}`)
-  //       const result = await ImageResizer.createResizedImage(src.uri!, size, size, 'PNG', 100)
-  //       console.log({ result })
-  //       return result
-  //     }
-  //   })
-  // )
 
   const source = images
     .filter((value, index, array) =>
