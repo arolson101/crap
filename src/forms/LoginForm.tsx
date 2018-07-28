@@ -9,6 +9,8 @@ import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
+import { CalculatorInput } from 'react-native-calculator'
+import { Dimensions } from 'react-native'
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -53,6 +55,11 @@ export class LoginFormComponent extends React.Component<Props> {
               <WelcomeText>
                 <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)} />
               </WelcomeText>
+              <CalculatorInput
+                fieldTextStyle={{ fontSize: 24 }}
+                fieldContainerStyle={{ height: 36 }}
+                width={Dimensions.get('screen').width}
+              />
               <TextField
                 autoFocus
                 secure

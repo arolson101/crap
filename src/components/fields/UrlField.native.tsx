@@ -1,11 +1,11 @@
 import isUrl from 'is-url'
-import { Button, Input, Item, Text, Thumbnail, NativeBase, Spinner } from 'native-base'
+import { Button, Input, Item, Text, Thumbnail, NativeBase, Spinner, ActionSheet } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { InjectedIntlProps, injectIntl, defineMessages } from 'react-intl'
 import { TextInput } from 'react-native'
-import { FavicoProps, getFavico } from '../../util/getFavico'
+import { FavicoProps, getFavico, getFavicoFromLibrary } from '../../util/getFavico'
 import { Label } from './Label.native'
 import { UrlFieldProps } from './UrlField'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -91,7 +91,7 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
     this.maybeGetIcon(value)
   }
 
-  maybeGetIcon = async (value: string) => {
+  maybeGetIcon = async (value: string, force: boolean = false) => {
     console.log('maybeGetIcon', { value })
 
     if (!isUrl(value)) {
@@ -100,7 +100,7 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
     }
 
     const iconValue = this.iconFieldApi.value
-    if (iconValue) {
+    if (iconValue && !force) {
       const iconProps = JSON.parse(iconValue) as FavicoProps
       if (iconProps.from === value) {
         console.log(`not looking up icon because we already got it from ${value}`)
@@ -125,8 +125,46 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
     }
   }
 
+  redownload = async () => {
+    this.iconFieldApi.setValue('')
+    this.maybeGetIcon(this.fieldApi.value, true)
+  }
+
+  getFromLibrary = async () => {
+    const icon = await getFavicoFromLibrary()
+    this.iconFieldApi.setValue(JSON.stringify(icon))
+    this.originalValue = icon.from
+  }
+
   onIconButtonPressed = () => {
-    console.warn('press')
+    const { intl, label } = this.props
+    const options: string[] = [
+      intl.formatMessage(messages.reset),
+      intl.formatMessage(messages.redownload),
+      intl.formatMessage(messages.library),
+      intl.formatMessage(messages.cancel)
+    ]
+    const cancelButtonIndex = 3
+    ActionSheet.show(
+      {
+        options,
+        cancelButtonIndex,
+        title: intl.formatMessage(label)
+      },
+      buttonIndex => {
+        switch (buttonIndex) {
+          case 0: // reset
+            this.iconFieldApi.setValue('')
+            break
+          case 1: // redownload
+            this.redownload()
+            break
+          case 2: // library
+            this.getFromLibrary()
+            break
+        }
+      }
+    )
   }
 }
 
@@ -170,3 +208,22 @@ class FavicoButton extends React.Component<FavicoButtonProps> {
 }
 
 export const UrlField = injectIntl<UrlField.Props>(UrlFieldComponent)
+
+const messages = defineMessages({
+  library: {
+    id: 'UrlField.library',
+    defaultMessage: 'Choose from library'
+  },
+  reset: {
+    id: 'UrlField.reset',
+    defaultMessage: 'Reset to default'
+  },
+  redownload: {
+    id: 'UrlField.redownload',
+    defaultMessage: 'Download again'
+  },
+  cancel: {
+    id: 'UrlField.cancel',
+    defaultMessage: 'Cancel'
+  },
+})

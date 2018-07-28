@@ -6,6 +6,7 @@ import { ImageSourcePropType, ImageURISource } from 'react-native'
 import * as RNFS from 'react-native-fs'
 import ImageResizer from 'react-native-image-resizer'
 import * as url from 'url'
+import ImageCropPicker from 'react-native-image-crop-picker'
 
 export interface FavicoProps {
   from: string
@@ -103,6 +104,10 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
     })
   )
 
+  return makeFavicoFromImages(from, images)
+}
+
+const makeFavicoFromImages = async (from: string, images: ImageURISource[]) => {
   // add resized images (iOS would rather upscale the 16x16 favico than use the better, larger one)
   await Promise.all(sizes
     .filter(size => !images.find(image => image.width === size))
@@ -147,6 +152,26 @@ export const getFavico = async (from: string): Promise<FavicoProps> => {
   }
 
   return { source, from }
+}
+
+export const getFavicoFromLibrary = async () => {
+  const image = await ImageCropPicker.openPicker({
+    width: 128,
+    height: 128,
+    cropping: true,
+  })
+  // console.log(image)
+  if (Array.isArray(image)) {
+    throw new Error('only one image can be picked!')
+  }
+  const { width, height, path, mime } = image
+  try {
+    const base64 = await RNFS.readFile(path, 'base64')
+    const uri = `data:${mime};base64,${base64}`
+    return makeFavicoFromImages(path, [{ width, height, uri }])
+  } finally {
+    await RNFS.unlink(path)
+  }
 }
 
 const toDataUri = (buf: Buffer, mime: string) => {

@@ -9,9 +9,16 @@ target 'crap' do
   pod 'React', :path => '../node_modules/react-native', :subspecs =>
   [
     'Core',
+    'RCTActionSheet',
+    'RCTAnimation',
+    'RCTGeolocation',
+    'RCTImage',
+    'RCTLinkingIOS',
+    'RCTNetwork',
+    'RCTSettings',
     'RCTText',
     'RCTImage',
-    'RCTNetwork',
+    'RCTVibration',
     'RCTWebSocket',
     'DevSupport'
   ]
@@ -20,11 +27,15 @@ target 'crap' do
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
+  pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
+      if target.name == "React"
+        target.remove_from_project
+      end
       target.build_configurations.each do |config|
         config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
           '$(inherited)',
