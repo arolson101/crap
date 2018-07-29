@@ -10,10 +10,12 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.wix.reactnativekeyboardinput.KeyboardInputPackage;
+import com.cmcewen.blurview.BlurViewPackage;
+import org.pgsqlite.SQLitePluginPackage;
 
 import java.util.Arrays;
 import java.util.List;
-import org.pgsqlite.SQLitePluginPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -30,7 +32,9 @@ public class MainApplication extends Application implements ReactApplication {
           new RNFSPackage(),
           new SQLitePluginPackage(),
           new RandomBytesPackage(),
-          new ImageResizerPackage()
+          new ImageResizerPackage(),
+          new BlurViewPackage(),
+          new KeyboardInputPackage(this) // (this = Android application object)
       );
     }
 

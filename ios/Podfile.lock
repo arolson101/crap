@@ -2,6 +2,8 @@ PODS:
   - QBImagePickerController (3.4.0)
   - React (0.55.4):
     - React/Core (= 0.55.4)
+  - react-native-blur (0.8.0):
+    - React
   - react-native-image-resizer (1.0.0):
     - React
   - React/Core (0.55.4):
@@ -52,6 +54,7 @@ PODS:
   - yoga (0.55.4.React)
 
 DEPENDENCIES:
+  - react-native-blur (from `../node_modules/react-native-blur`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - React/Core (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -80,6 +83,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
+  react-native-blur:
+    :path: "../node_modules/react-native-blur"
   react-native-image-resizer:
     :path: "../node_modules/react-native-image-resizer"
   RNFS:
@@ -94,6 +99,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: aa2040dbb6f317b95314968021bd2888816e03d5
+  react-native-blur: c35c1f6c2c76db7108bde7ed343bd2b01d64e0c0
   react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
   RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
@@ -102,6 +108,6 @@ SPEC CHECKSUMS:
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 156b9cf10a07467f7a214f62edd13b58546e8614
+PODFILE CHECKSUM: 574ea45b1f7dffce29c817cd65103dd2aa6bdcde
 
 COCOAPODS: 1.5.2

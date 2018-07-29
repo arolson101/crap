@@ -11105,6 +11105,16 @@ react-modal@^3.3.2:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
+react-native-autogrow-textinput@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-autogrow-textinput/-/react-native-autogrow-textinput-5.1.1.tgz#e6c85077f2a7c3371f382ab3224808b88f385819"
+
+react-native-blur@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-3.2.2.tgz#5bfb50638d148982c9560436554ed01d77d6d07d"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-calculator@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/react-native-calculator/-/react-native-calculator-0.2.0.tgz#78a158639e9ca03bba1f8fea6a408ad1ee7886fb"
@@ -11189,6 +11199,17 @@ react-native-keyboard-aware-scroll-view@0.5.0:
   dependencies:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
+
+react-native-keyboard-input@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-input/-/react-native-keyboard-input-5.2.3.tgz#98a52c75cc536b50aaaf20547a93219c94b64cb6"
+  dependencies:
+    lodash "^4.17.4"
+    react-native-keyboard-tracking-view "^5.4.3"
+
+react-native-keyboard-tracking-view@^5.4.3:
+  version "5.4.4"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-tracking-view/-/react-native-keyboard-tracking-view-5.4.4.tgz#2ec99d232bf59a73493288ba8503b29057fa8a06"
 
 react-native-paper@2.0.0-alpha.4:
   version "2.0.0-alpha.4"
