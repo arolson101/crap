@@ -34,7 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
           new RandomBytesPackage(),
           new ImageResizerPackage(),
           new BlurViewPackage(),
-          new KeyboardInputPackage(this) // (this = Android application object)
+          new KeyboardInputPackage(getApplication()) // (this = Android application object)
       );
     }
 
