@@ -8,6 +8,8 @@ import { pickT } from '../util/pick'
 import { openDb } from './openDb'
 import { compose } from 'redux'
 import { injectIntl, InjectedIntlProps } from 'react-intl'
+import { Container } from '../../node_modules/typedi'
+import { DbService } from '../redux/reducers/dbReducer'
 
 interface Props {
   appGraphQLClient: selectors.returnOf['getAppGraphQLClient']
@@ -19,6 +21,9 @@ class AppDbProviderComponent extends React.Component<Props & InjectedIntlProps> 
     const { appGraphQLClient, initDb, intl: { formatMessage } } = this.props
     if (!appGraphQLClient) {
       const indexDb = await openDb(false, 'index', '')
+      const db = Container.get(DbService)
+      console.assert(db)
+      db.indexDb = indexDb
       initDb(indexDb, formatMessage)
     }
   }

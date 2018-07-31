@@ -7,6 +7,46 @@ import Observable from 'zen-observable-ts'
 import schema from '../../db/schema'
 import { Connection } from '../../db/typeorm'
 import { DbAction, dbActions, FormatMessageFcn } from '../actions/dbActions'
+import { Service, Container } from 'typedi'
+import { openDb } from '../../db/openDb.native'
+import { useContainer as ormUseContainer } from '../../db/typeorm'
+
+ormUseContainer(Container)
+
+@Service()
+export class DbService {
+  indexDb: Connection
+  private _appDb?: Connection
+
+  constructor() {
+    console.log('dbservice')
+    this.init()
+  }
+
+  // get indexDb() {
+  //   if (!this._indexDb) {
+  //     throw new Error('index db not loaded')
+  //   }
+  //   return this._indexDb
+  // }
+
+  get appDb() {
+    if (!this._appDb) {
+      throw new Error('app db not loaded')
+    }
+    return this._appDb
+  }
+
+  setAppDb(value: Connection | undefined) {
+    this._appDb = value
+  }
+
+  private async init() {
+    // this._indexDb = await openDb(false, 'index', '')
+  }
+}
+
+Container.get(DbService)
 
 export interface ResolverContext {
   indexDb: Connection

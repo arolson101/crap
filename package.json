@@ -221,6 +221,7 @@
     "tslint-config-standard": "^7.1.0",
     "tslint-react": "^3.6.0",
     "type-graphql": "^0.12.3",
+    "typedi": "^0.8.0",
     "typesafe-actions": "^2.0.4",
     "typescript": "^3.0.0-dev.20180712",
     "uglifyjs-webpack-plugin": "^1.2.7",
