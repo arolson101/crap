@@ -70,7 +70,9 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
         try {
           this.setState({ loading: true })
           const results = await gql.execute(desc.mutation, variables)
-          console.assert(!results.errors)
+          if (results.errors && results.errors.length > 0) {
+            throw results.errors[0]
+          }
           this.onCompleted(results.data as TRes)
         } catch (error) {
           this.onError(error)
@@ -93,7 +95,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       }
 
       onError = (error: Error) => {
-        // console.log('onError', error.message, { error })
+        console.log('onError', error.message, { error })
         Toast.show({
           text: error.message,
           buttonText: 'Okay',

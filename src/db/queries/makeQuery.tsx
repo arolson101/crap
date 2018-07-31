@@ -68,7 +68,9 @@ export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extend
         if (!getVariables || variables) {
           try {
             const result = await gql.execute(desc.query, variables)
-            console.assert(!result.errors)
+            if (result.errors && result.errors.length > 0) {
+              throw result.errors[0]
+            }
             if (this.mounted) {
               this.setState({ result: result.data })
             }
