@@ -2,6 +2,7 @@ import cuid from 'cuid'
 import { Account, Bank, BankInput } from '../entities/index'
 import { Arg, Ctx, dbWrite, FieldResolver, Mutation, Query, Resolver, Root } from './helpers'
 import { AppDbService } from '../services/AppDbService'
+import { Container } from 'typedi'
 
 @Resolver(Bank)
 export class BankResolver {

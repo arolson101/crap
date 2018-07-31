@@ -12,7 +12,9 @@ export class IndexDbService {
   private initPromise: Promise<void>
   private dbInfos: Repository<DbInfo>
 
-  constructor() {
+  constructor(
+    private appService: AppDbService
+  ) {
     this.initPromise = this.init()
   }
 
@@ -38,27 +40,22 @@ export class IndexDbService {
 
     const db = await openDb(true, dbInfo.path, key)
     await this.dbInfos.save(dbInfo)
-    this.setAppDb(db)
+    this.appService.open(db)
     return true
   }
 
   async openDb(dbId: string, password: string): Promise<Boolean> {
     await this.initPromise
+    console.log('openDb')
     const dbInfo = await this.dbInfos.findOneOrFail(dbId)
     const key = dbInfo.getKey(password)
     const db = await openDb(true, dbInfo.path, key)
-    this.setAppDb(db)
+    this.appService.open(db)
     return true
   }
 
-  private setAppDb(db: Connection) {
-    Container.set(AppDbService, new AppDbService(db))
-  }
-
   async closeDb(): Promise<Boolean> {
-    const appService = Container.get(AppDbService)
-    appService.close()
-    Container.set(AppDbService, undefined)
+    this.appService.close()
     return true
   }
 

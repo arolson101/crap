@@ -12,27 +12,11 @@ type Resolver<Result, Args = any> = (
 export type DateTime = any;
 
 export interface Query {
+  account: Account;
   bank: Bank;
   banks: Bank[];
-  transaction: Transaction;
-  account: Account;
   allDbs: DbInfo[];
-}
-
-export interface Bank {
-  id: string;
-  name: string;
-  web: string;
-  address: string;
-  notes: string;
-  favicon: string;
-  online: boolean;
-  fid: string;
-  org: string;
-  ofx: string;
-  username: string;
-  password: string;
-  accounts: Account[];
+  transaction: Transaction;
 }
 
 export interface Account {
@@ -61,25 +45,41 @@ export interface Transaction {
   balance: number;
 }
 
+export interface Bank {
+  id: string;
+  name: string;
+  web: string;
+  address: string;
+  notes: string;
+  favicon: string;
+  online: boolean;
+  fid: string;
+  org: string;
+  ofx: string;
+  username: string;
+  password: string;
+  accounts: Account[];
+}
+
 export interface DbInfo {
   dbId: string;
   name: string;
 }
 
 export interface Mutation {
-  saveBank: Bank;
-  deleteBank: boolean;
-  saveTransaction: Transaction;
-  deleteTransaction: Transaction;
   saveAccount: Account;
   deleteAccount: boolean;
   downloadAccountList: Bank;
   downloadTransactions: Account;
   cancel: boolean;
+  saveBank: Bank;
+  deleteBank: boolean;
   createDb: boolean;
   openDb: boolean;
   closeDb: boolean;
-  deleteDb: boolean;
+  deleteDb: string;
+  saveTransaction: Transaction;
+  deleteTransaction: Transaction;
 }
 
 export interface Bill {
@@ -108,6 +108,16 @@ export interface Category {
   amount: number;
 }
 
+export interface AccountInput {
+  name?: string | null;
+  color?: string | null;
+  type?: AccountType | null;
+  number?: string | null;
+  visible?: boolean | null;
+  routing?: string | null;
+  key?: string | null;
+}
+
 export interface BankInput {
   name?: string | null;
   web?: string | null;
@@ -131,15 +141,8 @@ export interface TransactionInput {
   memo?: string | null;
   amount?: number | null;
 }
-
-export interface AccountInput {
-  name?: string | null;
-  color?: string | null;
-  type?: AccountType | null;
-  number?: string | null;
-  visible?: boolean | null;
-  routing?: string | null;
-  key?: string | null;
+export interface AccountQueryArgs {
+  accountId: string;
 }
 export interface BankQueryArgs {
   bankId: string;
@@ -147,27 +150,9 @@ export interface BankQueryArgs {
 export interface TransactionQueryArgs {
   transactionId: string;
 }
-export interface AccountQueryArgs {
-  accountId: string;
-}
 export interface TransactionsAccountArgs {
   end?: DateTime | null;
   start?: DateTime | null;
-}
-export interface SaveBankMutationArgs {
-  bankId?: string | null;
-  input: BankInput;
-}
-export interface DeleteBankMutationArgs {
-  bankId: string;
-}
-export interface SaveTransactionMutationArgs {
-  accountId?: string | null;
-  transactionId?: string | null;
-  input: TransactionInput;
-}
-export interface DeleteTransactionMutationArgs {
-  transactionId: string;
 }
 export interface SaveAccountMutationArgs {
   bankId?: string | null;
@@ -191,6 +176,13 @@ export interface DownloadTransactionsMutationArgs {
 export interface CancelMutationArgs {
   cancelToken: string;
 }
+export interface SaveBankMutationArgs {
+  bankId?: string | null;
+  input: BankInput;
+}
+export interface DeleteBankMutationArgs {
+  bankId: string;
+}
 export interface CreateDbMutationArgs {
   password: string /** the password for the database */;
   name: string;
@@ -201,6 +193,14 @@ export interface OpenDbMutationArgs {
 }
 export interface DeleteDbMutationArgs {
   dbId: string;
+}
+export interface SaveTransactionMutationArgs {
+  accountId?: string | null;
+  transactionId?: string | null;
+  input: TransactionInput;
+}
+export interface DeleteTransactionMutationArgs {
+  transactionId: string;
 }
 
 export enum AccountType {
@@ -213,11 +213,16 @@ export enum AccountType {
 
 export namespace QueryResolvers {
   export interface Resolvers {
+    account?: AccountResolver;
     bank?: BankResolver;
     banks?: BanksResolver;
-    transaction?: TransactionResolver;
-    account?: AccountResolver;
     allDbs?: AllDbsResolver;
+    transaction?: TransactionResolver;
+  }
+
+  export type AccountResolver = Resolver<Account, AccountArgs>;
+  export interface AccountArgs {
+    accountId: string;
   }
 
   export type BankResolver = Resolver<Bank, BankArgs>;
@@ -226,48 +231,11 @@ export namespace QueryResolvers {
   }
 
   export type BanksResolver = Resolver<Bank[]>;
+  export type AllDbsResolver = Resolver<DbInfo[]>;
   export type TransactionResolver = Resolver<Transaction, TransactionArgs>;
   export interface TransactionArgs {
     transactionId: string;
   }
-
-  export type AccountResolver = Resolver<Account, AccountArgs>;
-  export interface AccountArgs {
-    accountId: string;
-  }
-
-  export type AllDbsResolver = Resolver<DbInfo[]>;
-}
-export namespace BankResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    name?: NameResolver;
-    web?: WebResolver;
-    address?: AddressResolver;
-    notes?: NotesResolver;
-    favicon?: FaviconResolver;
-    online?: OnlineResolver;
-    fid?: FidResolver;
-    org?: OrgResolver;
-    ofx?: OfxResolver;
-    username?: UsernameResolver;
-    password?: PasswordResolver;
-    accounts?: AccountsResolver;
-  }
-
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type WebResolver = Resolver<string>;
-  export type AddressResolver = Resolver<string>;
-  export type NotesResolver = Resolver<string>;
-  export type FaviconResolver = Resolver<string>;
-  export type OnlineResolver = Resolver<boolean>;
-  export type FidResolver = Resolver<string>;
-  export type OrgResolver = Resolver<string>;
-  export type OfxResolver = Resolver<string>;
-  export type UsernameResolver = Resolver<string>;
-  export type PasswordResolver = Resolver<string>;
-  export type AccountsResolver = Resolver<Account[]>;
 }
 export namespace AccountResolvers {
   export interface Resolvers {
@@ -323,6 +291,37 @@ export namespace TransactionResolvers {
   export type AmountResolver = Resolver<number>;
   export type BalanceResolver = Resolver<number>;
 }
+export namespace BankResolvers {
+  export interface Resolvers {
+    id?: IdResolver;
+    name?: NameResolver;
+    web?: WebResolver;
+    address?: AddressResolver;
+    notes?: NotesResolver;
+    favicon?: FaviconResolver;
+    online?: OnlineResolver;
+    fid?: FidResolver;
+    org?: OrgResolver;
+    ofx?: OfxResolver;
+    username?: UsernameResolver;
+    password?: PasswordResolver;
+    accounts?: AccountsResolver;
+  }
+
+  export type IdResolver = Resolver<string>;
+  export type NameResolver = Resolver<string>;
+  export type WebResolver = Resolver<string>;
+  export type AddressResolver = Resolver<string>;
+  export type NotesResolver = Resolver<string>;
+  export type FaviconResolver = Resolver<string>;
+  export type OnlineResolver = Resolver<boolean>;
+  export type FidResolver = Resolver<string>;
+  export type OrgResolver = Resolver<string>;
+  export type OfxResolver = Resolver<string>;
+  export type UsernameResolver = Resolver<string>;
+  export type PasswordResolver = Resolver<string>;
+  export type AccountsResolver = Resolver<Account[]>;
+}
 export namespace DbInfoResolvers {
   export interface Resolvers {
     dbId?: DbIdResolver;
@@ -334,48 +333,19 @@ export namespace DbInfoResolvers {
 }
 export namespace MutationResolvers {
   export interface Resolvers {
-    saveBank?: SaveBankResolver;
-    deleteBank?: DeleteBankResolver;
-    saveTransaction?: SaveTransactionResolver;
-    deleteTransaction?: DeleteTransactionResolver;
     saveAccount?: SaveAccountResolver;
     deleteAccount?: DeleteAccountResolver;
     downloadAccountList?: DownloadAccountListResolver;
     downloadTransactions?: DownloadTransactionsResolver;
     cancel?: CancelResolver;
+    saveBank?: SaveBankResolver;
+    deleteBank?: DeleteBankResolver;
     createDb?: CreateDbResolver;
     openDb?: OpenDbResolver;
     closeDb?: CloseDbResolver;
     deleteDb?: DeleteDbResolver;
-  }
-
-  export type SaveBankResolver = Resolver<Bank, SaveBankArgs>;
-  export interface SaveBankArgs {
-    bankId?: string | null;
-    input: BankInput;
-  }
-
-  export type DeleteBankResolver = Resolver<boolean, DeleteBankArgs>;
-  export interface DeleteBankArgs {
-    bankId: string;
-  }
-
-  export type SaveTransactionResolver = Resolver<
-    Transaction,
-    SaveTransactionArgs
-  >;
-  export interface SaveTransactionArgs {
-    accountId?: string | null;
-    transactionId?: string | null;
-    input: TransactionInput;
-  }
-
-  export type DeleteTransactionResolver = Resolver<
-    Transaction,
-    DeleteTransactionArgs
-  >;
-  export interface DeleteTransactionArgs {
-    transactionId: string;
+    saveTransaction?: SaveTransactionResolver;
+    deleteTransaction?: DeleteTransactionResolver;
   }
 
   export type SaveAccountResolver = Resolver<Account, SaveAccountArgs>;
@@ -416,6 +386,17 @@ export namespace MutationResolvers {
     cancelToken: string;
   }
 
+  export type SaveBankResolver = Resolver<Bank, SaveBankArgs>;
+  export interface SaveBankArgs {
+    bankId?: string | null;
+    input: BankInput;
+  }
+
+  export type DeleteBankResolver = Resolver<boolean, DeleteBankArgs>;
+  export interface DeleteBankArgs {
+    bankId: string;
+  }
+
   export type CreateDbResolver = Resolver<boolean, CreateDbArgs>;
   export interface CreateDbArgs {
     password: string /** the password for the database */;
@@ -429,9 +410,27 @@ export namespace MutationResolvers {
   }
 
   export type CloseDbResolver = Resolver<boolean>;
-  export type DeleteDbResolver = Resolver<boolean, DeleteDbArgs>;
+  export type DeleteDbResolver = Resolver<string, DeleteDbArgs>;
   export interface DeleteDbArgs {
     dbId: string;
+  }
+
+  export type SaveTransactionResolver = Resolver<
+    Transaction,
+    SaveTransactionArgs
+  >;
+  export interface SaveTransactionArgs {
+    accountId?: string | null;
+    transactionId?: string | null;
+    input: TransactionInput;
+  }
+
+  export type DeleteTransactionResolver = Resolver<
+    Transaction,
+    DeleteTransactionArgs
+  >;
+  export interface DeleteTransactionArgs {
+    transactionId: string;
   }
 }
 export namespace BillResolvers {
@@ -505,6 +504,14 @@ export namespace OpenDb {
     openDb: boolean;
   };
 }
+export namespace CloseDb {
+  export type Variables = {};
+
+  export type Mutation = {
+    __typename?: "Mutation";
+    closeDb: boolean;
+  };
+}
 export namespace DeleteDb {
   export type Variables = {
     dbId: string;
@@ -512,7 +519,7 @@ export namespace DeleteDb {
 
   export type Mutation = {
     __typename?: "Mutation";
-    deleteDb: boolean;
+    deleteDb: string;
   };
 }
 export namespace SaveBank {

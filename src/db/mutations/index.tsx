@@ -3,6 +3,7 @@ import { MutationFcn, MutationDesc } from './makeMutation'
 import {
   OpenDb,
   CreateDb,
+  CloseDb,
   DeleteDb,
   SaveBank,
   DeleteBank,
@@ -30,6 +31,15 @@ export namespace Mutations {
     mutation: GQL.OpenDb,
     refetchQueries: (results) => [
       Queries.Dbs.refetchQuery({})
+    ]
+  }
+
+  export type CloseDb = MutationFcn<CloseDb.Mutation, CloseDb.Variables>
+  export const CloseDb: MutationDesc<CloseDb.Mutation, CloseDb.Variables> = {
+    mutation: GQL.CloseDb,
+    refetchQueries: (results) => [
+      Queries.Dbs.refetchQuery({}),
+      Queries.Banks.refetchQuery({}),
     ]
   }
 

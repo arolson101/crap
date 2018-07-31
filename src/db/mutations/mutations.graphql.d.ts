@@ -2,6 +2,7 @@ import { DocumentNode } from 'graphql'
 
 export const CreateDb: DocumentNode
 export const OpenDb: DocumentNode
+export const CloseDb: DocumentNode
 export const DeleteDb: DocumentNode
 export const SaveBank: DocumentNode
 export const DeleteBank: DocumentNode

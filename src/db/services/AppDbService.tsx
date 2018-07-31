@@ -6,13 +6,13 @@ import { AbstractRepository, Connection, EntityRepository } from '../typeorm'
 
 @Service()
 export class AppDbService {
+  private appDbConnection: Connection
   banks: BankRepository
   accounts: AccountRepository
   transactions: TransactionRepository
 
-  constructor(
-    private appDbConnection: Connection
-  ) {
+  open(appDbConnection: Connection) {
+    this.appDbConnection = appDbConnection
     this.banks = appDbConnection.getCustomRepository(BankRepository)
     this.accounts = appDbConnection.getCustomRepository(AccountRepository)
     this.transactions = appDbConnection.getCustomRepository(TransactionRepository)
@@ -21,6 +21,9 @@ export class AppDbService {
   close() {
     this.appDbConnection.close()
     delete this.appDbConnection
+    delete this.banks
+    delete this.accounts
+    delete this.transactions
   }
 
   write(changes: DbChange[]) {

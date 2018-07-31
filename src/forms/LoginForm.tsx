@@ -1,6 +1,8 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { Dimensions } from 'react-native'
+import { CalculatorInput } from 'react-native-calculator'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { typedFields } from '../components/fields/index'
@@ -9,8 +11,7 @@ import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
-import { CalculatorInput } from 'react-native-calculator'
-import { Dimensions } from 'react-native'
+import { selectors } from '../redux/reducers/index'
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -18,6 +19,7 @@ interface Props extends InjectedIntlProps {
   openDb: Mutations.OpenDb
   deleteDb: Mutations.DeleteDb
   login: actions['login']
+  appGraphQLClient: selectors.returnOf['getAppGraphQLClient']
 }
 
 interface FormValues {
@@ -121,6 +123,8 @@ export class LoginFormComponent extends React.Component<Props> {
   }
 
   onSubmit = ({ password }: FormValues) => {
+    const { appGraphQLClient } = this.props
+    appGraphQLClient.resetStore()
     const create = this.props.query.allDbs.length === 0
     if (create) {
       const { createDb, login } = this.props
@@ -166,7 +170,12 @@ export const LoginForm = compose(
   withMutation({ openDb: Mutations.OpenDb }),
   withMutation({ createDb: Mutations.CreateDb }),
   withMutation({ deleteDb: Mutations.DeleteDb }),
-  connect(null, { login: actions.login }),
+  connect(
+    (state: any) => ({
+      appGraphQLClient: selectors.getAppGraphQLClient(state)
+    }), {
+      login: actions.login
+    }),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

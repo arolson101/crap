@@ -7,6 +7,10 @@ mutation OpenDb($dbId: String!, $password: String!) {
   openDb(dbId: $dbId, password: $password)
 }
 
+mutation CloseDb {
+  closeDb
+}
+
 mutation DeleteDb($dbId: String!) {
   deleteDb(dbId: $dbId)
 }

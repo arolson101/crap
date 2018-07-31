@@ -5,6 +5,7 @@ import { checkLogin, createService, getFinancialAccount, toAccountType } from '.
 import { Account, AccountInput, AccountType, Bank, Transaction, TransactionInput } from '../entities/index'
 import { Arg, Ctx, DbChange, dbWrite, FieldResolver, Mutation, Query, Resolver, Root } from './helpers'
 import { AppDbService } from '../services/AppDbService'
+import { Container } from 'typedi'
 
 @Resolver(Account)
 export class AccountResolver {

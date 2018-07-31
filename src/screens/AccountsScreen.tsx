@@ -12,6 +12,7 @@ import { withQuery } from '../db/queries/makeQuery'
 import { Banks } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
 import { AddButtonProps, makeScreen } from './Screen'
+import { selectors } from '../redux/reducers/index'
 
 interface Props {
 }
@@ -24,6 +25,8 @@ interface ConnectedProps {
   navAccountCreate: actions['navAccountCreate']
   navBank: actions['navBank']
   navAccount: actions['navAccount']
+  logout: actions['logout']
+  closeDb: Mutations.CloseDb
 }
 
 class AccountsScreenComponent extends React.Component<Props & ConnectedProps & AddButtonProps> {
@@ -48,6 +51,7 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
               <Text>No Accounts</Text>
             }
           </Divider>
+          <Button onPress={this.logout}><Text>logout</Text></Button>
         </List>
         {/* <List>
           <ListItem button onPress={this.onAddButton}>
@@ -58,6 +62,17 @@ class AccountsScreenComponent extends React.Component<Props & ConnectedProps & A
         </List> */}
       </Scrollable>
     )
+  }
+
+  logout = () => {
+    const { closeDb, logout } = this.props
+    console.log('closeDb')
+    closeDb({}, { complete: this.onClosed })
+  }
+
+  onClosed = () => {
+    const { closeDb, logout } = this.props
+    logout()
   }
 
   onAddButton = () => {
@@ -130,11 +145,13 @@ export const AccountsScreen = compose(
   withQuery({ query: Queries.Banks }),
   withMutation({ deleteBank: Mutations.DeleteBank }),
   withMutation({ deleteAccount: Mutations.DeleteAccount }),
+  withMutation({ closeDb: Mutations.CloseDb }),
   connect(null, {
     navBankCreate: actions.navBankCreate,
     navAccountCreate: actions.navAccountCreate,
     navBank: actions.navBank,
     navAccount: actions.navAccount,
+    logout: actions.logout,
   })
 )(AccountsScreenComponent)
 AccountsScreen.displayName = 'AccountsPage'
