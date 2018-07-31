@@ -5,7 +5,6 @@ import { Record, RecordClass } from '../Record'
 import { Connection } from '../typeorm'
 export { Arg, Args, ArgsType, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, registerEnumType, Resolver, Root } from 'type-graphql/decorators'
 export { ResolverInterface } from 'type-graphql/interfaces'
-export { ResolverContext } from '../../redux/reducers/dbReducer'
 
 // build this function manually (copied from type-graphql) to fix runtime error:
 //   ./node_modules/type-graphql/helpers/loadResolversFromGlob.js

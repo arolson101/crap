@@ -1,59 +1,44 @@
 import cuid from 'cuid'
 import { Account, Bank, BankInput } from '../entities/index'
-import { Arg, Ctx, dbWrite, FieldResolver, Mutation, Query, Resolver, ResolverContext, Root } from './helpers'
+import { Arg, Ctx, dbWrite, FieldResolver, Mutation, Query, Resolver, Root } from './helpers'
+import { AppDbService } from '../services/AppDbService'
 
 @Resolver(Bank)
 export class BankResolver {
+  constructor(
+    private app: AppDbService
+  ) {}
 
   @Query(returns => Bank)
   async bank(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('bankId') bankId: string,
   ): Promise<Bank> {
-    if (!appDb) { throw new Error('appDb not open') }
-    const res = await appDb.manager.createQueryBuilder(Bank, 'bank')
-      .where({ _deleted: 0, id: bankId })
-      .getOne()
-    if (!res) {
-      throw new Error('account not found')
-    }
-    return res
+    return this.app.banks.get(bankId)
   }
 
   @Query(returns => [Bank])
-  async banks(@Ctx() { appDb }: ResolverContext): Promise<Bank[]> {
-    if (!appDb) { throw new Error('appDb not open') }
-    const res = await appDb.createQueryBuilder(Bank, 'bank')
-      .where({ _deleted: 0 })
-      .getMany()
-    return res
+  async banks(): Promise<Bank[]> {
+    return this.app.banks.all()
   }
 
   @FieldResolver(type => [Account])
   async accounts(
-    @Ctx() { appDb }: ResolverContext,
     @Root() bank: Bank,
   ): Promise<Account[]> {
-    if (!appDb) { throw new Error('appDb not open') }
-    const res = await appDb.createQueryBuilder(Account, 'account')
-      .where({ _deleted: 0, bankId: bank.id }) // 'tx._deleted = 0 AND tx.bankId=:bankId', { bankId: bank.id })
-      .orderBy({ name: 'ASC' })
-      .getMany()
-    return res
+    const res = await this.app.accounts.getForBank(bank.id)
+    return res.sort((a, b) => a.name.localeCompare(b.name))
   }
 
   @Mutation(returns => Bank)
   async saveBank(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('input') input: BankInput,
     @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Bank> {
-    if (!appDb) { throw new Error('appDb not open') }
     const t = Date.now()
     let bank: Bank
     let changes: Array<any>
     if (bankId) {
-      bank = await appDb.manager.findOneOrFail(Bank, bankId)
+      bank = await this.app.banks.get(bankId)
       const q = Bank.diff(bank, input)
       changes = [
         Bank.change.edit(t, bankId, q)
@@ -65,21 +50,19 @@ export class BankResolver {
         Bank.change.add(t, bank)
       ]
     }
-    await dbWrite(appDb, changes)
+    await this.app.write(changes)
     return bank
   }
 
   @Mutation(returns => Boolean)
   async deleteBank(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('bankId') bankId: string,
   ): Promise<Boolean> {
-    if (!appDb) { throw new Error('appDb not open') }
     const t = Date.now()
     const changes = [
       Bank.change.remove(t, bankId)
     ]
-    await dbWrite(appDb, changes)
+    await this.app.write(changes)
     return true
   }
 }

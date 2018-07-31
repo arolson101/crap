@@ -2,7 +2,6 @@ import { iupdate } from '../../iupdate'
 import { Record } from '../Record'
 export { Arg, Args, ArgsType, Ctx, Field, FieldResolver, InputType, Mutation, ObjectType, Query, registerEnumType, Resolver, Root } from 'type-graphql/decorators'
 export { ResolverInterface } from 'type-graphql/interfaces'
-export { ResolverContext } from '../../redux/reducers/dbReducer'
 
 export interface DbRecordEdit {
   id: string

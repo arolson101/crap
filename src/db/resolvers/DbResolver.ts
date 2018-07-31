@@ -1,23 +1,18 @@
-import * as crypto from 'crypto'
-import sanitize from 'sanitize-filename'
+import { Service } from 'typedi'
 import { DbInfo } from '../entities/index'
-import { deleteDb, openDb } from '../openDb'
-import { Arg, Ctx, Mutation, Query, Resolver, ResolverContext } from './helpers'
-import { Service, Container } from 'typedi'
-import { DbService } from '../../redux/reducers/dbReducer'
+import { IndexDbService } from '../services/IndexDbService'
+import { Arg, Mutation, Query, Resolver } from './helpers'
 
 @Service()
 @Resolver(objectType => DbInfo)
 export class DbResolver {
   constructor(
-    private dbs: DbService = Container.get(DbService)
-  ) { }
+    private index: IndexDbService
+  ) {}
 
   @Query(returns => [DbInfo])
   async allDbs(): Promise<DbInfo[]> {
-    const dbs = await this.dbs.indexDb.getRepository(DbInfo)
-      .find()
-    return dbs
+    return this.index.allDbs()
   }
 
   @Mutation(returns => Boolean)
@@ -25,17 +20,7 @@ export class DbResolver {
     @Arg('name') name: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
   ): Promise<Boolean> {
-    const dbInfo = new DbInfo()
-    dbInfo.dbId = crypto.randomBytes(8).toString('base64')
-    dbInfo.name = name
-    dbInfo.path = sanitize(name)
-    const key = DbInfo.generateKey()
-    dbInfo.setPassword(key, password)
-
-    const db = await openDb(true, dbInfo.path, key)
-    await this.dbs.indexDb.manager.save(DbInfo, dbInfo)
-    this.dbs.setAppDb(db)
-    return true
+    return this.index.createDb(name, password)
   }
 
   @Mutation(returns => Boolean)
@@ -43,30 +28,18 @@ export class DbResolver {
     @Arg('dbId') dbId: string,
     @Arg('password', { description: 'the password for the database' }) password: string,
   ): Promise<Boolean> {
-    const dbInfo = await this.dbs.indexDb.getRepository(DbInfo).findOneOrFail(dbId)
-    const key = dbInfo.getKey(password)
-    const db = await openDb(true, dbInfo.path, key)
-    this.dbs.setAppDb(db)
-    return true
+    return this.index.openDb(dbId, password)
   }
 
   @Mutation(returns => Boolean)
   async closeDb(): Promise<Boolean> {
-    this.dbs.setAppDb(undefined)
-    return true
+    return this.index.closeDb()
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation(returns => String)
   async deleteDb(
     @Arg('dbId') dbId: string,
-  ): Promise<Boolean> {
-    const dbInfo = await this.dbs.indexDb.getRepository(DbInfo).findOneOrFail(dbId)
-    await deleteDb(dbInfo.path)
-    await this.dbs.indexDb.createQueryBuilder()
-      .delete()
-      .from(DbInfo)
-      .where('dbId = :dbId', { dbId })
-      .execute()
-    return true
+  ): Promise<String> {
+    return this.index.deleteDb(dbId)
   }
 }

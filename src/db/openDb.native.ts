@@ -1,6 +1,9 @@
 import SqlitePlugin from 'react-native-sqlcipher-storage'
+import { Container } from 'typedi'
 import { appEntities, indexEntities } from './dbEntities'
-import { createConnection } from './typeorm'
+import { createConnection, useContainer as ormUseContainer } from './typeorm'
+
+ormUseContainer(Container)
 
 // tslint:disable-next-line:variable-name
 const trigger_on_insert_transaction = `

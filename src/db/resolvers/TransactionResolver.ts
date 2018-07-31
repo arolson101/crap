@@ -1,39 +1,33 @@
 import cuid from 'cuid'
 import { Transaction, TransactionInput } from '../entities/index'
-import { Arg, Ctx, DbChange, dbWrite, Mutation, Query, Resolver, ResolverContext } from './helpers'
+import { Arg, Ctx, DbChange, dbWrite, Mutation, Query, Resolver } from './helpers'
+import { AppDbService } from '../services/AppDbService'
 
 @Resolver(Transaction)
 export class TransactionResolver {
+  constructor(
+    private app: AppDbService
+  ) {}
 
   @Query(returns => Transaction)
   async transaction(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('transactionId') transactionId: string,
   ): Promise<Transaction> {
-    if (!appDb) { throw new Error('appDb not open') }
-    const res = await appDb.manager.createQueryBuilder(Transaction, 'tx')
-      .where({ _deleted: 0, id: transactionId }) // TODO: make this safe
-      .getOne()
-    if (!res) {
-      throw new Error('transaction not found')
-    }
-    return res
+    return this.app.transactions.get(transactionId)
   }
 
   @Mutation(returns => Transaction)
   async saveTransaction(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('input') input: TransactionInput,
     @Arg('transactionId', { nullable: true }) transactionId: string,
     @Arg('accountId', { nullable: true }) accountId?: string,
   ): Promise<Transaction> {
-    if (!appDb) { throw new Error('appDb not open') }
     const t = Date.now()
     const table = Transaction
     let transaction: Transaction
     let changes: DbChange[]
     if (transactionId) {
-      transaction = await appDb.manager.findOneOrFail(Transaction, transactionId)
+      transaction = await this.app.transactions.get(transactionId)
       const q = Transaction.diff(transaction, input)
       changes = [
         { table, t, edits: [{ id: transactionId, q }] }
@@ -48,23 +42,21 @@ export class TransactionResolver {
         { table, t, adds: [transaction] }
       ]
     }
-    await dbWrite(appDb, changes)
+    await this.app.write(changes)
     return transaction
   }
 
   @Mutation(returns => Transaction)
   async deleteTransaction(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('transactionId') transactionId: string,
   ): Promise<Transaction> {
-    if (!appDb) { throw new Error('appDb not open') }
     const t = Date.now()
     const table = Transaction
-    const transaction = await appDb.manager.findOneOrFail(Transaction, transactionId)
+    const transaction = await this.app.transactions.get(transactionId)
     const changes: DbChange[] = [
       { table, t, deletes: [transactionId] }
     ]
-    await dbWrite(appDb, changes)
+    await this.app.write(changes)
     return transaction
   }
 }

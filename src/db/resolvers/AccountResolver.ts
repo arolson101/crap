@@ -3,40 +3,35 @@ import cuid from 'cuid'
 import * as ofx4js from 'ofx4js'
 import { checkLogin, createService, getFinancialAccount, toAccountType } from '../../online/index'
 import { Account, AccountInput, AccountType, Bank, Transaction, TransactionInput } from '../entities/index'
-import { Arg, Ctx, DbChange, dbWrite, FieldResolver, Mutation, Query, Resolver, ResolverContext, Root } from './helpers'
+import { Arg, Ctx, DbChange, dbWrite, FieldResolver, Mutation, Query, Resolver, Root } from './helpers'
+import { AppDbService } from '../services/AppDbService'
 
 @Resolver(Account)
 export class AccountResolver {
   private tokens = new Map<string, CancelTokenSource>()
 
+  constructor(
+    private app: AppDbService
+  ) {}
+
   @Query(returns => Account)
   async account(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('accountId') accountId: string,
   ): Promise<Account> {
-    if (!appDb) { throw new Error('appDb not open') }
-    const res = await appDb.manager.createQueryBuilder(Account, 'account')
-      .where({ _deleted: 0, id: accountId })
-      .getOne()
-    if (!res) {
-      throw new Error('account not found')
-    }
-    return res
+    return this.app.accounts.get(accountId)
   }
 
   @Mutation(returns => Account)
   async saveAccount(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('input') input: AccountInput,
     @Arg('accountId', { nullable: true }) accountId?: string,
     @Arg('bankId', { nullable: true }) bankId?: string,
   ): Promise<Account> {
-    if (!appDb) { throw new Error('appDb not open') }
     let account: Account
     let changes: Array<any>
     const t = Date.now()
     if (accountId) {
-      account = await appDb.manager.findOneOrFail(Account, accountId)
+      account = await this.app.accounts.get(accountId)
       const q = Account.diff(account, input)
       changes = [
         Account.change.edit(t, accountId, q)
@@ -51,47 +46,41 @@ export class AccountResolver {
         Account.change.add(t, account)
       ]
     }
-    await dbWrite(appDb, changes)
+    await this.app.write(changes)
     return account
   }
 
   @Mutation(returns => Boolean)
   async deleteAccount(
-    @Ctx() { appDb }: ResolverContext,
     @Arg('accountId') accountId: string,
   ): Promise<Boolean> {
-    if (!appDb) { throw new Error('appDb not open') }
     const t = Date.now()
     const changes = [
       Account.change.remove(t, accountId)
     ]
-    await dbWrite(appDb, changes)
+    await this.app.write(changes)
     return true
   }
 
   @Mutation(returns => Bank)
   async downloadAccountList(
-    @Ctx() { appDb, formatMessage }: ResolverContext,
     @Arg('bankId') bankId: string,
     @Arg('cancelToken') cancelToken: string,
   ): Promise<Bank> {
-    if (!appDb) { throw new Error('appDb not open') }
 
-    const bank = await appDb.manager.findOneOrFail(Bank, bankId)
+    const bank = await this.app.banks.get(bankId)
     if (!bank.online) {
       throw new Error(`downloadAccountList: bank is not set online`)
     }
 
-    const existingAccounts = await appDb.createQueryBuilder(Account, 'account')
-      .where({ _deleted: 0, bankId: bank.id })
-      .getMany()
-
+    // TODO: make bank query get this for us
+    const existingAccounts = await this.app.accounts.getForBank(bank.id)
     const source = Axios.CancelToken.source()
     this.tokens.set(cancelToken, source)
 
     try {
-      const service = createService(bank, source.token, formatMessage)
-      const { username, password } = checkLogin(bank, formatMessage)
+      const service = createService(bank, source.token)
+      const { username, password } = checkLogin(bank)
       const accountProfiles = await service.readAccountProfiles(username, password)
       if (accountProfiles.length === 0) {
         console.log('server reports no accounts')
@@ -132,7 +121,7 @@ export class AccountResolver {
             edits,
           }
           console.log('account changes', change)
-          await dbWrite(appDb, [change])
+          await this.app.write([change])
         } else {
           console.log('no account changes')
         }
@@ -150,51 +139,37 @@ export class AccountResolver {
 
   @FieldResolver(type => [Transaction])
   async transactions(
-    @Ctx() { appDb }: ResolverContext,
     @Root() account: Account,
     @Arg('start', { nullable: true }) start?: Date,
     @Arg('end', { nullable: true }) end?: Date,
   ): Promise<Transaction[]> {
-    if (!appDb) { throw new Error('appDb not open') }
-    let q = appDb.createQueryBuilder(Transaction, 'tx')
-      .where({ _deleted: 0, accountId: account.id })
-
-    if (start && end) {
-      q = q.andWhere('tx.time BETWEEN :start AND :end', { start, end })
-    }
-
-    const res = await q
-      .orderBy({ time: 'ASC' })
-      .getMany()
-
+    const res = await this.app.transactions.getForAccount(account.id, start, end)
     console.log(`transactions for account ${account.id} (bank ${account.bankId})`, `time: BETWEEN '${start}' AND '${end}'`, res)
     return res
   }
 
   @Mutation(returns => Account)
   async downloadTransactions(
-    @Ctx() { appDb, formatMessage }: ResolverContext,
     @Arg('bankId') bankId: string,
     @Arg('accountId') accountId: string,
     @Arg('start') start: Date,
     @Arg('end') end: Date,
     @Arg('cancelToken') cancelToken: string,
   ): Promise<Account> {
-    if (!appDb) { throw new Error('appDb not open') }
 
-    const bank = await appDb.manager.findOneOrFail(Bank, bankId)
+    const bank = await await this.app.banks.get(bankId)
     if (!bank.online) {
       throw new Error(`downloadTransactions: bank is not set online`)
     }
 
-    const account = await appDb.manager.findOneOrFail(Account, accountId)
+    const account = await this.app.accounts.get(accountId)
 
     const source = Axios.CancelToken.source()
     this.tokens.set(cancelToken, source)
 
     try {
-      const service = createService(bank, source.token, formatMessage)
-      const bankAccount = getFinancialAccount(service, bank, account, formatMessage)
+      const service = createService(bank, source.token)
+      const bankAccount = getFinancialAccount(service, bank, account)
       const bankStatement = await bankAccount.readStatement(start, end)
       const transactionList = bankStatement.getTransactionList()
       const transactions = transactionList.getTransactions()
@@ -204,11 +179,7 @@ export class AccountResolver {
       } else {
         console.log('transactions', transactions)
 
-        const existingTransactions = await appDb
-          .createQueryBuilder(Transaction, 'tx')
-          .where({ _deleted: 0, accountId: account.id })
-          .andWhere('tx.time BETWEEN :startTime AND :endTime', { startTime: start.getTime(), endTime: end.getTime() })
-          .getMany()
+        const existingTransactions = await this.app.transactions.getForAccount(account.id, start, end)
 
         const inDateRange = (tx: TransactionInput): boolean => {
           return (tx.time !== undefined && tx.time >= start && tx.time <= end)
@@ -244,7 +215,7 @@ export class AccountResolver {
             edits,
           }
           console.log('transaction changes', change)
-          await dbWrite(appDb, [change])
+          await this.app.write([change])
         } else {
           console.log('no transaction changes')
         }
