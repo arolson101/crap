@@ -5,7 +5,6 @@ import { hot } from 'react-hot-loader'
 import { IntlProvider } from 'react-intl'
 import { BrowserRouter } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
-import { AppDbProvider } from '../db/index'
 import { ReduxProvider } from '../redux/index'
 import { LoginScreen } from '../screens/index'
 import { MainView } from '../screens/MainView'
@@ -44,13 +43,11 @@ const App: React.SFC = (props) => {
     <LoadFonts>
       <ReduxProvider>
         <IntlProvider locale='en' textComponent={Text}>
-          <AppDbProvider>
-            <BrowserRouter>
-              <ThemeProvider theme={defaultTheme}>
-                <Auth />
-              </ThemeProvider>
-            </BrowserRouter>
-          </AppDbProvider>
+          <BrowserRouter>
+            <ThemeProvider theme={defaultTheme}>
+              <Auth />
+            </ThemeProvider>
+          </BrowserRouter>
         </IntlProvider>
       </ReduxProvider>
     </LoadFonts>

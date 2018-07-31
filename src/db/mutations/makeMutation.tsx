@@ -7,6 +7,8 @@ import { Mutation, MutationFn, OperationVariables } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
 import { Spinner } from '../../components/index'
 import { Defined } from '../queries/makeQuery'
+import { Container } from 'typedi'
+import { GraphQLService } from '../services/GraphQLService'
 
 type CompletionFcn<TRet> = (result: TRet) => any
 
@@ -39,28 +41,44 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
 
   return <P extends WrappedProps>(Component: React.ComponentType<P>) => {
     type HocProps = Subtract<P, WrappedProps>
-    type State = MutationFcnOptions<TRes>
+    type State = MutationFcnOptions<TRes> & {
+      loading: boolean
+    }
 
     class WrappedMutation extends React.Component<HocProps, State> {
       static displayName: string = `WrappedMutation(${Component.displayName || Component.name || ''})`
 
-      state: State = {}
-      execute: MutationFn<any, OperationVariables> | undefined
+      state: State = { loading: false }
+      mounted = true
+      // execute: MutationFn<any, OperationVariables> | undefined
 
       componentWillUnmount() {
+        this.mounted = false
         this.closeToast()
       }
 
-      wrapExecute: MutationFcn<TRes, TVariables> = (variables: TVariables, options?: MutationFcnOptions<TRes>) => {
+      wrapExecute = async (variables: TVariables, options?: MutationFcnOptions<TRes>) => {
         // console.log('wrapExecute', { variables, options })
         this.closeToast()
-        if (!this.execute) {
-          throw new Error('execute was not set')
-        }
+        const gql = Container.get(GraphQLService)
+        // if (!this.execute) {
+        //   throw new Error('execute was not set')
+        // }
         if (options) {
           this.setState(options)
         }
-        return this.execute({ variables })
+        try {
+          this.setState({ loading: true })
+          const results = await gql.execute(desc.mutation, variables)
+          console.assert(!results.errors)
+          this.onCompleted(results.data as TRes)
+        } catch (error) {
+          this.onError(error)
+        } finally {
+          if (this.mounted) {
+            this.setState({ loading: false })
+          }
+        }
       }
 
       onCompleted = (results: TRes) => {
@@ -98,30 +116,45 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       }
 
       render() {
+        const { loading } = this.state
+        const componentProps = { [name]: this.wrapExecute }
         return (
-          <Mutation
-            mutation={desc.mutation}
-            refetchQueries={desc.refetchQueries}
-            onCompleted={this.onCompleted}
-            onError={this.onError}
-          >
-            {(execute, result) => {
-              this.execute = execute
-              const componentProps = { [name]: this.wrapExecute }
-              return (
-                <>
-                  <Spinner
-                    cancelable={!!this.state.cancel}
-                    onCancel={this.onCancel}
-                    visible={result.loading && !this.state.noSpinner}
-                  />
-                  <Component {...this.props} {...componentProps} />
-                </>
-              )
-            }}
-          </Mutation>
+          <>
+            <Spinner
+              cancelable={!!this.state.cancel}
+              onCancel={this.onCancel}
+              visible={loading && !this.state.noSpinner}
+            />
+            <Component {...this.props} {...componentProps} />
+          </>
         )
       }
+
+      // render2() {
+      //   return (
+      //     <Mutation
+      //       mutation={desc.mutation}
+      //       refetchQueries={desc.refetchQueries}
+      //       onCompleted={this.onCompleted}
+      //       onError={this.onError}
+      //     >
+      //       {(execute, result) => {
+      //         this.execute = execute
+      //         const componentProps = { [name]: this.wrapExecute }
+      //         return (
+      //           <>
+      //             <Spinner
+      //               cancelable={!!this.state.cancel}
+      //               onCancel={this.onCancel}
+      //               visible={result.loading && !this.state.noSpinner}
+      //             />
+      //             <Component {...this.props} {...componentProps} />
+      //           </>
+      //         )
+      //       }}
+      //     </Mutation>
+      //   )
+      // }
 
       closeToast = () => {
         (Toast as any).toastInstance._root.closeToast()

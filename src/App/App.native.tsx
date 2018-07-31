@@ -9,7 +9,6 @@ import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, 
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { AppDbProvider } from '../db/index'
 import * as modals from '../modals/index'
 import { paths } from '../nav'
 import { nativeActions } from '../redux/actions/nativeActions'
@@ -162,11 +161,9 @@ const App: React.SFC = () => {
     <LoadFonts>
       <ReduxProvider>
         <IntlProvider locale='en' textComponent={Text}>
-          <AppDbProvider>
-            <Root>
-              <AppNavigator />
-            </Root>
-          </AppDbProvider>
+          <Root>
+            <AppNavigator />
+          </Root>
         </IntlProvider>
       </ReduxProvider>
     </LoadFonts>

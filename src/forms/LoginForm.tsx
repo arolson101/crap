@@ -11,7 +11,6 @@ import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
-import { selectors } from '../redux/reducers/index'
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -19,7 +18,6 @@ interface Props extends InjectedIntlProps {
   openDb: Mutations.OpenDb
   deleteDb: Mutations.DeleteDb
   login: actions['login']
-  appGraphQLClient: selectors.returnOf['getAppGraphQLClient']
 }
 
 interface FormValues {
@@ -123,8 +121,6 @@ export class LoginFormComponent extends React.Component<Props> {
   }
 
   onSubmit = ({ password }: FormValues) => {
-    const { appGraphQLClient } = this.props
-    appGraphQLClient.resetStore()
     const create = this.props.query.allDbs.length === 0
     if (create) {
       const { createDb, login } = this.props
@@ -170,12 +166,9 @@ export const LoginForm = compose(
   withMutation({ openDb: Mutations.OpenDb }),
   withMutation({ createDb: Mutations.CreateDb }),
   withMutation({ deleteDb: Mutations.DeleteDb }),
-  connect(
-    (state: any) => ({
-      appGraphQLClient: selectors.getAppGraphQLClient(state)
-    }), {
-      login: actions.login
-    }),
+  connect(null, {
+    login: actions.login
+  }),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

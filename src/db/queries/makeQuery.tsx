@@ -4,6 +4,8 @@ import * as React from 'react'
 import { Query, QueryResult } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
 import { ErrorMessage } from '../../components/index'
+import { Container } from 'typedi'
+import { GraphQLService } from '../services/GraphQLService'
 
 export interface QueryType<TData> {
   data: TData
@@ -37,38 +39,93 @@ export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extend
     const name = Object.keys(queryDesc)[0]
     const desc = queryDesc[name]
     type HocProps = Subtract<P, WrappedProps>
-    class WrappedQuery extends React.Component<HocProps> {
+    type State = {
+      loading: boolean
+      error: Error | undefined
+      result: object | undefined
+    }
+
+    class WrappedQuery extends React.Component<HocProps, State> {
       static displayName: string = `WrappedQuery(${Component.displayName || Component.name || ''})`
-      render () {
+      state: State = {
+        loading: true,
+        error: undefined,
+        result: {}
+      }
+      mounted = true
+
+      componentDidMount() {
+        this.runQuery()
+      }
+
+      componentWillUnmount() {
+        this.mounted = false
+      }
+
+      async runQuery() {
+        const gql = Container.get(GraphQLService)
         const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
-        if (getVariables && !variables) {
-          const componentProps = { [name]: { loading: false } }
-          return (
-            <Component {...this.props as any} {...componentProps} />
-          )
-        } else {
-          return (
-            <Query
-              query={desc.query}
-              variables={variables as V}
-              // fetchPolicy="network-only"
-            >
-              {(result: QueryResult<QueryType<any>>) => {
-                if (!result.data || Object.keys(result.data).length === 0) {
-                  return <ErrorMessage error={new Error('no data')} />
-                } else if (result.error) {
-                  return <ErrorMessage error={result.error} />
-                } else if (result.loading) {
-                  return null
-                } else {
-                  const componentProps = { [name]: { ...result.data } }
-                  return <Component {...this.props as any} {...componentProps} />
-                }
-              }}
-            </Query>
-          )
+        if (!getVariables || variables) {
+          try {
+            const result = await gql.execute(desc.query, variables)
+            console.assert(!result.errors)
+            if (this.mounted) {
+              this.setState({ result: result.data })
+            }
+          } catch (error) {
+            if (this.mounted) {
+              this.setState({ error })
+            }
+          } finally {
+            if (this.mounted) {
+              this.setState({ loading: false })
+            }
+          }
         }
       }
+
+      render() {
+        const { loading, error, result } = this.state
+        const componentProps = { [name]: result }
+        if (error) {
+          return <ErrorMessage error={error}/>
+        } else if (loading) {
+          return null
+        } else {
+          return <Component {...this.props} {...componentProps}/>
+        }
+      }
+
+      // render () {
+      //   const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
+      //   if (getVariables && !variables) {
+      //     const componentProps = { [name]: { loading: false } }
+      //     return (
+      //       <Component {...this.props as any} {...componentProps} />
+      //     )
+      //   } else {
+      //     return (
+      //       <Query
+      //         query={desc.query}
+      //         variables={variables as V}
+      //         // fetchPolicy="network-only"
+      //       >
+      //         {(result: QueryResult<QueryType<any>>) => {
+      //           if (!result.data || Object.keys(result.data).length === 0) {
+      //             return <ErrorMessage error={new Error('no data')} />
+      //           } else if (result.error) {
+      //             return <ErrorMessage error={result.error} />
+      //           } else if (result.loading) {
+      //             return null
+      //           } else {
+      //             const componentProps = { [name]: { ...result.data } }
+      //             return <Component {...this.props as any} {...componentProps} />
+      //           }
+      //         }}
+      //       </Query>
+      //     )
+      //   }
+      // }
     }
 
     return hoistStatics(WrappedQuery, Component)

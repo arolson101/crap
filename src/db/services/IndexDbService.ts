@@ -46,7 +46,6 @@ export class IndexDbService {
 
   async openDb(dbId: string, password: string): Promise<Boolean> {
     await this.initPromise
-    console.log('openDb')
     const dbInfo = await this.dbInfos.findOneOrFail(dbId)
     const key = dbInfo.getKey(password)
     const db = await openDb(true, dbInfo.path, key)
