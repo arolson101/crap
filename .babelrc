@@ -3,6 +3,7 @@
     "react-native"
   ],
   "plugins": [
-    "transform-new-target"
+    "transform-new-target",
+    "transform-react-jsx-source"
   ]
 }
