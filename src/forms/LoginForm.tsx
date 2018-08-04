@@ -1,7 +1,7 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { Dimensions } from 'react-native'
+import { Dimensions, Text } from 'react-native'
 import { CalculatorInput } from 'react-native-calculator'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -11,6 +11,7 @@ import { Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
+import { iOSUIKit } from 'react-native-typography'
 
 interface Props extends InjectedIntlProps {
   query: Queries.Dbs
@@ -44,7 +45,7 @@ export class LoginFormComponent extends React.Component<Props> {
     return (
       <>
         <AppBannerText>App</AppBannerText>
-
+        <Text style={iOSUIKit.largeTitleEmphasized}>Hello iOS UI Kit!</Text>
         <Form
           defaultValues={defaultValues}
           validate={this.validate}
