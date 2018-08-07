@@ -17,7 +17,7 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - RNVectorIcons (4.5.0):
+  - RNVectorIcons (4.6.0):
     - React
   - SQLCipher (3.4.2):
     - SQLCipher/standard (= 3.4.2)
