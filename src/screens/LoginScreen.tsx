@@ -4,14 +4,25 @@ import { CenteredContent } from '../components/index'
 import { Scrollable } from '../components/layout.native'
 import { LoginForm } from '../forms/LoginForm'
 import { makeScreen2, registerScreen } from './Screen2'
+import { View } from 'native-base'
+import { Navigation } from 'react-native-navigation'
+import { Dimensions } from 'react-native'
 
 export const LoginScreenComponent: React.SFC = (props) => {
+  // const height = (Navigation.constants() as any).statusBarHeight
+  // console.log('---height: ', Navigation.constants())
+
+  const width = Dimensions.get('window').width
+  const height = Dimensions.get('window').height
+
   return (
-    <Scrollable>
-      <CenteredContent>
-        <LoginForm />
-      </CenteredContent>
-    </Scrollable>
+    <View style={{ position: 'absolute', left: 0, top: 0, width, height, backgroundColor: 'purple' }}>
+      <Scrollable>
+        <CenteredContent >
+          <LoginForm />
+        </CenteredContent>
+      </Scrollable>
+    </View>
   )
 }
 

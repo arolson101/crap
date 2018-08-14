@@ -44,8 +44,8 @@ export class LoginFormComponent extends React.Component<Props> {
 
     return (
       <>
-        <AppBannerText>App</AppBannerText>
-        <Text style={iOSUIKit.largeTitleEmphasized}>Hello iOS UI Kit!</Text>
+        {/* <AppBannerText>App</AppBannerText> */}
+        {/* <Text style={iOSUIKit.largeTitleEmphasized}>Hello iOS UI Kit!</Text> */}
         <Form
           defaultValues={defaultValues}
           validate={this.validate}

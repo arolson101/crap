@@ -161,11 +161,11 @@ const Services: React.SFC = ({ children }) => {
     <LoadFonts>
       <ReduxProvider>
         <IntlProvider locale='en' textComponent={Text}>
-          <Root>
+          {/* <Root> */}
             <SafeAreaView>
               {children}
             </SafeAreaView>
-          </Root>
+          {/* </Root> */}
         </IntlProvider>
       </ReduxProvider>
     </LoadFonts>
@@ -207,8 +207,69 @@ registerScreen(LoginApp)
 const initLogin = () => {
   Navigation.setRoot({
     root: {
-      component: {
-        name: LoginApp.screenID
+      bottomTabs: {
+        options: {
+          bottomTabs: {
+            drawBehind: true,
+            translucent: true,
+          }
+        },
+        children: [
+          {
+            stack: {
+              children: [
+                {
+                  component: {
+                    name: LoginApp.screenID,
+                    options: {
+                      topBar: {
+                        drawBehind: true,
+                        // transparent: true,
+                        translucent: true,
+                        // blur: true,
+                        title: {
+                          text: 'hi2',
+                        },
+                        // searchBar: true,
+                      },
+                    }
+                  },
+                },
+              ],
+              options: {
+                bottomTab: {
+                  text: 'Tab 1',
+                  // icon: require('../images/one.png')
+                },
+                topBar: {
+                  title: {
+                    // text: 'hi'
+                  },
+                  largeTitle: {
+                    visible: true
+                  },
+                }
+              }
+            }
+          },
+          {
+            component: {
+              name: LoginApp.screenID,
+              options: {
+                bottomTab: {
+                  text: 'Tab 2',
+                  // icon: require('../images/one.png')
+                },
+                topBar: {
+                  visible: true,
+                  title: {
+                    text: 'hi'
+                  }
+                }
+              }
+            },
+          }
+        ]
       }
     }
   })
