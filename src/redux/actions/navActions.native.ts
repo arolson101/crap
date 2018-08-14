@@ -2,6 +2,20 @@ import { NavigationActions, StackActions } from 'react-navigation'
 import { paths } from '../../nav'
 import { nativeActions } from './nativeActions'
 import { NavApi, NavPickerParams } from './navActions'
+import { ActionType, createAction } from 'typesafe-actions'
+
+export const navPop = createAction('nav/pop')
+export const navPush = createAction('nav/push', resolve =>
+  (routeName: string, params: object = {} as any) => resolve({
+    routeName,
+    params
+  })
+)
+export const navSwitchToTab = createAction('nav/switchToTab', resolve =>
+  (path: string) => resolve({
+    path
+  })
+)
 
 export const navActions: NavApi = {
   navBack: () => navPop(),
@@ -30,10 +44,10 @@ export const navActions: NavApi = {
     })
   ),
 
-  navBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.bankCreate,
-    params: {}
-  })),
+  // navBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
+  //   routeName: paths.bankCreate,
+  //   params: {}
+  // })),
 
   navBankEdit: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
     routeName: paths.bankEdit,
