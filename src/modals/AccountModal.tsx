@@ -1,9 +1,17 @@
+import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { compose } from 'redux'
+import { Scrollable } from '../components/layout.native'
 import { AccountForm } from '../forms/AccountForm'
 import { makeScreen } from '../screens/Screen'
 
 type Params = AccountForm.Props
+
+const AccountModalComponent: React.SFC<AccountForm.Props> = (props) => (
+  <Scrollable>
+    <AccountForm {...props} />
+  </Scrollable>
+)
 
 export const AccountModal = compose(
   makeScreen<Params>({
@@ -11,7 +19,7 @@ export const AccountModal = compose(
     saveButton: true,
     cancelButton: true,
   }),
-)(AccountForm)
+)(AccountModalComponent)
 AccountModal.displayName = 'AccountModal'
 
 const messages = defineMessages({

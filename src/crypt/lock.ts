@@ -63,9 +63,9 @@ const encryptMasterKey = (key: Buffer, cipher: crypto.Cipher): EncryptedData => 
 }
 
 const decryptMasterKey = (decipher: crypto.Decipher, masterKey: EncryptedData): Buffer => {
-  decipher.setAuthTag(new Buffer(masterKey.authTag, 'base64'))
+  decipher.setAuthTag(Buffer.from(masterKey.authTag, 'base64'))
   const key = Buffer.concat([
-    decipher.update(new Buffer(masterKey.cipherText, 'base64')),
+    decipher.update(Buffer.from(masterKey.cipherText, 'base64')),
     decipher.final() // will throw if auth tag doesn't match
   ])
   return key

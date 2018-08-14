@@ -1,5 +1,5 @@
 import { createConnection } from './typeorm'
-import { appEntities, indexEntities } from './entities'
+import { appEntities, indexEntities } from './dbEntities'
 
 (window as any).SQL = require('sql.js')
 

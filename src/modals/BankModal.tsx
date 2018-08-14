@@ -1,9 +1,17 @@
+import * as React from 'react'
 import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
+import { Scrollable } from '../components/layout.native'
 import { BankForm } from '../forms/BankForm'
 import { makeScreen } from '../screens/Screen'
 
 type Params = BankForm.Props
+
+const BankModalComponent: React.SFC<BankForm.Props> = (props) => (
+  <Scrollable>
+    <BankForm {...props} />
+  </Scrollable>
+)
 
 export const BankModal = compose(
   makeScreen<Params>({
@@ -11,7 +19,7 @@ export const BankModal = compose(
     saveButton: true,
     cancelButton: true,
   }),
-)(BankForm)
+)(BankModalComponent)
 BankModal.displayName = 'BankModal'
 
 const messages = defineMessages({

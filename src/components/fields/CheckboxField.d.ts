@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import * as web from './CheckboxField.web'
 import * as native from './CheckboxField.native'
 

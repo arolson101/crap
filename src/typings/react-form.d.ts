@@ -54,6 +54,7 @@ declare module 'react-form' {
 
   export interface FormAPI<V = FormValues> extends BaseFormAPI<V> {
     setValue: <K extends keyof V>(field: K, value: V[K], noTouch?: boolean) => void
+    setAllValues: (values: { [K in keyof V]?: V[K] }) => void
     getValue: <T extends FieldValue>(field: FieldSpec) => T | undefined
     setNestedError: (field: FieldSpec, value: FieldValue) => void
     getError: (field: FieldSpec) => string | undefined
@@ -92,6 +93,7 @@ declare module 'react-form' {
 
   export interface FieldProps extends FormPropsBase<any> {
     field: string
+    pure?: boolean
     children?: (fieldApi: FieldAPI<any>) => React.ReactNode
   }
 
@@ -119,10 +121,10 @@ declare module 'react-form' {
   export interface FieldComponentProps {
     fieldApi: BoundFormAPI
   }
-  export function FormField (component: React.ComponentType): React.ComponentClass
+  export function FormField(component: React.ComponentType): React.ComponentClass
 
-  export interface TextProps extends ComponentBaseProps {}
-  export class Text extends React.Component<TextProps> {}
+  export interface TextProps extends ComponentBaseProps { }
+  export class Text extends React.Component<TextProps> { }
 
   export type FormContext = {}
 }

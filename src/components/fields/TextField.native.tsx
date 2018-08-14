@@ -1,22 +1,13 @@
-import { Icon, Input, Item, Label, Textarea } from 'native-base'
-import platform from 'native-base/dist/src/theme/variables/platform'
+import { Icon, Input, Item, Textarea } from 'native-base'
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { ReturnKeyType, TextInput } from 'react-native'
+import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { TextInput } from 'react-native'
+import { Label } from './Label.native'
+import { TextFieldProps } from './TextField'
 
 export namespace TextField {
-  export interface Props<T = {}> {
-    field: string
-    label: FormattedMessage.MessageDescriptor
-    placeholder?: FormattedMessage.MessageDescriptor
-    secure?: boolean
-    rows?: number
-    color?: string
-    autoFocus?: boolean
-    onSubmitEditing?: () => any
-    returnKeyType?: ReturnKeyType
-  }
+  export type Props<T = {}> = TextFieldProps
 }
 
 class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
@@ -28,49 +19,43 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
     }
   }
 
-  render () {
-    const { field, autoFocus, label, color, placeholder, secure, rows, onSubmitEditing, returnKeyType, intl } = this.props
+  render() {
+    const { field, autoFocus, label, color, placeholder, secure,
+      rows, onSubmitEditing, returnKeyType, intl, noCorrect } = this.props
     return (
       <Field field={field}>
         {fieldApi => {
           const error = !!(fieldApi.touched && fieldApi.error)
-          const labelProps = { onPress: this.focusTextInput }
+          const itemProps = { onPress: this.focusTextInput }
           const inputProps = { autoFocus }
           const inputStyle = color ? { color } : {}
           return (
             <Item
-              // style={rows ? { minHeight: 20 * rows } : {}}
+              {...itemProps}
               error={error}
               secureTextEntry={secure}
               placeholder={placeholder && intl.formatMessage(placeholder)}
             >
-              <Label
-                {...labelProps}
-                style={(error
-                  ? ({ color: platform.brandDanger })
-                  : ({}) as any
-                )}
-              >
-                {intl.formatMessage(label)}
-              </Label>
+              <Label label={label} error={error} />
               {rows && rows > 0
                 ? <Textarea
                   style={{ flex: 1 }}
                   rowSpan={rows}
                   onChangeText={fieldApi.setValue}
                   value={fieldApi.value}
-                  ref={(ref: any) => this.textInput = ref && ref._root}
+                  ref={this.ref}
                 />
                 : <Input
                   style={{ flex: 1, ...inputStyle }}
                   onChangeText={fieldApi.setValue}
-                  value={fieldApi.value}
+                  value={fieldApi.value.toString()}
                   onSubmitEditing={onSubmitEditing}
                   secureTextEntry={secure}
                   numberOfLines={rows}
+                  autoCapitalize={noCorrect ? 'none' : undefined}
                   multiline={(rows ? rows > 0 : undefined)}
                   returnKeyType={returnKeyType}
-                  ref={(ref: any) => this.textInput = ref && ref._root}
+                  ref={this.ref}
                   {...inputProps}
                 />
               }
@@ -82,6 +67,13 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
         }}
       </Field>
     )
+  }
+
+  ref = (ref: any) => {
+    this.textInput = ref && ref._root
+    if (this.props.inputRef) {
+      this.props.inputRef(this.textInput)
+    }
   }
 }
 

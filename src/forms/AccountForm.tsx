@@ -1,17 +1,19 @@
-import { pick } from 'lodash'
+import { Button, View } from 'native-base'
 import * as React from 'react'
-import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl'
+import { FormAPI } from 'react-form'
+import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { SelectFieldItem, typedFields } from '../components/fields/index'
+import { confirm } from '../components/index'
 import { Container } from '../components/layout'
 import { Account, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
-import { SaveButtonProps } from '../screens/Screen';
-import { FormAPI } from 'react-form';
-import { SaveAccount } from '../db/mutations/mutations-types';
+import { SaveButtonProps } from '../screens/Screen'
+import { pickT } from '../util/pick'
 
 export namespace AccountForm {
   export interface Props {
@@ -25,7 +27,9 @@ type Props = AccountForm.Props
 interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
-  navAccount: (accountId: string, accountName: string) => any
+  deleteAccount: Mutations.DeleteAccount
+  navBack: actions['navBack']
+  navPopToTop: actions['navPopToTop']
 }
 
 type FormValues = Account.Props
@@ -35,72 +39,84 @@ const { Form, SelectField, TextField } = typedFields<FormValues>()
 export class AccountFormComponent extends React.PureComponent<ComposedProps> {
   formApi: FormAPI<FormValues>
 
-  componentDidMount () {
+  componentDidMount() {
     const { setSave } = this.props
     setSave(this.onSave)
   }
 
-  render () {
+  render() {
     const props = this.props
     const edit = this.props.accountId && props.query.account
     const { intl } = this.props
 
     const defaultValues = {
-      ...(edit ? pick(edit, Object.keys(Account.defaultValues())) as any : Account.defaultValues())
+      ...(edit
+        ? pickT(edit, Object.keys(Account.defaultValues()) as Array<keyof Account.Props>)
+        : Account.defaultValues()
+      )
     }
 
     return (
-      <Form
-        getApi={this.getApi}
-        defaultValues={defaultValues}
-        validate={this.validate}
-        onSubmit={this.onSubmit}
-      >
-        {formApi =>
-          <Container>
-            <TextField
-              field='name'
-              label={messages.name}
-              placeholder={messages.namePlaceholder}
-              autoFocus
-            />
-            <TextField
-              field='number'
-              label={messages.number}
-              placeholder={messages.numberPlaceholder}
-            />
-            <SelectField
-              field='type'
-              items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
-                value: acct.toString(),
-                label: intl.formatMessage(Account.messages[acct])
-              }))}
-              label={messages.type}
-              onValueChange={this.typeOnValueChange}
-            />
-            <TextField
-              field='color'
-              label={messages.color}
-              placeholder={messages.colorPlaceholder}
-              color={formApi.values.color}
-            />
-            {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
+      <>
+        <Form
+          getApi={this.getApi}
+          defaultValues={defaultValues}
+          validate={this.validate}
+          onSubmit={this.onSubmit}
+        >
+          {formApi =>
+            <Container>
               <TextField
-                field='routing'
-                label={messages.routing}
-                placeholder={messages.routingPlaceholder}
+                field='name'
+                label={messages.name}
+                placeholder={messages.namePlaceholder}
+                autoFocus={!edit}
               />
-            }
-            {(formApi.values.type === Account.Type.CREDITCARD) &&
               <TextField
-                field='key'
-                label={messages.key}
-                placeholder={messages.keyPlaceholder}
+                field='number'
+                label={messages.number}
+                placeholder={messages.numberPlaceholder}
               />
-            }
-          </Container>
+              <SelectField
+                field='type'
+                items={Object.keys(Account.Type).map((acct: Account.Type): SelectFieldItem => ({
+                  value: acct.toString(),
+                  label: intl.formatMessage(Account.messages[acct])
+                }))}
+                label={messages.type}
+                onValueChange={this.typeOnValueChange}
+              />
+              <TextField
+                field='color'
+                label={messages.color}
+                placeholder={messages.colorPlaceholder}
+                color={formApi.values.color}
+              />
+              {(formApi.values.type === Account.Type.CHECKING || formApi.values.type === Account.Type.SAVINGS) &&
+                <TextField
+                  field='routing'
+                  label={messages.routing}
+                  placeholder={messages.routingPlaceholder}
+                />
+              }
+              {(formApi.values.type === Account.Type.CREDITCARD) &&
+                <TextField
+                  field='key'
+                  label={messages.key}
+                  placeholder={messages.keyPlaceholder}
+                />
+              }
+            </Container>
+          }
+        </Form>
+        {edit &&
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Button transparent danger onPress={this.confirmDeleteAccount}>
+              <FormattedMessage {...messages.deleteAccount} />
+            </Button>
+          </View>
         }
-      </Form>
+      </>
     )
   }
 
@@ -132,13 +148,12 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
       input
     }
 
-    saveAccount(variables, this.onSaveAccount)
+    saveAccount(variables, { complete: this.onSaveAccount })
   }
 
-  onSaveAccount = (result: SaveAccount.Mutation) => {
-    const { navAccount } = this.props
-    const { saveAccount } = result
-    navAccount(saveAccount.id, saveAccount.name)
+  onSaveAccount = () => {
+    const { navBack } = this.props
+    navBack()
   }
 
   typeOnValueChange = (type: Account.Type) => {
@@ -146,13 +161,38 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
       this.formApi.setValue('color', Account.generateColor(type))
     }
   }
+
+  confirmDeleteAccount = () => {
+    confirm({
+      title: messages.deleteAccountTitle,
+      action: messages.deleteAccount,
+      formatMessage: this.props.intl.formatMessage,
+      onConfirm: this.deleteAccount,
+    })
+  }
+
+  deleteAccount = () => {
+    this.onDeleted()
+    const { deleteAccount, accountId } = this.props
+    if (accountId) {
+      deleteAccount({ accountId }, { complete: this.onDeleted })
+    }
+  }
+
+  onDeleted = () => {
+    const { navBack, navPopToTop } = this.props
+    navBack()
+    navPopToTop()
+  }
 }
 
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, { navAccount: actions.navAccount }),
-  withMutation({ saveAccount: Mutations.saveAccount }),
-  withQuery({ query: Queries.account }, ({ accountId }: Props) => accountId && ({ accountId })),
+  withNavigation,
+  connect(null, pickT(actions, 'navBack', 'navPopToTop')),
+  withQuery({ query: Queries.Account }, ({ accountId }: Props) => accountId && ({ accountId })),
+  withMutation({ saveAccount: Mutations.SaveAccount }),
+  withMutation({ deleteAccount: Mutations.DeleteAccount }),
 )(AccountFormComponent)
 AccountForm.displayName = 'AccountForm'
 
@@ -241,5 +281,13 @@ const messages = defineMessages({
   keyPlaceholder: {
     id: 'AccountDialog.keyPlaceholder',
     defaultMessage: '(for international accounts)'
-  }
+  },
+  deleteAccount: {
+    id: 'AccountDialog.deleteAccount',
+    defaultMessage: 'Delete Account'
+  },
+  deleteAccountTitle: {
+    id: 'AccountForm.deleteAccountTitle',
+    defaultMessage: 'Are you sure?'
+  },
 })

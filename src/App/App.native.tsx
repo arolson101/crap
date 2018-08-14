@@ -9,7 +9,6 @@ import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, 
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { AppDbProvider } from '../db/index'
 import * as modals from '../modals/index'
 import { paths } from '../nav'
 import { nativeActions } from '../redux/actions/nativeActions'
@@ -109,18 +108,17 @@ const mainStack = createBottomTabNavigatorFcn(
 )
 mainStack.displayName = 'mainStack'
 
-const modalStack = createStackNavigator({
-  [paths.bankCreate]: modals.BankModal,
-  [paths.bankEdit]: modals.BankModal,
-  [paths.accountCreate]: modals.AccountModal,
-  [paths.accountEdit]: modals.AccountModal,
-})
-modalStack.displayName = 'modalStack'
-
 const appStack = createStackNavigator(
   {
     main: mainStack,
-    [paths.modal]: modalStack,
+    // [paths.modal]: modalStack,
+    [paths.bankCreate]: createStackNavigator({ 'modal': modals.BankModal }),
+    [paths.bankEdit]: createStackNavigator({ 'modal': modals.BankModal }),
+    [paths.accountCreate]: createStackNavigator({ 'modal': modals.AccountModal }),
+    [paths.accountEdit]: createStackNavigator({ 'modal': modals.AccountModal }),
+    [paths.transactionCreate]: createStackNavigator({ 'modal': modals.TransactionModal }),
+    [paths.transactionEdit]: createStackNavigator({ 'modal': modals.TransactionModal }),
+    [paths.picker]: createStackNavigator({ 'modal': modals.PickerModal }),
   },
   {
     mode: 'modal',
@@ -160,17 +158,17 @@ AppNavigator.displayName = 'AppNavigator'
 
 const Services: React.SFC = ({ children }) => {
   return (
-    <ReduxProvider>
-      <IntlProvider locale='en' textComponent={Text}>
-        <AppDbProvider>
+    <LoadFonts>
+      <ReduxProvider>
+        <IntlProvider locale='en' textComponent={Text}>
           <Root>
             <SafeAreaView>
-            {children}
+              {children}
             </SafeAreaView>
           </Root>
-        </AppDbProvider>
-      </IntlProvider>
-    </ReduxProvider>
+        </IntlProvider>
+      </ReduxProvider>
+    </LoadFonts>
   )
 }
 

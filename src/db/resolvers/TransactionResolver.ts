@@ -1,43 +1,63 @@
-import { Column, Entity, Index, PrimaryColumn } from '../typeorm'
-import { iupdate } from '../../iupdate'
-import { Record, RecordClass } from '../Record'
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, ResolverContext, registerEnumType } from './helpers'
+import cuid from 'cuid'
+import { Container } from 'typedi'
+import { Transaction, TransactionInput } from '../entities/index'
+import { AppDbService } from '../services/AppDbService'
+import { Arg, DbChange, Mutation, Query, Resolver } from './helpers'
 
-export interface Split {
-  [categoryId: string]: number
-}
-
-@InputType()
-class TransactionInput {
-  @Field({ nullable: true }) account?: string
-  @Field({ nullable: true }) serverid?: string
-  @Field({ nullable: true }) time?: number
-  @Field({ nullable: true }) type?: string
-  @Field({ nullable: true }) name?: string
-  @Field({ nullable: true }) memo?: string
-  @Field({ nullable: true }) amount?: number
-  split: Split
-}
-
-@ObjectType()
-@Entity({ name: 'transactions' })
-export class Transaction extends RecordClass<Transaction.Props> {
-  @PrimaryColumn() @Field() id: string
-  @Column() @Field() account: string
-  @Column() @Field() serverid: string
-  @Column() @Field() time: number
-  @Column() @Field() type: string
-  @Column() @Field() name: string
-  @Column() @Field() memo: string
-  @Column() @Field() amount: number
-  split: Split
-}
-
-@Resolver(objectType => Transaction)
+@Resolver(Transaction)
 export class TransactionResolver {
-}
+  constructor(
+    private app: AppDbService
+  ) {}
 
-export namespace Transaction {
-  export interface Props extends Pick<TransactionInput, keyof TransactionInput> { }
-  export type Query = iupdate.Query<Props>
+  @Query(returns => Transaction)
+  async transaction(
+    @Arg('transactionId') transactionId: string,
+  ): Promise<Transaction> {
+    return this.app.transactions.get(transactionId)
+  }
+
+  @Mutation(returns => Transaction)
+  async saveTransaction(
+    @Arg('input') input: TransactionInput,
+    @Arg('transactionId', { nullable: true }) transactionId: string,
+    @Arg('accountId', { nullable: true }) accountId?: string,
+  ): Promise<Transaction> {
+    const t = Date.now()
+    const table = Transaction
+    let transaction: Transaction
+    let changes: DbChange[]
+    if (transactionId) {
+      transaction = await this.app.transactions.get(transactionId)
+      const q = Transaction.diff(transaction, input)
+      changes = [
+        { table, t, edits: [{ id: transactionId, q }] }
+      ]
+      transaction.update(q)
+    } else {
+      if (!accountId) {
+        throw new Error('when creating an transaction, accountId must be specified')
+      }
+      transaction = new Transaction(accountId, input, cuid)
+      changes = [
+        { table, t, adds: [transaction] }
+      ]
+    }
+    await this.app.write(changes)
+    return transaction
+  }
+
+  @Mutation(returns => Transaction)
+  async deleteTransaction(
+    @Arg('transactionId') transactionId: string,
+  ): Promise<Transaction> {
+    const t = Date.now()
+    const table = Transaction
+    const transaction = await this.app.transactions.get(transactionId)
+    const changes: DbChange[] = [
+      { table, t, deletes: [transactionId] }
+    ]
+    await this.app.write(changes)
+    return transaction
+  }
 }

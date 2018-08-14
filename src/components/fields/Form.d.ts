@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import * as web from './Form.web'
 import * as native from './Form.native'
 

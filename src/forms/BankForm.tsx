@@ -1,17 +1,21 @@
-import { pick } from 'lodash'
+import { Button, View } from 'native-base'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
+import { confirm } from '../components/Confirmation'
 import { typedFields } from '../components/fields/index'
+import { Text } from '../components/index'
 import { Bank, Mutations, Queries } from '../db/index'
 import { withMutation } from '../db/mutations/makeMutation'
-import { SaveBank } from '../db/mutations/mutations-types'
 import { withQuery } from '../db/queries/makeQuery'
 import { filist, formatAddress } from '../fi'
 import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
+import { pickT } from '../util/pick'
+import { SaveBank } from '../db/mutations/mutations-types'
+import Collapsible from 'react-native-collapsible'
 
 export namespace BankForm {
   export interface Props {
@@ -24,7 +28,10 @@ type Props = BankForm.Props
 interface ComposedProps extends Props {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
-  navBank: (bankId: string) => any
+  deleteBank: Mutations.DeleteBank
+  navBack: actions['navBack']
+  navBank: actions['navBank']
+  navPopToTop: actions['navPopToTop']
 }
 
 type BankInput = {
@@ -38,7 +45,6 @@ interface FormValues extends BankInput {
 const {
   Form,
   CheckboxField,
-  CollapseField,
   Divider,
   SelectField,
   TextField,
@@ -48,94 +54,117 @@ const {
 export class BankFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
   formApi: FormAPI<FormValues>
 
-  componentDidMount () {
+  componentDidMount() {
     const { setSave } = this.props
     setSave(this.onSave)
   }
 
-  render () {
+  render() {
     const { bankId, query } = this.props
 
     const edit = bankId && query.bank
     const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
     const defaultValues = {
       fi: defaultFi,
-      ...(edit ? pick(edit, Object.keys(Bank.defaultValues)) : Bank.defaultValues)
+      ...(edit
+        ? pickT(edit, Object.keys(Bank.defaultValues) as Array<keyof Bank.Props>)
+        : Bank.defaultValues
+      )
     }
 
     return (
-      <Form
-        getApi={this.getApi}
-        defaultValues={defaultValues}
-        validate={this.validate}
-        onSubmit={this.onSubmit}
-      >
-        {formApi =>
-          <>
-            <Divider><FormattedMessage {...messages.fiHelp} /></Divider>
-            <SelectField
-              field='fi'
-              items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
-              label={messages.fi}
-              onValueChange={this.fiOnValueChange}
-            />
-            <Divider />
-            <TextField
-              field='name'
-              label={messages.name}
-              placeholder={messages.namePlaceholder}
-            />
-            <TextField
-              field='address'
-              label={messages.address}
-              rows={4}
-            />
-            <UrlField
-              field='web'
-              // favicoName='favicon'
-              label={messages.web}
-            />
-            <TextField
-              field='notes'
-              label={messages.notes}
-              rows={4}
-            />
-            <Divider />
-            <CheckboxField
-              field='online'
-              label={messages.online}
-            />
-            <CollapseField field='online'>
+      <>
+        <Form
+          getApi={this.getApi}
+          defaultValues={defaultValues}
+          validate={this.validate}
+          onSubmit={this.onSubmit}
+        >
+          {formApi =>
+            <>
+              <Divider>
+                <FormattedMessage {...messages.fiHelp}>
+                  {txt =>
+                    <Text note>{txt}</Text>
+                  }
+                </FormattedMessage>
+              </Divider>
+              <SelectField
+                field='fi'
+                items={filist.map(fi => ({ label: fi.name, value: fi.id }))}
+                label={messages.fi}
+                onValueChange={this.fiOnValueChange}
+                searchable
+              />
+              <Divider />
               <TextField
-                field='username'
-                label={messages.username}
-                placeholder={messages.usernamePlaceholder}
+                field='name'
+                label={messages.name}
+                placeholder={messages.namePlaceholder}
               />
               <TextField
-                secure
-                field='password'
-                label={messages.password}
-                placeholder={messages.passwordPlaceholder}
+                field='address'
+                label={messages.address}
+                rows={4}
+              />
+              <UrlField
+                field='web'
+                favicoField='favicon'
+                label={messages.web}
               />
               <TextField
-                field='fid'
-                label={messages.fid}
-                placeholder={messages.fidPlaceholder}
+                field='notes'
+                label={messages.notes}
+                rows={4}
               />
-              <TextField
-                field='org'
-                label={messages.org}
-                placeholder={messages.orgPlaceholder}
+              <Divider />
+              <CheckboxField
+                field='online'
+                label={messages.online}
               />
-              <TextField
-                field='ofx'
-                label={messages.ofx}
-                placeholder={messages.ofxPlaceholder}
-              />
-            </CollapseField>
-          </>
+              <Collapsible collapsed={!formApi.values.online}>
+                <TextField
+                  field='username'
+                  noCorrect
+                  label={messages.username}
+                  placeholder={messages.usernamePlaceholder}
+                />
+                <TextField
+                  secure
+                  field='password'
+                  label={messages.password}
+                  placeholder={messages.passwordPlaceholder}
+                />
+                <TextField
+                  noCorrect
+                  field='fid'
+                  label={messages.fid}
+                  placeholder={messages.fidPlaceholder}
+                />
+                <TextField
+                  noCorrect
+                  field='org'
+                  label={messages.org}
+                  placeholder={messages.orgPlaceholder}
+                />
+                <TextField
+                  noCorrect
+                  field='ofx'
+                  label={messages.ofx}
+                  placeholder={messages.ofxPlaceholder}
+                />
+              </Collapsible>
+            </>
+          }
+        </Form>
+        {edit &&
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Button transparent danger onPress={this.confirmDeleteBank}>
+              <FormattedMessage {...messages.deleteBank} />
+            </Button>
+          </View>
         }
-      </Form>
+      </>
     )
   }
 
@@ -163,19 +192,23 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
       bankId,
       input
     }
-    saveBank(variables, this.onSaved)
+    saveBank(variables, { complete: this.onSaved })
   }
 
-  onSaved = ({ saveBank: { id: bankId } }: SaveBank.Mutation) => {
-    const { navBank } = this.props
-    navBank(bankId)
+  onSaved = (result: SaveBank.Mutation) => {
+    const { navBack, navBank, bankId } = this.props
+    if (bankId) {
+      navBack()
+    } else {
+      navBank(result.saveBank.id)
+    }
   }
 
   fiOnValueChange = (value: number) => {
     const formApi = this.formApi
     if (formApi) {
       const fi = filist[value]
-      formApi.setValue('name', fi.name || '')
+      formApi.setValue('name', value ? (fi.name || '') : '')
       formApi.setValue('web', fi.profile.siteURL || '')
       formApi.setValue('favicon', '')
       formApi.setValue('address', formatAddress(fi) || '')
@@ -184,13 +217,36 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
       formApi.setValue('ofx', fi.ofx || '')
     }
   }
+
+  confirmDeleteBank = () => {
+    confirm({
+      title: messages.deleteBankTitle,
+      action: messages.deleteBank,
+      formatMessage: this.props.intl.formatMessage,
+      onConfirm: this.deleteBank,
+    })
+  }
+
+  deleteBank = () => {
+    const { deleteBank, bankId } = this.props
+    if (bankId) {
+      deleteBank({ bankId }, { complete: this.onBankDeleted })
+    }
+  }
+
+  onBankDeleted = () => {
+    const { navBack, navPopToTop } = this.props
+    navBack()
+    navPopToTop()
+  }
 }
 
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, { navBank: actions.navBank }),
-  withQuery({ query: Queries.bank }, ({ bankId }: Props) => bankId && ({ bankId })),
-  withMutation({ saveBank: Mutations.saveBank }),
+  connect(null, pickT(actions, 'navBack', 'navBank', 'navPopToTop')),
+  withQuery({ query: Queries.Bank }, ({ bankId }: Props) => bankId && ({ bankId })),
+  withMutation({ saveBank: Mutations.SaveBank }),
+  withMutation({ deleteBank: Mutations.DeleteBank })
 )(BankFormComponent)
 BankForm.displayName = 'BankForm'
 
@@ -282,5 +338,13 @@ const messages = defineMessages({
   passwordPlaceholder: {
     id: 'BankForm.passwordPlaceholder',
     defaultMessage: 'Required'
-  }
+  },
+  deleteBank: {
+    id: 'BankForm.deleteBank',
+    defaultMessage: 'Delete Bank'
+  },
+  deleteBankTitle: {
+    id: 'BankForm.deleteBankTitle',
+    defaultMessage: 'Are you sure?'
+  },
 })

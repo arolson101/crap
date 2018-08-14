@@ -3,16 +3,20 @@ package com.crap;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.wix.reactnativekeyboardinput.KeyboardInputPackage;
+import com.cmcewen.blurview.BlurViewPackage;
+import org.pgsqlite.SQLitePluginPackage;
+import com.reactnativenavigation.NavigationApplication;
 
 import java.util.Arrays;
 import java.util.List;
-import org.pgsqlite.SQLitePluginPackage;
-import com.reactnativenavigation.NavigationApplication;
 
 public class MainApplication extends NavigationApplication implements ReactApplication {
   @Override
@@ -38,9 +42,13 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new SQLitePluginPackage(),
           new MainReactPackage(),
-          new RandomBytesPackage()
+          new RNFSPackage(),
+          new SQLitePluginPackage(),
+          new RandomBytesPackage(),
+          new ImageResizerPackage(),
+          new BlurViewPackage(),
+          new KeyboardInputPackage(getApplication()) // (this = Android application object)
       );
     }
 

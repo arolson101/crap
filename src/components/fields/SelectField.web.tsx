@@ -1,11 +1,11 @@
-import { Button, Classes, MenuItem } from '@blueprintjs/core'
-import { Suggest, ItemPredicate, ItemRenderer } from '@blueprintjs/select'
+import { MenuItem } from '@blueprintjs/core'
+import { ItemPredicate, ItemRenderer, Suggest } from '@blueprintjs/select'
 import '@blueprintjs/select/lib/css/blueprint-select.css'
 import * as React from 'react'
 import { Field } from 'react-form'
 import { FormattedMessage } from 'react-intl'
-import { WrappedField } from './WrappedField'
 import './SelectField.web.css'
+import { WrappedField } from './WrappedField'
 
 // const StyledPicker = glamorous(Picker)({},
 //   ({ error, theme }: ThemeProp & { error: any }) => ({
@@ -26,6 +26,7 @@ export namespace SelectField {
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
+    searchable?: boolean
   }
 }
 
@@ -54,7 +55,6 @@ export const SelectField: React.SFC<SelectField.Props> =
   ({ field, label, items, onValueChange }) => (
     <Field field={field}>
       {fieldApi => {
-        const error = fieldApi.touched && fieldApi.error
         return (
           <WrappedField label={label} fieldApi={fieldApi}>
             <ItemSuggest
@@ -71,7 +71,7 @@ export const SelectField: React.SFC<SelectField.Props> =
                   onValueChange(item.value)
                 }
               }}
-              // selectedValue={fieldApi.value}
+            // selectedValue={fieldApi.value}
             />
           </WrappedField>
         )

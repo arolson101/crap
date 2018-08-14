@@ -1,6 +1,7 @@
 import * as RF from 'react-form'
 import { CheckboxField } from './CheckboxField'
-import { CollapseField } from './CollapseField'
+import { CurrencyField } from './CurrencyField'
+import { DateField } from './DateField'
 import { Divider } from './Divider'
 import { ErrorMessage } from '../ErrorMessage'
 import { Form } from './Form'
@@ -14,7 +15,8 @@ export const typedFields = <V extends {}>() => {
   return {
     Form: Form as any as React.ComponentClass<RF.FormProps<V>>,
     CheckboxField: CheckboxField as React.ComponentClass<CheckboxField.Props<V>>,
-    CollapseField: CollapseField as React.StatelessComponent<CollapseField.Props<V>>,
+    CurrencyField: CurrencyField as React.ComponentClass<CurrencyField.Props<V>>,
+    DateField: DateField as React.ComponentClass<DateField.Props<V>>,
     Divider,
     ErrorMessage,
     TextField: TextField as React.ComponentClass<TextField.Props<V>>,

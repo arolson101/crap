@@ -8,6 +8,10 @@ type Props = RF.FormProps
 export class Form extends React.Component<Props> {
   formApi: RF.FormAPI
 
+  componentWillUnmount () {
+    this.closeToast()
+  }
+
   render () {
     const { children, ...props } = this.props
     return (
@@ -15,13 +19,20 @@ export class Form extends React.Component<Props> {
         <RF.Form
           {...props}
           validateOnSubmit
+          onSubmit={(values, state, props, instance) => {
+            const { onSubmit } = this.props
+            this.closeToast()
+            if (onSubmit) {
+              onSubmit(values, state, props, instance)
+            }
+          }}
           onSubmitFailure={(errors) => {
             console.log(errors)
             Object.keys(errors).forEach(field => {
               NB.Toast.show({
                 text: errors[field] as string,
                 buttonText: 'Okay',
-                duration: 5000,
+                duration: 0,
                 type: 'danger',
                 onClose: () => {
                   this.formApi.setError(field, null)
@@ -42,5 +53,9 @@ export class Form extends React.Component<Props> {
         </RF.Form>
       </NB.Form>
     )
+  }
+
+  closeToast = () => {
+    (NB.Toast as any).toastInstance._root.closeToast()
   }
 }

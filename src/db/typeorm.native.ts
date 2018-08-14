@@ -1,1 +1,1 @@
-export * from 'typeorm/browser'
+export * from 'typeorm/build/package/browser'

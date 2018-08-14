@@ -1,6 +1,37 @@
-import { createConnection } from './typeorm'
-import { appEntities, indexEntities } from './entities'
 import SqlitePlugin from 'react-native-sqlcipher-storage'
+import { Container } from 'typedi'
+import { appEntities, indexEntities } from './dbEntities'
+import { createConnection, useContainer as ormUseContainer } from './typeorm'
+
+ormUseContainer(Container)
+
+// tslint:disable-next-line:variable-name
+const trigger_on_insert_transaction = `
+DROP TRIGGER IF EXISTS trigger_on_insert_transaction;
+CREATE TRIGGER trigger_on_insert_transaction BEFORE INSERT ON 'transactions'
+  BEGIN
+    UPDATE 'transactions' SET balance = balance + NEW.balance WHERE time >= NEW.time;
+  END;
+`
+
+// tslint:disable-next-line:variable-name
+const trigger_on_update_transaction = `
+DROP TRIGGER IF EXISTS trigger_on_update_transaction;
+CREATE TRIGGER trigger_on_update_transaction BEFORE UPDATE ON 'transactions'
+  BEGIN
+    UPDATE 'transactions' SET balance = balance - OLD.balance WHERE time >= OLD.TIME;
+    UPDATE 'transactions' SET balance = balance + NEW.balance WHERE time >= NEW.time;
+  END;
+`
+
+// tslint:disable-next-line:variable-name
+const trigger_on_delete_transaction = `
+DROP TRIGGER IF EXISTS trigger_on_delete_transaction;
+CREATE TRIGGER trigger_on_delete_transaction BEFORE DELETE ON 'transactions'
+  BEGIN
+    UPDATE 'transactions' SET balance = balance - OLD.balance WHERE time >= OLD.TIME;
+  END;
+`
 
 const iosDatabaseLocation: SqlitePlugin.Location = 'Documents'
 
@@ -23,12 +54,17 @@ export const openDb = async (app: boolean, name: string, key: string) => {
     extra,
     // logging: true,
   })
+  if (app) {
+    await db.query(trigger_on_insert_transaction)
+    await db.query(trigger_on_update_transaction)
+    await db.query(trigger_on_delete_transaction)
+  }
   return db
 }
 
 export const deleteDb = async (name: string) => {
   if (SqlitePlugin) {
-    SqlitePlugin.deleteDatabase({
+    await SqlitePlugin.deleteDatabase({
       name: dbName(name),
       location: iosDatabaseLocation,
     })

@@ -1,89 +1,106 @@
-import { Icon, Item, Label, Picker, View } from 'native-base'
+import { Body, Icon, ListItem, Picker, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { Field, FieldAPI } from 'react-form'
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { actions } from '../../redux/actions/index'
+import { SelectFieldItem } from '../../redux/actions/navActions'
+import { Label } from './Label.native'
 
 export namespace SelectField {
-  export interface Item {
-    label: string
-    value: string | number
-  }
+  export type Item = SelectFieldItem
 
   export interface Props<T = {}> {
     field: string
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
+    searchable?: boolean
   }
 }
 
-export const SelectFieldComponent: React.SFC<SelectField.Props & InjectedIntlProps> =
-  ({ field, label, items, onValueChange, intl }) => (
-    <Field field={field}>
-      {fieldApi => {
-        const error = !!(fieldApi.touched && fieldApi.error)
-        return (
-          <Item
-            error={error}
-          >
-            <Label
-              // {...labelProps}
-              style={(error ? ({ color: platform.brandDanger }) : ({} as any))}
+interface ComposedProps extends SelectField.Props, InjectedIntlProps {
+  navPicker: actions['navPicker']
+}
+
+export class SelectFieldComponent extends React.Component<ComposedProps> {
+  fieldApi: FieldAPI<any>
+
+  render() {
+    const { field, label, items, intl, searchable } = this.props
+
+    return (
+      <Field field={field}>
+        {fieldApi => {
+          this.fieldApi = fieldApi
+          const error = !!(fieldApi.touched && fieldApi.error)
+          const selectedItem = items.find(item => item.value === fieldApi.value)
+          if (!selectedItem) {
+            throw new Error(`selected item ${fieldApi.value} not found in item list`)
+          }
+          return (
+            <ListItem
+              button
+              onPress={this.onPress}
+              style={searchable ? {} : { paddingTop: 0, paddingBottom: 0 }}
             >
-              {intl.formatMessage(label)}
-            </Label>
-            <View style={{ flex: 1 }}>
-              <Picker
-                // mode="dropdown"
-                iosHeader={intl.formatMessage(label)}
-                // iosIcon={<Icon name='arrow-dropdown-circle' style={{ color: '#007aff', fontSize: 25 }} />}
-                style={{
-                  width: '100%',
-                  borderWidth: error ? 1 : undefined,
-                  borderColor: error ? platform.brandDanger : undefined
-                }}
-                onValueChange={(value) => {
-                  fieldApi.setValue(value)
-                  if (onValueChange) {
-                    onValueChange(value)
-                  }
-                }}
-                headerBackButtonText={intl.formatMessage(messages.cancel)}
-                selectedValue={fieldApi.value}
-                // renderHeader={(backAction) => {
-                //   return (
-                //     <Header searchBar rounded>
-                //       <Left/>
-                //       <Body><Title>hi</Title></Body>
-                //       <Right/>
-                //     </Header>
-                //   )
-                // }}
-              >
-                {items.map(item =>
-                  <Picker.Item
-                    key={item.value}
-                    label={item.label}
-                    value={item.value}
-                  />
-                )}
-              </Picker>
-            </View>
-            {error &&
-              <Icon name='close-circle' />
-            }
-          </Item>
-        )
-      }}
-    </Field>
-  )
+              <Label label={label} error={error} />
+              <Body>
+                {searchable
+                  ? <Text style={{ color: platform.textColor }}>
+                    {selectedItem.label}
+                  </Text>
+                  : <Picker
+                    mode='dialog'
+                    iosHeader={intl.formatMessage(label)}
+                    textStyle={{ flex: 1 }}
+                    placeholder='placeholder'
+                    placeholderStyle={{ flex: 1 }}
+                    selectedValue={fieldApi.value}
+                    onValueChange={fieldApi.setValue}
+                  >
+                    {items.map(item =>
+                      <Picker.Item key={item.value} label={item.label} value={item.value} />
+                    )}
+                  </Picker>
+                }
 
-export const SelectField = injectIntl<SelectField.Props>(SelectFieldComponent)
-
-const messages = defineMessages({
-  cancel: {
-    id: 'SelectField.cancel',
-    defaultMessage: 'Cancel'
+              </Body>
+              {error &&
+                <Icon name='close-circle' />
+              }
+            </ListItem>
+          )
+        }}
+      </Field>
+    )
   }
-})
+
+  onPress = () => {
+    const { navPicker, items, searchable, label, intl } = this.props
+    if (searchable) {
+      navPicker({
+        title: label,
+        items,
+        searchable,
+        onValueChange: this.onValueChange,
+        selectedItem: this.fieldApi.value,
+      })
+    }
+  }
+
+  onValueChange = (value: string | number) => {
+    const { onValueChange } = this.props
+    this.fieldApi.setValue(value)
+    if (onValueChange) {
+      onValueChange(value)
+    }
+  }
+}
+
+export const SelectField = compose(
+  injectIntl,
+  connect(null, { navPicker: actions.navPicker })
+)(SelectFieldComponent)

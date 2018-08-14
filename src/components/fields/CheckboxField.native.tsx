@@ -1,8 +1,10 @@
-import { Item, Label, Right } from 'native-base'
+import { Item, Right, Switch } from 'native-base'
+import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field } from 'react-form'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { Switch } from 'react-native'
+import { FormattedMessage } from 'react-intl'
+import { StyleSheet } from 'react-native'
+import { Label } from './Label.native'
 
 export namespace CheckboxField {
   export interface Props<T = {}> {
@@ -11,8 +13,8 @@ export namespace CheckboxField {
   }
 }
 
-const CheckboxFieldComponent: React.SFC<CheckboxField.Props & InjectedIntlProps> =
-  ({ field, label, intl }) => (
+export const CheckboxField: React.SFC<CheckboxField.Props> =
+  ({ field, label }) => (
     <Field field={field}>
       {fieldApi => {
         const error = !!(fieldApi.touched && fieldApi.error)
@@ -20,13 +22,14 @@ const CheckboxFieldComponent: React.SFC<CheckboxField.Props & InjectedIntlProps>
           <Item
             inlineLabel
             error={error}
+            style={styles.item}
           >
-            <Label>{intl.formatMessage(label)}</Label>
+            <Label label={label} error={error} />
             <Right>
-            <Switch
-              onValueChange={(value: boolean) => fieldApi.setValue(value)}
-              value={fieldApi.value}
-            />
+              <Switch
+                onValueChange={(value: boolean) => fieldApi.setValue(value)}
+                value={fieldApi.value}
+              />
             </Right>
           </Item>
         )
@@ -34,4 +37,9 @@ const CheckboxFieldComponent: React.SFC<CheckboxField.Props & InjectedIntlProps>
     </Field>
   )
 
-export const CheckboxField = injectIntl(CheckboxFieldComponent)
+const styles = StyleSheet.create({
+  item: {
+    paddingTop: platform.listItemPadding,
+    paddingBottom: platform.listItemPadding,
+  }
+})

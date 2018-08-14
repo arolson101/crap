@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import * as electron from './openDb.electron'
 import * as native from './openDb.native'
 import * as web from './openDb.web'

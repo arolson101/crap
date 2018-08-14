@@ -1,7 +1,7 @@
 import * as electron from 'electron'
 import * as fs from 'fs'
 import * as path from 'path'
-import { appEntities, indexEntities } from './entities'
+import { appEntities, indexEntities } from './dbEntities'
 import { createConnection } from './typeorm'
 
 const userData = electron.remote.app.getPath('userData')

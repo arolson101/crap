@@ -1,8 +1,7 @@
-import { Container, Content, Fab, Icon } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormattedMessage, InjectedIntlProps } from 'react-intl'
-import { Platform, ScrollView, StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react-navigation'
@@ -65,24 +64,24 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<T, P> = ((props) => (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Container>
-          {/* <Fab
-            direction='up'
-            containerStyle={{}}
-            style={{ backgroundColor: '#5067FF' }}
-            position='bottomRight'
-          >
-            <Icon name='share' />
-          </Fab> */}
-          <Content>
-            <Component
-              {...props}
-              {...moreProps}
-              {...props.navigation.state.params}
-            />
-          </Content>
-        </Container>
+      <SafeAreaView style={{ flex: 1, backgroundColor: platform.brandLight }}>
+        {/* <Container style={{flex: 2}}> */}
+        {/* <Fab
+          direction='up'
+          containerStyle={{}}
+          style={{ backgroundColor: '#5067FF' }}
+          position='bottomRight'
+        >
+          <Icon name='share' />
+        </Fab> */}
+        {/* <Content> */}
+        <Component
+          {...props}
+          {...moreProps}
+          {...props.navigation.state.params}
+        />
+        {/* </Content> */}
+        {/* </Container> */}
       </SafeAreaView>
     )) as NavigationScreenComponent<T, {}, P> as any
 

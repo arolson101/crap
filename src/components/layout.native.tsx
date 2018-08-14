@@ -1,9 +1,10 @@
 import glamorous from 'glamorous-native'
 import * as NB from 'native-base'
+import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
+import { ScrollView } from 'react-native'
 import { ThemeProp } from '../App/index'
-import platform from 'native-base/dist/src/theme/variables/platform';
 
 interface ButtonProps {
   block?: boolean
@@ -20,22 +21,24 @@ export const Button: React.SFC<ButtonProps> = ({ block, onPress, title, transpar
   </NB.Button>
 )
 
-export const Text = NB.Text //: React.SFC = (props) => (
-//   <NB.Text {...props} />
-// )
+export const Text: React.SFC<{ note?: boolean }> = (props) => (
+  <NB.Text {...props} />
+)
 
 export const List: React.SFC = (props) => (
   <NB.List {...props} style={{ backgroundColor: platform.cardDefaultBg }} />
 )
 
 export const ListItem: React.SFC<any> = (props) => (
-  <NB.ListItem {...props}/>
+  <NB.ListItem {...props} />
 )
 
 export { Picker } from 'react-native'
 
 export const Container = glamorous.view()
 Container.displayName = 'Container'
+
+export const Scrollable: React.SFC<any> = (props) => <ScrollView {...props} />
 
 export const CenteredContent = glamorous.view<ThemeProp>({},
   ({ theme }) => ({

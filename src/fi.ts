@@ -42,7 +42,7 @@ const emptyprofile: FinancialInstitutionProfile = {
 }
 
 const emptyfi: FinancialInstitution = {
-  name: '',
+  name: '(none)',
   fid: '',
   org: '',
   ofx: '',

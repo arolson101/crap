@@ -18,7 +18,7 @@ export const Button: React.SFC<ButtonProps> = ({ block, onPress, title }) => (
   </BPButton>
 )
 
-export const Text: React.SFC = ({ children }) => (
+export const Text: React.SFC<{ note?: boolean }> = ({ children }) => (
   <span>{children}</span>
 )
 
@@ -34,7 +34,7 @@ interface PickerProps {
   selectedValue?: any
 }
 export class Picker extends React.Component<PickerProps> {
-  render () {
+  render() {
     return (
       <select
         value={this.props.selectedValue}
@@ -65,7 +65,6 @@ export const CenteredContent = glamorous.div<ThemeProp>({},
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   })
 )
 CenteredContent.displayName = 'CenteredContent'

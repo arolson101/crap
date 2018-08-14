@@ -1,38 +1,125 @@
-import { Body, Card, CardItem } from 'native-base'
+import cuid from 'cuid'
+import { Body, Card, CardItem, Icon, Right, Text, Thumbnail, Left, Button } from 'native-base'
+import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
+import { defineMessages, FormattedMessage } from 'react-intl'
 import { Linking } from 'react-native'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
+import * as URL from 'url'
 import { Divider } from '../components/fields/Divider'
-import { Button, List, ListItem, Text } from '../components/layout.native'
-import { Queries } from '../db/index'
+import { List, ListItem, Scrollable } from '../components/layout.native'
+import { Mutations, Queries } from '../db/index'
+import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { Bank } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
-import { EditButtonProps, makeScreen } from './Screen'
-import * as URL from 'url'
+import { pickT } from '../util/pick'
+import { AddButtonProps, makeScreen } from './Screen'
 
 interface Params {
   bankId: string
 }
 
-interface Props extends Params, EditButtonProps {
+interface Props extends Params, AddButtonProps {
   query: Queries.Bank
-  navBankEdit: (bankId: string) => any
-  navAccount: (accountId: string, accountName: string) => any
-  navAccountCreate: (bankId: string) => any
+  navBankEdit: actions['navBankEdit']
+  navAccountEdit: actions['navAccountEdit']
+  navAccountCreate: actions['navAccountCreate']
+  downloadAccountList: Mutations.DownloadAccountList
+  cancel: Mutations.Cancel
 }
 
-class Link extends React.Component<{ url: string, title: any }> {
-  render () {
-    const { url, ...props } = this.props
-    return <Button transparent {...props} onPress={this.onPress} />
+export class BankScreenComponent extends React.PureComponent<Props> {
+
+  // componentDidMount() {
+  //   this.props.setAdd(this.accountCreate)
+  // }
+
+  render() {
+    const { bank } = this.props.query
+
+    return (
+      <Scrollable>
+        <Card>
+          <CardItem header>
+            <Left>
+              {!!bank.favicon &&
+                <Thumbnail square {...JSON.parse(bank.favicon)} />
+              }
+              <Body>
+                <Text>{bank.name}</Text>
+                {!!bank.web &&
+                  <Text
+                    numberOfLines={1}
+                    onPress={this.webOnPress}
+                    note
+                    style={{ color: platform.brandPrimary }}
+                  >
+                    {bank.web}
+                  </Text>
+                }
+              </Body>
+            </Left>
+            <Right style={{ flex: 0 }}>
+              <Button transparent onPress={this.bankEdit}>
+                <Icon name='create' style={{ color: platform.brandInfo }} />
+              </Button>
+            </Right>
+          </CardItem>
+          <CardItem>
+            <Body>
+              {bank.address.split(/\n/g).map((line, i) => (
+                <Text key={i} note>{line}</Text>
+              ))}
+            </Body>
+          </CardItem>
+          <CardItem>
+            <Body>
+              {bank.notes.split(/\n/g).map((line, i) => (
+                <Text key={i} note>{line}</Text>
+              ))}
+            </Body>
+          </CardItem>
+        </Card>
+        <List>
+          <Divider>
+            {bank.accounts.length
+              ? <FormattedMessage {...messages.accountList}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
+              : <FormattedMessage {...messages.accountListEmpty}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
+            }
+          </Divider>
+          {bank.accounts.map(account => (
+            <AccountItem key={account.id} {...this.props} account={account} />
+          ))}
+          {bank.accounts.length > 0 &&
+            <Divider />
+          }
+          {bank.online &&
+            <ListItem button onPress={this.downloadAccountList}>
+              <FormattedMessage {...messages.downloadAccountList} />
+            </ListItem>
+          }
+          <ListItem button onPress={this.accountCreate}>
+            <FormattedMessage {...messages.addAccount} />
+          </ListItem>
+        </List>
+      </Scrollable>
+    )
   }
 
-  onPress = () => {
-    const urlf = URL.parse(this.props.url)
-    if(!urlf.protocol) {
+  bankEdit = () => {
+    this.props.navBankEdit(this.props.bankId)
+  }
+
+  accountCreate = () => {
+    this.props.navAccountCreate(this.props.bankId)
+  }
+
+  webOnPress = () => {
+    const { bank } = this.props.query
+    const urlf = URL.parse(bank.web)
+    if (!urlf.protocol) {
       urlf.protocol = 'https'
     }
     const url = URL.format(urlf)
@@ -45,86 +132,48 @@ class Link extends React.Component<{ url: string, title: any }> {
       }
     }).catch(err => console.warn('An error occurred', err))
   }
-}
 
-export class BankScreenComponent extends React.PureComponent<Props> {
-  componentDidMount () {
-    this.props.setEdit(this.bankEdit)
-  }
-
-  bankEdit = () => {
-    this.props.navBankEdit(this.props.bankId)
-  }
-
-  accountCreate = () => {
-    this.props.navAccountCreate(this.props.bankId)
-  }
-
-  render () {
-    const { bank } = this.props.query
-
-    return (
-      <>
-        <List>
-          <Card>
-            <CardItem header>
-              <Text>{bank.name}</Text>
-            </CardItem>
-            {bank.web &&
-              <CardItem>
-                <Link title={bank.web} url={bank.web} />
-              </CardItem>
-            }
-            <CardItem>
-              <Body>
-                {bank.address.split(/\n/g).map((line, i) => (
-                  <Text key={i} note>{line}</Text>
-                ))}
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                {bank.notes.split(/\n/g).map((line, i) => (
-                  <Text key={i} note>{line}</Text>
-                ))}
-              </Body>
-            </CardItem>
-          </Card>
-          <Divider />
-          {bank.accounts.map(account => (
-            <AccountItem key={account.id} {...this.props} account={account} />
-          ))}
-        </List>
-        <Button block title='add account' onPress={this.accountCreate} />
-      </>
+  downloadAccountList = () => {
+    const { bankId, downloadAccountList, cancel } = this.props
+    const cancelToken = cuid()
+    downloadAccountList(
+      { bankId, cancelToken },
+      {
+        cancel: () => {
+          cancel({ cancelToken })
+        }
+      }
     )
   }
 }
 
 class AccountItem extends React.Component<Props & { account: Bank.Accounts }> {
-  render () {
+  render() {
     const { account } = this.props
     return (
-      <ListItem key={account.id} onPress={this.onPress}>
-        <Text>{account.name}</Text>
+      <ListItem onPress={this.onPress}>
+        <Body>
+          <Text>{account.name}</Text>
+        </Body>
+        <Right>
+          <Icon name='information-circle' style={{ color: platform.brandInfo }} />
+        </Right>
       </ListItem>
     )
   }
 
   onPress = () => {
-    const { account, navAccount } = this.props
-    navAccount(account.id, account.name)
+    const { account, navAccountEdit } = this.props
+    navAccountEdit(account.id)
   }
 }
 
 export const BankScreen = compose(
-  makeScreen({ title: () => messages.title, editButton: true }),
-  withQuery({ query: Queries.bank }, (params: Params) => params),
-  connect(null, {
-    navBankEdit: actions.navBankEdit,
-    navAccount: actions.navAccount,
-    navAccountCreate: actions.navAccountCreate,
-  })
+  makeScreen({ title: () => messages.title, /*addButton: true*/ }),
+  withQuery({ query: Queries.Bank }, (params: Params) => params),
+  withMutation({ downloadAccountList: Mutations.DownloadAccountList }),
+  withMutation({ cancel: Mutations.Cancel }),
+  connect(null, pickT(actions, 'navBankEdit', 'navAccountEdit', 'navAccountCreate'))
 )(BankScreenComponent)
 BankScreen.displayName = 'BankScreen'
 
@@ -133,4 +182,20 @@ const messages = defineMessages({
     id: 'BankScreen.title',
     defaultMessage: 'Bank'
   },
+  accountList: {
+    id: 'BankScreen.accountList',
+    defaultMessage: 'Accounts'
+  },
+  accountListEmpty: {
+    id: 'BankScreen.accountListEmpty',
+    defaultMessage: 'No Accounts'
+  },
+  downloadAccountList: {
+    id: 'BankScreen.downloadAccountList',
+    defaultMessage: 'Import accounts from server...'
+  },
+  addAccount: {
+    id: 'BankScreen.addAccount',
+    defaultMessage: 'Add account...'
+  }
 })

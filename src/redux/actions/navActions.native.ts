@@ -1,26 +1,16 @@
+import { NavigationActions, StackActions } from 'react-navigation'
 import { paths } from '../../nav'
 import { nativeActions } from './nativeActions'
-import { NavApi } from './navActions'
-import { ActionType, createAction } from 'typesafe-actions'
-
-export const navPop = createAction('nav/pop')
-export const navPush = createAction('nav/push', resolve =>
-  (routeName: string, params: object = {} as any) => resolve({
-    routeName,
-    params
-  })
-)
-export const navSwitchToTab = createAction('nav/switchToTab', resolve =>
-  (path: string) => resolve({
-    path
-  })
-)
+import { NavApi, NavPickerParams } from './navActions'
 
 export const navActions: NavApi = {
   navBack: () => navPop(),
 
-  login: () => navPush(paths.app),
-  logout: () => navPush(paths.login),
+  navPopToTop: () => nativeActions.navigate(StackActions.popToTop({})),
+
+  login: () => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.app,
+  })),
 
   navHome: () => navSwitchToTab(paths.root.home),
   navAccounts: () => navSwitchToTab(paths.root.accounts),
@@ -41,19 +31,13 @@ export const navActions: NavApi = {
   ),
 
   navBankCreate: () => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal,
-    action: NavigationActions.navigate({
-      routeName: paths.bankCreate,
-      params: {}
-    })
+    routeName: paths.bankCreate,
+    params: {}
   })),
 
   navBankEdit: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal,
-    action: NavigationActions.navigate({
-      routeName: paths.bankEdit,
-      params: { bankId }
-    })
+    routeName: paths.bankEdit,
+    params: { bankId }
   })),
 
   navAccount: (accountId: string, accountName: string) => nativeActions.navigate(NavigationActions.navigate({
@@ -65,18 +49,27 @@ export const navActions: NavApi = {
   })),
 
   navAccountEdit: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal,
-    action: NavigationActions.navigate({
-      routeName: paths.accountEdit,
-      params: { accountId }
-    })
+    routeName: paths.accountEdit,
+    params: { accountId }
   })),
 
   navAccountCreate: (bankId: string) => nativeActions.navigate(NavigationActions.navigate({
-    routeName: paths.modal,
-    action: NavigationActions.navigate({
-      routeName: paths.accountCreate,
-      params: { bankId }
-    })
+    routeName: paths.accountCreate,
+    params: { bankId }
+  })),
+
+  navTransactionEdit: (transactionId: string) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.transactionEdit,
+    params: { transactionId }
+  })),
+
+  navTransactionCreate: (accountId: string) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.transactionCreate,
+    params: { accountId }
+  })),
+
+  navPicker: (params: NavPickerParams) => nativeActions.navigate(NavigationActions.navigate({
+    routeName: paths.picker,
+    params
   })),
 }
