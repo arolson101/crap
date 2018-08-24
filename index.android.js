@@ -1,1 +1,1 @@
-import './screens/index'
+import './src/index'
