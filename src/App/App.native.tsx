@@ -157,6 +157,7 @@ const AppNavigator = compose(
 AppNavigator.displayName = 'AppNavigator'
 
 const Services: React.SFC = ({ children }) => {
+  console.log('---services')
   return (
     <LoadFonts>
       <ReduxProvider>
@@ -184,15 +185,23 @@ export default App
 
 import { Navigation } from 'react-native-navigation'
 import { LoginScreen, LoginScreenComponent } from '../screens/index'
-import { registerScreen, makeScreen2 } from '../screens/Screen2'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { registerScreen, makeScreen2, NavScreen, NavContext } from '../screens/Screen2'
+import { LayoutRoot, LayoutComponent, LayoutStackChildren } from 'react-native-navigation/lib/dist/interfaces/Layout'
+import { Options } from 'react-native-navigation/lib/dist/interfaces/Options'
 
-const LoginAppComponent: React.SFC = () => {
-  return (
-    <Services>
-      <LoginScreenComponent />
-    </Services>
-  )
+class LoginAppComponent extends React.Component {
+  render() {
+    return (
+      <NavContext.Provider value={this.props.componentId}>
+      <Services>
+        <LoginScreen />
+      </Services>
+      </NavContext.Provider>
+    )
+  }
+
+  static displayName = 'LoginAppComponent'
 }
 
 const messages = defineMessages({
@@ -203,7 +212,34 @@ const messages = defineMessages({
 })
 
 const LoginApp = makeScreen2({ getTitle: () => messages.LoginApp })(LoginAppComponent)
-registerScreen(LoginApp)
+// registerScreen(LoginApp)
+Navigation.registerComponent(LoginApp.screenID, () => LoginApp)
+
+const rnnComponent = (screen: NavScreen): LayoutStackChildren => ({
+  component: {
+    name: screen.screenID,
+    options: {
+      topBar: {
+        drawBehind: true,
+        translucent: true,
+        title: {
+          text: 'override me',
+        },
+        // searchBar: true,
+      },
+    }
+  }
+})
+
+const loginConfig = (): LayoutRoot => ({
+  root: {
+    stack: {
+      children: [
+        rnnComponent(LoginApp)
+      ]
+    }
+  }
+})
 
 const iconImages = {
   'ios-settings': 0,
@@ -242,9 +278,9 @@ const initLogin = async () => {
                         // transparent: true,
                         translucent: true,
                         // blur: true,
-                        title: {
-                          text: 'hi2',
-                        },
+                        // title: {
+                        //   text: 'hi2',
+                        // },
                         // searchBar: true,
                       },
                     }
