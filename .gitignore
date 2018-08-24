@@ -89,3 +89,4 @@ android/build
 .vscode/.react
 .idea
 .iml
+local.properties

@@ -2,7 +2,7 @@ import { Root, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { InjectedIntlProps, injectIntl, IntlProvider, defineMessages } from 'react-intl'
-import { Platform, SafeAreaView } from 'react-native'
+import { Platform, SafeAreaView, ImageRequireSource } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
@@ -185,6 +185,7 @@ export default App
 import { Navigation } from 'react-native-navigation'
 import { LoginScreen, LoginScreenComponent } from '../screens/index'
 import { registerScreen, makeScreen2 } from '../screens/Screen2'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const LoginAppComponent: React.SFC = () => {
   return (
@@ -204,7 +205,21 @@ const messages = defineMessages({
 const LoginApp = makeScreen2({ getTitle: () => messages.LoginApp })(LoginAppComponent)
 registerScreen(LoginApp)
 
-const initLogin = () => {
+const iconImages = {
+  'ios-settings': 0,
+}
+
+const initLogin = async () => {
+  console.log('initLogin')
+  await Promise.all(
+    Object.keys(iconImages)
+    .map(async name => {
+      iconImages[name] = await Icon.getImageSource(name)
+    })
+  )
+
+  console.log('initLogin done', iconImages)
+
   Navigation.setRoot({
     root: {
       bottomTabs: {
@@ -239,7 +254,7 @@ const initLogin = () => {
               options: {
                 bottomTab: {
                   text: 'Tab 1',
-                  // icon: require('../images/one.png')
+                  icon: iconImages['ios-settings'],
                 },
                 topBar: {
                   title: {
@@ -258,6 +273,7 @@ const initLogin = () => {
               options: {
                 bottomTab: {
                   text: 'Tab 2',
+                  icon: iconImages['ios-settings'],
                   // icon: require('../images/one.png')
                 },
                 topBar: {

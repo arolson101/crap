@@ -3,6 +3,7 @@ package com.crap;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.rnfs.RNFSPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
         new RandomBytesPackage(),
         // eg. new VectorIconsPackage()
         new MainReactPackage(),
+        new VectorIconsPackage(),
         new RNFSPackage(),
         new ImageResizerPackage(),
         new BlurViewPackage(),
