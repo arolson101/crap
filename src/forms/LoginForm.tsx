@@ -12,8 +12,10 @@ import { withMutation } from '../db/mutations/makeMutation'
 import { withQuery } from '../db/queries/makeQuery'
 import { actions } from '../redux/actions/index'
 import { iOSUIKit } from 'react-native-typography'
+import { Navigation } from 'react-native-navigation'
+import { withNavigation, InjectedNavProps } from '../screens/Screen2'
 
-interface Props extends InjectedIntlProps {
+interface Props extends InjectedIntlProps, InjectedNavProps {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
@@ -83,7 +85,10 @@ export class LoginFormComponent extends React.Component<Props> {
               }
               <Button
                 block
-                onPress={formApi.submitForm}
+                onPress={() => {
+                  const { nav: { componentId } } = this.props
+                  Navigation.push(componentId, { component: { name: 'LoginAppComponent' } })
+                }}
               >
                 <FormattedMessage {...(create ? messages.create : messages.open)} />
               </Button>
@@ -170,6 +175,7 @@ export const LoginForm = compose(
   connect(null, {
     login: actions.login
   }),
+  withNavigation,
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

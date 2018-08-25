@@ -3,14 +3,12 @@ import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl'
 import { CenteredContent } from '../components/index'
 import { Scrollable } from '../components/layout.native'
 import { LoginForm } from '../forms/LoginForm'
-import { makeScreen2, registerScreen, NavContext } from './Screen2'
+import { makeScreen2, registerScreen, InjectedNavProps, withNavigation } from './Screen2'
 import { View } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import { Dimensions } from 'react-native'
-import { Options } from 'react-native-navigation/lib/dist/interfaces/Options'
-import hoistStatics from 'hoist-non-react-statics'
 
-export class LoginScreenComponent extends React.Component<InjectedIntlProps> {
+export class LoginScreenComponent extends React.Component<InjectedIntlProps & InjectedNavProps> {
   componentDidMount() {
     console.log('mounted', this.props)
     const { intl: { formatMessage } } = this.props
@@ -44,26 +42,7 @@ export class LoginScreenComponent extends React.Component<InjectedIntlProps> {
   }
 }
 
-const withComponentId = (Component: React.ComponentType) => {
-  const ret = hoistStatics(
-    (props: any) => {
-      console.log('withcomponentid', props)
-      return (
-        <NavContext.Consumer>
-          {(componentId) =>
-            <Component {...props} componentId={componentId} />}
-        </NavContext.Consumer>
-      )
-    },
-    Component
-  )
-  ret.displayName = `withComponentId(${Component.displayName || Component.name || 'unknown'})`
-  return ret
-}
-
-export const LoginScreen = makeScreen2({
-  getTitle: () => messages.title
-})(injectIntl(withComponentId(LoginScreenComponent)))
+export const LoginScreen = injectIntl(withNavigation(LoginScreenComponent)) as React.ComponentType
 
 const messages = defineMessages({
   title: {

@@ -1,8 +1,8 @@
 import { Root, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { InjectedIntlProps, injectIntl, IntlProvider, defineMessages } from 'react-intl'
-import { Platform, SafeAreaView } from 'react-native'
+import { InjectedIntlProps, injectIntl, IntlProvider, defineMessages, FormattedDate, FormattedMessage } from 'react-intl'
+import { Platform, SafeAreaView, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
@@ -156,22 +156,23 @@ const AppNavigator = compose(
 )(AppNavigatorComponent)
 AppNavigator.displayName = 'AppNavigator'
 
-const Services: React.SFC = ({ children }) => {
-  console.log('---services')
+const Services: React.SFC = ({ children, ...props }) => {
+  console.log('---services', props)
   return (
-    <LoadFonts>
-      <ReduxProvider>
-        <IntlProvider locale='en' textComponent={Text}>
-          {/* <Root> */}
-            <SafeAreaView>
-              {children}
-            </SafeAreaView>
-          {/* </Root> */}
-        </IntlProvider>
-      </ReduxProvider>
-    </LoadFonts>
+    // <LoadFonts>
+    <ReduxProvider>
+      <IntlProvider locale='en' textComponent={Text}>
+        {/* <Root> */}
+        {/* <SafeAreaView> */}
+        {children}
+        {/* </SafeAreaView> */}
+        {/* </Root> */}
+      </IntlProvider>
+    </ReduxProvider>
+    // </LoadFonts>
   )
 }
+Services.displayName = 'Services'
 
 const App: React.SFC = () => {
   return (
@@ -185,18 +186,18 @@ export default App
 
 import { Navigation } from 'react-native-navigation'
 import { LoginScreen } from '../screens/index'
-import { registerScreen, makeScreen2, NavScreen, NavContext } from '../screens/Screen2'
 import { LayoutRoot, LayoutComponent, LayoutStackChildren } from 'react-native-navigation/lib/dist/interfaces/Layout'
 import { Options } from 'react-native-navigation/lib/dist/interfaces/Options'
+import hoistStatics from 'hoist-non-react-statics'
 
-class LoginAppComponent extends React.Component {
+class LoginAppComponent extends React.Component<{ componentId: string }> {
   render() {
     return (
-      <NavContext.Provider value={this.props.componentId}>
-      <Services>
-        <LoginScreen />
-      </Services>
-      </NavContext.Provider>
+      // <NavContext.Provider value={this.props.componentId}>
+      //   <Services>
+      <LoginScreen />
+      //   </Services>
+      // </NavContext.Provider>
     )
   }
 
@@ -206,17 +207,66 @@ class LoginAppComponent extends React.Component {
 const messages = defineMessages({
   LoginApp: {
     id: 'App.native.LoginApp',
-    defaultMessage: 'hello'
+    defaultMessage: 'login'
   }
 })
 
-const LoginApp = makeScreen2({ getTitle: () => messages.LoginApp })(LoginAppComponent)
-// registerScreen(LoginApp)
-Navigation.registerComponent(LoginApp.screenID, () => LoginApp)
+// const LoginApp = makeScreen2({ getTitle: () => messages.LoginApp })(LoginAppComponent)
+// // registerScreen(LoginApp)
+// Navigation.registerComponentWithRedux(LoginApp.screenID, () => LoginApp, Services, true)
 
-const rnnComponent = (screen: NavScreen): LayoutStackChildren => ({
+interface Params {
+  getTitle: () => FormattedMessage.MessageDescriptor
+}
+
+const registerNavComponent = <T extends {}>(Component: React.ComponentType<T>, { getTitle }: Params) => {
+  if (!Component.displayName) {
+    throw new Error(`no displayName on component`)
+  }
+
+  const SetTitleComponent = injectIntl<T>(
+    class extends React.Component<T & InjectedIntlProps> {
+      componentDidMount() {
+        console.log('mounted', this.props)
+        const { intl: { formatMessage } } = this.props
+        const { componentId } = this.props as any
+        Navigation.mergeOptions(componentId, {
+          topBar: {
+            title: {
+              text: formatMessage(getTitle())
+            }
+          }
+        })
+      }
+
+      render() {
+        return (
+          <Services>
+            <Component {...this.props} />
+          </Services>
+        )
+      }
+
+      static displayName = `navComponent(${Component.displayName || Component.name})`
+    }
+  )
+
+  const ServiceComponent: React.SFC<T> = (props) => (
+    <Services>
+      <SetTitleComponent {...props}/>
+    </Services>
+  )
+  ServiceComponent.displayName = `ServiceComponent(${Component.displayName || Component.name})`
+
+  const newComponent = hoistStatics(ServiceComponent, Component)
+  Navigation.registerComponent(Component.displayName, () => newComponent)
+}
+
+registerNavComponent(LoginAppComponent, { getTitle: () => messages.LoginApp })
+
+const rnnComponent = (screen: React.ComponentType): LayoutStackChildren => ({
   component: {
-    name: screen.screenID,
+    name: screen.displayName!,
     options: {
       topBar: {
         drawBehind: true,
@@ -234,82 +284,83 @@ const loginConfig = (): LayoutRoot => ({
   root: {
     stack: {
       children: [
-        rnnComponent(LoginApp)
+        rnnComponent(LoginAppComponent)
       ]
     }
   }
 })
 
 const initLogin = () => {
-  console.log('initLogin')
-  Navigation.setRoot({
-    root: {
-      bottomTabs: {
-        options: {
-          bottomTabs: {
-            drawBehind: true,
-            translucent: true,
-          }
-        },
-        children: [
-          {
-            stack: {
-              children: [
-                {
-                  component: {
-                    name: LoginApp.screenID,
-                    options: {
-                      topBar: {
-                        drawBehind: true,
-                        // transparent: true,
-                        translucent: true,
-                        // blur: true,
-                        // title: {
-                        //   text: 'hi2',
-                        // },
-                        // searchBar: true,
-                      },
-                    }
-                  },
-                },
-              ],
-              options: {
-                bottomTab: {
-                  text: 'Tab 1',
-                  // icon: require('../images/one.png')
-                },
-                topBar: {
-                  title: {
-                    // text: 'hi'
-                  },
-                  largeTitle: {
-                    visible: true
-                  },
-                }
-              }
-            }
-          },
-          {
-            component: {
-              name: LoginApp.screenID,
-              options: {
-                bottomTab: {
-                  text: 'Tab 2',
-                  // icon: require('../images/one.png')
-                },
-                topBar: {
-                  visible: true,
-                  title: {
-                    text: 'hi'
-                  }
-                }
-              }
-            },
-          }
-        ]
-      }
-    }
-  })
+  // console.log('initLogin')
+  Navigation.setRoot(loginConfig())
+  // Navigation.setRoot({
+  //   root: {
+  //     bottomTabs: {
+  //       options: {
+  //         bottomTabs: {
+  //           drawBehind: true,
+  //           translucent: true,
+  //         }
+  //       },
+  //       children: [
+  //         {
+  //           stack: {
+  //             children: [
+  //               {
+  //                 component: {
+  //                   name: LoginAppComponent.displayName,
+  //                   options: {
+  //                     topBar: {
+  //                       drawBehind: true,
+  //                       // transparent: true,
+  //                       translucent: true,
+  //                       // blur: true,
+  //                       // title: {
+  //                       //   text: 'hi2',
+  //                       // },
+  //                       // searchBar: true,
+  //                     },
+  //                   }
+  //                 },
+  //               },
+  //             ],
+  //             options: {
+  //               bottomTab: {
+  //                 text: 'Tab 1',
+  //                 // icon: require('../images/one.png')
+  //               },
+  //               topBar: {
+  //                 title: {
+  //                   // text: 'hi'
+  //                 },
+  //                 largeTitle: {
+  //                   visible: true
+  //                 },
+  //               }
+  //             }
+  //           }
+  //         },
+  //         {
+  //           component: {
+  //             name: LoginAppComponent.displayName,
+  //             options: {
+  //               bottomTab: {
+  //                 text: 'Tab 2',
+  //                 // icon: require('../images/one.png')
+  //               },
+  //               topBar: {
+  //                 visible: true,
+  //                 title: {
+  //                   text: 'hi'
+  //                 }
+  //               }
+  //             }
+  //           },
+  //         }
+  //       ]
+  //     }
+  //   }
+  // })
 }
 
 // registerScreen(LoginScreen)

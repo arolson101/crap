@@ -12,9 +12,7 @@ interface Params {
   getTitle: () => FormattedMessage.MessageDescriptor
 }
 
-// Navigation.registerComponent(`navigation.playground.WelcomeScreen`, () => WelcomeScreen)
-
-export const NavContext = React.createContext('')
+const NavContext = React.createContext('')
 
 export const makeScreen2 = <T extends {}>(params: Params) => {
   return <P extends object>(Component: React.ComponentType<P>) => {
@@ -29,13 +27,30 @@ export const makeScreen2 = <T extends {}>(params: Params) => {
       static screenID = `Screen(${Component.displayName || Component.name || ''})`
       static getTitle = params.getTitle
     }, Component)
-    // const c2 = Component as any as NavScreen<P>
-    // c2.screenID = `Screen(${Component.displayName || Component.name || ''})`
-    // c2.getTitle = params.getTitle
-    // return c2
   }
 }
 
 export const registerScreen = (screen: NavScreen) => {
   Navigation.registerComponent(screen.screenID, () => screen)
+}
+
+export interface InjectedNavProps {
+  nav: {
+    componentId: string
+  }
+}
+
+export const withNavigation = <T extends {}>(Component: React.ComponentType<T & InjectedNavProps>) => {
+  const ret = hoistStatics<T, InjectedNavProps>(
+    (props) => (
+      <NavContext.Consumer>
+        {(componentId) =>
+          <Component {...props} nav={{ componentId }} />
+        }
+      </NavContext.Consumer>
+    ),
+    Component
+  )
+  ret.displayName = `withNavigation(${Component.displayName || Component.name || 'unknown'})`
+  return ret
 }
