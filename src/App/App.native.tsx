@@ -295,7 +295,8 @@ const loginConfig = (): LayoutRoot => ({
 const iconImages = {
   'ios-settings': 0,
 }
-const initLogin = () => {
+
+const initLogin = async () => {
   console.log('initLogin')
   await Promise.all(
     Object.keys(iconImages)
