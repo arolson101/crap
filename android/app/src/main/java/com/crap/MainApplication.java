@@ -3,6 +3,7 @@ package com.crap;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.rnfs.RNFSPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
@@ -28,9 +29,15 @@ public class MainApplication extends NavigationApplication implements ReactAppli
   public List<ReactPackage> createAdditionalReactPackages() {
       return Arrays.<ReactPackage>asList(
         new SQLitePluginPackage(),
-        new RandomBytesPackage()
+        new RandomBytesPackage(),
         // eg. new VectorIconsPackage()
-      );
+        new MainReactPackage(),
+        new VectorIconsPackage(),
+        new RNFSPackage(),
+        new ImageResizerPackage(),
+        new BlurViewPackage(),
+        new KeyboardInputPackage(this) // (this = Android application object)
+    );
   }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -42,13 +49,13 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new RNFSPackage(),
-          new SQLitePluginPackage(),
-          new RandomBytesPackage(),
-          new ImageResizerPackage(),
-          new BlurViewPackage(),
-          new KeyboardInputPackage(getApplication()) // (this = Android application object)
+          // new MainReactPackage(),
+          // new RNFSPackage(),
+          // new SQLitePluginPackage(),
+          // new RandomBytesPackage(),
+          // new ImageResizerPackage(),
+          // new BlurViewPackage(),
+          // new KeyboardInputPackage(getApplication()) // (this = Android application object)
       );
     }
 

@@ -185,7 +185,9 @@ const App: React.SFC = () => {
 export default App
 
 import { Navigation } from 'react-native-navigation'
-import { LoginScreen } from '../screens/index'
+import { LoginScreen, LoginScreenComponent } from '../screens/index'
+import Icon from 'react-native-vector-icons/Ionicons'
+import { registerScreen, makeScreen2, NavScreen } from '../screens/Screen2'
 import { LayoutRoot, LayoutComponent, LayoutStackChildren } from 'react-native-navigation/lib/dist/interfaces/Layout'
 import { Options } from 'react-native-navigation/lib/dist/interfaces/Options'
 import hoistStatics from 'hoist-non-react-statics'
@@ -290,7 +292,19 @@ const loginConfig = (): LayoutRoot => ({
   }
 })
 
+const iconImages = {
+  'ios-settings': 0,
+}
 const initLogin = () => {
+  console.log('initLogin')
+  await Promise.all(
+    Object.keys(iconImages)
+    .map(async name => {
+      iconImages[name] = await Icon.getImageSource(name)
+    })
+  )
+
+  console.log('initLogin done', iconImages)
   // console.log('initLogin')
   Navigation.setRoot(loginConfig())
   // Navigation.setRoot({
@@ -327,7 +341,7 @@ const initLogin = () => {
   //             options: {
   //               bottomTab: {
   //                 text: 'Tab 1',
-  //                 // icon: require('../images/one.png')
+  //                 icon: iconImages['ios-settings'],
   //               },
   //               topBar: {
   //                 title: {
@@ -346,7 +360,7 @@ const initLogin = () => {
   //             options: {
   //               bottomTab: {
   //                 text: 'Tab 2',
-  //                 // icon: require('../images/one.png')
+  //                 icon: iconImages['ios-settings'],
   //               },
   //               topBar: {
   //                 visible: true,
