@@ -236,6 +236,16 @@ const registerNavComponent = <T extends {}>(Component: React.ComponentType<T>, {
           topBar: {
             title: {
               text: formatMessage(getTitle())
+            },
+            rightButtons: [
+              {
+                id: 'foo',
+                icon: iconImages['ios-settings'],
+                testID: 'foo',
+              }
+            ],
+            largeTitle: {
+              // visible: true
             }
           }
         })
@@ -285,12 +295,20 @@ const rnnComponent = (screen: React.ComponentType): LayoutStackChildren => ({
 const loginConfig = (): LayoutRoot => ({
   root: {
     stack: {
+      id: 'stack1',
       children: [
         rnnComponent(LoginAppComponent)
       ]
     }
   }
 })
+
+import { PixelRatio } from 'react-native'
+const iconSize = Platform.select({
+  ios: 28,
+  android: PixelRatio.getPixelSizeForLayoutSize(24)
+})
+// const ICON_SIZE_ANDROID = __DEV__ ? 24 : PixelRatio.getPixelSizeForLayoutSize(24);
 
 const iconImages = {
   'ios-settings': 0,
@@ -301,7 +319,7 @@ const initLogin = async () => {
   await Promise.all(
     Object.keys(iconImages)
     .map(async name => {
-      iconImages[name] = await Icon.getImageSource(name)
+      iconImages[name] = await Icon.getImageSource(name, iconSize)
     })
   )
 

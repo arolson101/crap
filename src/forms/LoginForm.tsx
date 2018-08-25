@@ -87,7 +87,7 @@ export class LoginFormComponent extends React.Component<Props> {
                 block
                 onPress={() => {
                   const { nav: { componentId } } = this.props
-                  Navigation.push(componentId, { component: { name: 'LoginAppComponent' } })
+                  Navigation.push('stack1', { component: { name: 'LoginAppComponent' } })
                 }}
               >
                 <FormattedMessage {...(create ? messages.create : messages.open)} />
