@@ -11219,9 +11219,9 @@ react-native-keyboard-tracking-view@^5.4.3:
   version "5.4.4"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-tracking-view/-/react-native-keyboard-tracking-view-5.4.4.tgz#2ec99d232bf59a73493288ba8503b29057fa8a06"
 
-react-native-navigation@^2.0.2459:
-  version "2.0.2459"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.0.2459.tgz#73e373ea6ee2948000dbbeb9f2a5b8d5f4ff7eeb"
+react-native-navigation@2.0.2501:
+  version "2.0.2501"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.0.2501.tgz#3ddf12a74fea0b9db9749bf31b6beb2315edb25f"
   dependencies:
     hoist-non-react-statics "2.x.x"
     lodash "4.x.x"
