@@ -240,7 +240,7 @@ const registerNavComponent = <T extends {}>(Component: React.ComponentType<T>, {
             rightButtons: [
               {
                 id: 'foo',
-                icon: iconImages['ios-settings'],
+                icon: iconImages['ios-share-outline'],
                 testID: 'foo',
               }
             ],
@@ -292,13 +292,51 @@ const rnnComponent = (screen: React.ComponentType): LayoutStackChildren => ({
   }
 })
 
-const loginConfig = (): LayoutRoot => ({
+const componentIds = {
+  login: 'login',
+}
+
+const loginRoot = (): LayoutRoot => ({
   root: {
-    stack: {
-      id: 'stack1',
+    component: {
+      id: componentIds.login,
+      name: LoginAppComponent.displayName!,
+    }
+  }
+})
+
+Navigation.setDefaultOptions({
+  bottomTabs: {
+    backgroundColor: platform.tabActiveBgColor
+  },
+
+  bottomTab: {
+    iconColor: platform.tabBarTextColor,
+    textColor: platform.tabBarTextColor,
+    selectedIconColor: platform.tabBarActiveTextColor,
+    selectedTextColor: platform.tabBarActiveTextColor,
+  }
+})
+
+const appTab = (text: string, component: React.ComponentType) => ({
+  component: {
+    name: component.displayName || component.name,
+    options: {
+      bottomTab: {
+        text,
+        icon: iconImages['ios-share-outline'],
+      }
+    }
+  },
+})
+
+const appRoot = () => ({
+  root: {
+    bottomTabs: {
       children: [
-        rnnComponent(LoginAppComponent)
-      ]
+        appTab('app tab 1', LoginAppComponent),
+        appTab('app tab 2', LoginAppComponent),
+      ],
     }
   }
 })
@@ -311,7 +349,7 @@ const iconSize = Platform.select({
 // const ICON_SIZE_ANDROID = __DEV__ ? 24 : PixelRatio.getPixelSizeForLayoutSize(24);
 
 const iconImages = {
-  'ios-settings': 0,
+  'ios-share-outline': 0,
 }
 
 const initLogin = async () => {
@@ -325,7 +363,7 @@ const initLogin = async () => {
 
   console.log('initLogin done', iconImages)
   // console.log('initLogin')
-  Navigation.setRoot(loginConfig())
+  Navigation.setRoot(appRoot())
   // Navigation.setRoot({
   //   root: {
   //     bottomTabs: {
@@ -360,7 +398,7 @@ const initLogin = async () => {
   //             options: {
   //               bottomTab: {
   //                 text: 'Tab 1',
-  //                 icon: iconImages['ios-settings'],
+  //                 icon: iconImages['ios-share-outline'],
   //               },
   //               topBar: {
   //                 title: {
@@ -379,7 +417,7 @@ const initLogin = async () => {
   //             options: {
   //               bottomTab: {
   //                 text: 'Tab 2',
-  //                 icon: iconImages['ios-settings'],
+  //                 icon: iconImages['ios-share-outline'],
   //               },
   //               topBar: {
   //                 visible: true,
