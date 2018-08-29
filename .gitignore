@@ -87,3 +87,5 @@ android/app/build
 android/build
 .gradle
 .vscode/.react
+.idea
+local.properties
