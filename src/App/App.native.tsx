@@ -237,13 +237,13 @@ const registerNavComponent = <T extends {}>(Component: React.ComponentType<T>, {
             title: {
               text: formatMessage(getTitle())
             },
-            rightButtons: [
-              {
-                id: 'foo',
-                icon: iconImages['ios-share-outline'],
-                testID: 'foo',
-              }
-            ],
+            // rightButtons: [
+            //   {
+            //     id: 'foo',
+            //     icon: iconImages['ios-share-outline'],
+            //     testID: 'foo',
+            //   }
+            // ],
             largeTitle: {
               // visible: true
             }
@@ -315,8 +315,10 @@ Navigation.setDefaultOptions({
     textColor: platform.tabBarTextColor,
     selectedIconColor: platform.tabBarActiveTextColor,
     selectedTextColor: platform.tabBarActiveTextColor,
+    fontSize: platform.tabBarTextSize,
+    fontFamily: platform.fontFamily,
   }
-})
+} as Options)
 
 const appTab = (text: string, component: React.ComponentType) => ({
   component: {
@@ -341,13 +343,6 @@ const appRoot = () => ({
   }
 })
 
-import { PixelRatio } from 'react-native'
-const iconSize = Platform.select({
-  ios: 28,
-  android: PixelRatio.getPixelSizeForLayoutSize(24)
-})
-// const ICON_SIZE_ANDROID = __DEV__ ? 24 : PixelRatio.getPixelSizeForLayoutSize(24);
-
 const iconImages = {
   'ios-share-outline': 0,
 }
@@ -357,7 +352,7 @@ const initLogin = async () => {
   await Promise.all(
     Object.keys(iconImages)
     .map(async name => {
-      iconImages[name] = await Icon.getImageSource(name, iconSize)
+      iconImages[name] = await Icon.getImageSource(name, platform.iconHeaderSize)
     })
   )
 
