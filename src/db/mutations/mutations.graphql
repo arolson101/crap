@@ -1,0 +1,71 @@
+
+mutation CreateDb($name: String!, $password: String!) {
+  createDb(name: $name, password: $password)
+}
+
+mutation OpenDb($dbId: String!, $password: String!) {
+  openDb(dbId: $dbId, password: $password)
+}
+
+mutation CloseDb {
+  closeDb
+}
+
+mutation DeleteDb($dbId: String!) {
+  deleteDb(dbId: $dbId)
+}
+
+mutation SaveBank($input: BankInput!, $bankId: String) {
+  saveBank(input: $input, bankId: $bankId) {
+    id
+    name
+  }
+}
+
+mutation DeleteBank($bankId: String!) {
+  deleteBank(bankId: $bankId)
+}
+
+mutation SaveAccount($input: AccountInput!, $accountId: String, $bankId: String) {
+  saveAccount(input: $input, accountId: $accountId, bankId: $bankId) {
+    id
+    name,
+    bankId
+  }
+}
+
+mutation DownloadAccountList($bankId: String!, $cancelToken: String!) {
+  downloadAccountList(bankId: $bankId, cancelToken: $cancelToken) {
+    id
+    accounts {
+      id
+    }
+  }
+}
+
+mutation DeleteAccount($accountId: String!) {
+  deleteAccount(accountId: $accountId)
+}
+
+mutation SaveTransaction($input: TransactionInput!, $transactionId: String, $accountId: String) {
+  saveTransaction(input: $input, transactionId: $transactionId, accountId: $accountId) {
+    id
+    accountId
+  }
+}
+
+mutation DeleteTransaction($transactionId: String) {
+  deleteTransaction(transactionId: $transactionId) {
+    accountId
+  }
+}
+
+mutation DownloadTransactions($bankId: String!, $accountId: String!, $start: DateTime!, $end: DateTime!, $cancelToken: String!) {
+  downloadTransactions(bankId: $bankId, accountId: $accountId, start: $start, end: $end, cancelToken: $cancelToken) {
+    id
+  }
+}
+
+mutation Cancel($cancelToken: String!) {
+  cancel(cancelToken: $cancelToken)
+}
