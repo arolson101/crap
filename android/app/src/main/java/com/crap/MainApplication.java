@@ -3,13 +3,13 @@ package com.crap;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.rnfs.RNFSPackage;
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
-import com.bitgo.randombytes.RandomBytesPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.rnfs.RNFSPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.bitgo.randombytes.RandomBytesPackage;
 import com.wix.reactnativekeyboardinput.KeyboardInputPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import org.pgsqlite.SQLitePluginPackage;

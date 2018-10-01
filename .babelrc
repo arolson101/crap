@@ -1,9 +1,9 @@
 {
   "presets": [
-    "react-native"
+    "module:metro-react-native-babel-preset"
   ],
   "plugins": [
-    "transform-new-target",
-    "transform-react-jsx-source"
+    "@babel/plugin-transform-new-target",
+    "@babel/plugin-transform-react-jsx-source"
   ]
 }

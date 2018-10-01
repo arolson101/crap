@@ -94,24 +94,18 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "27.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.crap"
-        minSdkVersion 19
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
-        renderscriptTargetApi 23
-        renderscriptSupportModeEnabled true
-    }
-    compileOptions {
-      sourceCompatibility JavaVersion.VERSION_1_8
-      targetCompatibility JavaVersion.VERSION_1_8
     }
     splits {
         abi {
@@ -140,25 +134,17 @@ android {
             }
         }
     }
-    configurations.all {
-        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            def requested = details.requested
-            if (requested.group == 'com.android.support' && requested.name != 'multidex') {
-                details.useVersion "25.4.0"
-            }
-        }
-    }
 }
 
 dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-fs')
     implementation project(':react-native-randombytes')
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:25.4.0"
-    implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-sqlcipher-storage')
     implementation project(':react-native-image-resizer')
-    implementation project(":reactnativekeyboardinput")
+    implementation project(":react-native-keyboard-input")
     implementation project(':react-native-blur')
 }
 
