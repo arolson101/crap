@@ -1,3 +1,4 @@
+console.log('native')
 import { Root, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
