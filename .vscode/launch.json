@@ -1,0 +1,167 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to packager",
+      "program": "${workspaceRoot}/.vscode/launchReactNative.js",
+      "type": "reactnative",
+      "request": "attach",
+      "sourceMaps": true,
+      "outDir": "${workspaceRoot}/.vscode/.react"
+    },
+    {
+      "name": "Android",
+      "program": "${workspaceRoot}/.vscode/launchReactNative.js",
+      "type": "reactnative",
+      "request": "launch",
+      "platform": "android",
+      "sourceMaps": true,
+      "outDir": "${workspaceRoot}/.vscode/.react"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Electron",
+      "type": "chrome",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "runtimeArgs": [
+        "${workspaceRoot}",
+        "--remote-debugging-port=9222",
+        "--debug-brk"
+      ],
+      "webRoot": "${workspaceRoot}"
+    },
+    {
+      "name": "Electron (Main Process)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "args" : ["."]
+    },
+    {
+      "name": "Tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/react-scripts-ts/scripts/test.js",
+      "stopOnEntry": false,
+      "args": [
+        "--runInBand",
+        "--env=jsdom"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+          "NODE_ENV": "test",
+          "CI": "true"
+      },
+      "console": "internalConsole",
+      "sourceMaps": true
+    },
+    {
+      "name": "Jest",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/jest-cli/bin/jest.js",
+      "stopOnEntry": false,
+      "args": [
+        "--runInBand",
+        "--env=jsdom"
+      ],
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+          "NODE_ENV": "test",
+          "CI": "true"
+      },
+      "console": "internalConsole",
+      "sourceMaps": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "genSchema",
+      "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
+      "args": [
+        "--transpileOnly",
+        "--project",
+        "tsconfig.test.json",
+        "--ignore",
+        "/sql.js/",
+        "${workspaceFolder}/genSchema.ts"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "gql-gen mutations",
+      "program": "${workspaceRoot}/node_modules/graphql-code-generator/dist/cli.js",
+      "args": [
+        "--require",
+        "ts-node/register",
+        "--schema",
+        "temp/schema.json",
+        "--template",
+        "graphql-codegen-typescript-template",
+        "--out",
+        "src/db/mutations/mutations-types.ts",
+        "src/db/mutations/mutations.graphql"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "react-app-rewired start",
+      "program": "${workspaceRoot}/node_modules/react-app-rewired/scripts/start.js",
+      "args": [
+        "start"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "env": {
+        "BROWSER": "none"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "react-app-rewired build",
+      "program": "${workspaceRoot}/node_modules/react-app-rewired/scripts/build.js",
+      "args": [
+        "build"
+      ],
+      "sourceMaps": false,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "env": {
+        "BROWSER": "none"
+      }
+    },
+  ]
+}
