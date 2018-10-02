@@ -1,4 +1,3 @@
-console.log('web')
 import { Text } from '@blueprintjs/core'
 import { ThemeProvider } from 'glamorous'
 import * as React from 'react'
