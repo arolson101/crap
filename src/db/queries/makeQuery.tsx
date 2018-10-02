@@ -1,7 +1,6 @@
 import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
 import * as React from 'react'
-import { Query, QueryResult } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
 import { ErrorMessage } from '../../components/index'
 import { Container } from 'typedi'

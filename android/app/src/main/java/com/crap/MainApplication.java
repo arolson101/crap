@@ -2,17 +2,18 @@ package com.crap;
 
 import android.app.Application;
 
+import org.pgsqlite.SQLitePluginPackage;
 import com.facebook.react.ReactApplication;
-import com.rnfs.RNFSPackage;
+import com.cmcewen.blurview.BlurViewPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
+import com.rnfs.RNFSPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.wix.reactnativekeyboardinput.KeyboardInputPackage;
-import com.cmcewen.blurview.BlurViewPackage;
-import org.pgsqlite.SQLitePluginPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +30,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          new RNFSPackage(),
-          new SQLitePluginPackage(),
-          new RandomBytesPackage(),
-          new ImageResizerPackage(),
-          new BlurViewPackage(),
-          new KeyboardInputPackage(getApplication()) // (this = Android application object)
+            new SQLitePluginPackage(),
+            new BlurViewPackage(),
+            new PickerPackage(),
+            new ImageResizerPackage(),
+            new VectorIconsPackage(),
+            new RandomBytesPackage(),
+            new RNFSPackage()
       );
     }
 
