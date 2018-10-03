@@ -1,4 +1,3 @@
-import { PureQueryOptions } from 'apollo-client'
 import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
 import { Toast } from 'native-base'
@@ -22,7 +21,6 @@ export type MutationFcn<TRet, TVars> = (vars: TVars, options?: MutationFcnOption
 
 export type MutationDesc<TRes, TVars> = {
   mutation: DocumentNode
-  refetchQueries: (results: { data: TRes }) => PureQueryOptions[]
   __variables?: TVars
   __results?: TRes
 }
