@@ -2,19 +2,18 @@ import { Button, View } from 'native-base'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { connect } from 'react-redux'
+import Collapsible from 'react-native-collapsible'
 import { compose } from 'recompose'
 import { confirm } from '../components/Confirmation'
 import { typedFields } from '../components/fields/index'
 import { Text } from '../components/index'
-import { Bank, Mutations, Queries } from '../db/index'
+import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
+import { Bank, Mutations, Queries } from '../db/index'
+import { SaveBank } from '../db/mutations/mutations-types'
 import { filist, formatAddress } from '../fi'
-import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
-import { SaveBank } from '../db/mutations/mutations-types'
-import Collapsible from 'react-native-collapsible'
 
 export namespace BankForm {
   export interface Props {
@@ -24,13 +23,10 @@ export namespace BankForm {
 
 type Props = BankForm.Props
 
-interface ComposedProps extends Props {
+interface ComposedProps extends Props, InjectedNavProps {
   query: Queries.Bank
   saveBank: Mutations.SaveBank
   deleteBank: Mutations.DeleteBank
-  navBack: actions['navBack']
-  navBank: actions['navBank']
-  navPopToTop: actions['navPopToTop']
 }
 
 type BankInput = {
@@ -242,7 +238,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 
 export const BankForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, pickT(actions, 'navBack', 'navBank', 'navPopToTop')),
+  withNav,
   withQuery({ query: Queries.Bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   withMutation({ saveBank: Mutations.SaveBank }),
   withMutation({ deleteBank: Mutations.DeleteBank })

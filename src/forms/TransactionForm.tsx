@@ -3,13 +3,12 @@ import { Button, View } from 'native-base'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { confirm } from '../components/Confirmation'
 import { typedFields } from '../components/fields/index'
-import { Mutations, Queries, Transaction } from '../db/index'
+import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
-import { actions } from '../redux/actions/index'
+import { Mutations, Queries, Transaction } from '../db/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
 
@@ -22,13 +21,10 @@ export namespace TransactionForm {
 
 type Props = TransactionForm.Props
 
-interface ComposedProps extends Props {
+interface ComposedProps extends Props, InjectedNavProps {
   query: Queries.Transaction
   saveTransaction: Mutations.SaveTransaction
   deleteTransaction: Mutations.DeleteTransaction
-  navBack: actions['navBack']
-  // navTransaction: actions['navTransaction']
-  navPopToTop: actions['navPopToTop']
 }
 
 type TransactionInput = {
@@ -174,7 +170,7 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
 
 export const TransactionForm = compose<ComposedProps, Props>(
   injectIntl,
-  connect(null, pickT(actions, 'navBack', /*'navTransaction',*/ 'navPopToTop')),
+  withNav,
   withQuery({ query: Queries.Transaction }, ({ transactionId }: Props) => transactionId && ({ transactionId })),
   withMutation({ saveTransaction: Mutations.SaveTransaction }),
   withMutation({ deleteTransaction: Mutations.DeleteTransaction })

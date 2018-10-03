@@ -7,14 +7,6 @@ import { FormattedMessage } from 'react-intl'
 import './SelectField.web.css'
 import { WrappedField } from './WrappedField'
 
-// const StyledPicker = glamorous(Picker)({},
-//   ({ error, theme }: ThemeProp & { error: any }) => ({
-//     borderWidth: theme.boxBorderWidth,
-//     borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor
-//   })
-// )
-// StyledPicker.displayName = 'StyledPicker'
-
 export namespace SelectField {
   export interface Item {
     label: string

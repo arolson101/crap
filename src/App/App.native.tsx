@@ -5,14 +5,13 @@ import { InjectedIntlProps, injectIntl, IntlProvider } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
+import { compose } from 'recompose'
+import { InjectedNavProps, withNav } from '../components/NavContext'
+import { NavProvider } from '../components/NavProvider'
 import * as modals from '../modals/index'
 import { paths } from '../nav'
-import { nativeActions } from '../redux/actions/nativeActions'
-import { ReduxProvider } from '../redux/index'
 import * as screens from '../screens/index'
 import { ScreenComponent, ScreenProps } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
@@ -139,9 +138,7 @@ const AuthStack = createSwitchNavigator({
 })
 AuthStack.displayName = 'AuthStack'
 
-interface TopNavigatorComponentProps extends InjectedIntlProps {
-  setTopNavigator: (topNavigator: NavigationContainerComponent) => any
-}
+type TopNavigatorComponentProps = InjectedIntlProps & InjectedNavProps
 
 const AppNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator, intl }) => {
   const screenProps: ScreenProps = ({ intl })
@@ -152,20 +149,20 @@ const AppNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNa
 
 const AppNavigator = compose(
   injectIntl,
-  connect(null, { setTopNavigator: nativeActions.setTopNavigator })
+  withNav,
 )(AppNavigatorComponent)
 AppNavigator.displayName = 'AppNavigator'
 
 const App: React.SFC = () => {
   return (
     <LoadFonts>
-      <ReduxProvider>
+      <NavProvider>
         <IntlProvider locale='en' textComponent={Text}>
           <Root>
             <AppNavigator />
           </Root>
         </IntlProvider>
-      </ReduxProvider>
+      </NavProvider>
     </LoadFonts>
   )
 }

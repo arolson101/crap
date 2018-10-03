@@ -3,10 +3,8 @@ import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldAPI } from 'react-form'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { actions } from '../../redux/actions/index'
-import { SelectFieldItem } from '../../redux/actions/navActions'
+import { compose } from 'recompose'
+import { InjectedNavProps, withNav, SelectFieldItem } from '../NavContext'
 import { Label } from './Label.native'
 
 export namespace SelectField {
@@ -21,8 +19,7 @@ export namespace SelectField {
   }
 }
 
-interface ComposedProps extends SelectField.Props, InjectedIntlProps {
-  navPicker: actions['navPicker']
+interface ComposedProps extends SelectField.Props, InjectedIntlProps, InjectedNavProps {
 }
 
 export class SelectFieldComponent extends React.Component<ComposedProps> {
@@ -102,5 +99,5 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
 
 export const SelectField = compose(
   injectIntl,
-  connect(null, { navPicker: actions.navPicker })
+  withNav,
 )(SelectFieldComponent)

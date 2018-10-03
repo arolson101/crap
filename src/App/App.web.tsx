@@ -5,13 +5,13 @@ import { hot } from 'react-hot-loader'
 import { IntlProvider } from 'react-intl'
 import { BrowserRouter } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
-import { ReduxProvider } from '../redux/index'
 import { LoginScreen } from '../screens/index'
 import { MainView } from '../screens/MainView'
 import { Sidebar } from '../screens/Sidebar'
 import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 import './App.web.css'
+import { NavProvider } from '../components/NavProvider'
 
 // https://github.com/tomkp/react-split-pane/issues/252
 require('react-split-pane').default = require('react-split-pane')
@@ -41,7 +41,7 @@ const Auth: React.SFC<Props> = ({ isOpen }) => {
 const App: React.SFC = (props) => {
   return (
     <LoadFonts>
-      <ReduxProvider>
+      <NavProvider>
         <IntlProvider locale='en' textComponent={Text}>
           <BrowserRouter>
             <ThemeProvider theme={defaultTheme}>
@@ -49,7 +49,7 @@ const App: React.SFC = (props) => {
             </ThemeProvider>
           </BrowserRouter>
         </IntlProvider>
-      </ReduxProvider>
+      </NavProvider>
     </LoadFonts>
   )
 }

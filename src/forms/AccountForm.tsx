@@ -2,15 +2,13 @@ import { Button, View } from 'native-base'
 import * as React from 'react'
 import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { withNavigation } from 'react-navigation'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { SelectFieldItem, typedFields } from '../components/fields/index'
 import { confirm } from '../components/index'
 import { Container } from '../components/layout'
-import { Account, Mutations, Queries } from '../db/index'
+import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
-import { actions } from '../redux/actions/index'
+import { Account, Mutations, Queries } from '../db/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
 
@@ -23,12 +21,10 @@ export namespace AccountForm {
 
 type Props = AccountForm.Props
 
-interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps {
+interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps, InjectedNavProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
   deleteAccount: Mutations.DeleteAccount
-  navBack: actions['navBack']
-  navPopToTop: actions['navPopToTop']
 }
 
 type FormValues = Account.Props
@@ -187,8 +183,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
 
 export const AccountForm = compose<ComposedProps, Props>(
   injectIntl,
-  withNavigation,
-  connect(null, pickT(actions, 'navBack', 'navPopToTop')),
+  withNav,
   withQuery({ query: Queries.Account }, ({ accountId }: Props) => accountId && ({ accountId })),
   withMutation({ saveAccount: Mutations.SaveAccount }),
   withMutation({ deleteAccount: Mutations.DeleteAccount }),

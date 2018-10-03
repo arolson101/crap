@@ -4,14 +4,12 @@ import { Body, ListItem } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { ListRenderItem, SectionBase, SectionList } from 'react-native'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Text } from '../components/layout'
-import { Mutations, Queries } from '../db/index'
+import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
+import { Mutations, Queries } from '../db/index'
 import { Account } from '../db/queries/queries-types'
-import { actions } from '../redux/actions/index'
-import { pickT } from '../util/pick'
 import { AddButtonProps, makeScreen } from './Screen'
 
 interface Params {
@@ -19,9 +17,8 @@ interface Params {
   accountName: string
 }
 
-interface Props extends Params, AddButtonProps {
+interface Props extends Params, AddButtonProps, InjectedNavProps {
   query: Queries.Account
-  navTransactionCreate: actions['navTransactionCreate']
   downloadTransactions: Mutations.DownloadTransactions
   cancel: Mutations.Cancel
 }
@@ -131,6 +128,6 @@ export const AccountScreen = compose(
   withQuery({ query: Queries.Account }, (props: Props) => ({ accountId: props.accountId })),
   withMutation({ downloadTransactions: Mutations.DownloadTransactions }),
   withMutation({ cancel: Mutations.Cancel }),
-  connect(null, pickT(actions, 'navTransactionCreate')),
+  withNav,
 )(AccountScreenComponent)
 AccountScreen.displayName = 'AccountScreen'

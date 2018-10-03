@@ -1,30 +1,25 @@
 import cuid from 'cuid'
-import { Body, Card, CardItem, Icon, Right, Text, Thumbnail, Left, Button } from 'native-base'
+import { Body, Button, Card, CardItem, Icon, Left, Right, Text, Thumbnail } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import { Linking } from 'react-native'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import * as URL from 'url'
 import { Divider } from '../components/fields/Divider'
 import { List, ListItem, Scrollable } from '../components/layout.native'
-import { Mutations, Queries } from '../db/index'
+import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
+import { Mutations, Queries } from '../db/index'
 import { Bank } from '../db/queries/queries-types'
-import { actions } from '../redux/actions/index'
-import { pickT } from '../util/pick'
 import { AddButtonProps, makeScreen } from './Screen'
 
 interface Params {
   bankId: string
 }
 
-interface Props extends Params, AddButtonProps {
+interface Props extends Params, AddButtonProps, InjectedNavProps {
   query: Queries.Bank
-  navBankEdit: actions['navBankEdit']
-  navAccountEdit: actions['navAccountEdit']
-  navAccountCreate: actions['navAccountCreate']
   downloadAccountList: Mutations.DownloadAccountList
   cancel: Mutations.Cancel
 }
@@ -172,7 +167,7 @@ export const BankScreen = compose(
   withQuery({ query: Queries.Bank }, (params: Params) => params),
   withMutation({ downloadAccountList: Mutations.DownloadAccountList }),
   withMutation({ cancel: Mutations.Cancel }),
-  connect(null, pickT(actions, 'navBankEdit', 'navAccountEdit', 'navAccountCreate'))
+  withNav,
 )(BankScreenComponent)
 BankScreen.displayName = 'BankScreen'
 

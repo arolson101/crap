@@ -3,20 +3,18 @@ import * as React from 'react'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { Dimensions } from 'react-native'
 import { CalculatorInput } from 'react-native-calculator'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
+import { compose } from 'recompose'
 import { typedFields } from '../components/fields/index'
 import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
-import { Mutations, Queries } from '../db/index'
+import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
-import { actions } from '../redux/actions/index'
+import { Mutations, Queries } from '../db/index'
 
-interface Props extends InjectedIntlProps {
+interface Props extends InjectedIntlProps, InjectedNavProps {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
   deleteDb: Mutations.DeleteDb
-  login: actions['login']
 }
 
 interface FormValues {
@@ -165,9 +163,7 @@ export const LoginForm = compose(
   withMutation({ openDb: Mutations.OpenDb }),
   withMutation({ createDb: Mutations.CreateDb }),
   withMutation({ deleteDb: Mutations.DeleteDb }),
-  connect(null, {
-    login: actions.login
-  }),
+  withNav,
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

@@ -2,15 +2,11 @@ import { Body, Header, Icon, Input, Item, ListItem, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { ListRenderItem, SectionBase, SectionList, StyleSheet } from 'react-native'
-import { NavigationInjectedProps } from 'react-navigation'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { actions } from '../redux/actions/index'
-import { NavPickerParams, SelectFieldItem } from '../redux/actions/navActions'
+import { compose } from 'recompose'
 import { makeScreen } from '../screens/Screen'
+import { InjectedNavProps, withNav, NavPickerParams, SelectFieldItem } from '../components/NavContext'
 
-interface Props extends NavPickerParams, NavigationInjectedProps {
-  navBack: actions['navBack']
+interface Props extends NavPickerParams, InjectedNavProps {
 }
 
 interface State {
@@ -138,7 +134,7 @@ export const PickerModal = compose(
     title: (props) => props.title,
     cancelButton: true,
   }),
-  connect(null, { navBack: actions.navBack }),
+  withNav,
 )(PickerForm)
 PickerModal.displayName = 'PickerModal'
 

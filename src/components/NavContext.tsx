@@ -1,7 +1,7 @@
-/* tslint:disable:no-duplicate-variable */
-import * as web from './navActions.web'
-import * as native from './navActions.native'
+import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
+import { NavigationContainerComponent } from 'react-navigation'
+import { Subtract } from 'utility-types'
 
 export interface SelectFieldItem {
   label: string
@@ -33,10 +33,25 @@ export interface NavApi {
   navTransactionEdit: (transactionId: string) => any
   navTransactionCreate: (accountId: string) => any
   navPicker: (params: NavPickerParams) => any
+
+  setTopNavigator: (navigator: NavigationContainerComponent) => any
 }
 
-declare var _test: typeof web
-declare var _test: typeof native
+export const NavContext = React.createContext(null as any as NavApi)
 
-/// export to get the shape of the module
-export * from './navActions.web'
+export type InjectedNavProps = NavApi
+
+export const withNav = <P extends InjectedNavProps>(Component: React.ComponentType<P>) => {
+  return (props: Subtract<P, InjectedNavProps>) => {
+    return (
+     <NavContext.Consumer>
+       {navContext =>
+        <Component
+          {...navContext}
+          {...props}
+        />
+       }
+     </NavContext.Consumer >
+    )
+  }
+}
