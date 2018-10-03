@@ -54,7 +54,7 @@ mutation SaveTransaction($input: TransactionInput!, $transactionId: String, $acc
   }
 }
 
-mutation DeleteTransaction($transactionId: String) {
+mutation DeleteTransaction($transactionId: String!) {
   deleteTransaction(transactionId: $transactionId) {
     accountId
   }

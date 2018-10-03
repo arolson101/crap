@@ -7,12 +7,10 @@ import { compose } from 'recompose'
 import { Divider } from '../components/fields/Divider'
 import { List, ListItem, Scrollable, Text } from '../components/layout.native'
 import { Mutations, Queries } from '../db/index'
-import { withMutation } from '../db/mutations/makeMutation'
-import { withQuery } from '../db/queries/makeQuery'
+import { withMutation, withQuery } from '../db'
 import { Banks } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
 import { AddButtonProps, makeScreen } from './Screen'
-import { selectors } from '../redux/reducers/index'
 
 interface Props {
 }

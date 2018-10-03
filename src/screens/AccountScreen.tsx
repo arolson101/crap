@@ -8,8 +8,7 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Text } from '../components/layout'
 import { Mutations, Queries } from '../db/index'
-import { withMutation } from '../db/mutations/makeMutation'
-import { withQuery } from '../db/queries/makeQuery'
+import { withMutation, withQuery } from '../db'
 import { Account } from '../db/queries/queries-types'
 import { actions } from '../redux/actions/index'
 import { pickT } from '../util/pick'
@@ -63,17 +62,15 @@ class AccountScreenComponent extends React.PureComponent<Props, State> {
       })
 
     return (
-      <>
-        <SectionList
-          refreshing={this.state.refreshing}
-          onRefresh={this.downloadTransactions}
-          style={{ backgroundColor: platform.cardDefaultBg }}
-          sections={sections}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderItem}
-          renderSectionHeader={this.renderSectionHeader}
-        />
-      </>
+      <SectionList
+        refreshing={this.state.refreshing}
+        onRefresh={this.downloadTransactions}
+        style={{ backgroundColor: platform.cardDefaultBg }}
+        sections={sections}
+        keyExtractor={this.keyExtractor}
+        renderItem={this.renderItem}
+        renderSectionHeader={this.renderSectionHeader}
+      />
     )
   }
 
@@ -107,8 +104,6 @@ class AccountScreenComponent extends React.PureComponent<Props, State> {
   keyExtractor = (item: ItemType) => item.id.toString()
 
   renderItem: ListRenderItem<ItemType> = ({ item, index }) => {
-    const { } = this.props
-
     return (
       <ListItem>
         <Body>

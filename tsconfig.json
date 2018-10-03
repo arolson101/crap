@@ -6,6 +6,7 @@
     "target": "es2017",
     "lib": [
       "es2017",
+      "esnext.asynciterable",
       "dom"
     ],
     "sourceMap": true,
@@ -28,6 +29,7 @@
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": false,
     "emitDecoratorMetadata": true,
+    "noEmit": true
   },
   "exclude": [
     "build",

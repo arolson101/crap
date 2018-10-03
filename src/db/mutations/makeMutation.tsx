@@ -1,12 +1,12 @@
-import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
 import { Toast } from 'native-base'
 import * as React from 'react'
 import { $Values, Subtract } from 'utility-types'
 import { Spinner } from '../../components/index'
-import { Defined } from '../queries/makeQuery'
+import { Defined } from '../queries'
 import { Container } from 'typedi'
 import { GraphQLService } from '../services/GraphQLService'
+import { ExecutableDocumentNode } from '../graphql-types'
 
 type CompletionFcn<TRet> = (result: TRet) => any
 
@@ -17,21 +17,13 @@ interface MutationFcnOptions<TRet> {
   finally?: () => any
 }
 
-export type MutationFcn<TRet, TVars> = (vars: TVars, options?: MutationFcnOptions<TRet>) => void
-
-export type MutationDesc<TRes, TVars> = {
-  mutation: DocumentNode
-  __variables?: TVars
-  __results?: TRes
-}
-
-export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 extends {}, R1 extends {}>(
+export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1, R1>>, V1 extends {}, R1 extends {}>(
   mutationDesc: R
 ) => {
   type MD = $Values<R>
   type TRes = Defined<MD['__results']>
   type TVariables = MD['__variables']
-  type WrappedProps = { [K in keyof R]: MutationFcn<TRes, TVariables> }
+  type WrappedProps = { [K in keyof R]: ExecutableDocumentNode<TRes, TVariables> }
 
   const name = Object.keys(mutationDesc)[0]
   const desc = mutationDesc[name]
@@ -66,7 +58,7 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
         }
         try {
           this.setState({ loading: true })
-          const results = await gql.execute(desc.mutation, variables)
+          const results = await gql.execute(desc, variables)
           if (results.errors && results.errors.length > 0) {
             throw results.errors[0]
           }
@@ -128,32 +120,6 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
           </>
         )
       }
-
-      // render2() {
-      //   return (
-      //     <Mutation
-      //       mutation={desc.mutation}
-      //       refetchQueries={desc.refetchQueries}
-      //       onCompleted={this.onCompleted}
-      //       onError={this.onError}
-      //     >
-      //       {(execute, result) => {
-      //         this.execute = execute
-      //         const componentProps = { [name]: this.wrapExecute }
-      //         return (
-      //           <>
-      //             <Spinner
-      //               cancelable={!!this.state.cancel}
-      //               onCancel={this.onCancel}
-      //               visible={result.loading && !this.state.noSpinner}
-      //             />
-      //             <Component {...this.props} {...componentProps} />
-      //           </>
-      //         )
-      //       }}
-      //     </Mutation>
-      //   )
-      // }
 
       closeToast = () => {
         (Toast as any).toastInstance._root.closeToast()

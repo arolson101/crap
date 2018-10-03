@@ -37,7 +37,7 @@
     "storybook-native": "storybook start -p 7007 -c .storybook/native",
     "start": "npm run serve",
     "storybook": "npm run storybook-web",
-    "pregenerate": "rimraf temp/graphdoc || mkdirp temp",
+    "pregenerate": "rimraf temp/graphdoc && mkdirp temp",
     "generate": "npm run generate:schema && npm run graphdoc && npm run generate:queries && npm run generate:mutations && npm run generate:dts",
     "generate:schema": "ts-node --transpileOnly --project tsconfig.test.json --ignore \"/sql.js/\" ./genSchema.ts",
     "generate:queries": "gql-gen --require ts-node/register --schema temp/schema.json --template graphql-codegen-typescript-template --out src/db/queries/queries-types.ts \"src/db/queries/queries.graphql\"",

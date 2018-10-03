@@ -8,8 +8,7 @@ import { compose } from 'redux'
 import { typedFields } from '../components/fields/index'
 import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
 import { Mutations, Queries } from '../db/index'
-import { withMutation } from '../db/mutations/makeMutation'
-import { withQuery } from '../db/queries/makeQuery'
+import { withMutation, withQuery } from '../db'
 import { actions } from '../redux/actions/index'
 
 interface Props extends InjectedIntlProps {

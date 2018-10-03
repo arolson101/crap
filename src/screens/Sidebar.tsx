@@ -4,7 +4,7 @@ import { compose } from 'recompose'
 import { Button, Column, Text } from '../components/layout'
 import { Queries } from '../db/index'
 import { actions } from '../redux/actions/index'
-import { withQuery } from '../db/queries/makeQuery'
+import { withQuery } from '../db'
 
 interface Props {
   query: Queries.Accounts
