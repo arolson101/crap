@@ -2,8 +2,8 @@
 import * as web from './TextField.web'
 import * as native from './TextField.native'
 
-export interface TextFieldProps<T = {}> {
-  field: string
+export interface TextFieldProps<Values> {
+  field: keyof Values & string
   label: FormattedMessage.MessageDescriptor
   placeholder?: FormattedMessage.MessageDescriptor
   secure?: boolean

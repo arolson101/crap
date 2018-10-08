@@ -3,9 +3,9 @@ import { ReturnKeyType } from 'react-native'
 import * as web from './UrlField.web'
 import * as native from './UrlField.native'
 
-export interface UrlFieldProps<T = {}> {
-  field: string
-  favicoField: string
+export interface UrlFieldProps<Values> {
+  field: keyof Values & string
+  favicoField: keyof Values & string
   label: FormattedMessage.MessageDescriptor
   placeholder?: FormattedMessage.MessageDescriptor
   autoFocus?: boolean

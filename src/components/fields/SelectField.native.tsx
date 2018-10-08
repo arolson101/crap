@@ -1,7 +1,7 @@
+import { Field, FieldProps, FormikProps } from 'formik'
 import { Body, Icon, ListItem, Picker, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { Field, FieldAPI } from 'react-form'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'recompose'
 import { InjectedNavProps, withNav, SelectFieldItem } from '../NavContext'
@@ -10,8 +10,8 @@ import { Label } from './Label.native'
 export namespace SelectField {
   export type Item = SelectFieldItem
 
-  export interface Props<T = {}> {
-    field: string
+  export interface Props<Values> {
+    field: keyof Values & string
     label: FormattedMessage.MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
@@ -19,23 +19,23 @@ export namespace SelectField {
   }
 }
 
-interface ComposedProps extends SelectField.Props, InjectedIntlProps, InjectedNavProps {
+interface ComposedProps<Values> extends SelectField.Props<Values>, InjectedIntlProps, InjectedNavProps {
 }
 
-export class SelectFieldComponent extends React.Component<ComposedProps> {
-  fieldApi: FieldAPI<any>
+export class SelectFieldComponent<Values> extends React.Component<ComposedProps<Values>> {
+  private form: FormikProps<Values>
 
   render() {
-    const { field, label, items, intl, searchable } = this.props
+    const { field: name, label, items, intl, searchable } = this.props
 
     return (
-      <Field field={field}>
-        {fieldApi => {
-          this.fieldApi = fieldApi
-          const error = !!(fieldApi.touched && fieldApi.error)
-          const selectedItem = items.find(item => item.value === fieldApi.value)
+      <Field name={name}>
+        {({ field, form }: FieldProps<Values>) => {
+          this.form = form
+          const error = !!(form.touched[name] && form.error[name])
+          const selectedItem = items.find(item => item.value === field.value)
           if (!selectedItem) {
-            throw new Error(`selected item ${fieldApi.value} not found in item list`)
+            throw new Error(`selected item ${field.value} not found in item list`)
           }
           return (
             <ListItem
@@ -55,8 +55,8 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
                     textStyle={{ flex: 1 }}
                     placeholder='placeholder'
                     placeholderStyle={{ flex: 1 }}
-                    selectedValue={fieldApi.value}
-                    onValueChange={fieldApi.setValue}
+                    selectedValue={field.value}
+                    onValueChange={value => form.setFieldValue(name, value)}
                   >
                     {items.map(item =>
                       <Picker.Item key={item.value} label={item.label} value={item.value} />
@@ -76,21 +76,21 @@ export class SelectFieldComponent extends React.Component<ComposedProps> {
   }
 
   onPress = () => {
-    const { navPicker, items, searchable, label, intl } = this.props
+    const { navPicker, items, searchable, label, field } = this.props
     if (searchable) {
       navPicker({
         title: label,
         items,
         searchable,
         onValueChange: this.onValueChange,
-        selectedItem: this.fieldApi.value,
+        selectedItem: this.form.values[field] as any,
       })
     }
   }
 
   onValueChange = (value: string | number) => {
-    const { onValueChange } = this.props
-    this.fieldApi.setValue(value)
+    const { onValueChange, field } = this.props
+    this.form.setFieldValue(field, value)
     if (onValueChange) {
       onValueChange(value)
     }

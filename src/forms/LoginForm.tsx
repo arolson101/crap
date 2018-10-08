@@ -1,8 +1,6 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { Dimensions } from 'react-native'
-import { CalculatorInput } from 'react-native-calculator'
 import { compose } from 'recompose'
 import { typedFields } from '../components/fields/index'
 import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
@@ -52,11 +50,6 @@ export class LoginFormComponent extends React.Component<Props> {
               <WelcomeText>
                 <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)} />
               </WelcomeText>
-              <CalculatorInput
-                fieldTextStyle={{ fontSize: 24 }}
-                fieldContainerStyle={{ height: 36 }}
-                width={Dimensions.get('screen').width}
-              />
               <TextField
                 autoFocus
                 secure

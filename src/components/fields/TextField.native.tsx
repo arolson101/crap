@@ -1,16 +1,16 @@
+import { Field, FieldProps } from 'formik'
 import { Icon, Input, Item, Textarea } from 'native-base'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { TextInput } from 'react-native'
 import { Label } from './Label.native'
 import { TextFieldProps } from './TextField'
 
 export namespace TextField {
-  export type Props<T = {}> = TextFieldProps
+  export type Props<Values> = TextFieldProps<Values>
 }
 
-class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
+export class TextField<Values> extends React.Component<TextField.Props<Values>> {
   private textInput: TextInput
 
   focusTextInput = () => {
@@ -20,49 +20,53 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
   }
 
   render() {
-    const { field, autoFocus, label, color, placeholder, secure,
-      rows, onSubmitEditing, returnKeyType, intl, noCorrect } = this.props
+    const { field: name, autoFocus, label, color, placeholder, secure,
+      rows, onSubmitEditing, returnKeyType, noCorrect } = this.props
     return (
-      <Field field={field}>
-        {fieldApi => {
-          const error = !!(fieldApi.touched && fieldApi.error)
+      <Field name={name}>
+        {({ field, form }: FieldProps<Values>) => {
+          const error = !!(form.touched[name] && form.error[name])
           const itemProps = { onPress: this.focusTextInput }
           const inputProps = { autoFocus }
           const inputStyle = color ? { color } : {}
           return (
-            <Item
-              {...itemProps}
-              error={error}
-              secureTextEntry={secure}
-              placeholder={placeholder && intl.formatMessage(placeholder)}
-            >
-              <Label label={label} error={error} />
-              {rows && rows > 0
-                ? <Textarea
-                  style={{ flex: 1 }}
-                  rowSpan={rows}
-                  onChangeText={fieldApi.setValue}
-                  value={fieldApi.value}
-                  ref={this.ref}
-                />
-                : <Input
-                  style={{ flex: 1, ...inputStyle }}
-                  onChangeText={fieldApi.setValue}
-                  value={fieldApi.value.toString()}
-                  onSubmitEditing={onSubmitEditing}
+            <FormattedMessage {...placeholder}>
+              {placeholderText =>
+                <Item
+                  {...itemProps}
+                  error={error}
                   secureTextEntry={secure}
-                  numberOfLines={rows}
-                  autoCapitalize={noCorrect ? 'none' : undefined}
-                  multiline={(rows ? rows > 0 : undefined)}
-                  returnKeyType={returnKeyType}
-                  ref={this.ref}
-                  {...inputProps}
-                />
+                  placeholder={placeholderText as string}
+                >
+                  <Label label={label} error={error} />
+                  {rows && rows > 0
+                    ? <Textarea
+                      style={{ flex: 1 }}
+                      rowSpan={rows}
+                      onChangeText={value => form.setFieldValue(name, value)}
+                      value={field.value}
+                      ref={this.ref}
+                    />
+                    : <Input
+                      style={{ flex: 1, ...inputStyle }}
+                      onChangeText={value => form.setFieldValue(name, value)}
+                      value={field.value.toString()}
+                      onSubmitEditing={onSubmitEditing}
+                      secureTextEntry={secure}
+                      numberOfLines={rows}
+                      autoCapitalize={noCorrect ? 'none' : undefined}
+                      multiline={(rows ? rows > 0 : undefined)}
+                      returnKeyType={returnKeyType}
+                      ref={this.ref}
+                      {...inputProps}
+                    />
+                  }
+                  {error &&
+                    <Icon name='close-circle' />
+                  }
+                </Item>
               }
-              {error &&
-                <Icon name='close-circle' />
-              }
-            </Item>
+            </FormattedMessage>
           )
         }}
       </Field>
@@ -76,5 +80,3 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
     }
   }
 }
-
-export const TextField = injectIntl<TextField.Props>(TextFieldComponent)

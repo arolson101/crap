@@ -1,11 +1,11 @@
 import accounting from 'accounting'
 import { Icon, Input, Item } from 'native-base'
 import * as React from 'react'
-import { Field, FieldAPI } from 'react-form'
 import { InjectedIntlProps, injectIntl } from 'react-intl'
 import { TextInput } from 'react-native'
 import { CurrencyFieldProps } from './CurrencyField'
 import { Label } from './Label.native'
+// import { CalculatorInput } from 'react-native-calculator'
 
 export namespace CurrencyField {
   export type Props<T = {}> = CurrencyFieldProps
@@ -38,6 +38,15 @@ class CurrencyFieldComponent extends React.Component<CurrencyField.Props & Injec
               placeholder={placeholder && intl.formatMessage(placeholder)}
             >
               <Label label={label} error={error} />
+              {/* <CalculatorInput
+                prefix='$ '
+                suffix=' USD'
+                onChange={x => this.setState({ x })}
+                value={fieldApi.value.toString()}
+                // fieldTextStyle={{ fontSize: 24 }}
+                // fieldContainerStyle={{ height: 36 }}
+                // width={Dimensions.get('screen').width}
+              /> */}
               <Input
                 selectTextOnFocus
                 style={{ flex: 1 }}
@@ -72,4 +81,4 @@ class CurrencyFieldComponent extends React.Component<CurrencyField.Props & Injec
   }
 }
 
-export const CurrencyField = injectIntl<CurrencyField.Props>(CurrencyFieldComponent)
+export const CurrencyField = injectIntl(CurrencyFieldComponent)

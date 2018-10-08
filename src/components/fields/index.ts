@@ -1,4 +1,5 @@
-import * as RF from 'react-form'
+// import * as RF from 'react-form'
+import { Formik } from 'formik'
 import { CheckboxField } from './CheckboxField'
 import { CurrencyField } from './CurrencyField'
 import { DateField } from './DateField'
@@ -13,7 +14,7 @@ export type SelectFieldItem = SelectField.Item
 
 export const typedFields = <V extends {}>() => {
   return {
-    Form: Form as any as React.ComponentClass<RF.FormProps<V>>,
+    Form: Form as any as React.ComponentClass<Form.Props<V>>,
     CheckboxField: CheckboxField as React.ComponentClass<CheckboxField.Props<V>>,
     CurrencyField: CurrencyField as React.ComponentClass<CurrencyField.Props<V>>,
     DateField: DateField as React.ComponentClass<DateField.Props<V>>,

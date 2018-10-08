@@ -2,8 +2,8 @@ import isUrl from 'is-url'
 import { Button, Input, Item, Text, Thumbnail, NativeBase, Spinner, ActionSheet } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { Field, FieldAPI } from 'react-form'
-import { InjectedIntlProps, injectIntl, defineMessages } from 'react-intl'
+import { Field, FieldProps, FormikProps } from 'formik'
+import { defineMessages, FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl'
 import { TextInput } from 'react-native'
 import { FavicoProps, getFavico, getFavicoFromLibrary } from '../../util/getFavico'
 import { Label } from './Label.native'
@@ -11,17 +11,16 @@ import { UrlFieldProps } from './UrlField'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 export namespace UrlField {
-  export type Props<T = {}> = UrlFieldProps<T>
+  export type Props<Values> = UrlFieldProps<Values>
 }
 
 interface State {
   gettingIcon: boolean
 }
 
-class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlProps> {
+export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Values> & InjectedIntlProps, State> {
   private textInput: TextInput
-  private fieldApi: FieldAPI<any>
-  private iconFieldApi: FieldAPI<any>
+  private form: FormikProps<Values>
   private originalValue: string | undefined = undefined
 
   state: State = {
@@ -35,52 +34,55 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
   }
 
   render() {
-    const { field, favicoField, intl, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
+    const { field: name, favicoField, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
     return (
-      <Field field={field} pure={false}>
-        {fieldApi => {
-          this.fieldApi = fieldApi
-          const error = !!(fieldApi.touched && fieldApi.error)
+      <Field name={name} pure={false}>
+        {({ field, form }: FieldProps<Values>) => {
+          this.form = form
+          const error = !!(form.touched[name] && form.error[name])
           const inputProps = { autoFocus, onPress: this.focusTextInput }
           if (this.originalValue === undefined) {
-            this.originalValue = fieldApi.value
+            this.originalValue = field.value
           }
           return (
-            <Item
-              inlineLabel
-              error={error}
-              {...inputProps}
-              placeholder={placeholder && intl.formatMessage(placeholder)}
-            >
-              <Label label={label} error={error} />
+            <FormattedMessage {...placeholder || messages.empty}>
+              {(placeholderText: string) =>
+                <Item
+                  inlineLabel
+                  error={error}
+                  {...inputProps}
+                  placeholder={placeholderText}
+                >
+                  <Label label={label} error={error} />
 
-              <Field field={favicoField} pure={false}>
-                {iconFieldApi => {
-                  this.iconFieldApi = iconFieldApi
-                  return (
-                    <FavicoButton
-                      loading={this.state.gettingIcon}
-                      value={iconFieldApi.value}
-                      bordered
-                      onPress={this.onIconButtonPressed}
-                      style={{ alignSelf: 'center', padding: platform.buttonPadding }}
-                    />
-                  )
-                }}
-              </Field>
+                  <Field field={favicoField} pure={false}>
+                    {({ field: iconField }: FieldProps<Values>) => {
+                      return (
+                        <FavicoButton
+                          loading={this.state.gettingIcon}
+                          value={iconField.value}
+                          bordered
+                          onPress={this.onIconButtonPressed}
+                          style={{ alignSelf: 'center', padding: platform.buttonPadding }}
+                        />
+                      )
+                    }}
+                  </Field>
 
-              <NotifyingInput
-                style={{ flex: 1 }}
-                keyboardType='url'
-                autoFocus={autoFocus}
-                onChangeText={fieldApi.setValue}
-                value={fieldApi.value}
-                onSubmitEditing={onSubmitEditing}
-                returnKeyType={returnKeyType}
-                ref={(ref: any) => this.textInput = ref && ref._root}
-                onValueChanged={this.onValueChanged}
-              />
-            </Item>
+                  <NotifyingInput
+                    style={{ flex: 1 }}
+                    keyboardType='url'
+                    autoFocus={autoFocus}
+                    onChangeText={text => form.setFieldValue(name, text)}
+                    value={field.value}
+                    onSubmitEditing={onSubmitEditing}
+                    returnKeyType={returnKeyType}
+                    ref={(ref: any) => this.textInput = ref && ref._root}
+                    onValueChanged={this.onValueChanged}
+                  />
+                </Item>
+              }
+            </FormattedMessage>
           )
         }}
       </Field>
@@ -93,15 +95,16 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
 
   maybeGetIcon = async (value: string, force: boolean = false) => {
     console.log('maybeGetIcon', { value })
+    const { favicoField } = this.props
 
     if (!isUrl(value)) {
       console.log(`not looking up icon '${value}' is not an URL`)
       return
     }
 
-    const iconValue = this.iconFieldApi.value
+    const iconValue = this.form.values[favicoField]
     if (iconValue && !force) {
-      const iconProps = JSON.parse(iconValue) as FavicoProps
+      const iconProps = JSON.parse(iconValue as any) as FavicoProps
       if (iconProps.from === value) {
         console.log(`not looking up icon because we already got it from ${value}`)
         return
@@ -116,7 +119,7 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
     try {
       this.setState({ gettingIcon: true })
       const icon = await getFavico(value)
-      this.iconFieldApi.setValue(JSON.stringify(icon))
+      this.form.setFieldValue(favicoField, JSON.stringify(icon))
       this.originalValue = icon.from
     } catch (ex) {
       console.warn(ex.message)
@@ -126,18 +129,20 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
   }
 
   redownload = async () => {
-    this.iconFieldApi.setValue('')
-    this.maybeGetIcon(this.fieldApi.value, true)
+    const { favicoField, field } = this.props
+    this.form.setFieldValue(favicoField, '')
+    this.maybeGetIcon(this.form.values[field] as any, true)
   }
 
   getFromLibrary = async () => {
+    const { favicoField } = this.props
     const icon = await getFavicoFromLibrary()
-    this.iconFieldApi.setValue(JSON.stringify(icon))
+    this.form.setFieldValue(favicoField, JSON.stringify(icon))
     this.originalValue = icon.from
   }
 
   onIconButtonPressed = () => {
-    const { intl, label } = this.props
+    const { intl, label, favicoField } = this.props
     const options: string[] = [
       intl.formatMessage(messages.reset),
       intl.formatMessage(messages.redownload),
@@ -154,7 +159,7 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
       buttonIndex => {
         switch (buttonIndex) {
           case 0: // reset
-            this.iconFieldApi.setValue('')
+            this.form.setFieldValue(favicoField, '')
             break
           case 1: // redownload
             this.redownload()
@@ -207,9 +212,13 @@ class FavicoButton extends React.Component<FavicoButtonProps> {
   }
 }
 
-export const UrlField = injectIntl<UrlField.Props>(UrlFieldComponent)
+export const UrlField = injectIntl(UrlFieldComponent as any)
 
 const messages = defineMessages({
+  empty: {
+    id: 'empty',
+    defaultMessage: ''
+  },
   library: {
     id: 'UrlField.library',
     defaultMessage: 'Choose from library'

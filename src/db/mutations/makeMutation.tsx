@@ -109,6 +109,7 @@ export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1,
       render() {
         const { loading } = this.state
         const componentProps = { [name]: this.wrapExecute }
+        console.log(`makeMutation ${Component.displayName}`)
         return (
           <>
             <Spinner
