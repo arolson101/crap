@@ -16,12 +16,12 @@ class DateFieldComponent<Values> extends React.Component<DateField.Props<Values>
   private form: FormikProps<Values>
 
   render() {
-    const { field, label, intl, collapsed } = this.props
+    const { field: name, label, intl, collapsed } = this.props
     if (collapsed) {
       return null
     }
     return (
-      <Field field={field}>
+      <Field name={name}>
         {({ field, form }: FieldProps<Values>) => {
           this.form = form
           const error = !!(form.touched[name] && form.errors[name])
