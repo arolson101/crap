@@ -1,7 +1,7 @@
 import { Field, FieldProps } from 'formik'
 import { Icon, Input, Item, Textarea } from 'native-base'
 import * as React from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl'
 import { TextInput } from 'react-native'
 import { Label } from './Label.native'
 import { TextFieldProps } from './TextField'
@@ -10,7 +10,7 @@ export namespace TextField {
   export type Props<Values> = TextFieldProps<Values>
 }
 
-export class TextField<Values> extends React.Component<TextField.Props<Values>> {
+export class TextFieldComponent<Values> extends React.Component<TextField.Props<Values> & InjectedIntlProps> {
   private textInput: TextInput
 
   focusTextInput = () => {
@@ -21,7 +21,7 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
 
   render() {
     const { field: name, autoFocus, label, color, placeholder, secure,
-      rows, onSubmitEditing, returnKeyType, noCorrect } = this.props
+      rows, onSubmitEditing, returnKeyType, noCorrect, intl } = this.props
     return (
       <Field name={name}>
         {({ field, form }: FieldProps<Values>) => {
@@ -30,13 +30,11 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
           const inputProps = { autoFocus }
           const inputStyle = color ? { color } : {}
           return (
-            <FormattedMessage {...placeholder}>
-              {placeholderText =>
                 <Item
                   {...itemProps}
                   error={error}
                   secureTextEntry={secure}
-                  placeholder={placeholderText as string}
+                  placeholder={placeholder && intl.formatMessage(placeholder)}
                 >
                   <Label label={label} error={error} />
                   {rows && rows > 0
@@ -65,8 +63,6 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
                     <Icon name='close-circle' />
                   }
                 </Item>
-              }
-            </FormattedMessage>
           )
         }}
       </Field>
@@ -80,3 +76,5 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
     }
   }
 }
+
+export const TextField = injectIntl(TextFieldComponent as any)

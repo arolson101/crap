@@ -55,7 +55,7 @@ export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Va
                 >
                   <Label label={label} error={error} />
 
-                  <Field field={favicoField} pure={false}>
+                  <Field name={favicoField} pure={false}>
                     {({ field: iconField }: FieldProps<Values>) => {
                       return (
                         <FavicoButton

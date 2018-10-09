@@ -50,10 +50,10 @@ export const withQuery = <R extends Record<string, ExecutableDocumentNode<V1, Q1
       }
 
       async runQuery() {
-        const gql = Container.get(GraphQLService)
-        const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
-        if (!getVariables || variables) {
-          try {
+        try {
+          const gql = Container.get(GraphQLService)
+          const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
+          if (!getVariables || variables) {
             const result = await gql.execute(desc, variables)
             if (result.errors && result.errors.length > 0) {
               throw result.errors[0]
@@ -61,14 +61,14 @@ export const withQuery = <R extends Record<string, ExecutableDocumentNode<V1, Q1
             if (this.mounted) {
               this.setState({ result: result.data })
             }
-          } catch (error) {
-            if (this.mounted) {
-              this.setState({ error })
-            }
-          } finally {
-            if (this.mounted) {
-              this.setState({ loading: false })
-            }
+          }
+        } catch (error) {
+          if (this.mounted) {
+            this.setState({ error })
+          }
+        } finally {
+          if (this.mounted) {
+            this.setState({ loading: false })
           }
         }
       }
