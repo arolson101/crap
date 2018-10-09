@@ -1,7 +1,6 @@
 import accounting from 'accounting'
 import { Button, View } from 'native-base'
 import * as React from 'react'
-import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'recompose'
 import { confirm } from '../components/Confirmation'
@@ -11,6 +10,7 @@ import { withMutation, withQuery } from '../db'
 import { Mutations, Queries, Transaction } from '../db/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
+import { FormikProps, FormikErrors } from 'formik'
 
 export namespace TransactionForm {
   export interface Props {
@@ -44,7 +44,7 @@ const {
 } = typedFields<FormValues>()
 
 export class TransactionFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
-  formApi: FormAPI<FormValues>
+  private formApi: FormikProps<FormValues>
   static displayName = 'TransactionFormComponent'
 
   componentDidMount() {
@@ -56,7 +56,7 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
     const { transactionId, query } = this.props
 
     const edit = transactionId && query.transaction
-    const defaultValues = edit
+    const initialValues = edit
       ? pickT(edit, Object.keys(Transaction.defaultValues()) as Array<keyof Transaction.Props>)
       : Transaction.defaultValues()
 
@@ -64,7 +64,7 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
       <>
         <Form
           getApi={this.getApi}
-          defaultValues={defaultValues}
+          initialValues={initialValues}
           validate={this.validate}
           onSubmit={this.onSubmit}
         >
@@ -109,7 +109,7 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
     )
   }
 
-  getApi = (formApi: FormAPI<FormValues>) => {
+  getApi = (formApi: FormikProps<FormValues>) => {
     this.formApi = formApi
   }
 
@@ -119,12 +119,13 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
     }
   }
 
-  validate = (values: FormValues) => {
+  validate = (values: FormValues): FormikErrors<FormValues> => {
     const { intl: { formatMessage } } = this.props
-    return {
-      name: !values.name.trim() ? formatMessage(messages.valueEmpty)
-        : undefined
+    const errors: FormikErrors<FormValues> = {}
+    if (!values.name.trim()) {
+      errors.name = formatMessage(messages.valueEmpty)
     }
+    return errors
   }
 
   onSubmit = (input: FormValues) => {

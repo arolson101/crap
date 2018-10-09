@@ -32,7 +32,7 @@ export class SelectFieldComponent<Values> extends React.Component<ComposedProps<
       <Field name={name}>
         {({ field, form }: FieldProps<Values>) => {
           this.form = form
-          const error = !!(form.touched[name] && form.error[name])
+          const error = !!(form.touched[name] && form.errors[name])
           const selectedItem = items.find(item => item.value === field.value)
           if (!selectedItem) {
             throw new Error(`selected item ${field.value} not found in item list`)
@@ -56,7 +56,7 @@ export class SelectFieldComponent<Values> extends React.Component<ComposedProps<
                     placeholder='placeholder'
                     placeholderStyle={{ flex: 1 }}
                     selectedValue={field.value}
-                    onValueChange={value => form.setFieldValue(name, value)}
+                    onValueChange={form.handleChange(name)}
                   >
                     {items.map(item =>
                       <Picker.Item key={item.value} label={item.label} value={item.value} />

@@ -16,7 +16,7 @@ export namespace CheckboxField {
 export const CheckboxField = <Values extends {}>({ field: name, label }: React.Props<any> & CheckboxField.Props<Values>) => (
   <Field name={name}>
     {({ field, form }: FieldProps<Values>) => {
-      const error = !!(form.touched[name] && form.error[name])
+      const error = !!(form.touched[name] && form.errors[name])
       return (
         <Item
           inlineLabel
@@ -36,9 +36,9 @@ export const CheckboxField = <Values extends {}>({ field: name, label }: React.P
   </Field>
 )
 
-const styles = StyleSheet.create({
+const styles = {
   item: {
     paddingTop: platform.listItemPadding,
     paddingBottom: platform.listItemPadding,
   }
-})
+}

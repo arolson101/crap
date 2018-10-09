@@ -25,7 +25,7 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
     return (
       <Field name={name}>
         {({ field, form }: FieldProps<Values>) => {
-          const error = !!(form.touched[name] && form.error[name])
+          const error = !!(form.touched[name] && form.errors[name])
           const itemProps = { onPress: this.focusTextInput }
           const inputProps = { autoFocus }
           const inputStyle = color ? { color } : {}
@@ -43,13 +43,13 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
                     ? <Textarea
                       style={{ flex: 1 }}
                       rowSpan={rows}
-                      onChangeText={value => form.setFieldValue(name, value)}
+                      onChangeText={form.handleChange(name)}
                       value={field.value}
                       ref={this.ref}
                     />
                     : <Input
                       style={{ flex: 1, ...inputStyle }}
-                      onChangeText={value => form.setFieldValue(name, value)}
+                      onChangeText={form.handleChange(name)}
                       value={field.value.toString()}
                       onSubmitEditing={onSubmitEditing}
                       secureTextEntry={secure}

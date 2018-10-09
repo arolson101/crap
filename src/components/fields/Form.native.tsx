@@ -1,13 +1,11 @@
-import { Formik, FormikProps, FormikConfig } from 'formik'
+import { Formik, FormikProps, FormikConfig, FormikActions } from 'formik'
 import * as React from 'react'
 import * as NB from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
+import { FormProps } from './Form'
 
 export namespace Form {
-  export interface Props<Values> extends FormikConfig<Values> {
-    getApi?: (api: FormikProps<Values>) => any
-    children: (props: FormikProps<Values>) => React.ReactNode
-  }
+  export type Props<Values> = FormProps<Values>
 }
 
 export class Form<Values> extends React.Component<Form.Props<Values>> {
@@ -22,11 +20,24 @@ export class Form<Values> extends React.Component<Form.Props<Values>> {
         <Formik
           {...props}
           validateOnSubmit
-          onSubmit={(values, formikActions) => {
+          onSubmit={async (values: Values, formikActions: FormikActions<Values>) => {
             const { onSubmit } = this.props
             this.closeToast()
-            if (onSubmit) {
-              onSubmit(values, formikActions)
+            try {
+              if (onSubmit) {
+                onSubmit(values, formikActions)
+              }
+            } catch (err) {
+              console.log('submit form error', err)
+              NB.Toast.show({
+                text: err.message,
+                buttonText: 'Okay',
+                duration: 0,
+                type: 'danger',
+                onClose: () => {
+                  // this.formApi.setFieldError(field, null)
+                }
+              })
             }
           }}
           // onSubmitFailure={(errors) => {
@@ -57,6 +68,7 @@ export class Form<Values> extends React.Component<Form.Props<Values>> {
   }
 
   closeToast = () => {
-    (NB.Toast as any).toastInstance._root.closeToast()
+    // console.log('closetoast 2');
+    // (NB.Toast as any).toastInstance._root.closeToast()
   }
 }

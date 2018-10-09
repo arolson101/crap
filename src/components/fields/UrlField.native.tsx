@@ -39,7 +39,7 @@ export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Va
       <Field name={name} pure={false}>
         {({ field, form }: FieldProps<Values>) => {
           this.form = form
-          const error = !!(form.touched[name] && form.error[name])
+          const error = !!(form.touched[name] && form.errors[name])
           const inputProps = { autoFocus, onPress: this.focusTextInput }
           if (this.originalValue === undefined) {
             this.originalValue = field.value

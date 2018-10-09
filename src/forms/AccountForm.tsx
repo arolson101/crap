@@ -1,6 +1,5 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
-import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'recompose'
 import { SelectFieldItem, typedFields } from '../components/fields/index'
@@ -11,6 +10,7 @@ import { withMutation, withQuery } from '../db'
 import { Account, Mutations, Queries } from '../db/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
+import { FormikProps, FormikErrors } from 'formik'
 
 export namespace AccountForm {
   export interface Props {
@@ -32,7 +32,7 @@ type FormValues = Account.Props
 const { Form, SelectField, TextField } = typedFields<FormValues>()
 
 export class AccountFormComponent extends React.PureComponent<ComposedProps> {
-  formApi: FormAPI<FormValues>
+  private formApi: FormikProps<FormValues>
 
   componentDidMount() {
     const { setSave } = this.props
@@ -44,7 +44,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     const edit = this.props.accountId && props.query.account
     const { intl } = this.props
 
-    const defaultValues = {
+    const initialValues = {
       ...(edit
         ? pickT(edit, Object.keys(Account.defaultValues()) as Array<keyof Account.Props>)
         : Account.defaultValues()
@@ -55,7 +55,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
       <>
         <Form
           getApi={this.getApi}
-          defaultValues={defaultValues}
+          initialValues={initialValues}
           validate={this.validate}
           onSubmit={this.onSubmit}
         >
@@ -115,8 +115,8 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     )
   }
 
-  getApi = (formApi: FormAPI<FormValues>) => {
-    this.formApi = formApi
+  getApi = (api: FormikProps<Account.Props>) => {
+    this.formApi = api
   }
 
   onSave = () => {
@@ -125,12 +125,13 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     }
   }
 
-  validate = (values: FormValues) => {
+  validate = (values: FormValues): FormikErrors<FormValues> => {
     const { intl: { formatMessage } } = this.props
-    return {
-      name: !values.name || !values.name.trim() ? formatMessage(messages.valueEmpty)
-        : undefined
+    const errors: FormikErrors<FormValues> = {}
+    if (!values.name || !values.name.trim()) {
+      errors.name = formatMessage(messages.valueEmpty)
     }
+    return errors
   }
 
   onSubmit = (input: Account.Props) => {
@@ -153,7 +154,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
 
   typeOnValueChange = (type: Account.Type) => {
     if (this.formApi) {
-      this.formApi.setValue('color', Account.generateColor(type))
+      this.formApi.setFieldValue('color', Account.generateColor(type))
     }
   }
 

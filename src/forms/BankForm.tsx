@@ -1,6 +1,5 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
-import { FormAPI } from 'react-form'
 import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import Collapsible from 'react-native-collapsible'
 import { compose } from 'recompose'
@@ -14,6 +13,7 @@ import { SaveBank } from '../db/mutations/mutations-types'
 import { filist, formatAddress } from '../fi'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
+import { FormikProps, FormikErrors } from 'formik'
 
 export namespace BankForm {
   export interface Props {
@@ -47,7 +47,7 @@ const {
 } = typedFields<FormValues>()
 
 export class BankFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
-  formApi: FormAPI<FormValues>
+  private formApi: FormikProps<FormValues>
 
   componentDidMount() {
     const { setSave } = this.props
@@ -59,7 +59,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 
     const edit = bankId && query.bank
     const defaultFi = edit ? filist.findIndex(fi => fi.name === edit.name) : 0
-    const defaultValues = {
+    const initialValues = {
       fi: defaultFi,
       ...(edit
         ? pickT(edit, Object.keys(Bank.defaultValues) as Array<keyof Bank.Props>)
@@ -71,7 +71,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
       <>
         <Form
           getApi={this.getApi}
-          defaultValues={defaultValues}
+          initialValues={initialValues}
           validate={this.validate}
           onSubmit={this.onSubmit}
         >
@@ -163,7 +163,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     )
   }
 
-  getApi = (formApi: FormAPI<FormValues>) => {
+  getApi = (formApi: FormikProps<FormValues>) => {
     this.formApi = formApi
   }
 
@@ -173,12 +173,13 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     }
   }
 
-  validate = (values: FormValues) => {
+  validate = (values: FormValues): FormikErrors<FormValues> => {
     const { intl: { formatMessage } } = this.props
-    return {
-      name: !values.name.trim() ? formatMessage(messages.valueEmpty)
-        : undefined
+    const errors: FormikErrors<FormValues> = {}
+    if (!values.name.trim()) {
+      errors.name = formatMessage(messages.valueEmpty)
     }
+    return errors
   }
 
   onSubmit = ({ fi, ...input }: FormValues) => {
@@ -203,13 +204,13 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     const formApi = this.formApi
     if (formApi) {
       const fi = filist[value]
-      formApi.setValue('name', value ? (fi.name || '') : '')
-      formApi.setValue('web', fi.profile.siteURL || '')
-      formApi.setValue('favicon', '')
-      formApi.setValue('address', formatAddress(fi) || '')
-      formApi.setValue('fid', fi.fid || '')
-      formApi.setValue('org', fi.org || '')
-      formApi.setValue('ofx', fi.ofx || '')
+      formApi.setFieldValue('name', value ? (fi.name || '') : '')
+      formApi.setFieldValue('web', fi.profile.siteURL || '')
+      formApi.setFieldValue('favicon', '')
+      formApi.setFieldValue('address', formatAddress(fi) || '')
+      formApi.setFieldValue('fid', fi.fid || '')
+      formApi.setFieldValue('org', fi.org || '')
+      formApi.setFieldValue('ofx', fi.ofx || '')
     }
   }
 

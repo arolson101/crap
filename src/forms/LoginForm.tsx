@@ -7,6 +7,7 @@ import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/
 import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
+import { FormikErrors } from 'formik'
 
 interface Props extends InjectedIntlProps, InjectedNavProps {
   query: Queries.Dbs
@@ -31,7 +32,7 @@ export class LoginFormComponent extends React.Component<Props> {
   render() {
     const create = this.props.query.allDbs.length === 0
 
-    const defaultValues = {
+    const initialValues = {
       password: '',
       passwordConfirm: ''
     }
@@ -41,7 +42,7 @@ export class LoginFormComponent extends React.Component<Props> {
         <AppBannerText>App</AppBannerText>
 
         <Form
-          defaultValues={defaultValues}
+          initialValues={initialValues}
           validate={this.validate}
           onSubmit={this.onSubmit}
         >
@@ -91,26 +92,29 @@ export class LoginFormComponent extends React.Component<Props> {
     )
   }
 
-  validate = (values: FormValues) => {
+  validate = (values: FormValues): FormikErrors<FormValues> => {
     const { intl: { formatMessage } } = this.props
     const create = this.props.query.allDbs.length === 0
+    const errors: FormikErrors<FormValues> = {}
 
     if (create) {
-      return ({
-        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined,
-        passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
-          : undefined
-      })
+      if (!values.password.trim()) {
+        errors.password = formatMessage(messages.valueEmpty)
+      }
+      if (values.password !== values.passwordConfirm) {
+        errors.passwordConfirm = formatMessage(messages.passwordsMatch)
+      }
     } else {
-      return ({
-        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined
-      })
+      if (!values.password.trim()) {
+        errors.password = formatMessage(messages.valueEmpty)
+      }
     }
+
+    return errors
   }
 
   onSubmit = ({ password }: FormValues) => {
+    console.log('onsubmit')
     const create = this.props.query.allDbs.length === 0
     if (create) {
       const { createDb, login } = this.props

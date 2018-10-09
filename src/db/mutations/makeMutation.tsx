@@ -32,27 +32,29 @@ export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1,
     type HocProps = Subtract<P, WrappedProps>
     type State = MutationFcnOptions<TRes> & {
       loading: boolean
+      toastOpen: boolean
     }
 
     class WrappedMutation extends React.Component<HocProps, State> {
       static displayName: string = `WrappedMutation(${Component.displayName || Component.name || ''})`
 
-      state: State = { loading: false }
+      state: State = {
+        loading: false,
+        toastOpen: false
+      }
+
       mounted = true
-      // execute: MutationFn<any, OperationVariables> | undefined
 
       componentWillUnmount() {
         this.mounted = false
-        this.closeToast()
+        if (this.state.toastOpen) {
+          this.closeToast()
+        }
       }
 
       wrapExecute = async (variables: TVariables, options?: MutationFcnOptions<TRes>) => {
         // console.log('wrapExecute', { variables, options })
-        this.closeToast()
         const gql = Container.get(GraphQLService)
-        // if (!this.execute) {
-        //   throw new Error('execute was not set')
-        // }
         if (options) {
           this.setState(options)
         }
@@ -75,6 +77,9 @@ export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1,
       onCompleted = (results: TRes) => {
         // console.log('onCompleted', { results })
         const { complete, finally: Finally } = this.state
+        if (this.state.toastOpen) {
+          this.closeToast()
+        }
         if (complete) {
           complete(results)
         }
@@ -84,12 +89,16 @@ export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1,
       }
 
       onError = (error: Error) => {
-        console.log('onError', error.message, { error })
+        // console.log('onError', error.message, { error })
+        this.setState({ toastOpen: true })
         Toast.show({
           text: error.message,
           buttonText: 'Okay',
           duration: 0,
-          type: 'danger'
+          type: 'danger',
+          onClose: () => {
+            this.setState({ toastOpen: false })
+          }
         })
         const { finally: Finally } = this.state
         if (Finally) {
@@ -109,7 +118,6 @@ export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1,
       render() {
         const { loading } = this.state
         const componentProps = { [name]: this.wrapExecute }
-        console.log(`makeMutation ${Component.displayName}`)
         return (
           <>
             <Spinner

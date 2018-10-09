@@ -1,5 +1,4 @@
 // import * as RF from 'react-form'
-import { Formik } from 'formik'
 import { CheckboxField } from './CheckboxField'
 import { CurrencyField } from './CurrencyField'
 import { DateField } from './DateField'
