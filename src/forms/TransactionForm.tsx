@@ -172,7 +172,7 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
 
 export const TransactionForm = compose<ComposedProps, Props>(
   injectIntl,
-  // withNav,
+  withNav,
   withQuery({ query: Queries.Transaction }, ({ transactionId }: Props) => transactionId && ({ transactionId })),
   withMutation({ saveTransaction: Mutations.SaveTransaction }),
   withMutation({ deleteTransaction: Mutations.DeleteTransaction })
