@@ -46,7 +46,7 @@ export class DbInfo {
 
   getKey(password: string): string {
     const pwbuf = crypto.pbkdf2Sync(password, this.salt, this.iterations, this.keylen, this.digest)
-    const decipher = crypto.createDecipheriv(this.algorithm, pwbuf, this.nonce)
+    const decipher = crypto.createDecipheriv(this.algorithm, pwbuf, this.nonce) as crypto.DecipherGCM
     decipher.setAuthTag(Buffer.from(this.tag, 'base64'))
     const key = decipher.update(this.cipherKey, 'base64', 'utf8')
     decipher.final()

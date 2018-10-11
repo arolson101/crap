@@ -156,11 +156,11 @@ export class LoginFormComponent extends React.Component<Props> {
 
 export const LoginForm = compose(
   injectIntl,
+  withNav,
   withQuery({ query: Queries.Dbs }),
   withMutation({ openDb: Mutations.OpenDb }),
   withMutation({ createDb: Mutations.CreateDb }),
   withMutation({ deleteDb: Mutations.DeleteDb }),
-  withNav,
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

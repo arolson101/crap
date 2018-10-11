@@ -45,15 +45,15 @@ const createCipherInfo = (): CipherInfo => {
 
 const createCipher = (key: Buffer, info: CipherInfo) => {
   const { algorithm, iv } = info
-  return crypto.createCipheriv(algorithm, key, Buffer.from(iv, 'base64'))
+  return crypto.createCipheriv(algorithm, key, Buffer.from(iv, 'base64')) as crypto.CipherGCM
 }
 
 const createDecipher = (key: Buffer, info: CipherInfo) => {
   const { algorithm, iv } = info
-  return crypto.createDecipheriv(algorithm, key, Buffer.from(iv, 'base64'))
+  return crypto.createDecipheriv(algorithm, key, Buffer.from(iv, 'base64')) as crypto.DecipherGCM
 }
 
-const encryptMasterKey = (key: Buffer, cipher: crypto.Cipher): EncryptedData => {
+const encryptMasterKey = (key: Buffer, cipher: crypto.CipherGCM): EncryptedData => {
   const cipherText = Buffer.concat([
     cipher.update(key),
     cipher.final()
@@ -62,7 +62,7 @@ const encryptMasterKey = (key: Buffer, cipher: crypto.Cipher): EncryptedData => 
   return { cipherText, authTag }
 }
 
-const decryptMasterKey = (decipher: crypto.Decipher, masterKey: EncryptedData): Buffer => {
+const decryptMasterKey = (decipher: crypto.DecipherGCM, masterKey: EncryptedData): Buffer => {
   decipher.setAuthTag(Buffer.from(masterKey.authTag, 'base64'))
   const key = Buffer.concat([
     decipher.update(Buffer.from(masterKey.cipherText, 'base64')),
