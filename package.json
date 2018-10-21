@@ -51,6 +51,7 @@
     "electron-is-dev": "^1.0.1",
     "electron-window-state": "^5.0.1",
     "node-pre-gyp": "^0.11.0",
+    "react-native": "0.57.1",
     "sqlite3": "^4.0.2",
     "typeorm": "https://github.com/arolson101/typeorm.git#with_build"
   },
@@ -156,7 +157,6 @@
     "react-helmet": "^5.2.0",
     "react-hot-loader": "^4.3.11",
     "react-intl": "^2.7.0",
-    "react-native": "0.57.1",
     "react-native-autogrow-textinput": "^5.1.1",
     "react-native-blur": "^3.2.2",
     "react-native-calculator": "^0.2.4",
