@@ -30,39 +30,39 @@ export class TextFieldComponent<Values> extends React.Component<TextField.Props<
           const inputProps = { autoFocus }
           const inputStyle = color ? { color } : {}
           return (
-                <Item
-                  {...itemProps}
-                  error={error}
+            <Item
+              {...itemProps}
+              error={error}
+              secureTextEntry={secure}
+              placeholder={placeholder && intl.formatMessage(placeholder)}
+            >
+              <Label label={label} error={error} />
+              {rows && rows > 0
+                ? <Textarea
+                  style={{ flex: 1 }}
+                  rowSpan={rows}
+                  onChangeText={form.handleChange(name)}
+                  value={field.value}
+                  ref={this.ref}
+                />
+                : <Input
+                  style={{ flex: 1, ...inputStyle }}
+                  onChangeText={form.handleChange(name)}
+                  value={field.value.toString()}
+                  onSubmitEditing={onSubmitEditing}
                   secureTextEntry={secure}
-                  placeholder={placeholder && intl.formatMessage(placeholder)}
-                >
-                  <Label label={label} error={error} />
-                  {rows && rows > 0
-                    ? <Textarea
-                      style={{ flex: 1 }}
-                      rowSpan={rows}
-                      onChangeText={form.handleChange(name)}
-                      value={field.value}
-                      ref={this.ref}
-                    />
-                    : <Input
-                      style={{ flex: 1, ...inputStyle }}
-                      onChangeText={form.handleChange(name)}
-                      value={field.value.toString()}
-                      onSubmitEditing={onSubmitEditing}
-                      secureTextEntry={secure}
-                      numberOfLines={rows}
-                      autoCapitalize={noCorrect ? 'none' : undefined}
-                      multiline={(rows ? rows > 0 : undefined)}
-                      returnKeyType={returnKeyType}
-                      ref={this.ref}
-                      {...inputProps}
-                    />
-                  }
-                  {error &&
-                    <Icon name='close-circle' />
-                  }
-                </Item>
+                  numberOfLines={rows}
+                  autoCapitalize={noCorrect ? 'none' : undefined}
+                  multiline={(rows ? rows > 0 : undefined)}
+                  returnKeyType={returnKeyType}
+                  ref={this.ref}
+                  {...inputProps}
+                />
+              }
+              {error &&
+                <Icon name='close-circle' />
+              }
+            </Item>
           )
         }}
       </Field>

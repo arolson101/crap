@@ -34,7 +34,7 @@ export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Va
   }
 
   render() {
-    const { field: name, favicoField, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
+    const { field: name, favicoField, autoFocus, label, placeholder, onSubmitEditing, returnKeyType, intl } = this.props
     return (
       <Field name={name} pure={false}>
         {({ field, form }: FieldProps<Values>) => {
@@ -45,44 +45,40 @@ export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Va
             this.originalValue = field.value
           }
           return (
-            <FormattedMessage {...placeholder || messages.empty}>
-              {(placeholderText: string) =>
-                <Item
-                  inlineLabel
-                  error={error}
-                  {...inputProps}
-                  placeholder={placeholderText}
-                >
-                  <Label label={label} error={error} />
+            <Item
+              inlineLabel
+              error={error}
+              {...inputProps}
+              placeholder={placeholder && intl.formatMessage(placeholder)}
+            >
+              <Label label={label} error={error} />
 
-                  <Field name={favicoField} pure={false}>
-                    {({ field: iconField }: FieldProps<Values>) => {
-                      return (
-                        <FavicoButton
-                          loading={this.state.gettingIcon}
-                          value={iconField.value}
-                          bordered
-                          onPress={this.onIconButtonPressed}
-                          style={{ alignSelf: 'center', padding: platform.buttonPadding }}
-                        />
-                      )
-                    }}
-                  </Field>
+              <Field name={favicoField} pure={false}>
+                {({ field: iconField }: FieldProps<Values>) => {
+                  return (
+                    <FavicoButton
+                      loading={this.state.gettingIcon}
+                      value={iconField.value}
+                      bordered
+                      onPress={this.onIconButtonPressed}
+                      style={{ alignSelf: 'center', padding: platform.buttonPadding }}
+                    />
+                  )
+                }}
+              </Field>
 
-                  <NotifyingInput
-                    style={{ flex: 1 }}
-                    keyboardType='url'
-                    autoFocus={autoFocus}
-                    onChangeText={text => form.setFieldValue(name, text)}
-                    value={field.value}
-                    onSubmitEditing={onSubmitEditing}
-                    returnKeyType={returnKeyType}
-                    ref={(ref: any) => this.textInput = ref && ref._root}
-                    onValueChanged={this.onValueChanged}
-                  />
-                </Item>
-              }
-            </FormattedMessage>
+              <NotifyingInput
+                style={{ flex: 1 }}
+                keyboardType='url'
+                autoFocus={autoFocus}
+                onChangeText={text => form.setFieldValue(name, text)}
+                value={field.value}
+                onSubmitEditing={onSubmitEditing}
+                returnKeyType={returnKeyType}
+                ref={(ref: any) => this.textInput = ref && ref._root}
+                onValueChanged={this.onValueChanged}
+              />
+            </Item>
           )
         }}
       </Field>
