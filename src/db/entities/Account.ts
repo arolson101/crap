@@ -1,8 +1,8 @@
-import { defineMessages } from 'react-intl'
 import { iupdate } from '../../iupdate'
 import { RecordClass } from '../Record'
 import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { DbChange, Field, InputType, ObjectType, registerEnumType } from './helpers'
+import { defineMessages } from 'src/intl'
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 
 // see ofx4js.domain.data.banking.AccountType

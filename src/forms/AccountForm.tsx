@@ -1,6 +1,5 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'recompose'
 import { SelectFieldItem, typedFields } from '../components/fields/index'
 import { confirm } from '../components/index'
@@ -11,6 +10,8 @@ import { Account, Mutations, Queries } from '../db/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
 import { FormikProps, FormikErrors } from 'formik'
+import { intl, defineMessages } from 'src/intl'
+import { Text } from 'react-native'
 
 export namespace AccountForm {
   export interface Props {
@@ -21,7 +22,7 @@ export namespace AccountForm {
 
 type Props = AccountForm.Props
 
-interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps, InjectedNavProps {
+interface ComposedProps extends Props, SaveButtonProps, InjectedNavProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
   deleteAccount: Mutations.DeleteAccount
@@ -42,7 +43,6 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
   render() {
     const props = this.props
     const edit = this.props.accountId && props.query.account
-    const { intl } = this.props
 
     const initialValues = {
       ...(edit
@@ -107,7 +107,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
         {edit &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Button transparent danger onPress={this.confirmDeleteAccount}>
-              <FormattedMessage {...messages.deleteAccount} />
+              <Text>{intl.formatMessage(messages.deleteAccount)}</Text>
             </Button>
           </View>
         }
@@ -126,10 +126,9 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
   }
 
   validate = (values: FormValues): FormikErrors<FormValues> => {
-    const { intl: { formatMessage } } = this.props
     const errors: FormikErrors<FormValues> = {}
     if (!values.name || !values.name.trim()) {
-      errors.name = formatMessage(messages.valueEmpty)
+      errors.name = intl.formatMessage(messages.valueEmpty)
     }
     return errors
   }
@@ -162,7 +161,6 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     confirm({
       title: messages.deleteAccountTitle,
       action: messages.deleteAccount,
-      formatMessage: this.props.intl.formatMessage,
       onConfirm: this.deleteAccount,
     })
   }
@@ -183,7 +181,6 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
 }
 
 export const AccountForm = compose<ComposedProps, Props>(
-  injectIntl,
   withNav,
   withQuery({ query: Queries.Account }, ({ accountId }: Props) => accountId && ({ accountId })),
   withMutation({ saveAccount: Mutations.SaveAccount }),

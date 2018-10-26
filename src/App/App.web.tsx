@@ -2,7 +2,6 @@ import { Text } from '@blueprintjs/core'
 import { ThemeProvider } from 'glamorous'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
-import { IntlProvider } from 'react-intl'
 import { BrowserRouter } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
 import { LoginScreen } from '../screens/index'
@@ -12,6 +11,7 @@ import { LoadFonts } from './LoadFonts'
 import { defaultTheme } from './Theme'
 import './App.web.css'
 import { NavProvider } from '../components/NavProvider'
+import { IntlProvider } from 'src/intl'
 
 // https://github.com/tomkp/react-split-pane/issues/252
 require('react-split-pane').default = require('react-split-pane')

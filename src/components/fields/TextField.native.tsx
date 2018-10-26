@@ -1,16 +1,16 @@
 import { Field, FieldProps } from 'formik'
 import { Icon, Input, Item, Textarea } from 'native-base'
 import * as React from 'react'
-import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl'
 import { TextInput } from 'react-native'
 import { Label } from './Label.native'
 import { TextFieldProps } from './TextField'
+import { intl } from 'src/intl'
 
 export namespace TextField {
   export type Props<Values> = TextFieldProps<Values>
 }
 
-export class TextFieldComponent<Values> extends React.Component<TextField.Props<Values> & InjectedIntlProps> {
+export class TextField<Values> extends React.Component<TextField.Props<Values>> {
   private textInput: TextInput
 
   focusTextInput = () => {
@@ -21,7 +21,7 @@ export class TextFieldComponent<Values> extends React.Component<TextField.Props<
 
   render() {
     const { field: name, autoFocus, label, color, placeholder, secure,
-      rows, onSubmitEditing, returnKeyType, noCorrect, intl } = this.props
+      rows, onSubmitEditing, returnKeyType, noCorrect } = this.props
     return (
       <Field name={name}>
         {({ field, form }: FieldProps<Values>) => {
@@ -76,5 +76,3 @@ export class TextFieldComponent<Values> extends React.Component<TextField.Props<
     }
   }
 }
-
-export const TextField = injectIntl(TextFieldComponent as any)

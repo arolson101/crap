@@ -1,7 +1,6 @@
 import { Body, Icon, ListItem, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
 import { DatePickerAndroid } from 'react-native'
 import { formatDate, makeDate } from '../../util/date'
 import { DateFieldProps } from './DateField'
@@ -12,11 +11,11 @@ export namespace DateField {
   export type Props<Values> = DateFieldProps<Values>
 }
 
-class DateFieldComponent<Values> extends React.Component<DateField.Props<Values> & InjectedIntlProps> {
+export class DateField<Values> extends React.Component<DateField.Props<Values>> {
   private form: FormikProps<Values>
 
   render() {
-    const { field: name, label, intl, collapsed } = this.props
+    const { field: name, label, collapsed } = this.props
     if (collapsed) {
       return null
     }
@@ -64,5 +63,3 @@ class DateFieldComponent<Values> extends React.Component<DateField.Props<Values>
     }
   }
 }
-
-export const DateField = injectIntl(DateFieldComponent as any)

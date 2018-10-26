@@ -1,7 +1,6 @@
 import accounting from 'accounting'
-import { Button, View } from 'native-base'
+import { Button, View, Text } from 'native-base'
 import * as React from 'react'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'recompose'
 import { confirm } from '../components/Confirmation'
 import { typedFields } from '../components/fields/index'
@@ -11,6 +10,7 @@ import { Mutations, Queries, Transaction } from '../db/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
 import { FormikProps, FormikErrors } from 'formik'
+import { intl, defineMessages } from 'src/intl'
 
 export namespace TransactionForm {
   export interface Props {
@@ -43,7 +43,7 @@ const {
   UrlField
 } = typedFields<FormValues>()
 
-export class TransactionFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
+export class TransactionFormComponent extends React.Component<ComposedProps & SaveButtonProps> {
   private formApi: FormikProps<FormValues>
   static displayName = 'TransactionFormComponent'
 
@@ -101,7 +101,7 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
         {edit &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Button transparent danger onPress={this.confirmDeleteTransaction}>
-              <FormattedMessage {...messages.deleteTransaction} />
+              <Text>{intl.formatMessage(messages.deleteTransaction)}</Text>
             </Button>
           </View>
         }
@@ -120,10 +120,9 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
   }
 
   validate = (values: FormValues): FormikErrors<FormValues> => {
-    const { intl: { formatMessage } } = this.props
     const errors: FormikErrors<FormValues> = {}
     if (!values.name.trim()) {
-      errors.name = formatMessage(messages.valueEmpty)
+      errors.name = intl.formatMessage(messages.valueEmpty)
     }
     return errors
   }
@@ -151,7 +150,6 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
     confirm({
       title: messages.deleteTransactionTitle,
       action: messages.deleteTransaction,
-      formatMessage: this.props.intl.formatMessage,
       onConfirm: this.deleteTransaction,
     })
   }
@@ -171,7 +169,6 @@ export class TransactionFormComponent extends React.Component<ComposedProps & In
 }
 
 export const TransactionForm = compose<ComposedProps, Props>(
-  injectIntl,
   withNav,
   withQuery({ query: Queries.Transaction }, ({ transactionId }: Props) => transactionId && ({ transactionId })),
   withMutation({ saveTransaction: Mutations.SaveTransaction }),

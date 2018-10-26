@@ -2,7 +2,6 @@ import { Body, Icon, ListItem, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { FormikProps, Field, FieldProps } from 'formik'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
 import { DatePickerIOS } from 'react-native'
 import Collapsible from 'react-native-collapsible'
 import { formatDate, standardizeDate } from '../../util/date'
@@ -17,7 +16,7 @@ interface State {
   picking: boolean
 }
 
-class DateFieldComponent<Values> extends React.Component<DateField.Props<Values> & InjectedIntlProps> {
+export class DateField<Values> extends React.Component<DateField.Props<Values>> {
   private form: FormikProps<Values>
 
   state: State = {
@@ -25,7 +24,7 @@ class DateFieldComponent<Values> extends React.Component<DateField.Props<Values>
   }
 
   render() {
-    const { field, label, intl, collapsed } = this.props
+    const { field, label, collapsed } = this.props
     if (collapsed) {
       return null
     }
@@ -80,5 +79,3 @@ class DateFieldComponent<Values> extends React.Component<DateField.Props<Values>
     this.setState({ picking: false })
   }
 }
-
-export const DateField = injectIntl(DateFieldComponent as any)

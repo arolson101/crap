@@ -1,7 +1,6 @@
 import { Body, Button, Icon, Left, NativeBase, Right, Thumbnail } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
 import { Divider } from '../components/fields/Divider'
 import { List, ListItem, Scrollable, Text } from '../components/layout.native'
@@ -10,6 +9,7 @@ import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
 import { Banks } from '../db/queries/queries-types'
 import { AddButtonProps, makeScreen } from './Screen'
+import { defineMessages } from 'src/intl'
 
 interface Props {
 }

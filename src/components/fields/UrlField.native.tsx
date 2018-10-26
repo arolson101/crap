@@ -3,12 +3,12 @@ import { Button, Input, Item, Text, Thumbnail, NativeBase, Spinner, ActionSheet 
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldProps, FormikProps } from 'formik'
-import { defineMessages, FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl'
 import { TextInput } from 'react-native'
 import { FavicoProps, getFavico, getFavicoFromLibrary } from '../../util/getFavico'
 import { Label } from './Label.native'
 import { UrlFieldProps } from './UrlField'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { intl, defineMessages } from 'src/intl'
 
 export namespace UrlField {
   export type Props<Values> = UrlFieldProps<Values>
@@ -18,7 +18,7 @@ interface State {
   gettingIcon: boolean
 }
 
-export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Values> & InjectedIntlProps, State> {
+export class UrlField<Values> extends React.Component<UrlField.Props<Values>, State> {
   private textInput: TextInput
   private form: FormikProps<Values>
   private originalValue: string | undefined = undefined
@@ -34,7 +34,7 @@ export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Va
   }
 
   render() {
-    const { field: name, favicoField, autoFocus, label, placeholder, onSubmitEditing, returnKeyType, intl } = this.props
+    const { field: name, favicoField, autoFocus, label, placeholder, onSubmitEditing, returnKeyType } = this.props
     return (
       <Field name={name} pure={false}>
         {({ field, form }: FieldProps<Values>) => {
@@ -138,7 +138,7 @@ export class UrlFieldComponent<Values> extends React.Component<UrlField.Props<Va
   }
 
   onIconButtonPressed = () => {
-    const { intl, label, favicoField } = this.props
+    const { label, favicoField } = this.props
     const options: string[] = [
       intl.formatMessage(messages.reset),
       intl.formatMessage(messages.redownload),
@@ -207,8 +207,6 @@ class FavicoButton extends React.Component<FavicoButtonProps> {
     )
   }
 }
-
-export const UrlField = injectIntl(UrlFieldComponent as any)
 
 const messages = defineMessages({
   empty: {

@@ -1,6 +1,5 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import Collapsible from 'react-native-collapsible'
 import { compose } from 'recompose'
 import { confirm } from '../components/Confirmation'
@@ -14,6 +13,7 @@ import { filist, formatAddress } from '../fi'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
 import { FormikProps, FormikErrors } from 'formik'
+import { intl, defineMessages } from 'src/intl'
 
 export namespace BankForm {
   export interface Props {
@@ -46,7 +46,7 @@ const {
   UrlField
 } = typedFields<FormValues>()
 
-export class BankFormComponent extends React.Component<ComposedProps & InjectedIntlProps & SaveButtonProps> {
+export class BankFormComponent extends React.Component<ComposedProps & SaveButtonProps> {
   private formApi: FormikProps<FormValues>
 
   componentDidMount() {
@@ -78,11 +78,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
           {formApi =>
             <>
               <Divider>
-                <FormattedMessage {...messages.fiHelp}>
-                  {txt =>
-                    <Text note>{txt}</Text>
-                  }
-                </FormattedMessage>
+                <Text note>{intl.formatMessage(messages.fiHelp)}</Text>
               </Divider>
               <SelectField
                 field='fi'
@@ -155,7 +151,7 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
         {edit &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Button transparent danger onPress={this.confirmDeleteBank}>
-              <FormattedMessage {...messages.deleteBank} />
+              <Text>{intl.formatMessage(messages.deleteBank)}</Text>
             </Button>
           </View>
         }
@@ -174,10 +170,9 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
   }
 
   validate = (values: FormValues): FormikErrors<FormValues> => {
-    const { intl: { formatMessage } } = this.props
     const errors: FormikErrors<FormValues> = {}
     if (!values.name.trim()) {
-      errors.name = formatMessage(messages.valueEmpty)
+      errors.name = intl.formatMessage(messages.valueEmpty)
     }
     return errors
   }
@@ -218,7 +213,6 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
     confirm({
       title: messages.deleteBankTitle,
       action: messages.deleteBank,
-      formatMessage: this.props.intl.formatMessage,
       onConfirm: this.deleteBank,
     })
   }
@@ -238,7 +232,6 @@ export class BankFormComponent extends React.Component<ComposedProps & InjectedI
 }
 
 export const BankForm = compose<ComposedProps, Props>(
-  injectIntl,
   withNav,
   withQuery({ query: Queries.Bank }, ({ bankId }: Props) => bankId && ({ bankId })),
   withMutation({ saveBank: Mutations.SaveBank }),

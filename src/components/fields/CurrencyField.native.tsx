@@ -2,17 +2,17 @@ import { Field, FieldProps, FormikProps } from 'formik'
 import accounting from 'accounting'
 import { Icon, Input, Item } from 'native-base'
 import * as React from 'react'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
 import { TextInput } from 'react-native'
 import { CurrencyFieldProps } from './CurrencyField'
 import { Label } from './Label.native'
+import { intl } from 'src/intl'
 // import { CalculatorInput } from 'react-native-calculator'
 
 export namespace CurrencyField {
   export type Props<Values> = CurrencyFieldProps<Values>
 }
 
-class CurrencyFieldComponent<Values> extends React.Component<CurrencyField.Props<Values> & InjectedIntlProps> {
+export class CurrencyField<Values> extends React.Component<CurrencyField.Props<Values>> {
   private textInput: TextInput
   private form: FormikProps<Values>
 
@@ -24,7 +24,7 @@ class CurrencyFieldComponent<Values> extends React.Component<CurrencyField.Props
 
   render() {
     const { field: name, autoFocus, label, placeholder,
-      onSubmitEditing, returnKeyType, intl } = this.props
+      onSubmitEditing, returnKeyType } = this.props
     return (
       <Field name={name}>
         {({ field, form }: FieldProps<Values>) => {
@@ -83,5 +83,3 @@ class CurrencyFieldComponent<Values> extends React.Component<CurrencyField.Props
     }
   }
 }
-
-export const CurrencyField = injectIntl(CurrencyFieldComponent as any)

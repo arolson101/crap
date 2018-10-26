@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { FormattedMessage } from 'react-intl'
 import { NavigationContainerComponent } from 'react-navigation'
 import { Subtract } from 'utility-types'
+import { MessageDescriptor } from 'src/intl'
 
 export interface SelectFieldItem {
   label: string
@@ -9,7 +9,7 @@ export interface SelectFieldItem {
 }
 
 export interface NavPickerParams {
-  title: FormattedMessage.MessageDescriptor
+  title: MessageDescriptor
   items: SelectFieldItem[]
   selectedItem: string | number
   onValueChange: (selectedItem: string | number) => any

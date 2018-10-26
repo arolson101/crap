@@ -1,12 +1,12 @@
 import { ActionSheet } from 'native-base'
-import { defineMessages } from 'react-intl'
 import { Params } from './Confirmation'
+import { defineMessages, intl } from '../intl'
 
 export const confirm = (params: Params) => {
-  const { title, action, onConfirm, formatMessage } = params
+  const { title, action, onConfirm } = params
   const options: string[] = [
-    formatMessage(action),
-    formatMessage(messages.cancel)
+    intl.formatMessage(action),
+    intl.formatMessage(messages.cancel)
   ]
   const destructiveButtonIndex = 0
   const cancelButtonIndex = 1
@@ -15,7 +15,7 @@ export const confirm = (params: Params) => {
       options,
       cancelButtonIndex,
       destructiveButtonIndex,
-      title: formatMessage(title)
+      title: intl.formatMessage(title)
     },
     buttonIndex => {
       if (buttonIndex === destructiveButtonIndex) {

@@ -1,8 +1,8 @@
-import { Button, Spinner as NBSpinner, View } from 'native-base'
+import { Button, Spinner as NBSpinner, View, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { defineMessages, FormattedMessage } from 'react-intl'
 import { Dimensions, Modal, StyleSheet } from 'react-native'
+import { intl, defineMessages } from 'src/intl'
 
 interface Props {
   visible: boolean
@@ -26,7 +26,7 @@ export const Spinner: React.SFC<Props> = props => {
           <NBSpinner color={platform.brandInfo} />
           {cancelable &&
             <Button block transparent info onPress={onCancel}>
-              <FormattedMessage {...messages.cancel} />
+              <Text>{intl.formatMessage(messages.cancel)}</Text>
             </Button>
           }
         </View>

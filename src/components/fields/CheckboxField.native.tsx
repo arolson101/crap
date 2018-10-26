@@ -2,14 +2,13 @@ import { Item, Right, Switch } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldProps } from 'formik'
-import { FormattedMessage } from 'react-intl'
-import { StyleSheet } from 'react-native'
 import { Label } from './Label.native'
+import { MessageDescriptor } from 'src/intl'
 
 export namespace CheckboxField {
   export interface Props<Values> {
     field: keyof Values & string
-    label: FormattedMessage.MessageDescriptor
+    label: MessageDescriptor
   }
 }
 

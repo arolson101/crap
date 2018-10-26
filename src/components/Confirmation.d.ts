@@ -1,13 +1,12 @@
 /* tslint:disable:no-duplicate-variable */
-import { FormattedMessage } from 'react-intl'
 import * as native from './Confirmation.native'
 import * as web from './Confirmation.web'
+import { MessageDescriptor } from '../intl'
 
 export interface Params {
-  title: FormattedMessage.MessageDescriptor
-  action: FormattedMessage.MessageDescriptor
+  title: MessageDescriptor
+  action: MessageDescriptor
   onConfirm: () => any
-  formatMessage: (message: FormattedMessage.MessageDescriptor) => string
 }
 
 declare var _test: typeof web

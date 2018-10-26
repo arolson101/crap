@@ -2,7 +2,6 @@ import cuid from 'cuid'
 import { Body, Button, Card, CardItem, Icon, Left, Right, Text, Thumbnail } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { defineMessages, FormattedMessage } from 'react-intl'
 import { Linking } from 'react-native'
 import { compose } from 'recompose'
 import * as URL from 'url'
@@ -13,6 +12,7 @@ import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
 import { Bank } from '../db/queries/queries-types'
 import { AddButtonProps, makeScreen } from './Screen'
+import { intl, defineMessages } from 'src/intl'
 
 interface Params {
   bankId: string
@@ -78,10 +78,7 @@ export class BankScreenComponent extends React.PureComponent<Props> {
         </Card>
         <List>
           <Divider>
-            {bank.accounts.length
-              ? <FormattedMessage {...messages.accountList}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
-              : <FormattedMessage {...messages.accountListEmpty}>{txt => <Text note>{txt}</Text>}</FormattedMessage>
-            }
+            <Text note>{intl.formatMessage(bank.accounts.length ? messages.accountList : messages.accountListEmpty)}</Text>
           </Divider>
           {bank.accounts.map(account => (
             <AccountItem key={account.id} {...this.props} account={account} />
@@ -91,11 +88,11 @@ export class BankScreenComponent extends React.PureComponent<Props> {
           }
           {bank.online &&
             <ListItem button onPress={this.downloadAccountList}>
-              <FormattedMessage {...messages.downloadAccountList} />
+              <Text>{intl.formatMessage(messages.downloadAccountList)}</Text>
             </ListItem>
           }
           <ListItem button onPress={this.accountCreate}>
-            <FormattedMessage {...messages.addAccount} />
+            <Text>{intl.formatMessage(messages.addAccount)}</Text>
           </ListItem>
         </List>
       </Scrollable>

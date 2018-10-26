@@ -1,15 +1,15 @@
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { FormattedMessage, InjectedIntlProps } from 'react-intl'
 import { Platform, StyleSheet } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react-navigation'
 import HeaderButtons from 'react-navigation-header-buttons'
+import { MessageDescriptor, intl } from 'src/intl'
 
-export type ScreenProps = InjectedIntlProps
+export type ScreenProps = {}
 
-export type TitleFcn<T> = (params: T) => string | FormattedMessage.MessageDescriptor
+export type TitleFcn<T> = (params: T) => string | MessageDescriptor
 
 export interface AddButtonProps {
   setAdd: (callback: () => any) => any
@@ -86,8 +86,6 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
     )) as NavigationScreenComponent<T, {}, P> as any
 
     nav.navigationOptions = ({ navigation, screenProps }) => {
-      const { intl } = screenProps as ScreenProps
-
       const headerLeft = (params.cancelButton && !navigation.state.index) ? ({
         headerLeft: (
           <HeaderButtons IconComponent={IconComponent} iconSize={platform.iconHeaderSize} color={platform.toolbarBtnColor}>

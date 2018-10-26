@@ -2,31 +2,31 @@ import { Field, FieldProps, FormikProps } from 'formik'
 import { Body, Icon, ListItem, Picker, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'recompose'
 import { InjectedNavProps, withNav, SelectFieldItem } from '../NavContext'
 import { Label } from './Label.native'
+import { intl, MessageDescriptor } from 'src/intl'
 
 export namespace SelectField {
   export type Item = SelectFieldItem
 
   export interface Props<Values> {
     field: keyof Values & string
-    label: FormattedMessage.MessageDescriptor
+    label: MessageDescriptor
     items: Item[]
     onValueChange?: (value: string | number) => any
     searchable?: boolean
   }
 }
 
-interface ComposedProps<Values> extends SelectField.Props<Values>, InjectedIntlProps, InjectedNavProps {
+interface ComposedProps<Values> extends SelectField.Props<Values>, InjectedNavProps {
 }
 
 export class SelectFieldComponent<Values> extends React.Component<ComposedProps<Values>> {
   private form: FormikProps<Values>
 
   render() {
-    const { field: name, label, items, intl, searchable } = this.props
+    const { field: name, label, items, searchable } = this.props
 
     return (
       <Field name={name}>
@@ -98,6 +98,5 @@ export class SelectFieldComponent<Values> extends React.Component<ComposedProps<
 }
 
 export const SelectField = compose(
-  injectIntl,
   withNav,
 )(SelectFieldComponent)

@@ -1,6 +1,5 @@
-import { Button, View } from 'native-base'
+import { Button, View, Text } from 'native-base'
 import * as React from 'react'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 import { compose } from 'recompose'
 import { typedFields } from '../components/fields/index'
 import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
@@ -8,8 +7,9 @@ import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
 import { FormikErrors } from 'formik'
+import { intl, defineMessages } from 'src/intl'
 
-interface Props extends InjectedIntlProps, InjectedNavProps {
+interface Props extends InjectedNavProps {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
@@ -49,7 +49,7 @@ export class LoginFormComponent extends React.Component<Props> {
           {formApi =>
             <FormContent>
               <WelcomeText>
-                <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)} />
+                <Text>{intl.formatMessage(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)}</Text>
               </WelcomeText>
               <TextField
                 autoFocus
@@ -75,7 +75,7 @@ export class LoginFormComponent extends React.Component<Props> {
                 block
                 onPress={formApi.submitForm}
               >
-                <FormattedMessage {...(create ? messages.create : messages.open)} />
+                <Text>{intl.formatMessage(create ? messages.create : messages.open)}</Text>
               </Button>
             </FormContent>
           }
@@ -84,7 +84,7 @@ export class LoginFormComponent extends React.Component<Props> {
         {!create &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Button transparent danger onPress={this.confirmDelete}>
-              <FormattedMessage {...messages.delete} />
+              <Text>{intl.formatMessage(messages.delete)}</Text>
             </Button>
           </View>
         }
@@ -93,20 +93,19 @@ export class LoginFormComponent extends React.Component<Props> {
   }
 
   validate = (values: FormValues): FormikErrors<FormValues> => {
-    const { intl: { formatMessage } } = this.props
     const create = this.props.query.allDbs.length === 0
     const errors: FormikErrors<FormValues> = {}
 
     if (create) {
       if (!values.password.trim()) {
-        errors.password = formatMessage(messages.valueEmpty)
+        errors.password = intl.formatMessage(messages.valueEmpty)
       }
       if (values.password !== values.passwordConfirm) {
-        errors.passwordConfirm = formatMessage(messages.passwordsMatch)
+        errors.passwordConfirm = intl.formatMessage(messages.passwordsMatch)
       }
     } else {
       if (!values.password.trim()) {
-        errors.password = formatMessage(messages.valueEmpty)
+        errors.password = intl.formatMessage(messages.valueEmpty)
       }
     }
 
@@ -127,12 +126,10 @@ export class LoginFormComponent extends React.Component<Props> {
   }
 
   confirmDelete = () => {
-    const { intl: { formatMessage } } = this.props
     confirm({
       title: messages.deleteTitle,
       action: messages.delete,
       onConfirm: this.deleteDb,
-      formatMessage
     })
   }
 
@@ -155,7 +152,6 @@ export class LoginFormComponent extends React.Component<Props> {
 }
 
 export const LoginForm = compose(
-  injectIntl,
   withNav,
   withQuery({ query: Queries.Dbs }),
   withMutation({ openDb: Mutations.OpenDb }),

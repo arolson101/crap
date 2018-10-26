@@ -18,6 +18,9 @@
       "src",
       "stories"
     ],
+    "paths": {
+      "src": ["src"]
+    },
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
