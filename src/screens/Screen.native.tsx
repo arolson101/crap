@@ -1,8 +1,6 @@
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Platform, StyleSheet } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react-navigation'
 import HeaderButtons from 'react-navigation-header-buttons'
 import { MessageDescriptor, intl } from 'src/intl'
@@ -60,7 +58,7 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
     setEdit: params.editButton ? ((editFcn: () => any) => { onEdit = editFcn }) : null,
   }
 
-  const IconComponent = Platform.OS === 'ios' ? Ionicons : MaterialIcons
+  // const IconComponent = Platform.OS === 'ios' ? Ionicons : MaterialIcons
 
   return <P extends object>(Component: React.ComponentType<P>) => {
     const nav: ScreenComponent<T, P> = ((props) => (
@@ -88,7 +86,7 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
     nav.navigationOptions = ({ navigation, screenProps }) => {
       const headerLeft = (params.cancelButton && !navigation.state.index) ? ({
         headerLeft: (
-          <HeaderButtons IconComponent={IconComponent} iconSize={platform.iconHeaderSize} color={platform.toolbarBtnColor}>
+          <HeaderButtons>
             <HeaderButtons.Item
               title='cancel'
               iconName={Platform.OS === 'android' ? 'arrow-back' : undefined}
@@ -100,7 +98,7 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
 
       const headerRight = (params.addButton || params.saveButton || params.editButton) ? ({
         headerRight: (
-          <HeaderButtons IconComponent={IconComponent} iconSize={platform.iconHeaderSize} color={platform.toolbarBtnColor}>
+          <HeaderButtons>
             {params.addButton &&
               <HeaderButtons.Item
                 title='add'
