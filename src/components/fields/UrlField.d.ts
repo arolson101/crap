@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import { ReturnKeyType } from 'react-native'
 import * as web from './UrlField.web'
 import * as native from './UrlField.native'

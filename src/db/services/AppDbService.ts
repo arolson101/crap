@@ -18,16 +18,16 @@ export class AppDbService {
     this.transactions = appDbConnection.getCustomRepository(TransactionRepository)
   }
 
-  close() {
-    this.appDbConnection.close()
+  async close() {
+    await this.appDbConnection.close()
     delete this.appDbConnection
     delete this.banks
     delete this.accounts
     delete this.transactions
   }
 
-  write(changes: DbChange[]) {
-    dbWrite(this.appDbConnection, changes)
+  async write(changes: DbChange[]) {
+    await dbWrite(this.appDbConnection, changes)
   }
 }
 

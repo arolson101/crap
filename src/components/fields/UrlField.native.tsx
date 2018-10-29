@@ -85,8 +85,8 @@ export class UrlField<Values> extends React.Component<UrlField.Props<Values>, St
     )
   }
 
-  onValueChanged = (value: string) => {
-    this.maybeGetIcon(value)
+  onValueChanged = async (value: string) => {
+    await this.maybeGetIcon(value)
   }
 
   maybeGetIcon = async (value: string, force: boolean = false) => {
@@ -127,7 +127,7 @@ export class UrlField<Values> extends React.Component<UrlField.Props<Values>, St
   redownload = async () => {
     const { favicoField, field } = this.props
     this.form.setFieldValue(favicoField, '')
-    this.maybeGetIcon(this.form.values[field] as any, true)
+    return this.maybeGetIcon(this.form.values[field] as any, true)
   }
 
   getFromLibrary = async () => {
@@ -152,16 +152,16 @@ export class UrlField<Values> extends React.Component<UrlField.Props<Values>, St
         cancelButtonIndex,
         title: intl.formatMessage(label)
       },
-      buttonIndex => {
+      async buttonIndex => {
         switch (buttonIndex) {
           case 0: // reset
             this.form.setFieldValue(favicoField, '')
-            break
+            return
           case 1: // redownload
-            this.redownload()
+            await this.redownload()
             break
           case 2: // library
-            this.getFromLibrary()
+            await this.getFromLibrary()
             break
         }
       }

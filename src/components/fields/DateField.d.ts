@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import * as web from './DateField.web'
 import * as android from './DateField.android'
 import * as ios from './DateField.ios'

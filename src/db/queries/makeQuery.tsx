@@ -41,8 +41,8 @@ export const withQuery = <R extends Record<string, ExecutableDocumentNode<V1, Q1
       }
       mounted = true
 
-      componentDidMount() {
-        this.runQuery()
+      async componentDidMount() {
+        await this.runQuery()
       }
 
       componentWillUnmount() {

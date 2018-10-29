@@ -1,3 +1,4 @@
+/* tslint:disable:no-duplicate-variable */
 import * as web from './NavProvider.web'
 import * as native from './NavProvider.native'
 

@@ -54,7 +54,7 @@ export class IndexDbService {
   }
 
   async closeDb(): Promise<Boolean> {
-    this.appService.close()
+    await this.appService.close()
     return true
   }
 

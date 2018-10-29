@@ -12,6 +12,6 @@ declare module 'icojs' {
     parseSync(buffer: ArrayBuffer, mime?: string): Array<ParsedImage>
   }
 
-  var ICO: ICO
+  let ICO: ICO
   export = ICO
 }

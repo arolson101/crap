@@ -158,7 +158,7 @@ export class AccountResolver {
     @Arg('cancelToken') cancelToken: string,
   ): Promise<Account> {
 
-    const bank = await await this.app.banks.get(bankId)
+    const bank = await this.app.banks.get(bankId)
     if (!bank.online) {
       throw new Error(`downloadTransactions: bank is not set online`)
     }
