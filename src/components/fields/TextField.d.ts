@@ -1,11 +1,12 @@
 /* tslint:disable:no-duplicate-variable */
 import * as web from './TextField.web'
 import * as native from './TextField.native'
+import { MessageDescriptor } from 'src/intl'
 
 export interface TextFieldProps<Values> {
   field: keyof Values & string
-  label: FormattedMessage.MessageDescriptor
-  placeholder?: FormattedMessage.MessageDescriptor
+  label: MessageDescriptor
+  placeholder?: MessageDescriptor
   secure?: boolean
   rows?: number
   color?: string

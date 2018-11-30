@@ -1,31 +1,33 @@
+import { Switch, FormGroup, Intent } from '@blueprintjs/core'
+import { Field, FieldProps } from 'formik'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { Switch } from '@blueprintjs/core'
-import { WrappedField } from './WrappedField'
+import { intl } from 'src/intl'
+import { CheckboxFieldProps } from './CheckboxField'
 
 export namespace CheckboxField {
-  export interface Props<T = {}> {
-    field: string
-    label: FormattedMessage.MessageDescriptor
-  }
+  export type Props<Values> = CheckboxFieldProps<Values>
 }
 
-const CheckboxFieldComponent: React.SFC<CheckboxField.Props & InjectedIntlProps> =
-  ({ field, label, intl }) => (
-    <Field field={field}>
-      {fieldApi => (
-          <WrappedField fieldApi={fieldApi}>
-            <Switch
-              className='pt-align-right'
-              label={intl.formatMessage(label)}
-              checked={fieldApi.value}
-              onChange={e => fieldApi.setValue(e.currentTarget.checked)}
-            />
-          </WrappedField>
-        )
-      }
-    </Field>
-  )
-
-export const CheckboxField = injectIntl<CheckboxField.Props>(CheckboxFieldComponent)
+export const CheckboxField = <Values extends {}>({ field: name, label }: React.Props<any> & CheckboxField.Props<Values>) => (
+  <Field name={name}>
+    {({ field, form }: FieldProps<Values>) => {
+      const error = !!(form.touched[name] && form.errors[name])
+      const id = `${name}-input`
+      return (
+        <FormGroup
+          intent={error ? Intent.DANGER : undefined}
+          helperText={error}
+          label={intl.formatMessage(label)}
+          labelFor={id}
+        >
+          <Switch
+            className='pt-align-right'
+            label={intl.formatMessage(label)}
+            checked={field.value}
+            onChange={e => form.setFieldValue(name, e.currentTarget.checked)}
+          />
+        </FormGroup>
+      )
+    }}
+  </Field>
+)

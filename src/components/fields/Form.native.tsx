@@ -1,7 +1,7 @@
-import { Formik, FormikProps, FormikConfig, FormikActions } from 'formik'
-import * as React from 'react'
+import { Formik, FormikActions } from 'formik'
 import * as NB from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
+import * as React from 'react'
 import { FormProps } from './Form'
 
 export namespace Form {

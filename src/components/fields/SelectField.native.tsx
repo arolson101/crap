@@ -3,20 +3,14 @@ import { Body, Icon, ListItem, Picker, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { compose } from 'recompose'
-import { InjectedNavProps, withNav, SelectFieldItem } from '../NavContext'
+import { intl } from 'src/intl'
+import { InjectedNavProps, withNav } from '../NavContext'
 import { Label } from './Label.native'
-import { intl, MessageDescriptor } from 'src/intl'
+import { SelectFieldItem, SelectFieldProps } from './SelectField'
 
 export namespace SelectField {
   export type Item = SelectFieldItem
-
-  export interface Props<Values> {
-    field: keyof Values & string
-    label: MessageDescriptor
-    items: Item[]
-    onValueChange?: (value: string | number) => any
-    searchable?: boolean
-  }
+  export type Props<Values> = SelectFieldProps<Values>
 }
 
 interface ComposedProps<Values> extends SelectField.Props<Values>, InjectedNavProps {

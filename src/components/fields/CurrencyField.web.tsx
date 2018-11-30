@@ -1,21 +1,21 @@
-import { FormGroup, Intent, TextArea } from '@blueprintjs/core'
+import { FormGroup, Intent } from '@blueprintjs/core'
+import { Field, FieldProps } from 'formik'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { intl } from 'src/intl'
 import { CurrencyFieldProps } from './CurrencyField'
 
 export namespace CurrencyField {
-  export type Props<T = {}> = CurrencyFieldProps
+  export type Props<Values> = CurrencyFieldProps<Values>
 }
 
-export class CurrencyFieldComponent extends React.Component<CurrencyField.Props & InjectedIntlProps> {
+export class CurrencyField<Values> extends React.Component<CurrencyField.Props<Values>> {
   render() {
-    const { field, intl, label, placeholder, secure, rows } = this.props
-    const id = `${field}-input`
+    const { field: name, label, placeholder } = this.props
+    const id = `${name}-input`
     return (
-      <Field field={field}>
-        {fieldApi => {
-          const error = fieldApi.touched && fieldApi.error
+      <Field name={name}>
+        {({ field, form }: FieldProps<Values>) => {
+          const error = !!(form.touched[name] && form.errors[name])
           return (
             <FormGroup
               intent={error ? Intent.DANGER : undefined}
@@ -23,24 +23,14 @@ export class CurrencyFieldComponent extends React.Component<CurrencyField.Props 
               label={intl.formatMessage(label)}
               labelFor={id}
             >
-              {rows && rows > 1 ?
-                <TextArea
-                  id={id}
-                  className={'pt-input pt-fill' + (error ? ' pt-intent-danger' : '')}
-                  placeholder={placeholder && intl.formatMessage(placeholder)}
-                  onChange={(event) => fieldApi.setValue(event.target.value)}
-                  value={fieldApi.value}
-                  rows={rows}
-                />
-                : <input
-                  id={id}
-                  className={'pt-input pt-fill' + (error ? ' pt-intent-danger' : '')}
-                  type={secure ? 'password' : 'text'}
-                  placeholder={placeholder && intl.formatMessage(placeholder)}
-                  onChange={(event) => fieldApi.setValue(event.target.value)}
-                  value={fieldApi.value}
-                />
-              }
+              <input
+                id={id}
+                className={'pt-input pt-fill' + (error ? ' pt-intent-danger' : '')}
+                type={'text'}
+                placeholder={placeholder && intl.formatMessage(placeholder)}
+                onChange={field.onChange}
+                value={field.value.toString()}
+              />
             </FormGroup>
           )
         }}
@@ -48,5 +38,3 @@ export class CurrencyFieldComponent extends React.Component<CurrencyField.Props 
     )
   }
 }
-
-export const CurrencyField = injectIntl<CurrencyField.Props>(CurrencyFieldComponent)

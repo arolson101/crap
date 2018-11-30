@@ -1,12 +1,8 @@
 import * as React from 'react'
 import { NavigationContainerComponent } from 'react-navigation'
-import { Subtract } from 'utility-types'
 import { MessageDescriptor } from 'src/intl'
-
-export interface SelectFieldItem {
-  label: string
-  value: string | number
-}
+import { Subtract } from 'utility-types'
+import { SelectFieldItem } from './fields/SelectField'
 
 export interface NavPickerParams {
   title: MessageDescriptor

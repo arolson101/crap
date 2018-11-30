@@ -1,15 +1,70 @@
+import { Formik, FormikActions } from 'formik'
 import * as React from 'react'
-import * as RF from 'react-form'
 import { FormProps } from './Form'
 
 export namespace Form {
   export type Props<Values> = FormProps<Values>
 }
 
-type Props = RF.FormProps
+export class Form<Values> extends React.Component<Form.Props<Values>> {
+  componentWillUnmount() {
+    this.closeToast()
+  }
 
-export const Form: React.SFC<Props> = (props) => {
-  return (
-    <RF.Form {...props}/>
-  )
+  render() {
+    const { children, ...props } = this.props
+    return (
+      <Formik
+        {...props}
+        validateOnSubmit
+        onSubmit={async (values: Values, formikActions: FormikActions<Values>) => {
+          const { onSubmit } = this.props
+          this.closeToast()
+          try {
+            if (onSubmit) {
+              onSubmit(values, formikActions)
+            }
+          } catch (err) {
+            console.log('submit form error', err)
+            // NB.Toast.show({
+            //   text: err.message,
+            //   buttonText: 'Okay',
+            //   duration: 0,
+            //   type: 'danger',
+            //   onClose: () => {
+            //     // this.formApi.setFieldError(field, null)
+            //   }
+            // })
+          }
+        }}
+        // onSubmitFailure={(errors) => {
+        //   console.log(errors)
+        //   Object.keys(errors).forEach(field => {
+        //     NB.Toast.show({
+        //       text: errors[field] as string,
+        //       buttonText: 'Okay',
+        //       duration: 0,
+        //       type: 'danger',
+        //       onClose: () => {
+        //         this.formApi.setFieldError(field, null)
+        //       }
+        //     })
+        //   })
+        // }}
+      >
+        {formApi => {
+          if (this.props.getApi) {
+            this.props.getApi(formApi)
+          }
+
+          return children && children(formApi)
+        }}
+      </Formik>
+    )
+  }
+
+  closeToast = () => {
+    // console.log('closetoast 2');
+    // (NB.Toast as any).toastInstance._root.closeToast()
+  }
 }

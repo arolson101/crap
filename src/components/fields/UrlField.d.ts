@@ -1,8 +1,8 @@
 /* tslint:disable:no-duplicate-variable */
-import { ReturnKeyType } from 'react-native'
 import * as web from './UrlField.web'
 import * as native from './UrlField.native'
-import { MessageDescriptor } from '../../intl'
+import { ReturnKeyType } from 'react-native'
+import { MessageDescriptor } from 'src/intl'
 
 export interface UrlFieldProps<Values> {
   field: keyof Values & string

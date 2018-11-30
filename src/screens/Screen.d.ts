@@ -1,5 +1,5 @@
-import * as web from './screen.web'
-import * as native from './screen.native'
+import * as web from './Screen.web'
+import * as native from './Screen.native'
 
 /// export to get the shape of the module
-export * from './screen.web'
+export * from './Screen.web'
