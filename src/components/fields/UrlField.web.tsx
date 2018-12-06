@@ -9,7 +9,7 @@ export namespace UrlField {
 }
 
 export class UrlField<Values> extends React.Component<UrlField.Props<Values>> {
-  private textInput = React.createRef<any>()
+  private textInput = React.createRef<HTMLInputElement>()
 
   focusTextInput = () => {
     if (this.textInput.current) {

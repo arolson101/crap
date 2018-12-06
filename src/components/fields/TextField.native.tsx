@@ -11,11 +11,12 @@ export namespace TextField {
 }
 
 export class TextField<Values> extends React.Component<TextField.Props<Values>> {
-  private textInput: TextInput
+  private textInput = React.createRef<TextInput & Textarea>()
 
   focusTextInput = () => {
-    if (this.textInput) {
-      this.textInput.focus()
+    const ref: any = this.textInput.current
+    if (ref && ref._root) {
+      ref._root.focus()
     }
   }
 
@@ -43,7 +44,7 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
                   rowSpan={rows}
                   onChangeText={form.handleChange(name)}
                   value={field.value}
-                  ref={this.ref}
+                  ref={this.textInput}
                 />
                 : <Input
                   style={{ flex: 1, ...inputStyle }}
@@ -55,7 +56,7 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
                   autoCapitalize={noCorrect ? 'none' : undefined}
                   multiline={(rows ? rows > 0 : undefined)}
                   returnKeyType={returnKeyType}
-                  ref={this.ref}
+                  ref={this.textInput}
                   {...inputProps}
                 />
               }
@@ -67,12 +68,5 @@ export class TextField<Values> extends React.Component<TextField.Props<Values>> 
         }}
       </Field>
     )
-  }
-
-  ref = (ref: any) => {
-    this.textInput = ref && ref._root
-    if (this.props.inputRef) {
-      this.props.inputRef(this.textInput)
-    }
   }
 }

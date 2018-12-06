@@ -13,12 +13,13 @@ export namespace CurrencyField {
 }
 
 export class CurrencyField<Values> extends React.Component<CurrencyField.Props<Values>> {
-  private textInput: TextInput
+  private textInput = React.createRef<TextInput>()
   private form: FormikProps<Values>
 
   focusTextInput = () => {
-    if (this.textInput) {
-      this.textInput.focus()
+    const ref: any = this.textInput.current
+    if (ref && ref._root) {
+      ref._root.focus()
     }
   }
 
@@ -57,7 +58,7 @@ export class CurrencyField<Values> extends React.Component<CurrencyField.Props<V
                 onSubmitEditing={onSubmitEditing}
                 returnKeyType={returnKeyType}
                 keyboardType='numeric'
-                ref={this.ref}
+                ref={this.textInput}
                 {...inputProps}
               />
               {error &&
@@ -74,12 +75,5 @@ export class CurrencyField<Values> extends React.Component<CurrencyField.Props<V
     const { field } = this.props
     const value = accounting.formatMoney(this.form.values[field] as any)
     this.form.setFieldValue(field, value)
-  }
-
-  ref = (ref: any) => {
-    this.textInput = ref && ref._root
-    if (this.props.inputRef) {
-      this.props.inputRef(this.textInput)
-    }
   }
 }

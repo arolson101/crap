@@ -9,7 +9,6 @@ export interface CurrencyFieldProps<Values> {
   autoFocus?: boolean
   onSubmitEditing?: () => any
   returnKeyType?: ReturnKeyType
-  inputRef?: any
 }
 
 declare var _test: typeof web

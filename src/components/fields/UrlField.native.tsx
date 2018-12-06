@@ -3,7 +3,6 @@ import { Button, Input, Item, Text, Thumbnail, NativeBase, Spinner, ActionSheet 
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Field, FieldProps, FormikProps } from 'formik'
-import { TextInput } from 'react-native'
 import { FavicoProps, getFavico, getFavicoFromLibrary } from '../../util/getFavico'
 import { Label } from './Label.native'
 import { UrlFieldProps } from './UrlField'
@@ -19,7 +18,7 @@ interface State {
 }
 
 export class UrlField<Values> extends React.Component<UrlField.Props<Values>, State> {
-  private textInput: TextInput
+  private textInput = React.createRef<Input>()
   private form: FormikProps<Values>
   private originalValue: string | undefined = undefined
 
@@ -28,8 +27,9 @@ export class UrlField<Values> extends React.Component<UrlField.Props<Values>, St
   }
 
   focusTextInput = () => {
-    if (this.textInput) {
-      this.textInput.focus()
+    const ref: any = this.textInput.current
+    if (ref && ref._root) {
+      ref._root.focus()
     }
   }
 
@@ -75,7 +75,7 @@ export class UrlField<Values> extends React.Component<UrlField.Props<Values>, St
                 value={field.value}
                 onSubmitEditing={onSubmitEditing}
                 returnKeyType={returnKeyType}
-                ref={(ref: any) => this.textInput = ref && ref._root}
+                textRef={this.textInput}
                 onValueChanged={this.onValueChanged}
               />
             </Item>
@@ -170,6 +170,7 @@ export class UrlField<Values> extends React.Component<UrlField.Props<Values>, St
 }
 
 interface NotifyingInputProps extends NativeBase.Input {
+  textRef?: React.Ref<Input>
   onValueChanged: (newValue: string, oldValue: string) => any
 }
 
@@ -182,7 +183,7 @@ class NotifyingInput extends React.Component<NotifyingInputProps> {
   }
 
   render() {
-    return <Input {...this.props} />
+    return <Input {...this.props} ref={this.props.textRef} />
   }
 }
 
