@@ -4,7 +4,8 @@ import * as React from 'react'
 import { ListRenderItem, SectionBase, SectionList, StyleSheet } from 'react-native'
 import { compose } from 'recompose'
 import { makeScreen } from '../screens/Screen'
-import { InjectedNavProps, withNav, NavPickerParams, SelectFieldItem } from '../components/NavContext'
+import { InjectedNavProps, withNav, NavPickerParams } from '../components/NavContext'
+import { SelectFieldItem } from 'src/components'
 
 interface Props extends NavPickerParams, InjectedNavProps {
 }
