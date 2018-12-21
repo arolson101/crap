@@ -1,7 +1,7 @@
 import { Body, Header, Icon, Input, Item, ListItem, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { ListRenderItem, SectionBase, SectionList, StyleSheet } from 'react-native'
+import { ListRenderItem, SectionBase, SectionList } from 'react-native'
 import { compose } from 'recompose'
 import { makeScreen } from '../screens/Screen'
 import { InjectedNavProps, withNav, NavPickerParams } from '../components/NavContext'
@@ -139,7 +139,7 @@ export const PickerModal = compose(
 )(PickerForm)
 PickerModal.displayName = 'PickerModal'
 
-const styles = StyleSheet.create({
+const styles = {
   list: {
     backgroundColor: platform.cardDefaultBg
   },
@@ -147,4 +147,4 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     height: platform.searchBarHeight + platform.listItemPadding
   }
-})
+}

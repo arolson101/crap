@@ -125,7 +125,7 @@ export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1,
               onCancel={this.onCancel}
               visible={loading && !this.state.noSpinner}
             />
-            <Component {...this.props} {...componentProps} />
+            <Component {...this.props as any} {...componentProps} />
           </>
         )
       }

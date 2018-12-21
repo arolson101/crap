@@ -81,7 +81,7 @@ export const withQuery = <R extends Record<string, ExecutableDocumentNode<V1, Q1
         } else if (loading) {
           return null
         } else {
-          return <Component {...this.props} {...componentProps}/>
+          return <Component {...this.props as P} {...componentProps}/>
         }
       }
     }

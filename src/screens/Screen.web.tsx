@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { MessageDescriptor, intl } from 'src/intl'
+import { ScreenComponent } from './Screen'
 
 export type ScreenProps = {}
 
@@ -25,8 +26,6 @@ interface Params<T> {
   editButton?: boolean
 }
 
-export type ScreenComponent<T = {}, P = any> = React.ComponentType<P>
-
 export const makeScreen = <T extends {}>(params: Params<T>) => {
   let onAdd = () => { console.warn('no add function') }
   let onSave = () => { console.warn('no save function') }
@@ -43,7 +42,7 @@ export const makeScreen = <T extends {}>(params: Params<T>) => {
         {...props}
         {...moreProps}
       />
-    ))
+    )) as React.SFC<P> as any
 
     nav.displayName = `Screen(${Component.displayName || Component.name})`
     return nav

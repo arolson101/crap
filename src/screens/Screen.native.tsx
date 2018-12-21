@@ -1,9 +1,10 @@
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { Platform, StyleSheet } from 'react-native'
-import { NavigationParams, NavigationScreenComponent, SafeAreaView } from 'react-navigation'
+import { NavigationScreenComponent, SafeAreaView } from 'react-navigation'
 import HeaderButtons from 'react-navigation-header-buttons'
 import { MessageDescriptor, intl } from 'src/intl'
+import { ScreenComponent } from './Screen'
 
 export type ScreenProps = {}
 
@@ -44,9 +45,6 @@ const styles = StyleSheet.create({
     // height: platform.iconHeaderSize,
   },
 })
-
-export type ScreenComponent<T = {}, P = any> = NavigationScreenComponent<NavigationParams, {}, P>
-  & { title: TitleFcn<T> }
 
 export const makeScreen = <T extends {}>(params: Params<T>) => {
   let onAdd = () => { console.warn('no add function') }
