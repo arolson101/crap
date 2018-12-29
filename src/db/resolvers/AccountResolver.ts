@@ -250,8 +250,8 @@ const defined = <T>(object: T | undefined): object is T => !!object
 
 const toAccountInput = (
   bank: Bank,
-  accountProfiles: ofx4js.domain.data.signup.AccountProfile[],
-  accountProfile: ofx4js.domain.data.signup.AccountProfile
+  accountProfiles: ofx4js.AccountProfile[],
+  accountProfile: ofx4js.AccountProfile
 ): AccountInput | undefined => {
   const name = accountProfile.getDescription()
     || (accountProfiles.length === 1 ? bank.name : `${bank.name} ${accountProfiles.indexOf(accountProfile)}`)
@@ -288,12 +288,12 @@ const accountsEqual = (a: AccountInput, b: AccountInput): boolean => {
   return (a.type === b.type && a.number === b.number)
 }
 
-const timeForTransaction = (tx: ofx4js.domain.data.common.Transaction): Date => tx.getDatePosted()
+const timeForTransaction = (tx: ofx4js.Transaction): Date => tx.getDatePosted()
 
-const toTransactionInput = (tx: ofx4js.domain.data.common.Transaction): TransactionInput => ({
+const toTransactionInput = (tx: ofx4js.Transaction): TransactionInput => ({
   serverid: tx.getId(),
   time: timeForTransaction(tx),
-  type: ofx4js.domain.data.common.TransactionType[tx.getTransactionType()],
+  type: ofx4js.TransactionType[tx.getTransactionType()],
   name: tx.getName(),
   memo: tx.getMemo() || '',
   amount: tx.getAmount(),

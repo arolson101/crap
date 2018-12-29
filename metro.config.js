@@ -18,7 +18,7 @@ module.exports = (async () => {
         'stream':	require.resolve('react-native-stream'),
       },
 
-      sourceExts: [...sourceExts, "graphql", "gql"]
+      sourceExts: [...sourceExts, "graphql", "gql", "mjs"]
     }
   };
 })();

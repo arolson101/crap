@@ -1,13 +1,14 @@
-import { Button, View, Text } from 'native-base'
+import { FormikErrors } from 'formik'
+import { Button, Text, View } from 'native-base'
 import * as React from 'react'
+import { iOSUIKit } from 'react-native-typography'
 import { compose } from 'recompose'
+import { defineMessages, intl } from 'src/intl'
 import { typedFields } from '../components/fields/index'
 import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
 import { InjectedNavProps, withNav } from '../components/NavContext'
 import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
-import { FormikErrors } from 'formik'
-import { intl, defineMessages } from 'src/intl'
 
 interface Props extends InjectedNavProps {
   query: Queries.Dbs
