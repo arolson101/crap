@@ -2,22 +2,19 @@ import glamorous from 'glamorous-native'
 import * as NB from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { FormattedMessage } from 'react-intl'
 import { ScrollView } from 'react-native'
 import { ThemeProp } from '../App/index'
+import { MessageDescriptor, intl } from 'src/intl'
 
 interface ButtonProps {
   block?: boolean
   onPress: () => void
-  title: string | FormattedMessage.MessageDescriptor
+  title: string | MessageDescriptor
   transparent?: boolean
 }
 export const Button: React.SFC<ButtonProps> = ({ block, onPress, title, transparent }) => (
   <NB.Button block={block} onPress={onPress} transparent={transparent}>
-    {typeof title === 'string'
-      ? <Text>{title}</Text>
-      : <FormattedMessage {...title} />
-    }
+    <Text>{typeof title === 'string' ? title : intl.formatMessage(title)}</Text>
   </NB.Button>
 )
 

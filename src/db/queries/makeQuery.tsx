@@ -1,11 +1,10 @@
-import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
 import * as React from 'react'
-import { Query, QueryResult } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
 import { ErrorMessage } from '../../components/index'
 import { Container } from 'typedi'
 import { GraphQLService } from '../services/GraphQLService'
+import { ExecutableDocumentNode } from '../graphql-types'
 
 export interface QueryType<TData> {
   data: TData
@@ -13,21 +12,9 @@ export interface QueryType<TData> {
   error?: Error
 }
 
-export type QueryDesc<V, Q> = {
-  query: DocumentNode
-  __variables?: V
-  __results?: Q
-  refetchQuery: (variables: V) => { query: DocumentNode; variables: V }
-}
-
-export const makeQueryDesc = <V extends {}, Q>(query: DocumentNode): QueryDesc<V, Q> => ({
-  query,
-  refetchQuery: (variables) => ({ query, variables })
-})
-
 export type Defined<T> = T extends undefined ? never : T
 
-export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extends {}, Q1 extends {}>(
+export const withQuery = <R extends Record<string, ExecutableDocumentNode<V1, Q1>>, V1 extends {}, Q1 extends {}>(
   queryDesc: R,
   getVariables?: (props: any) => V1 | undefined
 ) => {
@@ -54,8 +41,8 @@ export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extend
       }
       mounted = true
 
-      componentDidMount() {
-        this.runQuery()
+      async componentDidMount() {
+        await this.runQuery()
       }
 
       componentWillUnmount() {
@@ -63,25 +50,25 @@ export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extend
       }
 
       async runQuery() {
-        const gql = Container.get(GraphQLService)
-        const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
-        if (!getVariables || variables) {
-          try {
-            const result = await gql.execute(desc.query, variables)
+        try {
+          const gql = Container.get(GraphQLService)
+          const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
+          if (!getVariables || variables) {
+            const result = await gql.execute(desc, variables)
             if (result.errors && result.errors.length > 0) {
               throw result.errors[0]
             }
             if (this.mounted) {
               this.setState({ result: result.data })
             }
-          } catch (error) {
-            if (this.mounted) {
-              this.setState({ error })
-            }
-          } finally {
-            if (this.mounted) {
-              this.setState({ loading: false })
-            }
+          }
+        } catch (error) {
+          if (this.mounted) {
+            this.setState({ error })
+          }
+        } finally {
+          if (this.mounted) {
+            this.setState({ loading: false })
           }
         }
       }
@@ -94,40 +81,9 @@ export const withQuery = <R extends Record<string, QueryDesc<V1, Q1>>, V1 extend
         } else if (loading) {
           return null
         } else {
-          return <Component {...this.props} {...componentProps}/>
+          return <Component {...this.props as P} {...componentProps}/>
         }
       }
-
-      // render () {
-      //   const variables = typeof getVariables === 'function' ? getVariables(this.props as any) : getVariables
-      //   if (getVariables && !variables) {
-      //     const componentProps = { [name]: { loading: false } }
-      //     return (
-      //       <Component {...this.props as any} {...componentProps} />
-      //     )
-      //   } else {
-      //     return (
-      //       <Query
-      //         query={desc.query}
-      //         variables={variables as V}
-      //         // fetchPolicy="network-only"
-      //       >
-      //         {(result: QueryResult<QueryType<any>>) => {
-      //           if (!result.data || Object.keys(result.data).length === 0) {
-      //             return <ErrorMessage error={new Error('no data')} />
-      //           } else if (result.error) {
-      //             return <ErrorMessage error={result.error} />
-      //           } else if (result.loading) {
-      //             return null
-      //           } else {
-      //             const componentProps = { [name]: { ...result.data } }
-      //             return <Component {...this.props as any} {...componentProps} />
-      //           }
-      //         }}
-      //       </Query>
-      //     )
-      //   }
-      // }
     }
 
     return hoistStatics(WrappedQuery, Component)

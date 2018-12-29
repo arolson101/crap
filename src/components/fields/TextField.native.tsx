@@ -1,31 +1,32 @@
+import { Field, FieldProps } from 'formik'
 import { Icon, Input, Item, Textarea } from 'native-base'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
 import { TextInput } from 'react-native'
 import { Label } from './Label.native'
 import { TextFieldProps } from './TextField'
+import { intl } from 'src/intl'
 
 export namespace TextField {
-  export type Props<T = {}> = TextFieldProps
+  export type Props<Values> = TextFieldProps<Values>
 }
 
-class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
-  private textInput: TextInput
+export class TextField<Values> extends React.Component<TextField.Props<Values>> {
+  private textInput = React.createRef<TextInput & Textarea>()
 
   focusTextInput = () => {
-    if (this.textInput) {
-      this.textInput.focus()
+    const ref: any = this.textInput.current
+    if (ref && ref._root) {
+      ref._root.focus()
     }
   }
 
   render() {
-    const { field, autoFocus, label, color, placeholder, secure,
-      rows, onSubmitEditing, returnKeyType, intl, noCorrect } = this.props
+    const { field: name, autoFocus, label, color, placeholder, secure,
+      rows, onSubmitEditing, returnKeyType, noCorrect } = this.props
     return (
-      <Field field={field}>
-        {fieldApi => {
-          const error = !!(fieldApi.touched && fieldApi.error)
+      <Field name={name}>
+        {({ field, form }: FieldProps<Values>) => {
+          const error = !!(form.touched[name] && form.errors[name])
           const itemProps = { onPress: this.focusTextInput }
           const inputProps = { autoFocus }
           const inputStyle = color ? { color } : {}
@@ -41,21 +42,21 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
                 ? <Textarea
                   style={{ flex: 1 }}
                   rowSpan={rows}
-                  onChangeText={fieldApi.setValue}
-                  value={fieldApi.value}
-                  ref={this.ref}
+                  onChangeText={form.handleChange(name)}
+                  value={field.value}
+                  ref={this.textInput}
                 />
                 : <Input
                   style={{ flex: 1, ...inputStyle }}
-                  onChangeText={fieldApi.setValue}
-                  value={fieldApi.value.toString()}
+                  onChangeText={form.handleChange(name)}
+                  value={field.value.toString()}
                   onSubmitEditing={onSubmitEditing}
                   secureTextEntry={secure}
                   numberOfLines={rows}
                   autoCapitalize={noCorrect ? 'none' : undefined}
                   multiline={(rows ? rows > 0 : undefined)}
                   returnKeyType={returnKeyType}
-                  ref={this.ref}
+                  ref={this.textInput}
                   {...inputProps}
                 />
               }
@@ -68,13 +69,4 @@ class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlP
       </Field>
     )
   }
-
-  ref = (ref: any) => {
-    this.textInput = ref && ref._root
-    if (this.props.inputRef) {
-      this.props.inputRef(this.textInput)
-    }
-  }
 }
-
-export const TextField = injectIntl<TextField.Props>(TextFieldComponent)

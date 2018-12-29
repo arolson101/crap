@@ -4,15 +4,12 @@ import { Body, ListItem } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
 import { ListRenderItem, SectionBase, SectionList } from 'react-native'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Text } from '../components/layout'
+import { InjectedNavProps, withNav } from '../components/NavContext'
+import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
-import { withMutation } from '../db/mutations/makeMutation'
-import { withQuery } from '../db/queries/makeQuery'
 import { Account } from '../db/queries/queries-types'
-import { actions } from '../redux/actions/index'
-import { pickT } from '../util/pick'
 import { AddButtonProps, makeScreen } from './Screen'
 
 interface Params {
@@ -20,9 +17,8 @@ interface Params {
   accountName: string
 }
 
-interface Props extends Params, AddButtonProps {
+interface Props extends Params, AddButtonProps, InjectedNavProps {
   query: Queries.Account
-  navTransactionCreate: actions['navTransactionCreate']
   downloadTransactions: Mutations.DownloadTransactions
   cancel: Mutations.Cancel
 }
@@ -63,17 +59,15 @@ class AccountScreenComponent extends React.PureComponent<Props, State> {
       })
 
     return (
-      <>
-        <SectionList
-          refreshing={this.state.refreshing}
-          onRefresh={this.downloadTransactions}
-          style={{ backgroundColor: platform.cardDefaultBg }}
-          sections={sections}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderItem}
-          renderSectionHeader={this.renderSectionHeader}
-        />
-      </>
+      <SectionList
+        refreshing={this.state.refreshing}
+        onRefresh={this.downloadTransactions}
+        style={{ backgroundColor: platform.cardDefaultBg }}
+        sections={sections}
+        keyExtractor={this.keyExtractor}
+        renderItem={this.renderItem}
+        renderSectionHeader={this.renderSectionHeader}
+      />
     )
   }
 
@@ -107,8 +101,6 @@ class AccountScreenComponent extends React.PureComponent<Props, State> {
   keyExtractor = (item: ItemType) => item.id.toString()
 
   renderItem: ListRenderItem<ItemType> = ({ item, index }) => {
-    const { } = this.props
-
     return (
       <ListItem>
         <Body>
@@ -136,6 +128,6 @@ export const AccountScreen = compose(
   withQuery({ query: Queries.Account }, (props: Props) => ({ accountId: props.accountId })),
   withMutation({ downloadTransactions: Mutations.DownloadTransactions }),
   withMutation({ cancel: Mutations.Cancel }),
-  connect(null, pickT(actions, 'navTransactionCreate')),
+  withNav,
 )(AccountScreenComponent)
 AccountScreen.displayName = 'AccountScreen'

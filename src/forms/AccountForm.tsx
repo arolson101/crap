@@ -1,19 +1,17 @@
 import { Button, View } from 'native-base'
 import * as React from 'react'
-import { FormAPI } from 'react-form'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { withNavigation } from 'react-navigation'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { SelectFieldItem, typedFields } from '../components/fields/index'
 import { confirm } from '../components/index'
 import { Container } from '../components/layout'
+import { InjectedNavProps, withNav } from '../components/NavContext'
+import { withMutation, withQuery } from '../db'
 import { Account, Mutations, Queries } from '../db/index'
-import { withMutation } from '../db/mutations/makeMutation'
-import { withQuery } from '../db/queries/makeQuery'
-import { actions } from '../redux/actions/index'
 import { SaveButtonProps } from '../screens/Screen'
 import { pickT } from '../util/pick'
+import { FormikProps, FormikErrors } from 'formik'
+import { intl, defineMessages } from 'src/intl'
+import { Text } from 'react-native'
 
 export namespace AccountForm {
   export interface Props {
@@ -24,12 +22,10 @@ export namespace AccountForm {
 
 type Props = AccountForm.Props
 
-interface ComposedProps extends Props, InjectedIntlProps, SaveButtonProps {
+interface ComposedProps extends Props, SaveButtonProps, InjectedNavProps {
   query: Queries.Account
   saveAccount: Mutations.SaveAccount
   deleteAccount: Mutations.DeleteAccount
-  navBack: actions['navBack']
-  navPopToTop: actions['navPopToTop']
 }
 
 type FormValues = Account.Props
@@ -37,7 +33,7 @@ type FormValues = Account.Props
 const { Form, SelectField, TextField } = typedFields<FormValues>()
 
 export class AccountFormComponent extends React.PureComponent<ComposedProps> {
-  formApi: FormAPI<FormValues>
+  private formApi: FormikProps<FormValues>
 
   componentDidMount() {
     const { setSave } = this.props
@@ -47,9 +43,8 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
   render() {
     const props = this.props
     const edit = this.props.accountId && props.query.account
-    const { intl } = this.props
 
-    const defaultValues = {
+    const initialValues = {
       ...(edit
         ? pickT(edit, Object.keys(Account.defaultValues()) as Array<keyof Account.Props>)
         : Account.defaultValues()
@@ -60,7 +55,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
       <>
         <Form
           getApi={this.getApi}
-          defaultValues={defaultValues}
+          initialValues={initialValues}
           validate={this.validate}
           onSubmit={this.onSubmit}
         >
@@ -112,7 +107,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
         {edit &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Button transparent danger onPress={this.confirmDeleteAccount}>
-              <FormattedMessage {...messages.deleteAccount} />
+              <Text>{intl.formatMessage(messages.deleteAccount)}</Text>
             </Button>
           </View>
         }
@@ -120,8 +115,8 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     )
   }
 
-  getApi = (formApi: FormAPI<FormValues>) => {
-    this.formApi = formApi
+  getApi = (api: FormikProps<Account.Props>) => {
+    this.formApi = api
   }
 
   onSave = () => {
@@ -130,12 +125,12 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     }
   }
 
-  validate = (values: FormValues) => {
-    const { intl: { formatMessage } } = this.props
-    return {
-      name: !values.name || !values.name.trim() ? formatMessage(messages.valueEmpty)
-        : undefined
+  validate = (values: FormValues): FormikErrors<FormValues> => {
+    const errors: FormikErrors<FormValues> = {}
+    if (!values.name || !values.name.trim()) {
+      errors.name = intl.formatMessage(messages.valueEmpty)
     }
+    return errors
   }
 
   onSubmit = (input: Account.Props) => {
@@ -158,7 +153,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
 
   typeOnValueChange = (type: Account.Type) => {
     if (this.formApi) {
-      this.formApi.setValue('color', Account.generateColor(type))
+      this.formApi.setFieldValue('color', Account.generateColor(type))
     }
   }
 
@@ -166,7 +161,6 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
     confirm({
       title: messages.deleteAccountTitle,
       action: messages.deleteAccount,
-      formatMessage: this.props.intl.formatMessage,
       onConfirm: this.deleteAccount,
     })
   }
@@ -187,9 +181,7 @@ export class AccountFormComponent extends React.PureComponent<ComposedProps> {
 }
 
 export const AccountForm = compose<ComposedProps, Props>(
-  injectIntl,
-  withNavigation,
-  connect(null, pickT(actions, 'navBack', 'navPopToTop')),
+  withNav,
   withQuery({ query: Queries.Account }, ({ accountId }: Props) => accountId && ({ accountId })),
   withMutation({ saveAccount: Mutations.SaveAccount }),
   withMutation({ deleteAccount: Mutations.DeleteAccount }),

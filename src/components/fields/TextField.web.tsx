@@ -1,21 +1,21 @@
 import { FormGroup, Intent, TextArea } from '@blueprintjs/core'
+import { Field, FieldProps } from 'formik'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { intl } from 'src/intl'
 import { TextFieldProps } from './TextField'
 
 export namespace TextField {
-  export type Props<T = {}> = TextFieldProps
+  export type Props<Values> = TextFieldProps<Values>
 }
 
-export class TextFieldComponent extends React.Component<TextField.Props & InjectedIntlProps> {
+export class TextField<Values> extends React.Component<TextField.Props<Values>> {
   render() {
-    const { field, intl, label, placeholder, secure, rows } = this.props
-    const id = `${field}-input`
+    const { field: name, label, placeholder, secure, rows } = this.props
+    const id = `${name}-input`
     return (
-      <Field field={field}>
-        {fieldApi => {
-          const error = fieldApi.touched && fieldApi.error
+      <Field name={name}>
+        {({ field, form }: FieldProps<Values>) => {
+          const error = !!(form.touched[name] && form.errors[name])
           return (
             <FormGroup
               intent={error ? Intent.DANGER : undefined}
@@ -28,8 +28,8 @@ export class TextFieldComponent extends React.Component<TextField.Props & Inject
                   id={id}
                   className={'pt-input pt-fill' + (error ? ' pt-intent-danger' : '')}
                   placeholder={placeholder && intl.formatMessage(placeholder)}
-                  onChange={(event) => fieldApi.setValue(event.target.value)}
-                  value={fieldApi.value}
+                  onChange={field.onChange}
+                  value={field.value}
                   rows={rows}
                 />
                 : <input
@@ -37,8 +37,8 @@ export class TextFieldComponent extends React.Component<TextField.Props & Inject
                   className={'pt-input pt-fill' + (error ? ' pt-intent-danger' : '')}
                   type={secure ? 'password' : 'text'}
                   placeholder={placeholder && intl.formatMessage(placeholder)}
-                  onChange={(event) => fieldApi.setValue(event.target.value)}
-                  value={fieldApi.value}
+                  onChange={field.onChange}
+                  value={field.value}
                 />
               }
             </FormGroup>
@@ -48,5 +48,3 @@ export class TextFieldComponent extends React.Component<TextField.Props & Inject
     )
   }
 }
-
-export const TextField = injectIntl<TextField.Props>(TextFieldComponent)

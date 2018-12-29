@@ -1,13 +1,14 @@
-import { FormattedMessage } from 'react-intl'
-import { ReturnKeyType } from 'react-native'
+/* tslint:disable:no-duplicate-variable */
 import * as web from './UrlField.web'
 import * as native from './UrlField.native'
+import { ReturnKeyType } from 'react-native'
+import { MessageDescriptor } from 'src/intl'
 
-export interface UrlFieldProps<T = {}> {
-  field: string
-  favicoField: string
-  label: FormattedMessage.MessageDescriptor
-  placeholder?: FormattedMessage.MessageDescriptor
+export interface UrlFieldProps<Values> {
+  field: keyof Values & string
+  favicoField: keyof Values & string
+  label: MessageDescriptor
+  placeholder?: MessageDescriptor
   autoFocus?: boolean
   onSubmitEditing?: () => any
   returnKeyType?: ReturnKeyType

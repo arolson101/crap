@@ -1,61 +1,74 @@
-import * as React from 'react'
-import * as RF from 'react-form'
+import { Formik, FormikActions } from 'formik'
 import * as NB from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
+import * as React from 'react'
+import { FormProps } from './Form'
 
-type Props = RF.FormProps
+export namespace Form {
+  export type Props<Values> = FormProps<Values>
+}
 
-export class Form extends React.Component<Props> {
-  formApi: RF.FormAPI
-
-  componentWillUnmount () {
+export class Form<Values> extends React.Component<Form.Props<Values>> {
+  componentWillUnmount() {
     this.closeToast()
   }
 
-  render () {
+  render() {
     const { children, ...props } = this.props
     return (
       <NB.Form style={{ backgroundColor: platform.cardDefaultBg }}>
-        <RF.Form
+        <Formik
           {...props}
           validateOnSubmit
-          onSubmit={(values, state, props, instance) => {
+          onSubmit={async (values: Values, formikActions: FormikActions<Values>) => {
             const { onSubmit } = this.props
             this.closeToast()
-            if (onSubmit) {
-              onSubmit(values, state, props, instance)
-            }
-          }}
-          onSubmitFailure={(errors) => {
-            console.log(errors)
-            Object.keys(errors).forEach(field => {
+            try {
+              if (onSubmit) {
+                onSubmit(values, formikActions)
+              }
+            } catch (err) {
+              console.log('submit form error', err)
               NB.Toast.show({
-                text: errors[field] as string,
+                text: err.message,
                 buttonText: 'Okay',
                 duration: 0,
                 type: 'danger',
                 onClose: () => {
-                  this.formApi.setError(field, null)
+                  // this.formApi.setFieldError(field, null)
                 }
               })
-            })
+            }
           }}
-          getApi={(formApi) => {
-            this.formApi = formApi
+          // onSubmitFailure={(errors) => {
+          //   console.log(errors)
+          //   Object.keys(errors).forEach(field => {
+          //     NB.Toast.show({
+          //       text: errors[field] as string,
+          //       buttonText: 'Okay',
+          //       duration: 0,
+          //       type: 'danger',
+          //       onClose: () => {
+          //         this.formApi.setFieldError(field, null)
+          //       }
+          //     })
+          //   })
+          // }}
+        >
+          {formApi => {
             if (this.props.getApi) {
               this.props.getApi(formApi)
             }
+
+            return children && children(formApi)
           }}
-        >
-        {formApi =>
-          children && children(formApi)
-        }
-        </RF.Form>
+        </Formik>
       </NB.Form>
     )
   }
 
   closeToast = () => {
-    (NB.Toast as any).toastInstance._root.closeToast()
+    // console.log('closetoast 2');
+    // (NB.Toast as any).toastInstance._root.closeToast()
   }
 }

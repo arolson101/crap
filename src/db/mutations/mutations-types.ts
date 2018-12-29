@@ -1,12 +1,32 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from "graphql";
 
-type Resolver<Result, Args = any> = (
-  parent: any,
+export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+  parent: Parent,
   args: Args,
-  context: any,
+  context: Context,
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
+
+export type SubscriptionResolver<
+  Result,
+  Parent = any,
+  Context = any,
+  Args = any
+> = {
+  subscribe<R = Result, P = Parent>(
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
+  ): AsyncIterator<R | Result>;
+  resolve?<R = Result, P = Parent>(
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
+  ): R | Result | Promise<R | Result>;
+};
 
 /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
 export type DateTime = any;
@@ -212,167 +232,343 @@ export enum AccountType {
 }
 
 export namespace QueryResolvers {
-  export interface Resolvers {
-    account?: AccountResolver;
-    bank?: BankResolver;
-    banks?: BanksResolver;
-    allDbs?: AllDbsResolver;
-    transaction?: TransactionResolver;
+  export interface Resolvers<Context = any> {
+    account?: AccountResolver<Account, any, Context>;
+    bank?: BankResolver<Bank, any, Context>;
+    banks?: BanksResolver<Bank[], any, Context>;
+    allDbs?: AllDbsResolver<DbInfo[], any, Context>;
+    transaction?: TransactionResolver<Transaction, any, Context>;
   }
 
-  export type AccountResolver = Resolver<Account, AccountArgs>;
+  export type AccountResolver<
+    R = Account,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, AccountArgs>;
   export interface AccountArgs {
     accountId: string;
   }
 
-  export type BankResolver = Resolver<Bank, BankArgs>;
+  export type BankResolver<R = Bank, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context,
+    BankArgs
+  >;
   export interface BankArgs {
     bankId: string;
   }
 
-  export type BanksResolver = Resolver<Bank[]>;
-  export type AllDbsResolver = Resolver<DbInfo[]>;
-  export type TransactionResolver = Resolver<Transaction, TransactionArgs>;
+  export type BanksResolver<R = Bank[], Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type AllDbsResolver<
+    R = DbInfo[],
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type TransactionResolver<
+    R = Transaction,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, TransactionArgs>;
   export interface TransactionArgs {
     transactionId: string;
   }
 }
+
 export namespace AccountResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    bankId?: BankIdResolver;
-    name?: NameResolver;
-    color?: ColorResolver;
-    type?: TypeResolver;
-    number?: NumberResolver;
-    visible?: VisibleResolver;
-    routing?: RoutingResolver;
-    key?: KeyResolver;
-    transactions?: TransactionsResolver;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
+    bankId?: BankIdResolver<string, any, Context>;
+    name?: NameResolver<string, any, Context>;
+    color?: ColorResolver<string, any, Context>;
+    type?: TypeResolver<AccountType, any, Context>;
+    number?: NumberResolver<string, any, Context>;
+    visible?: VisibleResolver<boolean, any, Context>;
+    routing?: RoutingResolver<string, any, Context>;
+    key?: KeyResolver<string, any, Context>;
+    transactions?: TransactionsResolver<Transaction[], any, Context>;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type BankIdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type ColorResolver = Resolver<string>;
-  export type TypeResolver = Resolver<AccountType>;
-  export type NumberResolver = Resolver<string>;
-  export type VisibleResolver = Resolver<boolean>;
-  export type RoutingResolver = Resolver<string>;
-  export type KeyResolver = Resolver<string>;
-  export type TransactionsResolver = Resolver<Transaction[], TransactionsArgs>;
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type BankIdResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type ColorResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type TypeResolver<
+    R = AccountType,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type NumberResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type VisibleResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type RoutingResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type KeyResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type TransactionsResolver<
+    R = Transaction[],
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, TransactionsArgs>;
   export interface TransactionsArgs {
     end?: DateTime | null;
     start?: DateTime | null;
   }
 }
+
 export namespace TransactionResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    accountId?: AccountIdResolver;
-    time?: TimeResolver;
-    account?: AccountResolver;
-    serverid?: ServeridResolver;
-    type?: TypeResolver;
-    name?: NameResolver;
-    memo?: MemoResolver;
-    amount?: AmountResolver;
-    balance?: BalanceResolver;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
+    accountId?: AccountIdResolver<string, any, Context>;
+    time?: TimeResolver<DateTime, any, Context>;
+    account?: AccountResolver<string, any, Context>;
+    serverid?: ServeridResolver<string, any, Context>;
+    type?: TypeResolver<string, any, Context>;
+    name?: NameResolver<string, any, Context>;
+    memo?: MemoResolver<string, any, Context>;
+    amount?: AmountResolver<number, any, Context>;
+    balance?: BalanceResolver<number, any, Context>;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type AccountIdResolver = Resolver<string>;
-  export type TimeResolver = Resolver<DateTime>;
-  export type AccountResolver = Resolver<string>;
-  export type ServeridResolver = Resolver<string>;
-  export type TypeResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type MemoResolver = Resolver<string>;
-  export type AmountResolver = Resolver<number>;
-  export type BalanceResolver = Resolver<number>;
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type AccountIdResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type TimeResolver<
+    R = DateTime,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type AccountResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type ServeridResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type TypeResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type MemoResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type AmountResolver<
+    R = number,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type BalanceResolver<
+    R = number,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
 }
+
 export namespace BankResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    name?: NameResolver;
-    web?: WebResolver;
-    address?: AddressResolver;
-    notes?: NotesResolver;
-    favicon?: FaviconResolver;
-    online?: OnlineResolver;
-    fid?: FidResolver;
-    org?: OrgResolver;
-    ofx?: OfxResolver;
-    username?: UsernameResolver;
-    password?: PasswordResolver;
-    accounts?: AccountsResolver;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
+    name?: NameResolver<string, any, Context>;
+    web?: WebResolver<string, any, Context>;
+    address?: AddressResolver<string, any, Context>;
+    notes?: NotesResolver<string, any, Context>;
+    favicon?: FaviconResolver<string, any, Context>;
+    online?: OnlineResolver<boolean, any, Context>;
+    fid?: FidResolver<string, any, Context>;
+    org?: OrgResolver<string, any, Context>;
+    ofx?: OfxResolver<string, any, Context>;
+    username?: UsernameResolver<string, any, Context>;
+    password?: PasswordResolver<string, any, Context>;
+    accounts?: AccountsResolver<Account[], any, Context>;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type WebResolver = Resolver<string>;
-  export type AddressResolver = Resolver<string>;
-  export type NotesResolver = Resolver<string>;
-  export type FaviconResolver = Resolver<string>;
-  export type OnlineResolver = Resolver<boolean>;
-  export type FidResolver = Resolver<string>;
-  export type OrgResolver = Resolver<string>;
-  export type OfxResolver = Resolver<string>;
-  export type UsernameResolver = Resolver<string>;
-  export type PasswordResolver = Resolver<string>;
-  export type AccountsResolver = Resolver<Account[]>;
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type WebResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type AddressResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type NotesResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type FaviconResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type OnlineResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type FidResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type OrgResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type OfxResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type UsernameResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type PasswordResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type AccountsResolver<
+    R = Account[],
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
 }
+
 export namespace DbInfoResolvers {
-  export interface Resolvers {
-    dbId?: DbIdResolver;
-    name?: NameResolver;
+  export interface Resolvers<Context = any> {
+    dbId?: DbIdResolver<string, any, Context>;
+    name?: NameResolver<string, any, Context>;
   }
 
-  export type DbIdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
+  export type DbIdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
 }
+
 export namespace MutationResolvers {
-  export interface Resolvers {
-    saveAccount?: SaveAccountResolver;
-    deleteAccount?: DeleteAccountResolver;
-    downloadAccountList?: DownloadAccountListResolver;
-    downloadTransactions?: DownloadTransactionsResolver;
-    cancel?: CancelResolver;
-    saveBank?: SaveBankResolver;
-    deleteBank?: DeleteBankResolver;
-    createDb?: CreateDbResolver;
-    openDb?: OpenDbResolver;
-    closeDb?: CloseDbResolver;
-    deleteDb?: DeleteDbResolver;
-    saveTransaction?: SaveTransactionResolver;
-    deleteTransaction?: DeleteTransactionResolver;
+  export interface Resolvers<Context = any> {
+    saveAccount?: SaveAccountResolver<Account, any, Context>;
+    deleteAccount?: DeleteAccountResolver<boolean, any, Context>;
+    downloadAccountList?: DownloadAccountListResolver<Bank, any, Context>;
+    downloadTransactions?: DownloadTransactionsResolver<Account, any, Context>;
+    cancel?: CancelResolver<boolean, any, Context>;
+    saveBank?: SaveBankResolver<Bank, any, Context>;
+    deleteBank?: DeleteBankResolver<boolean, any, Context>;
+    createDb?: CreateDbResolver<boolean, any, Context>;
+    openDb?: OpenDbResolver<boolean, any, Context>;
+    closeDb?: CloseDbResolver<boolean, any, Context>;
+    deleteDb?: DeleteDbResolver<string, any, Context>;
+    saveTransaction?: SaveTransactionResolver<Transaction, any, Context>;
+    deleteTransaction?: DeleteTransactionResolver<Transaction, any, Context>;
   }
 
-  export type SaveAccountResolver = Resolver<Account, SaveAccountArgs>;
+  export type SaveAccountResolver<
+    R = Account,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, SaveAccountArgs>;
   export interface SaveAccountArgs {
     bankId?: string | null;
     accountId?: string | null;
     input: AccountInput;
   }
 
-  export type DeleteAccountResolver = Resolver<boolean, DeleteAccountArgs>;
+  export type DeleteAccountResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, DeleteAccountArgs>;
   export interface DeleteAccountArgs {
     accountId: string;
   }
 
-  export type DownloadAccountListResolver = Resolver<
-    Bank,
-    DownloadAccountListArgs
-  >;
+  export type DownloadAccountListResolver<
+    R = Bank,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, DownloadAccountListArgs>;
   export interface DownloadAccountListArgs {
     cancelToken: string;
     bankId: string;
   }
 
-  export type DownloadTransactionsResolver = Resolver<
-    Account,
-    DownloadTransactionsArgs
-  >;
+  export type DownloadTransactionsResolver<
+    R = Account,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, DownloadTransactionsArgs>;
   export interface DownloadTransactionsArgs {
     cancelToken: string;
     end: DateTime;
@@ -381,107 +577,209 @@ export namespace MutationResolvers {
     bankId: string;
   }
 
-  export type CancelResolver = Resolver<boolean, CancelArgs>;
+  export type CancelResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, CancelArgs>;
   export interface CancelArgs {
     cancelToken: string;
   }
 
-  export type SaveBankResolver = Resolver<Bank, SaveBankArgs>;
+  export type SaveBankResolver<
+    R = Bank,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, SaveBankArgs>;
   export interface SaveBankArgs {
     bankId?: string | null;
     input: BankInput;
   }
 
-  export type DeleteBankResolver = Resolver<boolean, DeleteBankArgs>;
+  export type DeleteBankResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, DeleteBankArgs>;
   export interface DeleteBankArgs {
     bankId: string;
   }
 
-  export type CreateDbResolver = Resolver<boolean, CreateDbArgs>;
+  export type CreateDbResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, CreateDbArgs>;
   export interface CreateDbArgs {
     password: string /** the password for the database */;
     name: string;
   }
 
-  export type OpenDbResolver = Resolver<boolean, OpenDbArgs>;
+  export type OpenDbResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, OpenDbArgs>;
   export interface OpenDbArgs {
     password: string /** the password for the database */;
     dbId: string;
   }
 
-  export type CloseDbResolver = Resolver<boolean>;
-  export type DeleteDbResolver = Resolver<string, DeleteDbArgs>;
+  export type CloseDbResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type DeleteDbResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, DeleteDbArgs>;
   export interface DeleteDbArgs {
     dbId: string;
   }
 
-  export type SaveTransactionResolver = Resolver<
-    Transaction,
-    SaveTransactionArgs
-  >;
+  export type SaveTransactionResolver<
+    R = Transaction,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, SaveTransactionArgs>;
   export interface SaveTransactionArgs {
     accountId?: string | null;
     transactionId?: string | null;
     input: TransactionInput;
   }
 
-  export type DeleteTransactionResolver = Resolver<
-    Transaction,
-    DeleteTransactionArgs
-  >;
+  export type DeleteTransactionResolver<
+    R = Transaction,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context, DeleteTransactionArgs>;
   export interface DeleteTransactionArgs {
     transactionId: string;
   }
 }
+
 export namespace BillResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    name?: NameResolver;
-    group?: GroupResolver;
-    web?: WebResolver;
-    favicon?: FaviconResolver;
-    notes?: NotesResolver;
-    amount?: AmountResolver;
-    account?: AccountResolver;
-    category?: CategoryResolver;
-    rruleString?: RruleStringResolver;
-    showAdvanced?: ShowAdvancedResolver;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
+    name?: NameResolver<string, any, Context>;
+    group?: GroupResolver<string, any, Context>;
+    web?: WebResolver<string, any, Context>;
+    favicon?: FaviconResolver<string, any, Context>;
+    notes?: NotesResolver<string, any, Context>;
+    amount?: AmountResolver<number, any, Context>;
+    account?: AccountResolver<string, any, Context>;
+    category?: CategoryResolver<string, any, Context>;
+    rruleString?: RruleStringResolver<string, any, Context>;
+    showAdvanced?: ShowAdvancedResolver<boolean, any, Context>;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type GroupResolver = Resolver<string>;
-  export type WebResolver = Resolver<string>;
-  export type FaviconResolver = Resolver<string>;
-  export type NotesResolver = Resolver<string>;
-  export type AmountResolver = Resolver<number>;
-  export type AccountResolver = Resolver<string>;
-  export type CategoryResolver = Resolver<string>;
-  export type RruleStringResolver = Resolver<string>;
-  export type ShowAdvancedResolver = Resolver<boolean>;
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type GroupResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type WebResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type FaviconResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type NotesResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type AmountResolver<
+    R = number,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type AccountResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type CategoryResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type RruleStringResolver<
+    R = string,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
+  export type ShowAdvancedResolver<
+    R = boolean,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
 }
+
 export namespace BudgetResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    name?: NameResolver;
-    sortOrder?: SortOrderResolver;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
+    name?: NameResolver<string, any, Context>;
+    sortOrder?: SortOrderResolver<number, any, Context>;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type SortOrderResolver = Resolver<number>;
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type SortOrderResolver<
+    R = number,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
 }
+
 export namespace CategoryResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    name?: NameResolver;
-    amount?: AmountResolver;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<string, any, Context>;
+    name?: NameResolver<string, any, Context>;
+    amount?: AmountResolver<number, any, Context>;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type AmountResolver = Resolver<number>;
+  export type IdResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<
+    R,
+    Parent,
+    Context
+  >;
+  export type AmountResolver<
+    R = number,
+    Parent = any,
+    Context = any
+  > = Resolver<R, Parent, Context>;
 }
+
 export namespace CreateDb {
   export type Variables = {
     name: string;
@@ -493,6 +791,7 @@ export namespace CreateDb {
     createDb: boolean;
   };
 }
+
 export namespace OpenDb {
   export type Variables = {
     dbId: string;
@@ -504,6 +803,7 @@ export namespace OpenDb {
     openDb: boolean;
   };
 }
+
 export namespace CloseDb {
   export type Variables = {};
 
@@ -512,6 +812,7 @@ export namespace CloseDb {
     closeDb: boolean;
   };
 }
+
 export namespace DeleteDb {
   export type Variables = {
     dbId: string;
@@ -522,6 +823,7 @@ export namespace DeleteDb {
     deleteDb: string;
   };
 }
+
 export namespace SaveBank {
   export type Variables = {
     input: BankInput;
@@ -539,6 +841,7 @@ export namespace SaveBank {
     name: string;
   };
 }
+
 export namespace DeleteBank {
   export type Variables = {
     bankId: string;
@@ -549,6 +852,7 @@ export namespace DeleteBank {
     deleteBank: boolean;
   };
 }
+
 export namespace SaveAccount {
   export type Variables = {
     input: AccountInput;
@@ -568,6 +872,7 @@ export namespace SaveAccount {
     bankId: string;
   };
 }
+
 export namespace DownloadAccountList {
   export type Variables = {
     bankId: string;
@@ -590,6 +895,7 @@ export namespace DownloadAccountList {
     id: string;
   };
 }
+
 export namespace DeleteAccount {
   export type Variables = {
     accountId: string;
@@ -600,6 +906,7 @@ export namespace DeleteAccount {
     deleteAccount: boolean;
   };
 }
+
 export namespace SaveTransaction {
   export type Variables = {
     input: TransactionInput;
@@ -618,9 +925,10 @@ export namespace SaveTransaction {
     accountId: string;
   };
 }
+
 export namespace DeleteTransaction {
   export type Variables = {
-    transactionId?: string | null;
+    transactionId: string;
   };
 
   export type Mutation = {
@@ -633,6 +941,7 @@ export namespace DeleteTransaction {
     accountId: string;
   };
 }
+
 export namespace DownloadTransactions {
   export type Variables = {
     bankId: string;
@@ -652,6 +961,7 @@ export namespace DownloadTransactions {
     id: string;
   };
 }
+
 export namespace Cancel {
   export type Variables = {
     cancelToken: string;

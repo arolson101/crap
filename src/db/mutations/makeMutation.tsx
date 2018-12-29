@@ -1,14 +1,12 @@
-import { PureQueryOptions } from 'apollo-client'
-import { DocumentNode } from 'graphql'
 import hoistStatics from 'hoist-non-react-statics'
 import { Toast } from 'native-base'
 import * as React from 'react'
-import { Mutation, MutationFn, OperationVariables } from 'react-apollo'
 import { $Values, Subtract } from 'utility-types'
 import { Spinner } from '../../components/index'
-import { Defined } from '../queries/makeQuery'
+import { Defined } from '../queries'
 import { Container } from 'typedi'
 import { GraphQLService } from '../services/GraphQLService'
+import { ExecutableDocumentNode } from '../graphql-types'
 
 type CompletionFcn<TRet> = (result: TRet) => any
 
@@ -19,22 +17,13 @@ interface MutationFcnOptions<TRet> {
   finally?: () => any
 }
 
-export type MutationFcn<TRet, TVars> = (vars: TVars, options?: MutationFcnOptions<TRet>) => void
-
-export type MutationDesc<TRes, TVars> = {
-  mutation: DocumentNode
-  refetchQueries: (results: { data: TRes }) => PureQueryOptions[]
-  __variables?: TVars
-  __results?: TRes
-}
-
-export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 extends {}, R1 extends {}>(
+export const withMutation = <R extends Record<string, ExecutableDocumentNode<V1, R1>>, V1 extends {}, R1 extends {}>(
   mutationDesc: R
 ) => {
   type MD = $Values<R>
   type TRes = Defined<MD['__results']>
   type TVariables = MD['__variables']
-  type WrappedProps = { [K in keyof R]: MutationFcn<TRes, TVariables> }
+  type WrappedProps = { [K in keyof R]: ExecutableDocumentNode<TRes, TVariables> }
 
   const name = Object.keys(mutationDesc)[0]
   const desc = mutationDesc[name]
@@ -43,33 +32,35 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
     type HocProps = Subtract<P, WrappedProps>
     type State = MutationFcnOptions<TRes> & {
       loading: boolean
+      toastOpen: boolean
     }
 
     class WrappedMutation extends React.Component<HocProps, State> {
       static displayName: string = `WrappedMutation(${Component.displayName || Component.name || ''})`
 
-      state: State = { loading: false }
+      state: State = {
+        loading: false,
+        toastOpen: false
+      }
+
       mounted = true
-      // execute: MutationFn<any, OperationVariables> | undefined
 
       componentWillUnmount() {
         this.mounted = false
-        this.closeToast()
+        if (this.state.toastOpen) {
+          this.closeToast()
+        }
       }
 
       wrapExecute = async (variables: TVariables, options?: MutationFcnOptions<TRes>) => {
         // console.log('wrapExecute', { variables, options })
-        this.closeToast()
         const gql = Container.get(GraphQLService)
-        // if (!this.execute) {
-        //   throw new Error('execute was not set')
-        // }
         if (options) {
           this.setState(options)
         }
         try {
           this.setState({ loading: true })
-          const results = await gql.execute(desc.mutation, variables)
+          const results = await gql.execute(desc, variables)
           if (results.errors && results.errors.length > 0) {
             throw results.errors[0]
           }
@@ -86,6 +77,9 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       onCompleted = (results: TRes) => {
         // console.log('onCompleted', { results })
         const { complete, finally: Finally } = this.state
+        if (this.state.toastOpen) {
+          this.closeToast()
+        }
         if (complete) {
           complete(results)
         }
@@ -95,12 +89,16 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
       }
 
       onError = (error: Error) => {
-        console.log('onError', error.message, { error })
+        // console.log('onError', error.message, { error })
+        this.setState({ toastOpen: true })
         Toast.show({
           text: error.message,
           buttonText: 'Okay',
           duration: 0,
-          type: 'danger'
+          type: 'danger',
+          onClose: () => {
+            this.setState({ toastOpen: false })
+          }
         })
         const { finally: Finally } = this.state
         if (Finally) {
@@ -127,36 +125,10 @@ export const withMutation = <R extends Record<string, MutationDesc<R1, V1>>, V1 
               onCancel={this.onCancel}
               visible={loading && !this.state.noSpinner}
             />
-            <Component {...this.props} {...componentProps} />
+            <Component {...this.props as any} {...componentProps} />
           </>
         )
       }
-
-      // render2() {
-      //   return (
-      //     <Mutation
-      //       mutation={desc.mutation}
-      //       refetchQueries={desc.refetchQueries}
-      //       onCompleted={this.onCompleted}
-      //       onError={this.onError}
-      //     >
-      //       {(execute, result) => {
-      //         this.execute = execute
-      //         const componentProps = { [name]: this.wrapExecute }
-      //         return (
-      //           <>
-      //             <Spinner
-      //               cancelable={!!this.state.cancel}
-      //               onCancel={this.onCancel}
-      //               visible={result.loading && !this.state.noSpinner}
-      //             />
-      //             <Component {...this.props} {...componentProps} />
-      //           </>
-      //         )
-      //       }}
-      //     </Mutation>
-      //   )
-      // }
 
       closeToast = () => {
         (Toast as any).toastInstance._root.closeToast()

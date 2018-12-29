@@ -1,31 +1,23 @@
-import { Body, Icon, Right, Left, Thumbnail, Button, NativeBase } from 'native-base'
+import { Body, Button, Icon, Left, NativeBase, Right, Thumbnail } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Divider } from '../components/fields/Divider'
 import { List, ListItem, Scrollable, Text } from '../components/layout.native'
+import { InjectedNavProps, withNav } from '../components/NavContext'
+import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
-import { withMutation } from '../db/mutations/makeMutation'
-import { withQuery } from '../db/queries/makeQuery'
 import { Banks } from '../db/queries/queries-types'
-import { actions } from '../redux/actions/index'
 import { AddButtonProps, makeScreen } from './Screen'
-import { selectors } from '../redux/reducers/index'
+import { defineMessages } from 'src/intl'
 
 interface Props {
 }
 
-interface ConnectedProps {
+interface ConnectedProps extends InjectedNavProps {
   query: Queries.Banks
   deleteBank: Mutations.DeleteBank
   deleteAccount: Mutations.DeleteAccount
-  navBankCreate: actions['navBankCreate']
-  navAccountCreate: actions['navAccountCreate']
-  navBank: actions['navBank']
-  navAccount: actions['navAccount']
-  logout: actions['logout']
   closeDb: Mutations.CloseDb
 }
 
@@ -146,13 +138,7 @@ export const AccountsScreen = compose(
   withMutation({ deleteBank: Mutations.DeleteBank }),
   withMutation({ deleteAccount: Mutations.DeleteAccount }),
   withMutation({ closeDb: Mutations.CloseDb }),
-  connect(null, {
-    navBankCreate: actions.navBankCreate,
-    navAccountCreate: actions.navAccountCreate,
-    navBank: actions.navBank,
-    navAccount: actions.navAccount,
-    logout: actions.logout,
-  })
+  withNav,
 )(AccountsScreenComponent)
 AccountsScreen.displayName = 'AccountsPage'
 

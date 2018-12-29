@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Container, Text } from '../components/layout'
 import { Queries } from '../db/index'
-import { withQuery } from '../db/queries/makeQuery'
+import { withQuery } from '../db'
 import { makeScreen, ScreenComponent } from './Screen'
+import { defineMessages } from 'src/intl'
 
 interface Props {
   query: Queries.Accounts
@@ -38,7 +37,6 @@ export const HomeScreenComponent: React.SFC<Props> = (props) => {
 export const HomeScreen = compose(
   makeScreen({ title: () => messages.title }),
   withQuery({ query: Queries.Accounts }),
-  connect(null, { }),
 )(HomeScreenComponent) as ScreenComponent
 HomeScreen.displayName = 'HomePage'
 

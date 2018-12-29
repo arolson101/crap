@@ -1,21 +1,20 @@
 import { Root, Text } from 'native-base'
 import platform from 'native-base/dist/src/theme/variables/platform'
 import * as React from 'react'
-import { InjectedIntlProps, injectIntl, IntlProvider } from 'react-intl'
 import { Platform } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationContainerComponent, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator, NavigationRouteConfigMap, NavigationScreenConfig, NavigationScreenConfigProps, NavigationScreenOptions, TabNavigatorConfig } from 'react-navigation'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
+import { compose } from 'recompose'
+import { InjectedNavProps, withNav } from '../components/NavContext'
+import { NavProvider } from '../components/NavProvider'
 import * as modals from '../modals/index'
 import { paths } from '../nav'
-import { nativeActions } from '../redux/actions/nativeActions'
-import { ReduxProvider } from '../redux/index'
 import * as screens from '../screens/index'
 import { ScreenComponent, ScreenProps } from '../screens/Screen'
 import { LoadFonts } from './LoadFonts'
+import { IntlProvider, intl } from 'src/intl'
 
 const getCurrentParams = (state: any): any => {
   if (state.routes) {
@@ -33,7 +32,7 @@ const makeTab = <C extends NavigationRouteConfigMap, N extends keyof C & string>
   const stack = createStackNavigator(routeConfigMap, { initialRouteName })
   stack.navigationOptions = ({ navigation, screenProps }: NavigationScreenConfigProps): NavigationScreenConfig<NavigationScreenOptions> => {
     const title = primaryScreen.title(navigation.state.params!)
-    const tabBarLabel = (typeof title === 'string') ? title : (screenProps as ScreenProps).intl.formatMessage(title)
+    const tabBarLabel = (typeof title === 'string') ? title : intl.formatMessage(title)
     return ({
       tabBarIcon: ({ focused, tintColor }) => {
         const name = icon(focused)
@@ -139,33 +138,30 @@ const AuthStack = createSwitchNavigator({
 })
 AuthStack.displayName = 'AuthStack'
 
-interface TopNavigatorComponentProps extends InjectedIntlProps {
-  setTopNavigator: (topNavigator: NavigationContainerComponent) => any
-}
+type TopNavigatorComponentProps = InjectedNavProps
 
-const AppNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator, intl }) => {
-  const screenProps: ScreenProps = ({ intl })
+const AppNavigatorComponent: React.SFC<TopNavigatorComponentProps> = ({ setTopNavigator }) => {
+  const screenProps: ScreenProps = ({})
   return (
     <AuthStack screenProps={screenProps} ref={setTopNavigator} />
   )
 }
 
 const AppNavigator = compose(
-  injectIntl,
-  connect(null, { setTopNavigator: nativeActions.setTopNavigator })
+  withNav,
 )(AppNavigatorComponent)
 AppNavigator.displayName = 'AppNavigator'
 
 const App: React.SFC = () => {
   return (
     <LoadFonts>
-      <ReduxProvider>
+      <NavProvider>
         <IntlProvider locale='en' textComponent={Text}>
           <Root>
             <AppNavigator />
           </Root>
         </IntlProvider>
-      </ReduxProvider>
+      </NavProvider>
     </LoadFonts>
   )
 }

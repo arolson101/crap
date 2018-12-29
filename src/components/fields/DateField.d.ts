@@ -1,9 +1,10 @@
+/* tslint:disable:no-duplicate-variable */
 import * as web from './DateField.web'
 import * as android from './DateField.android'
 import * as ios from './DateField.ios'
 
-export interface DateFieldProps<T = {}> {
-  field: keyof T
+export interface DateFieldProps<Values> {
+  field: keyof Values & string
   label: FormattedMessage.MessageDescriptor
   collapsed?: boolean
 }

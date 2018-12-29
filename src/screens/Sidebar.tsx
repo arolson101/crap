@@ -1,17 +1,12 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Button, Column, Text } from '../components/layout'
+import { InjectedNavProps } from '../components/NavContext'
+import { withQuery } from '../db'
 import { Queries } from '../db/index'
-import { actions } from '../redux/actions/index'
-import { withQuery } from '../db/queries/makeQuery'
 
-interface Props {
+interface Props extends InjectedNavProps {
   query: Queries.Accounts
-  navHome: () => any
-  navBudgets: () => any
-  navAccounts: () => any
-  navAccount: (accountId: string, accountName: string) => any
 }
 
 export const SidebarComponent: React.SFC<Props> = (props) => {
@@ -41,11 +36,5 @@ export const SidebarComponent: React.SFC<Props> = (props) => {
 
 export const Sidebar = compose(
   withQuery({ query: Queries.Accounts }),
-  connect(null, {
-    navHome: actions.navHome,
-    navAccounts: actions.navAccounts,
-    navBudgets: actions.navBudgets,
-    navAccount: actions.navAccount,
-  })
 )(SidebarComponent)
 Sidebar.displayName = 'Sidebar'

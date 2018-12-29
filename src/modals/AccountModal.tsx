@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
-import { compose } from 'redux'
+import { compose } from 'recompose'
 import { Scrollable } from '../components/layout.native'
 import { AccountForm } from '../forms/AccountForm'
 import { makeScreen } from '../screens/Screen'
+import { defineMessages } from 'src/intl'
 
 type Params = AccountForm.Props
 

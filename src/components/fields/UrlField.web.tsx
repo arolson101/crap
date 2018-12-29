@@ -1,27 +1,15 @@
-import glamorous from 'glamorous'
+import { FormGroup, Intent } from '@blueprintjs/core'
+import { Field, FieldProps } from 'formik'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { ThemeProp } from '../../App/index'
-import { WrappedField } from './WrappedField'
+import { intl } from 'src/intl'
 import { UrlFieldProps } from './UrlField'
 
-const StyledTextInput = glamorous.input<ThemeProp & { error: any }>({},
-  ({ theme, error }) => ({
-    borderWidth: theme.boxBorderWidth,
-    borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor,
-    fontSize: theme.controlFontSize,
-    color: theme.controlFontColor
-  })
-)
-StyledTextInput.displayName = 'StyledTextInput'
-
 export namespace UrlField {
-  export type Props<T = {}> = UrlFieldProps<T>
+  export type Props<Values> = UrlFieldProps<Values>
 }
 
-class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlProps> {
-  private textInput = React.createRef<any>()
+export class UrlField<Values> extends React.Component<UrlField.Props<Values>> {
+  private textInput = React.createRef<HTMLInputElement>()
 
   focusTextInput = () => {
     if (this.textInput.current) {
@@ -30,27 +18,33 @@ class UrlFieldComponent extends React.Component<UrlField.Props & InjectedIntlPro
   }
 
   render() {
-    const { field, intl, autoFocus, label, placeholder } = this.props
+    const { field: name, autoFocus, label, placeholder } = this.props
+    const id = `${name}-input`
     return (
-      <Field field={field}>
-        {fieldApi => {
-          const error = fieldApi.touched && fieldApi.error
+      <Field name={name}>
+        {({ field, form }: FieldProps<Values>) => {
+          const error = !!(form.touched[name] && form.errors[name])
           return (
-            <WrappedField label={label} fieldApi={fieldApi} onLabelPress={this.focusTextInput}>
-              <StyledTextInput
+            <FormGroup
+              intent={error ? Intent.DANGER : undefined}
+              helperText={error}
+              label={intl.formatMessage(label)}
+              labelFor={id}
+            >
+              <input
+                id={id}
+                className={'pt-input pt-fill' + (error ? ' pt-intent-danger' : '')}
+                type='text'
                 autoFocus={autoFocus}
-                error={error}
-                onChange={fieldApi.setValue}
-                value={fieldApi.value}
+                onChange={field.onChange}
+                value={field.value}
                 placeholder={placeholder && intl.formatMessage(placeholder)}
-                innerRef={(current) => this.textInput = { current }}
+                ref={this.textInput}
               />
-            </WrappedField>
+            </FormGroup>
           )
         }}
       </Field>
     )
   }
 }
-
-export const UrlField = injectIntl<UrlField.Props>(UrlFieldComponent)

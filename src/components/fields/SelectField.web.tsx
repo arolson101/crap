@@ -1,33 +1,16 @@
-import { MenuItem } from '@blueprintjs/core'
+import { FormGroup, Intent, MenuItem } from '@blueprintjs/core'
 import { ItemPredicate, ItemRenderer, Suggest } from '@blueprintjs/select'
-import '@blueprintjs/select/lib/css/blueprint-select.css'
+import { Field, FieldProps } from 'formik'
 import * as React from 'react'
-import { Field } from 'react-form'
-import { FormattedMessage } from 'react-intl'
-import './SelectField.web.css'
-import { WrappedField } from './WrappedField'
+import { intl } from 'src/intl'
+import { SelectFieldItem, SelectFieldProps } from './SelectField'
 
-// const StyledPicker = glamorous(Picker)({},
-//   ({ error, theme }: ThemeProp & { error: any }) => ({
-//     borderWidth: theme.boxBorderWidth,
-//     borderColor: error ? theme.boxBorderColorError : theme.boxBorderColor
-//   })
-// )
-// StyledPicker.displayName = 'StyledPicker'
+import '@blueprintjs/select/lib/css/blueprint-select.css'
+import './SelectField.web.css'
 
 export namespace SelectField {
-  export interface Item {
-    label: string
-    value: string | number
-  }
-
-  export interface Props<T = {}> {
-    field: string
-    label: FormattedMessage.MessageDescriptor
-    items: Item[]
-    onValueChange?: (value: string | number) => any
-    searchable?: boolean
-  }
+  export type Item = SelectFieldItem
+  export type Props<Values> = SelectFieldProps<Values>
 }
 
 const ItemSuggest = Suggest.ofType<SelectField.Item>()
@@ -51,30 +34,41 @@ const renderItem: ItemRenderer<SelectField.Item> = (item, { handleClick, modifie
   )
 }
 
-export const SelectField: React.SFC<SelectField.Props> =
-  ({ field, label, items, onValueChange }) => (
-    <Field field={field}>
-      {fieldApi => {
-        return (
-          <WrappedField label={label} fieldApi={fieldApi}>
-            <ItemSuggest
-              popoverProps={{ minimal: true }}
-              className='pt-fill'
-              itemPredicate={filterItem}
-              itemRenderer={renderItem}
-              inputValueRenderer={item => item.label}
-              items={items}
-              // inputProps={{ value: items[fieldApi.value].label }}
-              onItemSelect={(item) => {
-                fieldApi.setValue(item.value)
-                if (onValueChange) {
-                  onValueChange(item.value)
-                }
-              }}
-            // selectedValue={fieldApi.value}
-            />
-          </WrappedField>
-        )
-      }}
-    </Field>
-  )
+export class SelectField<Values> extends React.Component<SelectField.Props<Values>> {
+  render() {
+    const { field: name, label, items, onValueChange } = this.props
+    const id = `${name}-input`
+    return (
+      <Field name={name}>
+        {({ field, form }: FieldProps<Values>) => {
+          const error = !!(form.touched[name] && form.errors[name])
+          return (
+            <FormGroup
+              intent={error ? Intent.DANGER : undefined}
+              helperText={error}
+              label={intl.formatMessage(label)}
+              labelFor={id}
+            >
+              <ItemSuggest
+                popoverProps={{ minimal: true }}
+                className='pt-fill'
+                itemPredicate={filterItem}
+                itemRenderer={renderItem}
+                inputValueRenderer={item => item.label}
+                items={items}
+                // inputProps={{ value: items[fieldApi.value].label }}
+                onItemSelect={(item) => {
+                  form.setFieldValue(name, item.value)
+                  if (onValueChange) {
+                    onValueChange(item.value)
+                  }
+                }}
+              // selectedValue={fieldApi.value}
+              />
+            </FormGroup>
+          )
+        }}
+      </Field>
+    )
+  }
+}

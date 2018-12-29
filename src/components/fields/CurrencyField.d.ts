@@ -2,14 +2,13 @@
 import * as web from './CurrencyField.web'
 import * as native from './CurrencyField.native'
 
-export interface CurrencyFieldProps<T = {}> {
-  field: string
+export interface CurrencyFieldProps<Values> {
+  field: keyof Values & string
   label: FormattedMessage.MessageDescriptor
   placeholder?: FormattedMessage.MessageDescriptor
   autoFocus?: boolean
   onSubmitEditing?: () => any
   returnKeyType?: ReturnKeyType
-  inputRef?: any
 }
 
 declare var _test: typeof web

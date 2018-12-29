@@ -77,7 +77,7 @@ export namespace Bank {
     })
   }
 
-  export const defaultValues: Props = {
+  export const defaultValues: Required<Props> = {
     name: '',
     web: '',
     address: '',

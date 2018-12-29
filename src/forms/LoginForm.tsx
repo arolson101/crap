@@ -1,24 +1,19 @@
-import { Button, View } from 'native-base'
+import { Button, View, Text } from 'native-base'
 import * as React from 'react'
-import { defineMessages, FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
-import { Dimensions, Text } from 'react-native'
-import { CalculatorInput } from 'react-native-calculator'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
+import { compose } from 'recompose'
 import { typedFields } from '../components/fields/index'
 import { AppBannerText, confirm, FormContent, WelcomeText } from '../components/index'
+import { InjectedNavProps, withNav } from '../components/NavContext'
+import { withMutation, withQuery } from '../db'
 import { Mutations, Queries } from '../db/index'
-import { withMutation } from '../db/mutations/makeMutation'
-import { withQuery } from '../db/queries/makeQuery'
-import { actions } from '../redux/actions/index'
-import { iOSUIKit } from 'react-native-typography'
+import { FormikErrors } from 'formik'
+import { intl, defineMessages } from 'src/intl'
 
-interface Props extends InjectedIntlProps {
+interface Props extends InjectedNavProps {
   query: Queries.Dbs
   createDb: Mutations.CreateDb
   openDb: Mutations.OpenDb
   deleteDb: Mutations.DeleteDb
-  login: actions['login']
 }
 
 interface FormValues {
@@ -37,7 +32,7 @@ export class LoginFormComponent extends React.Component<Props> {
   render() {
     const create = this.props.query.allDbs.length === 0
 
-    const defaultValues = {
+    const initialValues = {
       password: '',
       passwordConfirm: ''
     }
@@ -47,20 +42,15 @@ export class LoginFormComponent extends React.Component<Props> {
         <AppBannerText>App</AppBannerText>
         <Text style={iOSUIKit.largeTitleEmphasized}>Hello iOS UI Kit!</Text>
         <Form
-          defaultValues={defaultValues}
+          initialValues={initialValues}
           validate={this.validate}
           onSubmit={this.onSubmit}
         >
           {formApi =>
             <FormContent>
               <WelcomeText>
-                <FormattedMessage {...(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)} />
+                <Text>{intl.formatMessage(create ? messages.welcomeMessageCreate : messages.welcomeMessageOpen)}</Text>
               </WelcomeText>
-              <CalculatorInput
-                fieldTextStyle={{ fontSize: 24 }}
-                fieldContainerStyle={{ height: 36 }}
-                width={Dimensions.get('screen').width}
-              />
               <TextField
                 autoFocus
                 secure
@@ -85,7 +75,7 @@ export class LoginFormComponent extends React.Component<Props> {
                 block
                 onPress={formApi.submitForm}
               >
-                <FormattedMessage {...(create ? messages.create : messages.open)} />
+                <Text>{intl.formatMessage(create ? messages.create : messages.open)}</Text>
               </Button>
             </FormContent>
           }
@@ -94,7 +84,7 @@ export class LoginFormComponent extends React.Component<Props> {
         {!create &&
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Button transparent danger onPress={this.confirmDelete}>
-              <FormattedMessage {...messages.delete} />
+              <Text>{intl.formatMessage(messages.delete)}</Text>
             </Button>
           </View>
         }
@@ -102,26 +92,28 @@ export class LoginFormComponent extends React.Component<Props> {
     )
   }
 
-  validate = (values: FormValues) => {
-    const { intl: { formatMessage } } = this.props
+  validate = (values: FormValues): FormikErrors<FormValues> => {
     const create = this.props.query.allDbs.length === 0
+    const errors: FormikErrors<FormValues> = {}
 
     if (create) {
-      return ({
-        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined,
-        passwordConfirm: (values.password !== values.passwordConfirm) ? formatMessage(messages.passwordsMatch)
-          : undefined
-      })
+      if (!values.password.trim()) {
+        errors.password = intl.formatMessage(messages.valueEmpty)
+      }
+      if (values.password !== values.passwordConfirm) {
+        errors.passwordConfirm = intl.formatMessage(messages.passwordsMatch)
+      }
     } else {
-      return ({
-        password: !values.password.trim() ? formatMessage(messages.valueEmpty)
-          : undefined
-      })
+      if (!values.password.trim()) {
+        errors.password = intl.formatMessage(messages.valueEmpty)
+      }
     }
+
+    return errors
   }
 
   onSubmit = ({ password }: FormValues) => {
+    console.log('onsubmit')
     const create = this.props.query.allDbs.length === 0
     if (create) {
       const { createDb, login } = this.props
@@ -134,12 +126,10 @@ export class LoginFormComponent extends React.Component<Props> {
   }
 
   confirmDelete = () => {
-    const { intl: { formatMessage } } = this.props
     confirm({
       title: messages.deleteTitle,
       action: messages.delete,
       onConfirm: this.deleteDb,
-      formatMessage
     })
   }
 
@@ -162,14 +152,11 @@ export class LoginFormComponent extends React.Component<Props> {
 }
 
 export const LoginForm = compose(
-  injectIntl,
+  withNav,
   withQuery({ query: Queries.Dbs }),
   withMutation({ openDb: Mutations.OpenDb }),
   withMutation({ createDb: Mutations.CreateDb }),
   withMutation({ deleteDb: Mutations.DeleteDb }),
-  connect(null, {
-    login: actions.login
-  }),
 )(LoginFormComponent)
 LoginForm.displayName = 'LoginForm'
 

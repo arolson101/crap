@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { defineMessages } from 'react-intl'
 import { compose } from 'recompose'
 import { Text } from '../components/layout'
 import { makeScreen } from './Screen'
+import { defineMessages } from 'src/intl'
 
 export const BudgetsScreenComponent: React.SFC = (props) => {
   return (

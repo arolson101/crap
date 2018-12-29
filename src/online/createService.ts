@@ -1,15 +1,12 @@
 import axios, { CancelToken } from 'axios'
 import * as ofx4js from 'ofx4js'
-import { defineMessages, FormattedMessage } from 'react-intl'
 import { Bank, Account } from '../db/entities/index'
+import { defineMessages, intl } from 'src/intl'
 
 import FinancialInstitutionImpl = ofx4js.client.impl.FinancialInstitutionImpl
 import BaseFinancialInstitutionData = ofx4js.client.impl.BaseFinancialInstitutionData
 import OFXV1Connection = ofx4js.client.net.OFXV1Connection
 import FinancialInstitutionAccount = ofx4js.client.FinancialInstitutionAccount
-import { IntlError } from './IntlError'
-
-type FormatMessage = (messageDescriptor: FormattedMessage.MessageDescriptor, values?: Object) => string
 
 const messages = defineMessages({
   noFid: {
@@ -69,10 +66,10 @@ export const createService = (bank: Bank, cancelToken: CancelToken): FinancialIn
   OFXApplicationContextHolder.setCurrentContext(new DefaultApplicationContext('QWIN', '2300'))
 
   const { fid, org, ofx, name } = bank
-  if (!fid) { throw new IntlError(messages.noFid) }
-  if (!org) { throw new IntlError(messages.noOrg) }
-  if (!ofx) { throw new IntlError(messages.noOfx) }
-  if (!name) { throw new IntlError(messages.noName) }
+  if (!fid) { throw new Error(intl.formatMessage(messages.noFid)) }
+  if (!org) { throw new Error(intl.formatMessage(messages.noOrg)) }
+  if (!ofx) { throw new Error(intl.formatMessage(messages.noOfx)) }
+  if (!name) { throw new Error(intl.formatMessage(messages.noName)) }
 
   let fiData = new BaseFinancialInstitutionData()
   fiData.setFinancialInstitutionId(fid)
@@ -97,8 +94,8 @@ interface Login {
 
 export const checkLogin = (bank: Bank): Login => {
   const { username, password } = bank
-  if (!username) { throw new IntlError(messages.noUsername) }
-  if (!password) { throw new IntlError(messages.noPassword) }
+  if (!username) { throw new Error(intl.formatMessage(messages.noUsername)) }
+  if (!password) { throw new Error(intl.formatMessage(messages.noPassword)) }
   return { username, password }
 }
 
@@ -124,7 +121,7 @@ export const getFinancialAccount = (service: FinancialInstitutionImpl,
   account: Account): FinancialInstitutionAccount => {
   const { username, password } = checkLogin(bank)
   const accountNumber = account.number
-  if (!accountNumber) { throw new IntlError(messages.noAccountNumber) }
+  if (!accountNumber) { throw new Error(intl.formatMessage(messages.noAccountNumber)) }
   let accountDetails
 
   switch (account.type) {
@@ -132,7 +129,7 @@ export const getFinancialAccount = (service: FinancialInstitutionImpl,
     case Account.Type.SAVINGS:
     case Account.Type.CREDITLINE:
       const { routing } = account
-      if (!routing) { throw new IntlError(messages.noRoutingNumber) }
+      if (!routing) { throw new Error(intl.formatMessage(messages.noRoutingNumber)) }
       accountDetails = new ofx4js.domain.data.banking.BankAccountDetails()
       accountDetails.setAccountNumber(accountNumber)
       accountDetails.setRoutingNumber(routing)
