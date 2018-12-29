@@ -5,7 +5,7 @@ import { Column, Entity, PrimaryColumn } from '../typeorm'
 import { DbChange, Field, InputType, ObjectType, registerEnumType } from './helpers'
 const randomColor = require<(options?: RandomColorOptions) => string>('randomcolor')
 
-// see ofx4js.domain.data.banking.AccountType
+// see ofx4js.AccountType
 export enum AccountType {
   CHECKING = 'CHECKING',
   SAVINGS = 'SAVINGS',
