@@ -46,10 +46,10 @@ PODS:
   - RNVectorIcons (4.6.0):
     - React
   - RSKImageCropper (2.2.1)
-  - SQLCipher (3.4.2):
-    - SQLCipher/standard (= 3.4.2)
-  - SQLCipher/common (3.4.2)
-  - SQLCipher/standard (3.4.2):
+  - SQLCipher (4.0.1):
+    - SQLCipher/standard (= 4.0.1)
+  - SQLCipher/common (4.0.1)
+  - SQLCipher/standard (4.0.1):
     - SQLCipher/common
   - yoga (0.57.1.React)
 
@@ -105,9 +105,9 @@ SPEC CHECKSUMS:
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
-  SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
+  SQLCipher: 4636a257060f6f1b4e143a143028b61a2b462d0d
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
 PODFILE CHECKSUM: 04a9bec0b61855ef6a593dda8c3f30e67939260c
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.2
