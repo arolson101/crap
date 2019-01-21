@@ -1,5 +1,5 @@
-import { ExecutableDocumentNode, MutationFcn } from '../graphql-types'
-import * as T from './mutations-types'
+import { ExecutableDocumentNode, MutationFcn } from '../graphql-types';
+import * as T from './mutations-types';
 
 export const CreateDb: ExecutableDocumentNode<T.CreateDb.Variables, T.CreateDb.Mutation>
 export type CreateDb = MutationFcn<T.CreateDb.Variables, T.CreateDb.Mutation>
@@ -39,3 +39,4 @@ export type DownloadTransactions = MutationFcn<T.DownloadTransactions.Variables,
 
 export const Cancel: ExecutableDocumentNode<T.Cancel.Variables, T.Cancel.Mutation>
 export type Cancel = MutationFcn<T.Cancel.Variables, T.Cancel.Mutation>
+

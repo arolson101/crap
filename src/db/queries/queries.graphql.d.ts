@@ -1,5 +1,5 @@
-import { ExecutableDocumentNode, MutationFcn } from '../graphql-types'
-import * as T from './queries-types'
+import { ExecutableDocumentNode, MutationFcn } from '../graphql-types';
+import * as T from './queries-types';
 
 export const Banks: ExecutableDocumentNode<T.Banks.Variables, T.Banks.Query>
 export type Banks = T.Banks.Query
@@ -18,3 +18,4 @@ export type Transaction = T.Transaction.Query
 
 export const Dbs: ExecutableDocumentNode<T.Dbs.Variables, T.Dbs.Query>
 export type Dbs = T.Dbs.Query
+

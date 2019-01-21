@@ -1,7 +1,7 @@
 import axios, { CancelToken } from 'axios'
 import { FinancialInstitutionImpl, BaseFinancialInstitutionData, OFXV1Connection, FinancialInstitutionAccount, HeadersObject, OFXApplicationContextHolder, DefaultApplicationContext, AccountType, BankAccountDetails, CreditCardAccountDetails } from 'ofx4js'
 import { Bank, Account } from '../db/entities/index'
-import { defineMessages, intl } from 'src/intl'
+import { defineMessages, intl } from '../intl'
 
 const messages = defineMessages({
   noFid: {
